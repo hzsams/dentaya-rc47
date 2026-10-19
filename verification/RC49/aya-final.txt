@@ -1,0 +1,123 @@
+
+> dentaya-production-rc@1.0.0-rc.49 verify:aya-core
+> node scripts/verify-aya-core.cjs && npm run verify:aya-catalog
+
+PASS AYA Core: trusted shared identity and purpose with knowledge on/off and agent/legacy contexts, bounded role/style/options, relevant document retrieval, unknown-topic fallback, Unicode/CJK tokens, translated document search, explicit note opt-in and memory isolation, guide labelled separately. No inference performed.
+
+> dentaya-production-rc@1.0.0-rc.49 verify:aya-catalog
+> node scripts/verify-aya-catalog.cjs && npm run verify:aya-dialogue && node --import tsx scripts/verify-aya-conversation.ts && node scripts/export-aya-catalog.mjs --check
+
+{
+  "pass": true,
+  "catalogue": {
+    "version": "1.0.0",
+    "questions": 1008,
+    "topics": 252,
+    "language": "tr",
+    "categories": [
+      {
+        "id": "aya",
+        "title": "AYA ve sohbet",
+        "questions": 100
+      },
+      {
+        "id": "workflow",
+        "title": "CAD günlük iş akışı",
+        "questions": 100
+      },
+      {
+        "id": "geometry",
+        "title": "Geometri ve anatomi",
+        "questions": 100
+      },
+      {
+        "id": "display",
+        "title": "Görünüm ve renkler",
+        "questions": 100
+      },
+      {
+        "id": "files",
+        "title": "Tarama ve dosyalar",
+        "questions": 100
+      },
+      {
+        "id": "desktop",
+        "title": "Masaüstü ve veri",
+        "questions": 100
+      },
+      {
+        "id": "dental",
+        "title": "Temel diş bilgisi",
+        "questions": 100
+      },
+      {
+        "id": "production",
+        "title": "Üretim kontrol notları",
+        "questions": 100
+      },
+      {
+        "id": "fdi",
+        "title": "FDI diş numaraları",
+        "questions": 208
+      }
+    ]
+  },
+  "canonicalQuestionsVerified": 1008,
+  "regressionQueries": 77,
+  "unknownsRejected": 11,
+  "followup": true,
+  "safety": true,
+  "exactPassMs": 178
+}
+
+> dentaya-production-rc@1.0.0-rc.49 verify:aya-dialogue
+> node scripts/verify-aya-dialogue.cjs
+
+{
+  "pass": true,
+  "cases": 214,
+  "groups": {
+    "direct basics": 51,
+    "public integration": 51,
+    "knowledge disabled": 4,
+    "declared names": 6,
+    "name corrections": 2,
+    "missing names": 5,
+    "name evidence boundaries": 6,
+    "negative name evidence": 3,
+    "name revocation": 2,
+    "explicit name clearing": 4,
+    "name after clearing": 2,
+    "quoted clearing task": 2,
+    "identity followups": 13,
+    "shorter means shorter": 8,
+    "examples retain topic": 4,
+    "missing dialogue topic": 3,
+    "substantive clause boundaries": 14,
+    "catalog followups": 5,
+    "acknowledgements preserve catalog": 4,
+    "catalog false followups": 10,
+    "catalog topic boundaries": 9,
+    "deterministic work preservation": 2,
+    "acknowledgement meaning": 4
+  },
+  "nativeInference": false,
+  "coverage": "TR/EN direct and polite dialogue, compounds, public offline routing, session name evidence and corrections, short followups, quoted task rejection, catalog topic boundaries and deterministic tool preservation"
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+PASS: model-first definitions/new phrasings/followups, working-memory transfer, honest Core/model labels, offline guide, forced model path, cancellation/timeout/busy/invalid plan, preferences, notebook, clinical safety and actual CAD metadata (mock model calls only).
+PASS: exported question catalogue matches the running source.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

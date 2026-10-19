@@ -1,0 +1,50 @@
+{
+  "release": "1.0.0-rc.49",
+  "ayaCore": "0.7.0",
+  "baseCommit": "6ac33cd46c89f747674c46010ee4d332ecaa2edd",
+  "completedAt": "2026-10-19T15:06:12.360012+00:00",
+  "checks": [
+    {
+      "command": "npm run verify",
+      "exitCode": 0,
+      "log": "verify.txt"
+    },
+    {
+      "command": "npm run verify:aya-core",
+      "exitCode": 0,
+      "log": "aya-final.txt"
+    },
+    {
+      "command": "node scripts/verify-aya-dialogue.cjs",
+      "exitCode": 0,
+      "cases": 214,
+      "log": "dialogue.json"
+    },
+    {
+      "command": "npm run verify:aya-conversation-browser",
+      "exitCode": 0,
+      "log": "conversation-browser.txt"
+    },
+    {
+      "command": "npm run lint -- --max-warnings=0",
+      "exitCode": 0,
+      "log": "lint.txt"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "log": "types.txt"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "log": "build.txt"
+    }
+  ],
+  "nativeModelInferenceVerified": false,
+  "windowsInstallerProduced": false,
+  "liveOrganizationBackendVerified": false,
+  "browserModelCallsAreMock": true,
+  "dentalFactsActual": 220,
+  "catalogueQuestions": 1008
+}

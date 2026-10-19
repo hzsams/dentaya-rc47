@@ -19,6 +19,18 @@ const cancelled=await resolveAyaReply({prompt:'Yeni bir hikaye yaz'},{callModel:
 for(const error of ['MODEL_MISSING','LOCAL_TIMEOUT','LOCAL_BUSY','LOCAL_EMPTY_RESPONSE','LOCAL_INVALID_PLAN']){const reply=await resolveAyaReply({prompt:'Konu dışı bir hikaye'},{callModel:async()=>({ok:false,error})});assert.equal(reply.engine,'core');assert.equal(reply.warning,error);assert.ok(reply.output);}
 const rejected=await resolveAyaReply({prompt:'Bilinmeyen bir soru'},{callModel:async()=>{throw Error('network');}});assert.equal(rejected.warning,'LOCAL_ERROR');assert.ok(rejected.output);
 const empty=await resolveAyaReply({prompt:'Bilinmeyen bir soru'},{callModel:async()=>({ok:true,output:'  '})});assert.equal(empty.warning,'LOCAL_EMPTY_RESPONSE');
+// Basic identity is available without inference; ready models still receive all
+// normal questions. Recover known basics when inference fails, without hiding it.
+const basicPrompts=['Adın ne?','Amacın ne?','Merhaba AYA, adın ne ve amacın ne?','What is your name?'];
+let basicModelCalls=0;
+for(const prompt of basicPrompts){
+ const offline=await resolveAyaReply({prompt,options:{useKnowledge:false}});assert.equal(offline.engine,'core');assert.doesNotMatch(offline.output,/eşleştiremedim/);
+ const ready=await resolveAyaReply({prompt},{callModel:async()=>{basicModelCalls++;return {ok:true,output:'Model-first basic reply'};}});assert.equal(ready.engine,'model');
+ for(const error of ['MODEL_MISSING','LOCAL_TIMEOUT','LOCAL_EMPTY_RESPONSE']){const recovered=await resolveAyaReply({prompt},{callModel:async()=>({ok:false,error})});assert.equal(recovered.engine,'core');assert.equal(recovered.warning,error);assert.doesNotMatch(recovered.output,/eşleştiremedim/);assert.match(recovered.output,/AYA Core/);}
+}
+assert.equal(basicModelCalls,basicPrompts.length);
+const cancelledIdentity=await resolveAyaReply({prompt:'Adın ne?'},{callModel:async()=>({ok:false,error:'LOCAL_CANCELLED'})});assert.equal(cancelledIdentity.cancelled,true);assert.match(cancelledIdentity.output,/durdurdun/);assert.doesNotMatch(cancelledIdentity.output,/Adım AYA/);
+for(const error of [new DOMException('Aborted','AbortError'),new Error('LOCAL_CANCELLED')]){const aborted=await resolveAyaReply({prompt:'Adın ne?'},{callModel:async()=>{throw error;}});assert.equal(aborted.cancelled,true);assert.equal(aborted.warning,'LOCAL_CANCELLED');assert.doesNotMatch(aborted.output,/Adım AYA/);}
 const memory=await resolveAyaReply({prompt:'Sonraki adımı önceki hedefe göre düzenle'},{callModel:async()=>({ok:true,output:'Önce hedefimize uygun kayıt notunu tamamlayalım.',workingMemory:{goal:'Vakanın teslimini hazırla',decisions:['Teslim cuma günü'],openQuestions:['Hangi kurye?']}})});assert.deepEqual(memory.workingMemory,{goal:'Vakanın teslimini hazırla',decisions:['Teslim cuma günü'],openQuestions:['Hangi kurye?']});
 const manualMemory={goal:'Teslimi cuma hazırla',decisions:['Önce prova kontrolü'],openQuestions:['Kurye saati?']};
 const offlineMemory=await resolveAyaReply({prompt:'Önceki kararımız neydi?',workingMemory:manualMemory});assert.equal(offlineMemory.engine,'core');assert.match(offlineMemory.output,/Teslimi cuma hazırla/);assert.match(offlineMemory.output,/Önce prova kontrolü/);assert.match(offlineMemory.output,/Kurye saati/);

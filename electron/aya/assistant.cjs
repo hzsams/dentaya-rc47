@@ -1,8 +1,9 @@
 /* Browser/Electron shared, deterministic AYA-owned context and evidence layer. */
 'use strict';
-const CORE_VERSION='0.6.0';
+const CORE_VERSION='0.7.0';
 const workTools=require('./work-tools.cjs');
 const conversation=require('./conversation.cjs');
+const {answerDialogue}=require('./dialogue.cjs');
 function localSetupGuide(t=s=>s){return ['AYA Core '+CORE_VERSION+' · llama.cpp · Qwen3 1.7B · GGUF',t('Yerel motoru kur'),t('Yerel sohbet API anahtarı veya DentAYA oturumu istemez. Mesajlar yalnızca bu bilgisayardaki modele iletilir; buluta otomatik geçilmez.'),t('İlk indirme internet ve boş disk alanı ister. Sonrasında yerel sohbet çevrimdışı çalışabilir. Hız bilgisayarın belleği ve işlemcisine bağlıdır; daha küçük kurulu modelleri de seçebilirsin.'),t('Yerel model ekle'),t('AYA bilgi defteri'),t('Bu bilgiler bu cihazda saklanır.')].join('\n');}
 const fold=s=>String(s||'').toLocaleLowerCase('tr').normalize('NFKD').replace(/\p{M}/gu,'').replace(/ı/g,'i');
 const segmenter=new Intl.Segmenter(undefined,{granularity:'word'});
@@ -40,10 +41,9 @@ function answerOwned(prompt,{knowledge=[],cadContext=null,history=[],options={},
  const response=(output,references=[])=>({ok:true,engine:'core',output,references});
  const safety=conversation.safetyReply(prompt,{locale});if(safety)return safety;
  if(includeCatalog&&options.useKnowledge!==false&&conversation.isCatalogQuestion(prompt))return conversation.answerCatalog(prompt,{history,options,locale});
+ const dialogue=answerDialogue(prompt,{history,locale,cadContext:context});if(dialogue)return dialogue;
  const tool=workTools.toolAnswer(prompt,{cadContext:context,locale},t);if(tool)return response(tool);
  if(/sifirdan.*egit|temel.*model|foundation model|trained.*scratch|kendi.*model.*egit/.test(q))return response(t('AYA Core bize ait çalışma katmanıdır. Temel dil modeli sıfırdan eğitilmedi; yerel açık ağırlıklı model kullanılır.'));
- const chat=conversation.smallTalk(prompt,{locale});if(chat)return chat;
- if(/^(kimsin|sen kimsin|what are you|who are you)|kendini tanit/.test(q))return response(locale==='tr'?'DentAYA çalışma asistanınız AYA. İş akışını açıklayabilir, kontrol listesi ve teslim notu hazırlayabilir, hesaplama ve birim dönüşümü yapabilirim. CAD içindeki AYA paneli seçili ünitenin güncel bilgileriyle çalışır; önerilen işlemleri siz başlatırsınız.':'I’m AYA, your DentAYA work assistant. I can explain workflows, prepare checklists and handoff notes, and calculate or convert units. The AYA panel inside CAD uses the selected unit’s current data; you start any suggested action.');
  const arithmetic=calculate(q.replace(/^(hesapla|calculate)\s*:?\s*/,'').replace(/[?]$/,''));
  if(arithmetic)return response(arithmetic.expression+' = '+Number(arithmetic.result.toPrecision(12)).toString());
  const definition=/nedir|ne demek|ne anlama|tanimi|what is|what are|define|definition/.test(q)&&!/siradaki|sonraki|ne yap|next/.test(q);

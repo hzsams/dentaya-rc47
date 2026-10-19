@@ -1,11 +1,11 @@
 export const DENTAYA_RELEASE = {
-  version: "1.0.0-rc.48",
+  version: "1.0.0-rc.49",
   channel:
     process.env.NEXT_PUBLIC_DENTAYA_RELEASE_CHANNEL ??
     "staging",
   buildLabel:
     process.env.NEXT_PUBLIC_DENTAYA_BUILD_LABEL ??
-    "DentAYA RC48",
+    "DentAYA RC49",
   targetDate: "2026-10-19",
   targetLabel:
     "Doğrulama kayıtları",

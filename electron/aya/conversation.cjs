@@ -1,5 +1,6 @@
 'use strict';
-const {entries,topics,facets,stats}=require('./qa-catalog.cjs');
+const {entries,topics,facets}=require('./qa-catalog.cjs');
+const {answerDialogue,isAcknowledgement}=require('./dialogue.cjs');
 const fold=s=>String(s??'').toLocaleLowerCase('tr').normalize('NFKD').replace(/\p{M}/gu,'').replace(/ı/g,'i').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
 const words=s=>fold(s).split(' ').filter(Boolean);
 const ignored=new Set(words('kanka lütfen lutfen bana beni benim bir bu şu ve ile veya için hakkında konusunda nasıl nedir ne nedemek demek anlat açıkla bilgi verir misin acaba peki daha çok biraz yapmak yaparım ederim edebilirim yapmalıyım hangi kaç mı mi mu mü var yok olur olabilir nelerdir biliyor musun sen nedendi şöyle neden kontrol kontrolü etmeliyim ederiz edebilirim yapılan sık ilgili why what how can the a an is it to of in and for do does please tell me about'));
@@ -50,17 +51,7 @@ function safetyReply(prompt,{locale='tr'}={}){
  if(medication||torque||personal)return response(tr?(torque?'İmplant veya vida için tork değeri tahmin edemem. Tam implant sistemi, bağlantı ve bileşen koduna ait güncel üretici talimatını ve yetkili hekimin kararını esas alın.':medication?'Kişiye özel ilaç, antibiyotik veya doz öneremem. Güvenli seçim muayene, sağlık geçmişi ve kullanılan ilaçların değerlendirilmesini gerektirir; diş hekiminize veya eczacınıza danışın.':'Geçmiş olsun. Bu belirtilerle buradan tanı koyamam. Ne zaman başladığını ve şişlik/ateş olup olmadığını diş hekiminize bildirin; süren ağrı veya şişliği geciktirmeden değerlendirtin. Nefes veya yutma güçlüğünde acil yardım alın.'):'I cannot prescribe medication, diagnose a patient, or invent implant torque values. For symptoms seek dental assessment; for components use the exact manufacturer instructions and clinician approval.');
  return null;
 }
-function smallTalk(prompt,{locale='tr'}={}){
- const q=fold(prompt).replace(/^(kanka|aya) /,''),tr=locale==='tr';
- if(/^(kanka |aya |hey )?(merhaba|selam|selamlar|gunaydin|iyi aksamlar|iyi gunler|hello|hi|hey)( kanka| aya)?( nasilsin| naber| how are you)?$/.test(q))return response(tr?'Selam! Buradayım. Diş bilgisi, CAD, kayıt sorunları veya AYA hakkında sorabilirsin. Örneğin “Koleyi nasıl kontrol ederim?” yazabilirsin.':'Hi! Ask me about dental terms, CAD, saving work or AYA. The built-in question catalogue is currently Turkish; a local model can help with broader conversation.');
- if(/^(kanka |aya )?(nasilsin|naber|ne haber|napiyon|ne yapiyorsun|nasil gidiyor|how are you|whats up)$/.test(q))return response(tr?'Buradayım, yardımcı olmaya hazırım. Senin işler nasıl; CAD tarafında mı ilerleyelim, bir soruna mı bakalım?':'I’m here and ready to help. How is your work going—shall we work on CAD or a question?');
- if(/^(cok |kanka |aya )?(tesekkurler|tesekkur ederim|sag ol|sagol|eyvallah|thanks|thank you)( kanka)?$/.test(q))return response(tr?'Rica ederim. Son konuyu adım adım açabilir veya yeni bir işe geçebiliriz.':'You’re welcome. We can switch topics or go through the last answer step by step.');
- if(/^(tamam|ok|okay|anladim|olur|peki|guzel|evet|hayir)$/.test(q))return response(tr?'Tamam. Devam etmek istediğin adımı veya yeni sorunu yazabilirsin.':'Okay. Tell me the next step or your new question.');
- if(/^(kanka )?(iyi degilim|moralim bozuk|cok yoruldum|bunaldim|i am tired|im tired)$/.test(q))return response(tr?'Üzgünüm kanka. İstersen ne olduğunu anlat; iş tarafını da tek küçük adıma bölebiliriz.':'I’m sorry it’s been difficult. You can tell me what happened, or we can break the work into one small next step.');
- if(/^(yardim|yardim eder misin|bana yardim et|help|neler yapabilirsin|ne yapabilirsin|ne ise yararsin|ne biliyorsun|kac soruya cevap verebilirsin|kac soru biliyorsun|what can you do)$/.test(q))return response(tr?`İş akışını açıklayabilir, kontrol listesi ve teslim notu hazırlayabilir, hesaplama ve birim dönüşümü yapabilirim. Örneğin “Kontrol listesi”, “Teslim notu taslağı” veya “12 cm kaç mm?” yazın. Çevrimdışı rehberde ${stats.topics} konuda ${stats.questions} kayıt var. Açık uçlu sohbet için kurulu yerel model kullanılır.`:`I can explain workflows, prepare checklists and handoff notes, and calculate or convert units. Try “Workspace checklist”, “Handoff draft” or “12 cm to mm?”. The offline guide contains ${stats.questions} Turkish records across ${stats.topics} topics. Open-ended conversation uses an installed local model.`);
- if(/^(benim )?(adim|ismim) .{2,70}$/.test(q))return response(tr?'Memnun oldum! Bu konuşmada seni tanıyarak ilerleyebiliriz. Ne üzerinde çalışmak istersin? Bu mesaj kendiliğinden kalıcı bilgi defterine kaydedilmez.':'Nice to meet you! What would you like to work on? This message is not automatically added to permanent notebook memory.');
- return null;
-}
+function smallTalk(prompt,context={}){return answerDialogue(prompt,context);}
 function priorEntry(history){
  const safe=Array.isArray(history)?history.slice(-24):[];
  // Acknowledgements do not erase a topic; a substantive unrelated request does.
@@ -71,7 +62,7 @@ function priorEntry(history){
    for(const reference of references){const id=typeof reference?.id==='string'?reference.id.replace(/^aya-qa-/,''):'';if(byId.has(id))return byId.get(id);}
    if(references.length||message.engine==='model'||message.engine==='guide')return null;
   }else if(message?.role==='user'&&typeof message.content==='string'){
-   if(isFollowup(message.content)||smallTalk(message.content))continue;
+   if(isFollowup(message.content)||isAcknowledgement(message.content))continue;
    const canonical=exact.get(fold(message.content));if(canonical)return canonical;
    const hit=scoreQuery(message.content,1)[0];
    return hit?entryFor(hit.topic,facetOf(message.content)):null;
@@ -79,7 +70,9 @@ function priorEntry(history){
  }
  return null;
 }
-function isFollowup(prompt){return /^(peki |bunu |onu |biraz |daha |o zaman )*(devam|sonra|orne[kgi]|ornek ver|anlat|acikla|kisa|kisalt|ayrintili|detay|madde madde|kontrol|nasil|nasil kontrol|nasil kontrol ederim|neyi kontrol|neye dikkat|hangi hata|hangi hatalar|tekrar|ingilizce|english|continue|more|shorter|steps|check)(.*)?$/.test(fold(prompt));}
+// Only complete, topic-free follow-ups inherit a catalogue topic. In particular,
+// “nasıl yemek yapabilirim” and “devam etme” must not reuse an old dental answer.
+function isFollowup(prompt){return /^(?:(?:peki|bunu|onu|biraz|daha|o zaman) )*(?:devam(?: et)?|sonra|orne[kgi]|ornek ver|anlat|acikla|kisa(?: anlat)?|kisalt|ayrintili(?: anlat)?|detay(?:li anlat)?|madde madde|kontrol|nasil|nasil kontrol(?: ederim| edebilirim)?|neyi kontrol(?: edeyim)?|neye dikkat(?: etmeliyim)?|hangi hata|hangi hatalar|tekrar|ingilizce|english|continue|more|shorter|steps|check)(?: lutfen| misin| eder misin)?$/.test(fold(prompt));}
 function answerCatalog(prompt,{history=[],options={},locale='tr'}={}){
  if(typeof prompt!=='string'||!prompt.trim()||prompt.length>8000)return null;
  const canonical=exact.get(fold(prompt));if(canonical)return response(canonical.answer,[canonical]);
@@ -107,7 +100,7 @@ function fallbackReply(prompt,{locale='tr',history=[],modelError='',modelEnabled
  const q=fold(prompt),tr=locale==='tr';let output;
  if(!q||q.length<3)output=tr?'Buradayım. Biraz daha açar mısın? Örneğin “Koleyi nasıl kontrol ederim?” diye sorabilirsin.':'I’m here. Could you add a little detail about what you need?';
  else if(isFollowup(prompt)&&!priorEntry(history))output=tr?'Hangi konuyu devam ettirelim? Konu adını veya son sorunu bir kez yazarsan oradan ilerleyebilirim.':'Which topic should we continue? Please name it once so I can follow.';
- else if(/saat|tarih|hava|doviz|kur |fiyat|guncel|bugun|latest|weather|stock/.test(q))output=tr?'Bu bilgi güncel veri gerektirebilir; burada canlı veri kaynağına bağlı değilim. Hangi bilgi ve hangi tarih/yer gerektiğini netleştirirsen doğru doğrulama adımını konuşabiliriz.':'That may need live information. I do not have a live data source here; tell me the date or location you need.';
+ else if(/\b(?:saat|tarih|hava|doviz|kur|fiyat|guncel|bugun|latest|weather|stock)\b/.test(q))output=tr?'Bu bilgi güncel veri gerektirebilir; burada canlı veri kaynağına bağlı değilim. Hangi bilgi ve hangi tarih/yer gerektiğini netleştirirsen doğru doğrulama adımını konuşabiliriz.':'That may need live information. I do not have a live data source here; tell me the date or location you need.';
  else output=tr?'Mesajını aldım; buna hazır bilgi tabanımda güvenilir bir yanıt eşleştiremedim. Bir kavramı mı açıklayayım, bir hatayı mı çözelim, yoksa bir metin mi hazırlayalım? Konuyu bir cümle daha açabilir misin?':'I received your message, but could not match a reliable built-in answer. Do you want an explanation, troubleshooting, or a draft? Please add a little context.';
  if(modelError==='LOCAL_CANCELLED')output=tr?'Yanıtı durdurdun. Sorun konuşmada duruyor; yeniden gönderebilir veya daha kısa sorabilirsin.':'Response stopped. Your question is still in the conversation; you can retry or shorten it.';
  else if(modelError)output+=(tr?' Yerel model bu isteği tamamlayamadı; soru kaybolmadı.':' The local model could not complete this request; your question has been kept.');

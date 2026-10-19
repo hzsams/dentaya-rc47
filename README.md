@@ -1,10 +1,12 @@
-# DentAYA RC48
+# DentAYA RC49
 
-Sürüm `1.0.0-rc.48`, AYA Core `0.6.0`. AYA sohbeti, çalışma belleği ve CAD paneli sadeleştirildi; manuel CAD deterministik ve modelden bağımsız kalır. Finans, mesajlaşma, randevu, ekip, lojistik ve vaka işlemlerinde taslak, hata ve eşzamanlı değişiklik kontrolleri güçlendirildi. Marka koleksiyonu 18 özgün ambleme çıkarıldı; ortak yükleme deneyiminin bütçesi 5 saniyedir.
+Sürüm `1.0.0-rc.49`, AYA Core `0.7.0`. Kimlik, amaç, yetenek, sınır, gizlilik ve yerel çalışma soruları TR/EN temel sohbet katmanına bağlandı. Birleşik sorular, konuyla bağlı kısa takipler ve sohbet içi isim hatırlama/düzeltme desteklenir. Model hazırsa önceliğini korur; modelin kimlik talimatları katalogdan bağımsızdır.
 
-Başlangıç: [KURULUM.txt](KURULUM.txt). Kullanım: [RC48_KULLANIM.md](RC48_KULLANIM.md). Güncel doğrulama ve tamamlanmayanlar: [RC48_KONTROL_RAPORU.md](RC48_KONTROL_RAPORU.md).
+RC48 ile gelen: AYA sohbeti, çalışma belleği ve CAD paneli sadeleştirildi; manuel CAD deterministik ve modelden bağımsız kalır. Finans, mesajlaşma, randevu, ekip, lojistik ve vaka işlemlerinde taslak, hata ve eşzamanlı değişiklik kontrolleri güçlendirildi. Marka koleksiyonu 18 özgün ambleme çıkarıldı; ortak yükleme deneyiminin bütçesi 5 saniyedir.
 
-Ekranlar: [AYA](verification/RC48/AYA.png) · [CAD](verification/RC48/CAD.png) · [Mesajlar](verification/RC48/Messages.png) · [Logolar](public/brand/DentAYA_Premium_Logo_Koleksiyonu.png). Ekran kanıtları sentetik test verisi kullanır.
+Başlangıç: [KURULUM.txt](KURULUM.txt). Kullanım: [RC49_KULLANIM.md](RC49_KULLANIM.md). Güncel doğrulama ve tamamlanmayanlar: [RC49_KONTROL_RAPORU.md](RC49_KONTROL_RAPORU.md).
+
+Ekranlar: [AYA RC49](verification/RC49/AYA_RC49_identity.png) · [CAD RC48](verification/RC48/CAD.png) · [Mesajlar RC48](verification/RC48/Messages.png) · [Logolar](public/brand/DentAYA_Premium_Logo_Koleksiyonu.png). Ekran kanıtları sentetik test verisi kullanır.
 
 Bilgi kartı sayısı **220**; kaynaklar ve 30.000 içerik hedefinin durumu [bilgi kataloğu raporunda](DENTAL_BILGI_KATALOGU_RAPORU.md). 30.000 kayıtlık kapasite testinin verileri ürüne eklenmez.
 

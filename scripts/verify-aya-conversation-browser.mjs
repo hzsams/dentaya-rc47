@@ -23,8 +23,21 @@ try{
  await main.locator('.aya-prompts button').nth(2).click();assert.equal(await textarea.inputValue(),'12 cm kaç mm?');assert.equal(await main.locator('.aya-message').count(),0,'Welcome shortcuts prepare a question without sending');await textarea.fill('');
  async function ask(prompt,scope=main){const selector=scope===main?'.aya-message--assistant':'.cad-aya-messages article',composer=scope.locator(scope===main?'.aya-chat-composer':'.cad-aya-panel>form');const count=await scope.locator(selector).count();await composer.locator('textarea').fill(prompt);await composer.locator('button[type=submit]').click();await assert.doesNotReject(()=>scope.locator(selector).nth(count+(scope===main?0:1)).waitFor());if(scope===main)await page.waitForFunction(()=>!document.querySelector('#aya-local-message')?.disabled);return scope.locator(selector).last();}
  assert.match(await (await ask('kanka selam nasılsın')).textContent(),/Selam/);
+ assert.match(await (await ask('Adın ne?')).textContent(),/Adım AYA/);
+ assert.match(await (await ask('Peki amacın ne?')).textContent(),/Amacım/);
+ assert.match(await (await ask('Örnek ver')).textContent(),/12 cm/);
+ const compound=await (await ask('Merhaba, adın ne ve amacın ne?')).textContent();assert.match(compound,/Adım AYA/);assert.match(compound,/Amacım/);
+ if(process.env.DENTAYA_SCREENSHOT_DIR)await main.locator('.aya-conversation-shell').screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'AYA_RC49_identity.png'),animations:'disabled'});
+ await ask('Benim adım Deniz');assert.match(await (await ask('Benim adım ne?')).textContent(),/Deniz/);
+ await ask('Hayır, adım Ece');assert.match(await (await ask('Adımı hatırlıyor musun?')).textContent(),/Ece/);
+ await ask('Adımı unut');assert.doesNotMatch(await (await ask('Adım ne?')).textContent(),/Ece|Deniz/);
+ await ask('Mesajlarım buluta gidiyor mu?');const privacy=await (await ask('Örnek ver')).textContent();assert.match(privacy,/bilgisayar|cihaz/);assert.match(privacy,/bulut/);
+ if(process.env.DENTAYA_SCREENSHOT_DIR)await main.locator('.aya-conversation-shell').screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'AYA_RC49_basic_dialogue.png'),animations:'disabled'});
  assert.match(await (await ask('zrikonya nedir')).textContent(),/Zirkonya/);
  assert.match(await (await ask('peki nasıl kontrol ederim')).textContent(),/ürün ailesi/);
+ const stop=await (await ask('Devam etme')).textContent();assert.match(stop,/konuyu burada/);assert.doesNotMatch(stop,/ürün ailesi/);
+ assert.match(await (await ask('Adın ne?')).textContent(),/AYA/);
+ assert.doesNotMatch(await (await ask('devam')).textContent(),/Zirkonya|ürün ailesi/,'Identity follow-ups cannot revive an older dental topic');
  assert.match(await (await ask('Mavi bir gezegen hakkında masal yaz')).textContent(),/Mesajını aldım/);
  assert.equal(await main.locator('#aya-conversation-settings').count(),0,'Settings are closed while the composer is ready');
  await main.getByRole('button',{name:'Sohbet ayarları',exact:true}).click();
@@ -80,6 +93,7 @@ try{
  await modelPage.waitForFunction(()=>window.rc46Fixture.readAyaState().sessions[0]?.workingMemory?.goal==='Cuma teslimine hazırlan');
  await modelPage.reload();await modelMain.locator('.aya-message--assistant').last().waitFor();await modelPage.waitForFunction(()=>document.querySelector('.aya-status--model'));
  await askModel('Önceki kararımız neydi');assert.equal(await modelPage.evaluate(()=>window.rc46Model.calls.at(-1).workingMemory.goal),'Cuma teslimine hazırlan');
+ assert.match(await (await askModel('Adın ne ve amacın ne?')).textContent(),/Yerel model test cevabı/);assert.equal(await modelPage.evaluate(()=>window.rc46Model.calls.at(-1).prompt),'Adın ne ve amacın ne?','Identity and purpose still reach a ready model');
  await modelPage.evaluate(()=>window.rc46Fixture.saveAyaOptions({saveHistory:false}));assert.equal(await modelPage.evaluate(()=>window.rc46Fixture.readAyaState().sessions.length),0);
  for(const error of ['LOCAL_TIMEOUT','LOCAL_BUSY','MODEL_MISSING','LOCAL_EMPTY_RESPONSE','LOCAL_INVALID_PLAN']){
   await modelPage.evaluate(error=>{window.rc46Model.mode='error';window.rc46Model.error=error;},error);

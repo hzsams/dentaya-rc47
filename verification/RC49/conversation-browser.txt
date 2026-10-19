@@ -1,0 +1,35 @@
+
+> dentaya-production-rc@1.0.0-rc.49 verify:aya-conversation-browser
+> node scripts/verify-aya-conversation-browser.mjs
+
+{
+  "pass": true,
+  "noBridgeChat": true,
+  "modelMissingDoesNotLockComposer": true,
+  "freeText": true,
+  "followup": true,
+  "catalogueFilterAndPrepare": true,
+  "historyOptIn": true,
+  "cadContext": true,
+  "noAutomaticCadActions": true,
+  "mobile": true,
+  "coreDoesNotPretendModel": true,
+  "modelFirstDefinitionsAndNewPhrasings": true,
+  "memoryAcrossTurnsAndOptInReload": true,
+  "notebookToggle": true,
+  "realModelTestButton": true,
+  "modelErrorAndCancelKeepQuestion": true,
+  "hungCancellationAndStaleResult": true,
+  "prepareOnlyWelcomeTools": true,
+  "explicitEnglishFallback": true,
+  "collapsedConversationSettings": true,
+  "keyboardSettingsFocus": true,
+  "boundedExplicitMemory": true,
+  "offlineMemoryRecall": true,
+  "modelCallsAreMock": true
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

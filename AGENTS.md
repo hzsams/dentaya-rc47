@@ -1,6 +1,6 @@
 # DentAYA çalışma talimatı
 
-Bu klasör RC46/RC47 tabanından geliştirilen RC48 kaynak güncellemesidir. Önce CODEX_DEVIR_NOTLARI.md ve CODEX_BASLANGIC_PROMPTU.md dosyalarını oku; bunlar ilk WIP devir kayıtlarıdır. Güncel kapsam ve test sınırları RC48_KONTROL_RAPORU.md içindedir. Windows EXE ve gerçek model çıkarımını doğrulanmış kabul etme.
+Bu klasör RC46/RC47 tabanından geliştirilen RC49 kaynak güncellemesidir. Önce CODEX_DEVIR_NOTLARI.md ve CODEX_BASLANGIC_PROMPTU.md dosyalarını oku; bunlar ilk WIP devir kayıtlarıdır. Güncel kapsam ve test sınırları RC49_KONTROL_RAPORU.md içindedir. Windows EXE ve gerçek model çıkarımını doğrulanmış kabul etme.
 
 - Kullanıcının önceliği: sade ve tutarlı profesyonel arayüz, model öncelikli yerel AYA, çalışma belleği ve gerçek CAD araçlarıyla bağlamlı yardım. “AI based kaldır” açıklaması AYA’yı kaldırmak değildir.
 - CAD manuel ve deterministik çalışır; asistan mevcut tipli komutları kullanıcı tıklamasıyla çağırır.

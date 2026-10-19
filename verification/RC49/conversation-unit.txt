@@ -1,0 +1,1 @@
+PASS: model-first definitions/new phrasings/followups, working-memory transfer, honest Core/model labels, offline guide, forced model path, cancellation/timeout/busy/invalid plan, preferences, notebook, clinical safety and actual CAD metadata (mock model calls only).
