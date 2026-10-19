@@ -1,0 +1,37 @@
+DentAYA RC38 — premium tipografi ve morfoloji güncellemesi — 13 Ekim 2026
+
+- Ana DENTAYA kelime işareti özel vektör serif harflerle yenilendi.
+- 24 morfoloji ailesi altı sınıfta toplanır; kontur, sırt, kesici kenar, tüberkül ve oluk düzenleri değişir.
+- Genişlik, yükseklik ve diğer ölçüler aile seçiminden ayrı tutulur.
+- CAD iş tanımında her ünite ayrı aile seçer; eski form kimlikleri yeni ailelere eşlenir.
+- Dar anatomik sırtlarda fırça daha küçük güvenli hareketi dener; yüzey koruması korunur.
+- 24 aile, dört diş grubu ve dört gerçek fırça aracıyla 3.072 düzenleme kapalı tek gövde kontrolünü geçti.
+- İş tanımı galerisi kart yüksekliği ve seçim çerçevesi düzeltildi.
+- Ayrıntılı güncel rapor: RC38_KONTROL_RAPORU.md. Kurulum: RC38_KULLANIM.md.
+
+ÖNCEKİ CAD BÜTÜNLÜĞÜ NOTLARI
+
+DentAYA CAD bütünlüğü ve isteğe bağlı AYA güncellemesi — 26 Eylül 2026
+
+UYGULANANLAR
+- Üretilen restorasyonlarda UV dikişleri pozisyon birleştirmesini artık engellemiyor.
+- Aynı noktadaki yüzey köşeleri fırça sırasında birlikte hareket ediyor.
+- Fırça karşı yöne bakan yüzeyi etkilemiyor; ince duvarların arkasına taşma azaltıldı.
+- Yumuşatma yalnız bağlı komşu köşeleri kullanıyor; yakın ama ayrı yüzeylere çekme kaldırıldı.
+- Sonlu olmayan koordinat, çöken üçgen ve yerel yüz ters dönmesi oluşturan darbeler geri alınıyor.
+- STL çıkışında kapalı, tek bileşenli, dejenere yüz içermeyen geometri aranıyor.
+- Ayrı connector katıları gerçek boolean birleşimi olmadan STL gönderimine alınmıyor. Bu nedenle eski çok parçalı köprü gönderimi artık engellenir; otomatik birleşim bu pakette yoktur.
+- CAD araçları bulut AI çağrısına bağlı değildir. Yeni varsayılan çalışma alanında AYA paneli kapalıdır; mevcut kullanıcı tercihi korunur.
+- AYA, CAD/tarama/ayrıntılı analizde sunucudaki gerçek araç listesini ve tamamlanma durumlarını alır. Klinik boşlukları körlemesine doldurmama, ölçüm ile varsayımı ayırma ve kanıtsız üretim onayı vermeme rehberliği eklenmiştir.
+- Önceki ana sayfa, logo ve renk kişiselleştirme güncellemeleri korunmuştur.
+
+DOĞRULAMA
+TypeScript, değişen kaynaklarda ESLint, temiz Next üretim derlemesi başarılı.
+100 yüzey düzenlemesi, gerçek ekle/çıkar/yumuşat/düzleştir fırçası, UV dikişi, NaN/çökme/ters yüz geri alma, karşı duvar koruma testleri başarılı.
+Mevcut CAD kernel ve AYA API testleri başarılı. AYA API testleri sahte servis yanıtları kullanır; canlı model kalitesi ölçülmedi.
+Windows Electron kurulum paketi bu Linux ortamında çalıştırılmadı. Windows'ta aşağıdaki CMD ile derlenmelidir.
+
+TAMAMLANMAYANLAR
+Bu paket tüm ürünün üretime hazır olduğunun kanıtı değildir. Genel boolean union/subtract, global öz-kesişim çözümü, otomatik tüm delikleri onarma, doğrulanmış anatomik diş kütüphanesi ve hasta/üretim senaryolarında validasyon tamamlanmadı. Yerel üçgen koruması uzak yüzlerin birbirine girmesini tamamen engelleyemez. Kullanıcının hatalı modeliyle henüz test yapılmadı.
+Kronun iç oturma ve çimento boşlukları kasıtlı olarak doldurulmadı. Dişler arasındaki her boşluk hata değildir.
+Yeni AI modeli eğitilmedi; mevcut modelin rehberliği ve uygulama yetenek bilgisi iyileştirildi. Bulut model yapılandırması mevcut ayarlara bağlıdır.

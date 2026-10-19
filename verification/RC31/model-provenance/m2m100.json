@@ -1,0 +1,6 @@
+{
+  "repo": "auralmira/m2m100-418M-ct2-int8",
+  "commit": "e205afefce2fd6933a1dca3b92b5063894f2f2bb",
+  "license": "mit",
+  "base_model": "facebook/m2m100_418M"
+}

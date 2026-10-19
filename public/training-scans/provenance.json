@@ -1,0 +1,35 @@
+{
+  "title": "ProsthoObjects3D",
+  "creator": "Tehran University of Medical Sciences",
+  "source": "https://doi.org/10.5281/zenodo.18488594",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "modification": "Original STL geometry unchanged. Selected files from 601-650.zip. Fictional demo patient labels are not source patient identities.",
+  "scans": [
+    {
+      "scan_id": 601,
+      "bytes": 34760384,
+      "sha256": "1e02eb74b0a2f7499a46f91db4c6010d9920efb34760d94ceec6b5bd3bda2e70"
+    },
+    {
+      "scan_id": 605,
+      "bytes": 17575934,
+      "sha256": "c43475ba4aee58e4869076bd4fc898b72ff9fc94747aef3136e48c26564ff063"
+    },
+    {
+      "scan_id": 606,
+      "bytes": 24964284,
+      "sha256": "aad85199d39f12a4f410132bb80865285d055b3e0ae095277246eb3cc9e5bc20"
+    },
+    {
+      "scan_id": 608,
+      "bytes": 45289184,
+      "sha256": "d27e19a69562397f01129da9b223d089ad01f3c3d1b4e8730a2bf3f9578497be"
+    },
+    {
+      "scan_id": 602,
+      "bytes": 33495684,
+      "sha256": "3f8fbba2541e2f8429ca54410bccfb1ad19413e6c67d4504152d1c54f722be7a"
+    }
+  ]
+}

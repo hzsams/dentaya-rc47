@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {calendarFile,conflicts,dateKey,shiftDate,weekDays} from '../src/lib/appointment-planner';
+assert.deepEqual(weekDays('2026-09-27'),['2026-09-21','2026-09-22','2026-09-23','2026-09-24','2026-09-25','2026-09-26','2026-09-27']);
+assert.equal(shiftDate('2026-12-31',1),'2027-01-01');
+assert.equal(dateKey(new Date(2026,0,3,1)),'2026-01-03');
+const a={id:'a',patient_id:'p',scheduled_at:'2026-09-27T10:00:00Z',duration_minutes:30,status:'scheduled'};
+assert.equal(conflicts([a],{...a,id:'b',scheduled_at:'2026-09-27T10:29:00Z'}).length,1);
+assert.equal(conflicts([a],{...a,id:'b',scheduled_at:'2026-09-27T10:30:00Z'}).length,0);
+assert.equal(conflicts([a],a).length,0);
+assert.equal(conflicts([{...a,status:'cancelled'}],{...a,id:'b'}).length,0);
+assert.equal(conflicts([a],{...a,id:'b',patient_id:'other'}).length,0);
+assert.ok(calendarFile(a).includes('DTEND:20260927T103000Z'));
+console.log('PASS: week rollover, local date, overlap boundaries, self exclusion, other patients, cancelled slots, calendar end time.');

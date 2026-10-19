@@ -1,0 +1,2 @@
+-- Production intentionally starts without synthetic patient or case data.
+-- Add development-only fixtures in a separate local seed file; never commit PHI.

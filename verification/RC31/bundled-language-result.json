@@ -1,0 +1,160 @@
+{
+  "pass": true,
+  "locales": 31,
+  "translatedLocales": 30,
+  "sourceKeys": 4517,
+  "translations": 135510,
+  "hash": "49f3019ec629cbc3956582619997eb52e4979af52c59d9149c966db044f8c996",
+  "packs": [
+    {
+      "locale": "en",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "de",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "fr",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "es",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "it",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "pt",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "nl",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "pl",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "ro",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "ru",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "uk",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "ar",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "zh",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "ja",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "sv",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "da",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "el",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "cs",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "ko",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "bg",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "hr",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "et",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "fi",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "hu",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "ga",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "lv",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "lt",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "mt",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "sk",
+      "completed": 4517,
+      "total": 4517
+    },
+    {
+      "locale": "sl",
+      "completed": 4517,
+      "total": 4517
+    }
+  ]
+}

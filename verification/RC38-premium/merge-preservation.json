@@ -1,0 +1,16 @@
+{
+  "pass": true,
+  "currentStylesPreserved": true,
+  "unchangedFiles": 797,
+  "requestedChangedFiles": [
+    "DENTAYA_GUNCELLE_DERLE.cmd",
+    "DentAYA_CAD_Degisiklikler.txt",
+    "RC38_KONTROL_RAPORU.md",
+    "RC38_KULLANIM.md",
+    "package.json",
+    "scripts/verify-cad-browser.mjs",
+    "scripts/verify-cad-guided-browser.mjs",
+    "src/lib/cad-sculpt-brush.ts"
+  ],
+  "additionalCurrentEvidencePreserved": true
+}

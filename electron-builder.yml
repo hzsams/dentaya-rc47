@@ -1,0 +1,29 @@
+appId: com.dentaya.desktop
+productName: DentAYA
+asar: true
+
+directories:
+  output: dist-desktop
+
+files:
+  - electron/**/*
+  - package.json
+
+# Kritik: Next standalone'in node_modules klasorunu Windows paketine
+# symlink yerine gercek dosya olarak kopyalar.
+afterPack: scripts/after-pack.cjs
+
+win:
+  icon: electron/dentaya.ico
+  target:
+    - target: nsis
+      arch:
+        - x64
+  artifactName: DentAYA-Setup-${version}.${ext}
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: DentAYA

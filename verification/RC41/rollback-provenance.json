@@ -1,0 +1,10 @@
+{
+  "source": "DentAYA_RC37_46_Dil_Final.zip",
+  "sourceVersion": 25,
+  "restoredFiles": {
+    "src/lib/tooth-appearance.ts": "a2869e66f717fd2dbda8d522e072eba4b6db7431a8d33b896691c1395562f660",
+    "src/lib/tooth-anatomy.ts": "59a982ff98b7e86946e60a048f5a1f739914dc606c1044fc38028cacc0824008",
+    "src/app/ToothAppearanceSettings.tsx": "c1ac8f320035c55318a36193ac0b22b88d7a1850eea4763f444908969af28feb"
+  },
+  "cadGeometryOriginalFunctionSha256": "1d5d4e1cf49053e1aef1433c19a232295ac8d6b670a3f96cf667df2dc13f44b2"
+}

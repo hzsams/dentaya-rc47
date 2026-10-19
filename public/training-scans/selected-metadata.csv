@@ -1,0 +1,23 @@
+Scan ID,Restoration ID,Class label,Tooth Type,Quadrant,Tooth Number
+601,1162,scan body,Molar,LR,6
+602,1163,scan body,Molar,LL,6
+605,1166,scan body,Premolar,UR,5
+605,1167,scan body,Premolar,UR,4
+605,1168,scan body,Canine,UR,3
+605,1169,scan body,Canine,UL,3
+605,1170,scan body,Premolar,UL,4
+605,1171,scan body,Premolar,UL,5
+606,1172,scan body,Molar,LR,7
+606,1173,scan body,Premolar,LR,4
+608,1178,Crown,Molar,UR,6
+608,1179,Crown,Premolar,UR,5
+608,1180,Crown,Premolar,UR,4
+608,1181,scan body,Canine,UR,3
+608,1182,Crown,Incisor,UR,2
+608,1183,Crown,Incisor,UR,1
+608,1184,Crown,Incisor,UL,1
+608,1185,scan body,Incisor,UL,2
+608,1186,Crown,Canine,UL,3
+608,1187,Crown,Premolar,UL,4
+608,1188,scan body,Molar,UL,6
+608,1189,scan body,Premolar,UL,5

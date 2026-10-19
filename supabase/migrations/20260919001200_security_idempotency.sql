@@ -1,0 +1,23 @@
+-- DentAYA MVP v6 / Step 4A
+-- Applied live to Supabase.
+--
+-- Main changes:
+-- * client_request_id on patients/cases/appointments/scan_sessions/attachments/
+--   case_messages/organization_messages with unique indexes
+-- * demo write policies removed; demo rows become client read-only
+-- * case ownership fields immutable; clinic and lab status transitions guarded
+-- * create_case_from_patient gains p_request_id idempotency
+-- * appointments restricted to clinic roles + own patients
+-- * attachment mutation limited to uploader
+-- * clinic/lab scan origins split and protected
+-- * case message sender identity server-stamped
+-- * case_events append-only
+-- * CAD review permissions tightened; review decision is one-time
+-- * CAD project/version ownership immutable
+-- * notification payload immutable to clients
+-- * shipment route/identity/status transitions guarded by role
+-- * courier location writes require courier role
+-- * dentaya-files update/delete limited to uploader
+-- * demo storage client writes removed
+--
+-- The complete executed SQL is retained in Supabase migration history.

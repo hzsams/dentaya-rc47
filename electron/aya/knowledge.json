@@ -1,0 +1,86 @@
+[
+  {
+    "id": "cad-setup",
+    "title": "CAD iş tanımı",
+    "href": "/design",
+    "keywords": "cad kapşon coping kron crown restorasyon setup pontik implant köprü",
+    "content": "CAD'den önce İş Tanımı / Restorasyon Setup ekranında FDI ünitelerini, rollerini ve tasarım tiplerini seçin. İş tanımı onaylanmadan tasarım adımları ilerletilmez. Anatomik kron, kapşon/altyapı ve geçici/pontik farklı başlangıç geometrileri kullanır."
+  },
+  {
+    "id": "cad-visibility",
+    "title": "Çene ve model görünürlüğü",
+    "href": "/design",
+    "keywords": "çene upper lower jaw visibility opacity saydamlık gizle göster katman",
+    "content": "Üst çene, alt çene, tarama ve tasarımın görünürlük ve opaklığı ayrı ayarlanır. Gizlemek dosyayı silmez. Görünürlüğü geri yüklemek katmanları ve opaklıkları geri açar."
+  },
+  {
+    "id": "cad-analysis",
+    "title": "CAD analiz görünümü",
+    "href": "/design",
+    "keywords": "kalınlık thickness contact kontak undercut analiz renk ölçüm",
+    "content": "Kalınlık, kontak ve undercut analizleri özel renkler kullanır. Model görünümü bu analiz renklerini değiştirmez. Görünüm rengi üretim uygunluğu onayı değildir; gerçek tarama ve uzman geometri kontrolü gerekir."
+  },
+  {
+    "id": "cad-brush",
+    "title": "CAD fırça ve araçları",
+    "href": "/design",
+    "keywords": "ekle çıkar smooth fırça brush dolu mesh boşluk sculpt araç sağ tık",
+    "content": "Ekleme, çıkarma ve yumuşatmada etkin üniteyi, fırça boyutunu ve kuvvetini kontrol edin. Geri al ve yinele düzenleme geçmişini kullanır. Sağ tık ve araç paneli araçlara erişir. AYA modeli görmez ve hatasız üretim garantisi vermez."
+  },
+  {
+    "id": "appearance",
+    "title": "Arayüz ve diş görünümü",
+    "href": "/settings",
+    "keywords": "tema theme japandi old money retro renk görünüm opal graphite logo",
+    "content": "Hızlı ayarlar Ctrl+, ile açılır. 16 arayüz ve 11 diş/model görünümü vardır. Arayüz tarzı CAD arka planını temaya bağlar. Model tarzını takip etme CAD sahnesi ve fare ayarından kapatılabilir. Görsel form gerçek restorasyon anatomisini değiştirmez."
+  },
+  {
+    "id": "sound",
+    "title": "Ses ve geçiş ayarları",
+    "href": "/settings",
+    "keywords": "ses sound asmr audio volume sessiz quiet saat geçiş animation hareket seramik cam keçe",
+    "content": "Geçiş ve ses bölümü 8 doku, 5 profil ve 7 olay düzeyi içerir. Ana ses düzeyi olay düzeyiyle çarpılır; sıfır olay düzeyi sessizdir. Sessiz saatler yerel saate uyar, gece yarısını aşabilir. Önizleme saat planını atlar. CAD kapsamı seçiliyken AYA sesi çalmaz. Sayfa, panel ve kamera hareketi ayrı kapatılabilir."
+  },
+  {
+    "id": "local-aya",
+    "title": "Yerel AYA kurulumu",
+    "href": "/ai",
+    "keywords": "aya ai local yerel ollama model anahtar bağımsız offline çevrimdışı bağlantı llama.cpp qwen gguf motor kur bilgi defteri hafıza import",
+    "content": "Yerel sohbet API anahtarı veya DentAYA oturumu istemez. Mesajlar yalnızca bu bilgisayardaki modele iletilir; buluta otomatik geçilmez."
+  },
+  {
+    "id": "aya-context",
+    "title": "AYA kişiselleştirme",
+    "href": "/ai",
+    "keywords": "aya yanıt tercih role klinik lab not context geçmiş kişiselleştirme kaynak",
+    "content": "Çalışma rolü, kısa/açıklamalı/kontrol listesi, uzunluk ve çeşitlilik seçilebilir. Çalışma notu yalnız dahil et seçeneği açıkken yerel modele iletilir. Geçmiş saklama isteğe bağlıdır ve bu cihazdadır. AYA hasta kayıtlarını veya dosyaları otomatik okumaz."
+  },
+  {
+    "id": "appointments",
+    "title": "Randevu çalışma alanı",
+    "href": "/appointments",
+    "keywords": "randevu appointment tarih saat takvim calendar yer plan klinik",
+    "content": "Randevular tarih ve saat üzerinden günlük plan içindir. Kaydetmeden hasta/vaka eşleşmesini, tarihi, saati ve yeri kontrol edin. AYA taslak yazabilir, randevu oluşturmaz. Çevrimiçi kayıtlar veritabanı bağlantısı gerektirir."
+  },
+  {
+    "id": "training",
+    "title": "Demo ve araştırma taramaları",
+    "href": "/training",
+    "keywords": "demo eğitim training hasta tarama stl scan gerçek research örnek",
+    "content": "Demo ve eğitim araştırma taramalarıyla kurgusal hasta senaryolarını içerir. Kaynak ve lisanslar pakette korunur. Bunlar uygulama denemesi içindir; gerçek hastaya ait üretim onayı değildir. AYA taramaları otomatik okuyamaz."
+  },
+  {
+    "id": "community",
+    "title": "Topluluk veritabanı kurulumu",
+    "href": "/community",
+    "keywords": "forum topluluk community sql migration makale profil klinik lab yorum",
+    "content": "Topluluk veritabanı henüz kurulmamış uyarısı gerekli SQL güncellemesinin bağlı Supabase projesinde uygulanmadığını gösterir. Paket migration dosyaları kullanılmalıdır. Uygulamayı yeniden kurmak tabloları oluşturmaz. AYA SQL'i otomatik çalıştırmaz."
+  },
+  {
+    "id": "desktop-install",
+    "title": "Windows güncelleme ve kurulum",
+    "href": "/settings",
+    "keywords": "windows kurulum setup npm powershell cmd env local derle güncelle",
+    "content": "ZIP'i yeni klasöre çıkarın, mevcut .env.local dosyasını package.json ile aynı yere kopyalayın. DENTAYA_GUNCELLE_DERLE.cmd derleme yardımcısıdır. PowerShell npm.ps1 engelinde npm.cmd kullanın. RC29 kurulumu dist-desktop klasöründedir. Kurulumdan önce DentAYA'yı kapatın."
+  }
+]

@@ -1,0 +1,26 @@
+DentAYA RC47 — TAM KAYNAK GÜNCELLEME PAKETİ
+Sürüm: 1.0.0-rc.47 / AYA Core 0.5.0
+
+1. ZIP'i yeni klasöre çıkarın; içindeki DentAYA_Codex_Devri klasörünü açın.
+2. CMD için package.json yanında .env.local dosyası gerekir. Vaka/sunucu kaydı için mevcut çalışan dosyanızı kopyalayın. Mevcut kayıt ve kişisel ayarlarınızı koruyun.
+   Yalnız yerel sohbet için bağlantı anahtarı gerekmez: .env.local içine yalnız aşağıdaki iki satırı yazabilirsiniz; Supabase değişkenlerini eklemeyin:
+   NEXT_PUBLIC_DENTAYA_RELEASE_CHANNEL=staging
+   DENTAYA_AI_CLOUD_ENABLED=false
+3. Windows'ta DENTAYA_GUNCELLE_DERLE.cmd dosyasına çift tıklayın.
+   Node.js 22.12+ ve npm 11+ gerekir. Tek CMD giriş noktası budur.
+4. Komut LOCALAPPDATA/DentAYA/Builds altında ayrı çalışma klasörü kullanır. OneDrive'daki .next ve node_modules kopyalanmaz. Eksik Electron dağıtımı, DLL kilidi tekrarları ve tanılama önlemleri korunur.
+5. Başarılı Windows derlemesinin ürettiği DentAYA-Setup-1.0.0-rc.47.exe dosyasını çalıştırın. Kesin çıktı yolu dist-desktop/latest-build.json içindedir.
+
+Bu ZIP hazır Windows EXE'si içermez. Windows üzerinde gerçek paketleme ve yerel model testlerinin durumunu RC47_KONTROL_RAPORU.md dosyasından okuyun.
+
+AYA motor/modeli uygulama içinden kurulur; uyumlu GGUF eklenebilir.
+Model hazırken yeni ifadeler ve tanımlar modele gider. Çevrimdışı rehber ayrıca seçilebilir, model yokken açık kalır. Buluta otomatik geçiş yoktur.
+Çalışma belleği hedefi ve kararları taşır. Kalıcı geçmiş yalnız tercih açıkken saklanır. CAD önerisini Uygula ile siz başlatırsınız; değişen çalışmaya eski öneri uygulanmaz. Model kapalıyken manuel CAD çalışır.
+
+Geliştirme: npm ci / npm run verify
+Yerel arayüz: npm run dev -- --hostname 127.0.0.1 --port 3010
+Yerel sohbet hesap/API anahtarı gerektirmez; gerçek vaka ve sunucu kaydı mevcut Supabase bağlantısını kullanır. Yeni migration yoktur. Üretim web sitesine dağıtım yapılmaz.
+
+Kullanım: RC47_KULLANIM.md
+Kontrol ve sınırlamalar: RC47_KONTROL_RAPORU.md
+İlk devir kayıtları: CODEX_BASLANGIC_PROMPTU.md / CODEX_DEVIR_NOTLARI.md

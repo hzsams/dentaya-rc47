@@ -1,0 +1,175 @@
+{
+  "pass": true,
+  "assetsPreserved": 42,
+  "comparison": "Byte-for-byte comparison against the current delivered RC33 source ZIP.",
+  "assets": [
+    {
+      "path": "public/tooth-anatomy/11.bin",
+      "sha256": "36d2dd5baa71158870ae9569c786979c668df1800ab50007c1efb45d42a40550"
+    },
+    {
+      "path": "public/tooth-anatomy/12.bin",
+      "sha256": "45e155e1e9df668338723f37aa40a56b58f8dce3f8c8214c20170c677b3343d8"
+    },
+    {
+      "path": "public/tooth-anatomy/13.bin",
+      "sha256": "82458c8f99cc869c00c4fe9a7252650d146b28f02f214c2e0eab280701fbf3aa"
+    },
+    {
+      "path": "public/tooth-anatomy/14.bin",
+      "sha256": "4dc97aa79efa1017ba4db35a6855317467446d45e8286acab109307ab533f8e1"
+    },
+    {
+      "path": "public/tooth-anatomy/15.bin",
+      "sha256": "eaa9849e3322a3c061cc5086261473681f430f955aff8bec5f42641ef66b96be"
+    },
+    {
+      "path": "public/tooth-anatomy/16.bin",
+      "sha256": "4680930a854418ac81359abb58189e90e94372455254e09f00de9a6e746e6501"
+    },
+    {
+      "path": "public/tooth-anatomy/17.bin",
+      "sha256": "3d4bace0cb4cc6ac724d14057d255aee37d2b7c883b87557f7c12f4b75c5bc22"
+    },
+    {
+      "path": "public/tooth-anatomy/21.bin",
+      "sha256": "dbaa3bf11d9ba93693e0d56e5374bcb0f99144d8c49edaba1895903a3c0feeb6"
+    },
+    {
+      "path": "public/tooth-anatomy/22.bin",
+      "sha256": "13fe3f8612891e4eac0b11e057a5bb9eb70281a40a1a0960d621483f5b26bcda"
+    },
+    {
+      "path": "public/tooth-anatomy/23.bin",
+      "sha256": "1366fecdf2a21a0b06d3445d9271dae9fc6b3bbade1e0c41e6f9208726789d80"
+    },
+    {
+      "path": "public/tooth-anatomy/24.bin",
+      "sha256": "a594dd165b1c517462cc7f82634f2d0567e4502e4bf04dc81b0bd694d255ff01"
+    },
+    {
+      "path": "public/tooth-anatomy/25.bin",
+      "sha256": "8c60913f4901ce5a3a7730d2441914d576b72f343464ba85d708db30a5afbc23"
+    },
+    {
+      "path": "public/tooth-anatomy/26.bin",
+      "sha256": "cfe2d1c97489f0ce96ea5a6836c0eb3f96e72ffc2e81cfa7674d7f0cacd2cf52"
+    },
+    {
+      "path": "public/tooth-anatomy/27.bin",
+      "sha256": "0e81fb0394c82db142a646f0a56b36501727c4e181b19817729a9efe6bc636d0"
+    },
+    {
+      "path": "public/tooth-anatomy/31.bin",
+      "sha256": "c18b3200deb26672d7fb242ba5a971935a6cd02d4e97fa94ae19aae4837db6ff"
+    },
+    {
+      "path": "public/tooth-anatomy/32.bin",
+      "sha256": "4b4e57e1ca75622cb08e8c3c3d3fa495ff6ade2d3f5817d1ecc8e2a12d9efb1f"
+    },
+    {
+      "path": "public/tooth-anatomy/33.bin",
+      "sha256": "f15078ba60dd00c8d66eba1d6b2fb6e126679a9aacf964b462f34dc2b1540287"
+    },
+    {
+      "path": "public/tooth-anatomy/34.bin",
+      "sha256": "f67a24b094030d551f3f7bd5faeb9c52760c91052e2befcea1591e5a79f3b9c1"
+    },
+    {
+      "path": "public/tooth-anatomy/35.bin",
+      "sha256": "5226d139e8cc9644377bd7d34adf10370dfed6c2f297b3aec8ac464465f3e4bc"
+    },
+    {
+      "path": "public/tooth-anatomy/36.bin",
+      "sha256": "5d98f464dc70f30a019b435fbd5eaafd7266663c1a31cf53fc362dfc14357f94"
+    },
+    {
+      "path": "public/tooth-anatomy/37.bin",
+      "sha256": "95eb10b3bc8b04bf65cd25f72a9c290b2a936a01c17413c7235007ea438a7b11"
+    },
+    {
+      "path": "public/tooth-anatomy/41.bin",
+      "sha256": "b90f64a1cc89f21fdb1285cd041c9d2f6900e44ba7893baa6bee0fb3a4bb6203"
+    },
+    {
+      "path": "public/tooth-anatomy/42.bin",
+      "sha256": "e5c7ff1e2540dbacd82e8d797fe631722fbc81720ad9d5b88a2854a1a553df65"
+    },
+    {
+      "path": "public/tooth-anatomy/43.bin",
+      "sha256": "f34d611d2adb78d21a5ee8b9c4671ee2ef36e1d56c63b4dea816f0cae313790e"
+    },
+    {
+      "path": "public/tooth-anatomy/44.bin",
+      "sha256": "1342836fc5715e660f9464996993e4b11a58347438eadbec50f2ccf2513815ba"
+    },
+    {
+      "path": "public/tooth-anatomy/45.bin",
+      "sha256": "a0c70f33d9312f3ba16b14beb3bef09772d238bf397312e239d5878984b2c380"
+    },
+    {
+      "path": "public/tooth-anatomy/46.bin",
+      "sha256": "cd79cc73914d1a282ffd4aafb0fbd917f669c6f28c6d7c356d7ca4356e6feed8"
+    },
+    {
+      "path": "public/tooth-anatomy/47.bin",
+      "sha256": "0d1b2be2fba5e36aaa41264c6eda0337beed4a9c942f8d2f83e417dd4a79b755"
+    },
+    {
+      "path": "public/tooth-anatomy/ATTRIBUTION.txt",
+      "sha256": "e346aa89d407e6a6c7cb6492022d702a4c5e993c98f62ef4188d0675b0b858d6"
+    },
+    {
+      "path": "public/tooth-anatomy/atlas.json",
+      "sha256": "11bbca3729216931154db0440e63dbaa0ef918fade51b8e74b5c74704c1ce076"
+    },
+    {
+      "path": "public/training-scans/601.json",
+      "sha256": "3d135a1ea9195a69e3628c6d06eb4fbbbb97e08bc77c00f0dfee83447a143858"
+    },
+    {
+      "path": "public/training-scans/601.stl",
+      "sha256": "1e02eb74b0a2f7499a46f91db4c6010d9920efb34760d94ceec6b5bd3bda2e70"
+    },
+    {
+      "path": "public/training-scans/602.json",
+      "sha256": "19618c8dd14e51078435257b6a75ebab72da93de3f7493df5b8fb0b6950ec766"
+    },
+    {
+      "path": "public/training-scans/602.stl",
+      "sha256": "3f8fbba2541e2f8429ca54410bccfb1ad19413e6c67d4504152d1c54f722be7a"
+    },
+    {
+      "path": "public/training-scans/605.json",
+      "sha256": "b258a6499d377f474649abd6b52721d53483346a562f720192e25cba438ebd7e"
+    },
+    {
+      "path": "public/training-scans/605.stl",
+      "sha256": "c43475ba4aee58e4869076bd4fc898b72ff9fc94747aef3136e48c26564ff063"
+    },
+    {
+      "path": "public/training-scans/606.json",
+      "sha256": "de73095ffb80148dc5533ff4bdd4307cc6fbb1a200a6687d183f02cb9f530e3a"
+    },
+    {
+      "path": "public/training-scans/606.stl",
+      "sha256": "aad85199d39f12a4f410132bb80865285d055b3e0ae095277246eb3cc9e5bc20"
+    },
+    {
+      "path": "public/training-scans/608.json",
+      "sha256": "9a0de441799dc72e6dc7ed058c30544de8eed50ace9796fa3030d7ca7797bd4f"
+    },
+    {
+      "path": "public/training-scans/608.stl",
+      "sha256": "d27e19a69562397f01129da9b223d089ad01f3c3d1b4e8730a2bf3f9578497be"
+    },
+    {
+      "path": "public/training-scans/provenance.json",
+      "sha256": "e3a0bb78ae6b6eae29117f50ae9318438124897ca1da8d5fead5d3ac92facaba"
+    },
+    {
+      "path": "public/training-scans/selected-metadata.csv",
+      "sha256": "6a575299aee74ce607ad64b2ca06ee7f53f6c58382f00dc2975365ef3c6f2cd8"
+    }
+  ]
+}

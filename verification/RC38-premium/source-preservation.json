@@ -1,0 +1,7 @@
+{
+  "pass": true,
+  "baseRelease": "1.0.0-rc.38",
+  "targetRelease": "1.0.0-rc.38",
+  "unchangedMigrationsAndAnatomySources": 57,
+  "newSqlMigration": false
+}

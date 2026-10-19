@@ -1,0 +1,4 @@
+Step 22 core TypeScript parser: PASS
+Synthetic half-edge/BVH smoke test: PASS
+DentAYA demo STL topology/BVH smoke test: PASS
+Full Next.js production build: NOT RUN (source archive has no package.json/lockfile)

@@ -1,0 +1,10 @@
+-- SECURITY DEFINER surface hardening.
+--
+-- Internal SECURITY DEFINER trigger/helper functions:
+-- EXECUTE revoked from PUBLIC / anon / authenticated.
+--
+-- Explicit client-facing RPCs were kept signed-in only where required.
+-- Unused get_lab_directory RPC access was removed.
+-- Legacy non-idempotent create_case_from_patient overload was dropped.
+-- The idempotent create_case_from_patient overload was converted to
+-- SECURITY INVOKER after RLS policies were tightened.

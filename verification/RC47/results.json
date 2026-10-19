@@ -1,0 +1,68 @@
+{
+  "release": "1.0.0-rc.47",
+  "date": "2026-10-19",
+  "verify": {
+    "command": "npm run verify",
+    "exitCode": 0,
+    "includes": [
+      "lint --max-warnings=0",
+      "typecheck",
+      "regression suites",
+      "next production build"
+    ]
+  },
+  "browser": {
+    "ayaConversation": "PASS; model bridge mocked",
+    "cadDaily": "PASS; actual WebGL and synthetic meshes; backend and model bridge mocked"
+  },
+  "standalone": {
+    "pass": true,
+    "server": "Next standalone production build",
+    "routes": [
+      {
+        "route": "/",
+        "status": 200,
+        "html": true
+      },
+      {
+        "route": "/ai",
+        "status": 200,
+        "html": true
+      },
+      {
+        "route": "/design",
+        "status": 200,
+        "html": true
+      }
+    ],
+    "staticAssetsVerified": 27,
+    "externalBackend": false,
+    "nativeModelInference": false
+  },
+  "nativeGrammar": {
+    "pass": true,
+    "cases": 8,
+    "mock": false,
+    "inference": false
+  },
+  "nativeModelInference": {
+    "executed": false,
+    "blocker": "Hugging Face proxy CONNECT 403",
+    "requiredNetworkDraftDomains": [
+      "huggingface.co",
+      "*.hf.co"
+    ]
+  },
+  "windowsInstaller": {
+    "produced": false,
+    "nativeWindowsVerified": false,
+    "simulatedPackagingTests": 25
+  },
+  "initialHandoffIntegrity": {
+    "pass": true,
+    "files": 1261
+  },
+  "dependencyLock": {
+    "onlyTwoRootVersionsChanged": true
+  }
+}

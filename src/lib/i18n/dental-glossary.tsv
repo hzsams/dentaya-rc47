@@ -1,0 +1,46 @@
+locale|first_name|last_name|technician|tools|framework|pickup|night_guard|cement_gap|preserve_cusps|upper_arch|lower_arch|duration|lab_pricing
+en|First name|Last name|Dental technician|Tools|Dental framework|Pickup|Night guard splint|Cement gap|Preserve cusp tips|Upper dental arch|Lower dental arch|Duration (min)|Laboratory pricing
+de|Vorname|Nachname|Zahntechniker|Werkzeuge|Zahngerüst|Abholung|Knirscherschiene|Zementspalt|Höckerspitzen beibehalten|Oberer Zahnbogen|Unterer Zahnbogen|Dauer (min)|Laborpreise
+fr|Prénom|Nom de famille|Prothésiste dentaire|Outils|Armature dentaire|Collecte|Gouttière occlusale nocturne|Espace de scellement|Préserver les sommets cuspidiens|Arcade dentaire supérieure|Arcade dentaire inférieure|Durée (min)|Tarification du laboratoire
+es|Nombre|Apellidos|Protésico dental|Herramientas|Estructura dental|Recogida|Férula de descarga nocturna|Espacio para cemento|Conservar las puntas de las cúspides|Arcada dental superior|Arcada dental inferior|Duración (min)|Tarifas del laboratorio
+it|Nome|Cognome|Odontotecnico|Strumenti|Struttura protesica|Ritiro|Bite notturno|Spazio per cemento|Preservare le punte delle cuspidi|Arcata dentale superiore|Arcata dentale inferiore|Durata (min)|Tariffe del laboratorio
+pt|Nome próprio|Apelido|Técnico de prótese dentária|Ferramentas|Estrutura dentária|Recolha|Goteira oclusal noturna|Espaço para cimento|Preservar as pontas das cúspides|Arcada dentária superior|Arcada dentária inferior|Duração (min)|Preços do laboratório
+nl|Voornaam|Achternaam|Tandtechnicus|Gereedschappen|Tandheelkundig geraamte|Ophalen|Nachtbitje|Cementruimte|Knobbelpunten behouden|Bovenste tandboog|Onderste tandboog|Duur (min)|Laboratoriumtarieven
+pl|Imię|Nazwisko|Technik dentystyczny|Narzędzia|Podbudowa protetyczna|Odbiór|Szyna nocna|Przestrzeń na cement|Zachowaj wierzchołki guzków|Górny łuk zębowy|Dolny łuk zębowy|Czas trwania (min)|Cennik laboratorium
+ro|Prenume|Nume de familie|Tehnician dentar|Instrumente|Structură protetică|Preluare|Gutieră nocturnă|Spațiu pentru ciment|Păstrează vârfurile cuspizilor|Arcadă dentară superioară|Arcadă dentară inferioară|Durată (min)|Tarifele laboratorului
+ru|Имя|Фамилия|Зубной техник|Инструменты|Протетический каркас|Забор|Ночная каппа|Зазор для цемента|Сохранить вершины бугров|Верхняя зубная дуга|Нижняя зубная дуга|Длительность (мин)|Тарифы лаборатории
+uk|Ім’я|Прізвище|Зубний технік|Інструменти|Протетичний каркас|Забір|Нічна капа|Зазор для цементу|Зберегти вершини горбків|Верхня зубна дуга|Нижня зубна дуга|Тривалість (хв)|Тарифи лабораторії
+ar|الاسم الأول|اسم العائلة|فني أسنان|الأدوات|هيكل التعويض السني|الاستلام|جبيرة ليلية واقية للأسنان|مسافة الإسمنت السني|الحفاظ على رؤوس الحدبات|القوس السني العلوي|القوس السني السفلي|المدة (دقيقة)|أسعار المختبر
+zh|名字|姓氏|牙科技师|工具|牙科修复体支架|取件|夜间咬合垫|粘接间隙|保留牙尖顶点|上牙弓|下牙弓|时长（分钟）|技工室报价
+ja|名|姓|歯科技工士|ツール|補綴フレームワーク|集荷|ナイトガード|セメントスペース|咬頭頂を保持|上顎歯列弓|下顎歯列弓|所要時間（分）|技工所の料金
+sv|Förnamn|Efternamn|Tandtekniker|Verktyg|Protetiskt skelett|Hämtning|Bettskena för natten|Cementspalt|Bevara kuspspetsarna|Övre tandbåge|Nedre tandbåge|Varaktighet (min)|Laboratoriepriser
+da|Fornavn|Efternavn|Tandtekniker|Værktøjer|Protetisk stel|Afhentning|Natbideskinne|Cementspalte|Bevar kuspspidserne|Øvre tandbue|Nedre tandbue|Varighed (min)|Laboratoriepriser
+el|Όνομα|Επώνυμο|Οδοντοτεχνίτης|Εργαλεία|Προσθετικός σκελετός|Παραλαβή|Νυχτερινός νάρθηκας|Χώρος κονίας|Διατήρηση των κορυφών των φυμάτων|Άνω οδοντικό τόξο|Κάτω οδοντικό τόξο|Διάρκεια (λεπτά)|Τιμές εργαστηρίου
+cs|Jméno|Příjmení|Zubní technik|Nástroje|Protetická konstrukce|Vyzvednutí|Noční dlaha|Prostor pro cement|Zachovat vrcholy hrbolků|Horní zubní oblouk|Dolní zubní oblouk|Doba trvání (min)|Ceník laboratoře
+ko|이름|성|치과기공사|도구|치과 보철 프레임워크|수거|야간 교합 안정 장치|시멘트 공간|교두 정점 유지|상악 치열궁|하악 치열궁|소요 시간 (분)|기공소 가격
+bg|Собствено име|Фамилия|Зъботехник|Инструменти|Протетична конструкция|Вземане|Нощна шина|Циментово пространство|Запази върховете на туберкулите|Горна зъбна дъга|Долна зъбна дъга|Продължителност (мин)|Цени на лабораторията
+hr|Ime|Prezime|Dentalni tehničar|Alati|Protetska konstrukcija|Preuzimanje|Noćna udlaga|Prostor za cement|Sačuvaj vrhove kvržica|Gornji zubni luk|Donji zubni luk|Trajanje (min)|Cjenik laboratorija
+et|Eesnimi|Perekonnanimi|Hambatehnik|Tööriistad|Proteesi karkass|Pealekorje|Öine hambakape|Tsemendiruum|Säilita köprude tipud|Ülemine hambakaar|Alumine hambakaar|Kestus (min)|Labori hinnakiri
+fi|Etunimi|Sukunimi|Hammasteknikko|Työkalut|Proteesirunko|Nouto|Yöpurentakisko|Sementtirako|Säilytä kuspien kärjet|Yläleuan hammaskaari|Alaleuan hammaskaari|Kesto (min)|Laboratorion hinnasto
+hu|Keresztnév|Vezetéknév|Fogtechnikus|Eszközök|Protetikai váz|Átvétel|Éjszakai harapásemelő sín|Cementrés|Csücsökcsúcsok megtartása|Felső fogív|Alsó fogív|Időtartam (perc)|Laboratóriumi árak
+ga|Ainm|Sloinne|Teicneoir fiaclóireachta|Uirlisí|Creat fiaclóireachta|Bailiú|Splint oíche|Spás don stroighin fhiaclóireachta|Coinnigh barr na gcusp|Áirse fiaclóireachta uachtarach|Áirse fiaclóireachta íochtarach|Fad (nóiméid)|Praghsanna na saotharlainne
+lv|Vārds|Uzvārds|Zobu tehniķis|Rīki|Protēzes karkass|Saņemšana|Nakts kape|Cementa sprauga|Saglabāt pauguru virsotnes|Augšējais zobu loks|Apakšējais zobu loks|Ilgums (min)|Laboratorijas cenas
+lt|Vardas|Pavardė|Dantų technikas|Įrankiai|Protezų karkasas|Paėmimas|Naktinė kapa|Cemento tarpas|Išlaikyti gumburų viršūnes|Viršutinis dantų lankas|Apatinis dantų lankas|Trukmė (min)|Laboratorijos kainos
+mt|Isem|Kunjom|Tekniku dentali|Għodod|Qafas dentali|Ġbir|Splint dentali għal-lejl|Spazju għas-siment dentali|Żomm il-ponot tal-kuspi|Arkata dentali ta’ fuq|Arkata dentali ta’ isfel|Tul (minuti)|Prezzijiet tal-laboratorju
+sk|Meno|Priezvisko|Zubný technik|Nástroje|Protetická konštrukcia|Vyzdvihnutie|Nočná dlaha|Priestor pre cement|Zachovať vrcholy hrbolčekov|Horný zubný oblúk|Dolný zubný oblúk|Trvanie (min)|Cenník laboratória
+sl|Ime|Priimek|Zobotehnik|Orodja|Protetično ogrodje|Prevzem|Nočna opornica|Prostor za cement|Ohrani vrhove grbin|Zgornji zobni lok|Spodnji zobni lok|Trajanje (min)|Cenik laboratorija
+no|Fornavn|Etternavn|Tanntekniker|Verktøy|Protetisk rammeverk|Henting|Nattskinne|Sementspalte|Bevar kuspspissene|Øvre tannbue|Nedre tannbue|Varighet (min)|Laboratoriepriser
+is|Eiginnafn|Eftirnafn|Tannsmiður|Verkfæri|Stoðgrind tanngervis|Sækja|Næturgómur|Rými fyrir festisement|Varðveita odda tannhólanna|Efri tannbogi|Neðri tannbogi|Lengd (mín)|Verðskrá tannsmíðastofu
+sr|Име|Презиме|Зубни техничар|Алати|Протетска конструкција|Преузимање|Ноћна удлага|Простор за цемент|Сачувај врхове квржица|Горњи зубни лук|Доњи зубни лук|Трајање (мин)|Ценовник лабораторије
+bs|Ime|Prezime|Zubni tehničar|Alati|Protetska konstrukcija|Preuzimanje|Noćna udlaga|Prostor za cement|Sačuvaj vrhove kvržica|Gornji zubni luk|Donji zubni luk|Trajanje (min)|Cjenovnik laboratorije
+sq|Emri|Mbiemri|Teknik dentar|Mjetet|Skelet protetik|Marrja|Shinë mbrojtëse për natën|Hapësira për çimento|Ruaj majat e kuspeve|Harku i sipërm dentar|Harku i poshtëm dentar|Kohëzgjatja (min)|Çmimet e laboratorit
+mk|Име|Презиме|Забен техничар|Алатки|Протетска конструкција|Подигнување|Ноќна шина|Простор за цемент|Зачувај ги врвовите на туберкулите|Горен забен лак|Долен забен лак|Времетраење (мин)|Ценовник на лабораторијата
+az|Ad|Soyad|Diş texniki|Alətlər|Diş protezinin karkası|Götürülmə|Gecə qoruyucu şinası|Sement boşluğu|Kusp uclarını qoruyun|Üst diş qövsü|Alt diş qövsü|Müddət (dəq)|Laboratoriya qiymətləri
+ka|სახელი|გვარი|კბილის ტექნიკოსი|ხელსაწყოები|კბილის პროთეზის კარკასი|აღება|ღამის დამცავი კაპა|ცემენტის სივრცე|ბორცვების წვეროების შენარჩუნება|ზედა კბილის რკალი|ქვედა კბილის რკალი|ხანგრძლივობა (წთ)|ლაბორატორიის ფასები
+hy|Անուն|Ազգանուն|Ատամնատեխնիկ|Գործիքներ|Ատամնային պրոթեզի հիմնակմախք|Վերցնում|Գիշերային պաշտպանիչ կապա|Ցեմենտի համար բացվածք|Պահպանել թմբիկների գագաթները|Վերին ատամնաշարի աղեղ|Ստորին ատամնաշարի աղեղ|Տևողություն (րոպե)|Լաբորատորիայի գներ
+he|שם פרטי|שם משפחה|טכנאי שיניים|כלים|שלד שיקומי דנטלי|איסוף|סד לילה|מרווח לצמנט|שמור על קצות התלוליות|קשת השיניים העליונה|קשת השיניים התחתונה|משך (דקות)|מחירון המעבדה
+fa|نام|نام خانوادگی|تکنسین دندان‌سازی|ابزارها|فریم پروتز دندانی|دریافت|محافظ شبانه دندان|فضای سمان|حفظ نوک کاسپ‌ها|قوس دندانی بالا|قوس دندانی پایین|مدت (دقیقه)|تعرفه‌های آزمایشگاه
+hi|पहला नाम|उपनाम|दंत तकनीशियन|उपकरण|दंत प्रोस्थेसिस का ढाँचा|पिकअप|रात्रिकालीन दंत रक्षक|सीमेंट के लिए अंतराल|कस्प के सिरों को सुरक्षित रखें|ऊपरी दंत चाप|निचली दंत चाप|अवधि (मिनट)|प्रयोगशाला मूल्य सूची
+bn|প্রথম নাম|পদবি|দাঁতের প্রযুক্তিবিদ|সরঞ্জাম|দাঁতের প্রস্থেসিসের কাঠামো|সংগ্রহ|রাতে ব্যবহারের দাঁতের রক্ষাকারী স্প্লিন্ট|সিমেন্টের জন্য ফাঁক|কাস্পের অগ্রভাগ অক্ষুণ্ণ রাখুন|ওপরের দন্ত খিলান|নিচের দন্ত খিলান|সময়কাল (মিনিট)|ল্যাবরেটরির মূল্যতালিকা
+id|Nama depan|Nama belakang|Teknisi gigi|Alat|Kerangka prostesis gigi|Pengambilan|Pelindung gigi malam|Celah semen|Pertahankan ujung kuspa|Lengkung gigi atas|Lengkung gigi bawah|Durasi (menit)|Daftar harga laboratorium
+vi|Tên|Họ|Kỹ thuật viên nha khoa|Công cụ|Khung phục hình răng|Nhận hàng|Máng bảo vệ răng ban đêm|Khoảng hở xi măng|Giữ nguyên đỉnh múi răng|Cung răng trên|Cung răng dưới|Thời lượng (phút)|Bảng giá labo

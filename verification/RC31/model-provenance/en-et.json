@@ -1,0 +1,7 @@
+{
+  "repo": "Helsinki-NLP/opus-mt-en-et",
+  "download": "https://object.pouta.csc.fi/OPUS-MT-models/en-et/opus-2019-12-18.zip",
+  "license": "apache-2.0",
+  "source_spm": "source.spm",
+  "target_spm": "target.spm"
+}

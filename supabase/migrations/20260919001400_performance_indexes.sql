@@ -1,0 +1,24 @@
+-- DentAYA MVP v6 Step 4C — performance indexes
+-- Canlı Supabase projesine uygulanmıştır.
+
+-- Confirmed duplicate indexes removed:
+-- scan_sessions_captured_by_org_idx
+-- idx_shipments_from_org
+-- idx_shipments_to_org
+
+-- High-traffic foreign-key indexes added:
+-- case_design_reviews(reviewed_by)
+-- case_design_reviews(submitted_by)
+-- case_messages(sender_org_id)
+-- courier_drivers(organization_id)
+-- courier_locations(courier_org_id)
+-- design_projects(source_scan_id)
+-- design_versions(attachment_id)
+-- design_versions(source_scan_id)
+-- organization_conversations(lab_org_id)
+-- organization_messages(sender_org_id)
+-- organization_messages(sender_user_id)
+-- shipments(courier_driver_id)
+-- user_onboarding(organization_id)
+-- scan_annotations(created_by)
+-- scan_sessions(created_by)

@@ -1,0 +1,129 @@
+{
+  "source": "https://github.com/ggml-org/llama.cpp/releases/download/b9380/llama-b9380-bin-win-cpu-x64.zip",
+  "bytes": 16067676,
+  "sha256": "cd44b61422671f0565cae98d856a70d55ef10392197a49246671f85bacb50dc3",
+  "archiveExtractedWithAppCode": true,
+  "windowsExecutableRun": false,
+  "acceptedFiles": [
+    {
+      "name": "ggml-base.dll",
+      "bytes": 799232
+    },
+    {
+      "name": "ggml-cpu-alderlake.dll",
+      "bytes": 1137152
+    },
+    {
+      "name": "ggml-cpu-cannonlake.dll",
+      "bytes": 1375744
+    },
+    {
+      "name": "ggml-cpu-cascadelake.dll",
+      "bytes": 1361920
+    },
+    {
+      "name": "ggml-cpu-cooperlake.dll",
+      "bytes": 1362432
+    },
+    {
+      "name": "ggml-cpu-haswell.dll",
+      "bytes": 1142272
+    },
+    {
+      "name": "ggml-cpu-icelake.dll",
+      "bytes": 1368576
+    },
+    {
+      "name": "ggml-cpu-ivybridge.dll",
+      "bytes": 1036288
+    },
+    {
+      "name": "ggml-cpu-piledriver.dll",
+      "bytes": 1037824
+    },
+    {
+      "name": "ggml-cpu-sandybridge.dll",
+      "bytes": 1016320
+    },
+    {
+      "name": "ggml-cpu-sapphirerapids.dll",
+      "bytes": 1637888
+    },
+    {
+      "name": "ggml-cpu-skylakex.dll",
+      "bytes": 1369088
+    },
+    {
+      "name": "ggml-cpu-sse42.dll",
+      "bytes": 856064
+    },
+    {
+      "name": "ggml-cpu-x64.dll",
+      "bytes": 847872
+    },
+    {
+      "name": "ggml-cpu-zen4.dll",
+      "bytes": 1369600
+    },
+    {
+      "name": "ggml-rpc.dll",
+      "bytes": 149504
+    },
+    {
+      "name": "ggml.dll",
+      "bytes": 96768
+    },
+    {
+      "name": "libomp140.x86_64.dll",
+      "bytes": 634936
+    },
+    {
+      "name": "llama-batched-bench-impl.dll",
+      "bytes": 69120
+    },
+    {
+      "name": "llama-bench-impl.dll",
+      "bytes": 390656
+    },
+    {
+      "name": "llama-cli-impl.dll",
+      "bytes": 2632192
+    },
+    {
+      "name": "llama-common.dll",
+      "bytes": 8089600
+    },
+    {
+      "name": "llama-completion-impl.dll",
+      "bytes": 146432
+    },
+    {
+      "name": "llama-fit-params-impl.dll",
+      "bytes": 46080
+    },
+    {
+      "name": "llama-perplexity-impl.dll",
+      "bytes": 225792
+    },
+    {
+      "name": "llama-quantize-impl.dll",
+      "bytes": 163328
+    },
+    {
+      "name": "llama-server-impl.dll",
+      "bytes": 12361216
+    },
+    {
+      "name": "llama-server.exe",
+      "bytes": 9728
+    },
+    {
+      "name": "llama.dll",
+      "bytes": 2480640
+    },
+    {
+      "name": "mtmd.dll",
+      "bytes": 1271296
+    }
+  ]
+}

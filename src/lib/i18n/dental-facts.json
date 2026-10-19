@@ -1,0 +1,1307 @@
+{
+  "reviewedAt": "2026-10-15",
+  "sources": {
+    "anatomy": {
+      "name": "ADA · Tooth anatomy",
+      "url": "https://www.mouthhealthy.org/all-topics-a-z/tooth"
+    },
+    "eruption": {
+      "name": "ADA · Eruption charts",
+      "url": "https://www.mouthhealthy.org/all-topics-a-z/eruption-charts"
+    },
+    "decay": {
+      "name": "NIDCR · Tooth decay",
+      "url": "https://www.nidcr.nih.gov/health-info/tooth-decay"
+    },
+    "hygiene": {
+      "name": "NIDCR · Oral hygiene",
+      "url": "https://www.nidcr.nih.gov/health-info/oral-hygiene"
+    },
+    "saliva": {
+      "name": "NIDCR · Dry mouth",
+      "url": "https://www.nidcr.nih.gov/health-info/dry-mouth"
+    },
+    "gum": {
+      "name": "NIDCR · Periodontal disease",
+      "url": "https://www.nidcr.nih.gov/health-info/gum-disease"
+    },
+    "bruxism": {
+      "name": "NIDCR · Bruxism",
+      "url": "https://www.nidcr.nih.gov/health-info/bruxism"
+    },
+    "sealants": {
+      "name": "NIDCR · Dental sealants",
+      "url": "https://www.nidcr.nih.gov/health-info/dental-sealants"
+    },
+    "sensitivity": {
+      "name": "ADA · Sensitive teeth",
+      "url": "https://www.mouthhealthy.org/all-topics-a-z/sensitive-teeth"
+    },
+    "implants": {
+      "name": "FDA · Dental implants",
+      "url": "https://www.fda.gov/medical-devices/dental-devices/dental-implants-what-you-should-know"
+    },
+    "endo": {
+      "name": "AAE · Root canal treatment",
+      "url": "https://www.aae.org/patients/root-canal-treatment/what-is-a-root-canal/"
+    },
+    "crowns": {
+      "name": "ADA · Crowns",
+      "url": "https://www.mouthhealthy.org/all-topics-a-z/crowns"
+    },
+    "wisdom": {
+      "name": "ADA · Wisdom teeth",
+      "url": "https://www.mouthhealthy.org/all-topics-a-z/wisdom-teeth"
+    },
+    "dentures": {
+      "name": "ADA · Dentures",
+      "url": "https://www.mouthhealthy.org/all-topics-a-z/dentures"
+    },
+    "bridges": {
+      "name": "ADA · Bridges",
+      "url": "https://www.mouthhealthy.org/all-topics-a-z/bridges"
+    },
+    "fillings": {
+      "name": "NIDCR · Dental fillings",
+      "url": "https://www.nidcr.nih.gov/health-info/dental-fillings"
+    },
+    "erosion": {
+      "name": "ADA · Dental erosion",
+      "url": "https://www.ada.org/resources/ada-library/oral-health-topics/dental-erosion"
+    },
+    "guards": {
+      "name": "ADA · Mouthguards",
+      "url": "https://www.mouthhealthy.org/all-topics-a-z/mouthguards"
+    },
+    "ortho": {
+      "name": "ADA · Braces",
+      "url": "https://www.mouthhealthy.org/all-topics-a-z/braces"
+    },
+    "xrays": {
+      "name": "ADA · X-rays",
+      "url": "https://www.mouthhealthy.org/all-topics-a-z/x-rays"
+    },
+    "pregnancy": {
+      "name": "ADA · Pregnancy and dental health",
+      "url": "https://www.mouthhealthy.org/life-stages/pregnancy/pregnancy-dental-concerns"
+    },
+    "diabetes": {
+      "name": "NIDCR · Diabetes and oral health",
+      "url": "https://www.nidcr.nih.gov/health-info/diabetes"
+    },
+    "cancer": {
+      "name": "NIDCR · Cancer treatments and oral health",
+      "url": "https://www.nidcr.nih.gov/health-info/cancer-treatments"
+    },
+    "glossary": {
+      "name": "ADA · Dental glossary",
+      "url": "https://www.mouthhealthy.org/glossary"
+    },
+    "whitening": {
+      "name": "ADA · Teeth whitening",
+      "url": "https://www.mouthhealthy.org/all-topics-a-z/teeth-whitening"
+    }
+  },
+  "facts": [
+    {
+      "id": "dental-001",
+      "source": "anatomy",
+      "tr": "Mine, diş kronunun dışını örten sert dokudur.",
+      "en": "Enamel is the hard outer covering of a tooth crown."
+    },
+    {
+      "id": "dental-002",
+      "source": "anatomy",
+      "tr": "Dentin, mine ve sementin altında bulunur.",
+      "en": "Dentin lies beneath enamel and cementum."
+    },
+    {
+      "id": "dental-003",
+      "source": "anatomy",
+      "tr": "Pulpa; damar, sinir ve bağ dokusu içerir.",
+      "en": "The pulp contains blood vessels, nerves and connective tissue."
+    },
+    {
+      "id": "dental-004",
+      "source": "anatomy",
+      "tr": "Sement, diş kökünün dış yüzeyini örter.",
+      "en": "Cementum covers the outer surface of the tooth root."
+    },
+    {
+      "id": "dental-005",
+      "source": "anatomy",
+      "tr": "Periodontal ligament, kökü diş yuvasına bağlayan lifler içerir.",
+      "en": "The periodontal ligament contains fibres connecting the root to its socket."
+    },
+    {
+      "id": "dental-006",
+      "source": "anatomy",
+      "tr": "Alveol kemiği, diş köklerini çevreleyen çene kemiğidir.",
+      "en": "Alveolar bone is the jawbone surrounding tooth roots."
+    },
+    {
+      "id": "dental-007",
+      "source": "anatomy",
+      "tr": "Dişin boyun bölgesi, kron ile kökün birleştiği alandır.",
+      "en": "The tooth neck is where the crown and root meet."
+    },
+    {
+      "id": "dental-008",
+      "source": "anatomy",
+      "tr": "Pulpa odası, kronun içindeki yumuşak dokuyu barındırır.",
+      "en": "The pulp chamber houses soft tissue inside the crown."
+    },
+    {
+      "id": "dental-009",
+      "source": "anatomy",
+      "tr": "Kök kanalı, pulpa boşluğunun kök içindeki devamıdır.",
+      "en": "The root canal continues the pulp space inside the root."
+    },
+    {
+      "id": "dental-010",
+      "source": "anatomy",
+      "tr": "Dentin, mikroskobik tübüllerden oluşan bir ağ içerir.",
+      "en": "Dentin contains a network of microscopic tubules."
+    },
+    {
+      "id": "dental-011",
+      "source": "anatomy",
+      "tr": "Mine dokusu canlı hücre içermez.",
+      "en": "Enamel does not contain living cells."
+    },
+    {
+      "id": "dental-012",
+      "source": "anatomy",
+      "tr": "Diş eti, dişlerin çevresindeki yumuşak dokudur.",
+      "en": "Gingiva is the soft tissue around the teeth."
+    },
+    {
+      "id": "dental-013",
+      "source": "eruption",
+      "tr": "Tipik süt dişi dizisi 20 diş içerir.",
+      "en": "A typical primary dentition contains 20 teeth."
+    },
+    {
+      "id": "dental-014",
+      "source": "eruption",
+      "tr": "Tipik daimi diş dizisi, yirmiliklerle birlikte 32 diş içerir.",
+      "en": "A typical permanent dentition includes 32 teeth with wisdom teeth."
+    },
+    {
+      "id": "dental-015",
+      "source": "eruption",
+      "tr": "Dişlerin boyutları ve biçimleri görevlerine göre farklılaşır.",
+      "en": "Teeth differ in size and shape according to their functions."
+    },
+    {
+      "id": "dental-016",
+      "source": "eruption",
+      "tr": "Dişlerin çenedeki konumu çiğnemedeki görevlerini etkiler.",
+      "en": "A tooth's position in the jaw affects its role in chewing."
+    },
+    {
+      "id": "dental-017",
+      "source": "eruption",
+      "tr": "Süt dişleri çocukluk boyunca farklı zamanlarda değişir.",
+      "en": "Primary teeth are shed at different times during childhood."
+    },
+    {
+      "id": "dental-018",
+      "source": "eruption",
+      "tr": "Süt ve daimi dişlerin birlikte bulunduğu dönem karma dişlenmedir.",
+      "en": "Mixed dentition is the period with both primary and permanent teeth."
+    },
+    {
+      "id": "dental-019",
+      "source": "eruption",
+      "tr": "İlk süt dişleri çoğunlukla altıncı ay civarında sürmeye başlar.",
+      "en": "The first primary teeth often erupt around six months of age."
+    },
+    {
+      "id": "dental-020",
+      "source": "eruption",
+      "tr": "Dişler, çiğnemenin yanında konuşmaya da katkı sağlar.",
+      "en": "Teeth help with speech as well as chewing."
+    },
+    {
+      "id": "dental-021",
+      "source": "eruption",
+      "tr": "Dişler, yüzün biçimini destekleyen yapılardan biridir.",
+      "en": "Teeth help support the shape of the face."
+    },
+    {
+      "id": "dental-022",
+      "source": "eruption",
+      "tr": "Süt dişlerinin sürme sırası ile daimi dişlerinki aynı değildir.",
+      "en": "Primary and permanent teeth have different eruption sequences."
+    },
+    {
+      "id": "dental-023",
+      "source": "decay",
+      "tr": "Çürük, bakterilerin ürettiği asitlerin diş dokusunu etkilemesiyle başlar.",
+      "en": "Decay begins when acids produced by bacteria affect tooth tissue."
+    },
+    {
+      "id": "dental-024",
+      "source": "decay",
+      "tr": "Şeker ve nişasta, çürükle ilişkili bakterilere kaynak sağlayabilir.",
+      "en": "Sugars and starches can fuel bacteria associated with decay."
+    },
+    {
+      "id": "dental-025",
+      "source": "decay",
+      "tr": "Tekrarlayan asit etkisi, mineden mineral kaybına neden olabilir.",
+      "en": "Repeated acid exposure can cause mineral loss from enamel."
+    },
+    {
+      "id": "dental-026",
+      "source": "decay",
+      "tr": "Erken mineral kaybı, dişte beyaz bir leke olarak görülebilir.",
+      "en": "Early mineral loss may appear as a white spot on a tooth."
+    },
+    {
+      "id": "dental-027",
+      "source": "decay",
+      "tr": "Başlangıç çürüğü her zaman ağrı yapmaz.",
+      "en": "Early tooth decay does not always cause pain."
+    },
+    {
+      "id": "dental-028",
+      "source": "decay",
+      "tr": "Dişte oyuk oluşmadan önceki mineral kaybı geri dönebilir.",
+      "en": "Mineral loss may be reversed before a cavity forms."
+    },
+    {
+      "id": "dental-029",
+      "source": "decay",
+      "tr": "Tükürük mineralleri ve florür, minenin yeniden minerallenmesini destekler.",
+      "en": "Salivary minerals and fluoride support enamel remineralisation."
+    },
+    {
+      "id": "dental-030",
+      "source": "decay",
+      "tr": "Diş kökünün açığa çıkan yüzeyi de çürüyebilir.",
+      "en": "Exposed tooth-root surfaces can also develop decay."
+    },
+    {
+      "id": "dental-031",
+      "source": "decay",
+      "tr": "Çürük yalnız çocuklarda değil, her yaşta görülebilir.",
+      "en": "Tooth decay can occur at any age, not only in children."
+    },
+    {
+      "id": "dental-032",
+      "source": "decay",
+      "tr": "Radyografiler, gözle görülemeyen bazı çürüklerin saptanmasına yardımcı olur.",
+      "en": "Radiographs can help detect some cavities hidden from direct view."
+    },
+    {
+      "id": "dental-033",
+      "source": "hygiene",
+      "tr": "Diş plağı, diş yüzeyinde oluşan yapışkan bir bakteri tabakasıdır.",
+      "en": "Dental plaque is a sticky bacterial film on tooth surfaces."
+    },
+    {
+      "id": "dental-034",
+      "source": "hygiene",
+      "tr": "Plak, gözle her zaman kolayca seçilemez.",
+      "en": "Plaque is not always easy to see."
+    },
+    {
+      "id": "dental-035",
+      "source": "hygiene",
+      "tr": "Florürlü macun, mineyi çürüğe karşı korumaya yardımcı olur.",
+      "en": "Fluoride toothpaste helps protect enamel against decay."
+    },
+    {
+      "id": "dental-036",
+      "source": "hygiene",
+      "tr": "Diş arası temizliği, fırçanın erişemediği alanlara ulaşmaya yardımcı olur.",
+      "en": "Interdental cleaning helps reach areas a brush cannot access."
+    },
+    {
+      "id": "dental-037",
+      "source": "hygiene",
+      "tr": "Yıpranan fırça kılları, fırçanın yenilenmesi gerektiğini gösterebilir.",
+      "en": "Worn bristles can indicate that a toothbrush needs replacing."
+    },
+    {
+      "id": "dental-038",
+      "source": "hygiene",
+      "tr": "Dişlerin iç, dış ve çiğneme yüzeyleri ayrı ayrı temizlenir.",
+      "en": "Inner, outer and chewing surfaces each need cleaning."
+    },
+    {
+      "id": "dental-039",
+      "source": "hygiene",
+      "tr": "Diş ipi, dişlerin arasındaki plak ve artıkları uzaklaştırabilir.",
+      "en": "Dental floss can remove plaque and debris between teeth."
+    },
+    {
+      "id": "dental-040",
+      "source": "hygiene",
+      "tr": "Diş taşı, diş yüzeyinde sertleşmiş plaktır.",
+      "en": "Calculus is plaque that has hardened on tooth surfaces."
+    },
+    {
+      "id": "dental-041",
+      "source": "hygiene",
+      "tr": "Dolgu bulunan dişlerde de yeni çürük oluşabilir.",
+      "en": "Teeth with fillings can still develop new decay."
+    },
+    {
+      "id": "dental-042",
+      "source": "hygiene",
+      "tr": "Dilin yüzeyi de ağız temizliğinin bir parçasıdır.",
+      "en": "Cleaning the tongue is also part of oral hygiene."
+    },
+    {
+      "id": "dental-043",
+      "source": "saliva",
+      "tr": "Tükürük, tükürük bezleri tarafından üretilir.",
+      "en": "Saliva is produced by the salivary glands."
+    },
+    {
+      "id": "dental-044",
+      "source": "saliva",
+      "tr": "Tükürük, besinlerin nemlenmesine ve parçalanmasına yardımcı olur.",
+      "en": "Saliva helps moisten and break down food."
+    },
+    {
+      "id": "dental-045",
+      "source": "saliva",
+      "tr": "Tükürük akışı, ağızdaki besin artıklarının uzaklaştırılmasını destekler.",
+      "en": "Salivary flow helps wash away food debris."
+    },
+    {
+      "id": "dental-046",
+      "source": "saliva",
+      "tr": "Tükürük, kalsiyum ve fosfat gibi mineraller içerir.",
+      "en": "Saliva contains minerals such as calcium and phosphate."
+    },
+    {
+      "id": "dental-047",
+      "source": "saliva",
+      "tr": "Yeterli tükürük bulunmaması çürük riskini artırabilir.",
+      "en": "Insufficient saliva can increase the risk of tooth decay."
+    },
+    {
+      "id": "dental-048",
+      "source": "saliva",
+      "tr": "Ağız kuruluğu, yaşlanmanın kaçınılmaz bir sonucu değildir.",
+      "en": "Dry mouth is not an inevitable part of ageing."
+    },
+    {
+      "id": "dental-049",
+      "source": "saliva",
+      "tr": "Bazı ilaçlar tükürük üretimini azaltabilir.",
+      "en": "Some medicines can reduce saliva production."
+    },
+    {
+      "id": "dental-050",
+      "source": "saliva",
+      "tr": "Tükürük, rahat yutkunmaya ve konuşmaya katkı sağlar.",
+      "en": "Saliva contributes to comfortable swallowing and speaking."
+    },
+    {
+      "id": "dental-051",
+      "source": "gum",
+      "tr": "Periodontal hastalık, dişleri destekleyen dokuları etkiler.",
+      "en": "Periodontal disease affects the tissues supporting teeth."
+    },
+    {
+      "id": "dental-052",
+      "source": "gum",
+      "tr": "Diş eti çekilmesi, kök yüzeyini açığa çıkarabilir.",
+      "en": "Gum recession can expose a tooth-root surface."
+    },
+    {
+      "id": "dental-053",
+      "source": "gum",
+      "tr": "Diş eti hastalığında kızarıklık ve şişlik görülebilir.",
+      "en": "Redness and swelling can occur with gum disease."
+    },
+    {
+      "id": "dental-054",
+      "source": "gum",
+      "tr": "Diş eti kanaması, değerlendirilmesi gereken bir bulgu olabilir.",
+      "en": "Bleeding gums can be a sign that needs assessment."
+    },
+    {
+      "id": "dental-055",
+      "source": "gum",
+      "tr": "İleri periodontal hastalık dişleri destekleyen kemiği etkileyebilir.",
+      "en": "Advanced periodontal disease can affect the bone supporting teeth."
+    },
+    {
+      "id": "dental-056",
+      "source": "gum",
+      "tr": "Sigara kullanımı, periodontal hastalık için önemli bir risk etkenidir.",
+      "en": "Smoking is an important risk factor for periodontal disease."
+    },
+    {
+      "id": "dental-057",
+      "source": "gum",
+      "tr": "Periodontal sond, diş çevresindeki ceplerin ölçülmesinde kullanılır.",
+      "en": "A periodontal probe measures pockets around teeth."
+    },
+    {
+      "id": "dental-058",
+      "source": "gum",
+      "tr": "Diş taşı, profesyonel temizlikle uzaklaştırılır.",
+      "en": "Calculus is removed through professional cleaning."
+    },
+    {
+      "id": "dental-059",
+      "source": "bruxism",
+      "tr": "Bruksizm, diş sıkma veya gıcırdatma davranışını ifade eder.",
+      "en": "Bruxism refers to clenching or grinding the teeth."
+    },
+    {
+      "id": "dental-060",
+      "source": "bruxism",
+      "tr": "Bruksizm uyanıkken de uyku sırasında da görülebilir.",
+      "en": "Bruxism can occur while awake or during sleep."
+    },
+    {
+      "id": "dental-061",
+      "source": "bruxism",
+      "tr": "Çocuklar ve erişkinler bruksizm yaşayabilir.",
+      "en": "Children and adults can experience bruxism."
+    },
+    {
+      "id": "dental-062",
+      "source": "bruxism",
+      "tr": "Şiddetli bruksizm dişlerde aşınma ve çatlaklara katkıda bulunabilir.",
+      "en": "Severe bruxism can contribute to tooth wear and cracks."
+    },
+    {
+      "id": "dental-063",
+      "source": "bruxism",
+      "tr": "Bruksizm, çiğneme kaslarında yorgunlukla ilişkili olabilir.",
+      "en": "Bruxism can be associated with tired chewing muscles."
+    },
+    {
+      "id": "dental-064",
+      "source": "bruxism",
+      "tr": "Uyku bruksizmi, kişi fark etmeden gerçekleşebilir.",
+      "en": "Sleep bruxism may happen without the person noticing."
+    },
+    {
+      "id": "dental-065",
+      "source": "bruxism",
+      "tr": "Bruksizmde dişler ve restorasyonlar birlikte değerlendirilir.",
+      "en": "Teeth and restorations are both assessed for bruxism-related damage."
+    },
+    {
+      "id": "dental-066",
+      "source": "bruxism",
+      "tr": "Bruksizmin ortaya çıkışında birden fazla etken rol oynayabilir.",
+      "en": "Multiple factors can play a role in bruxism."
+    },
+    {
+      "id": "dental-067",
+      "source": "sealants",
+      "tr": "Fissür örtücüler, arka dişlerin çiğneme yüzeylerini koruyan kaplamalardır.",
+      "en": "Sealants are coatings protecting the chewing surfaces of back teeth."
+    },
+    {
+      "id": "dental-068",
+      "source": "sealants",
+      "tr": "Azı dişlerinin çiğneme yüzeylerinde çukur ve oluklar bulunur.",
+      "en": "Molar chewing surfaces contain pits and grooves."
+    },
+    {
+      "id": "dental-069",
+      "source": "sealants",
+      "tr": "Derin oluklar, besin ve bakterilerin tutunmasına elverişli olabilir.",
+      "en": "Deep grooves can retain food and bacteria."
+    },
+    {
+      "id": "dental-070",
+      "source": "sealants",
+      "tr": "Fissür örtücüler, olukların içinde koruyucu bir bariyer oluşturur.",
+      "en": "Sealants form a protective barrier within grooves."
+    },
+    {
+      "id": "dental-071",
+      "source": "sealants",
+      "tr": "İlk daimi azılar çoğunlukla altı yaş civarında sürer.",
+      "en": "First permanent molars often erupt around age six."
+    },
+    {
+      "id": "dental-072",
+      "source": "sealants",
+      "tr": "İkinci daimi azılar çoğunlukla on iki yaş civarında sürer.",
+      "en": "Second permanent molars often erupt around age twelve."
+    },
+    {
+      "id": "dental-073",
+      "source": "sensitivity",
+      "tr": "Dentin, üzerindeki koruyucu tabakalar kaybolduğunda hassaslaşabilir.",
+      "en": "Dentin may become sensitive when its protective coverings are lost."
+    },
+    {
+      "id": "dental-074",
+      "source": "sensitivity",
+      "tr": "Açığa çıkan dentin tübülleri sıcak ve soğuk uyaranları iletebilir.",
+      "en": "Exposed dentinal tubules can transmit hot and cold stimuli."
+    },
+    {
+      "id": "dental-075",
+      "source": "sensitivity",
+      "tr": "Diş eti çekilmesi, dentinin açığa çıkmasına yol açabilir.",
+      "en": "Gum recession can lead to exposed dentin."
+    },
+    {
+      "id": "dental-076",
+      "source": "sensitivity",
+      "tr": "Çatlak bir diş, hassasiyetin olası nedenlerinden biridir.",
+      "en": "A cracked tooth is one possible cause of sensitivity."
+    },
+    {
+      "id": "dental-077",
+      "source": "sensitivity",
+      "tr": "Yıpranmış dolgular diş hassasiyetine katkıda bulunabilir.",
+      "en": "Worn fillings can contribute to tooth sensitivity."
+    },
+    {
+      "id": "dental-078",
+      "source": "sensitivity",
+      "tr": "Mine aşınması, alttaki dentinin korumasını azaltabilir.",
+      "en": "Enamel wear can reduce protection for the underlying dentin."
+    },
+    {
+      "id": "dental-079",
+      "source": "sensitivity",
+      "tr": "Hassasiyetin nedeni her dişte aynı olmak zorunda değildir.",
+      "en": "The cause of sensitivity can differ between teeth."
+    },
+    {
+      "id": "dental-080",
+      "source": "sensitivity",
+      "tr": "Hassasiyete yaklaşım, altta yatan nedene göre değişir.",
+      "en": "The approach to sensitivity depends on its underlying cause."
+    },
+    {
+      "id": "dental-081",
+      "source": "implants",
+      "tr": "Dental implant gövdesi, çene kemiği içine yerleştirilen bir tıbbi cihazdır.",
+      "en": "A dental implant body is a medical device placed in the jawbone."
+    },
+    {
+      "id": "dental-082",
+      "source": "implants",
+      "tr": "Abutment, implant gövdesiyle üstteki restorasyon arasında bağlantı sağlar.",
+      "en": "An abutment connects an implant body to its restoration."
+    },
+    {
+      "id": "dental-083",
+      "source": "implants",
+      "tr": "İmplant destekli restorasyonlar kron, köprü veya protez biçiminde olabilir.",
+      "en": "Implant-supported restorations can be crowns, bridges or dentures."
+    },
+    {
+      "id": "dental-084",
+      "source": "implants",
+      "tr": "İmplant sistemlerinde abutmenti sabitlemek için bir vida bulunabilir.",
+      "en": "An implant system may include a screw securing the abutment."
+    },
+    {
+      "id": "dental-085",
+      "source": "implants",
+      "tr": "İmplant çevresindeki dokuların temizliği uzun dönem bakımın parçasıdır.",
+      "en": "Cleaning tissues around implants is part of long-term care."
+    },
+    {
+      "id": "dental-086",
+      "source": "implants",
+      "tr": "Titanyum ve zirkonyum oksit, implant sistemlerinde kullanılan malzemelerdendir.",
+      "en": "Titanium and zirconium oxide are among implant-system materials."
+    },
+    {
+      "id": "dental-087",
+      "source": "implants",
+      "tr": "İmplant iyileşmesi, kişinin genel sağlık durumundan etkilenebilir.",
+      "en": "Implant healing can be affected by a person's general health."
+    },
+    {
+      "id": "dental-088",
+      "source": "implants",
+      "tr": "İmplantın markası ve modeli, takip kayıtlarında önemli bilgilerdir.",
+      "en": "Implant brand and model are useful details in follow-up records."
+    },
+    {
+      "id": "dental-089",
+      "source": "endo",
+      "tr": "Endodonti, dişin pulpası ve kök çevresiyle ilgilenen alandır.",
+      "en": "Endodontics concerns the dental pulp and tissues around roots."
+    },
+    {
+      "id": "dental-090",
+      "source": "endo",
+      "tr": "Kanal tedavisinde iltihaplı veya enfekte pulpa uzaklaştırılır.",
+      "en": "Root canal treatment removes inflamed or infected pulp."
+    },
+    {
+      "id": "dental-091",
+      "source": "endo",
+      "tr": "Kanal tedavisi, doğal dişi korumayı amaçlayan bir yaklaşımdır.",
+      "en": "Root canal treatment aims to preserve the natural tooth."
+    },
+    {
+      "id": "dental-092",
+      "source": "endo",
+      "tr": "Kök kanalları tedavi sırasında temizlenir ve dezenfekte edilir.",
+      "en": "Root canals are cleaned and disinfected during treatment."
+    },
+    {
+      "id": "dental-093",
+      "source": "endo",
+      "tr": "Temizlenen kök kanalları doldurularak kapatılır.",
+      "en": "Cleaned root canals are filled and sealed."
+    },
+    {
+      "id": "dental-094",
+      "source": "endo",
+      "tr": "Gelişimini tamamlamış bir diş, pulpası olmadan da ağızda kalabilir.",
+      "en": "A fully developed tooth can remain without its pulp."
+    },
+    {
+      "id": "dental-095",
+      "source": "crowns",
+      "tr": "Protetik kron, dişin biçimini ve işlevini yeniden oluşturabilir.",
+      "en": "A prosthetic crown can restore a tooth's shape and function."
+    },
+    {
+      "id": "dental-096",
+      "source": "crowns",
+      "tr": "Kronlar, zayıflamış bir dişi desteklemek için kullanılabilir.",
+      "en": "Crowns can be used to support a weakened tooth."
+    },
+    {
+      "id": "dental-097",
+      "source": "crowns",
+      "tr": "Kron, büyük dolgulu bir dişin örtülmesinde kullanılabilir.",
+      "en": "A crown may cover a tooth with a large filling."
+    },
+    {
+      "id": "dental-098",
+      "source": "crowns",
+      "tr": "Protetik kron, bir implantın üstünde de yer alabilir.",
+      "en": "A prosthetic crown can also be placed on an implant."
+    },
+    {
+      "id": "dental-099",
+      "source": "crowns",
+      "tr": "Protetik kron, kırılmış bir dişin biçimini tamamlayabilir.",
+      "en": "A prosthetic crown can restore the shape of a broken tooth."
+    },
+    {
+      "id": "dental-100",
+      "source": "hygiene",
+      "tr": "Kron kenarındaki diş dokusu da çürüğe karşı korunmalıdır.",
+      "en": "Tooth tissue at a crown margin still needs protection against decay."
+    },
+    {
+      "id": "dental-101",
+      "source": "wisdom",
+      "tr": "Yirmilik dişler, üçüncü büyük azı dişleridir.",
+      "en": "Wisdom teeth are the third molars."
+    },
+    {
+      "id": "dental-102",
+      "source": "wisdom",
+      "tr": "Yirmilikler çoğunlukla geç ergenlikte veya genç erişkinlikte sürer.",
+      "en": "Wisdom teeth commonly emerge in late adolescence or early adulthood."
+    },
+    {
+      "id": "dental-103",
+      "source": "wisdom",
+      "tr": "Gömülü diş, kemik veya diş eti altında kalabilir.",
+      "en": "An impacted tooth may remain beneath bone or gum tissue."
+    },
+    {
+      "id": "dental-104",
+      "source": "wisdom",
+      "tr": "Doğru konumdaki sağlıklı yirmilikler çiğnemeye katkı sağlayabilir.",
+      "en": "Healthy, properly positioned wisdom teeth can contribute to chewing."
+    },
+    {
+      "id": "dental-105",
+      "source": "wisdom",
+      "tr": "Kısmen sürmüş bir yirmiliğin çevresinde enfeksiyon gelişebilir.",
+      "en": "Infection can develop around a partly erupted wisdom tooth."
+    },
+    {
+      "id": "dental-106",
+      "source": "wisdom",
+      "tr": "Yanlış konumlanan yirmiliklerin çevresinde besin birikebilir.",
+      "en": "Food can become trapped around poorly positioned wisdom teeth."
+    },
+    {
+      "id": "dental-107",
+      "source": "wisdom",
+      "tr": "Gömülü bir yirmiliğin yakınında kist oluşabilir.",
+      "en": "A cyst can form near an impacted wisdom tooth."
+    },
+    {
+      "id": "dental-108",
+      "source": "wisdom",
+      "tr": "Yirmilik dişin korunması veya çekimi kişiye göre değerlendirilir.",
+      "en": "Keeping or removing a wisdom tooth requires individual assessment."
+    },
+    {
+      "id": "dental-109",
+      "source": "dentures",
+      "tr": "Hareketli protezler, eksik dişlerin yerini alabilen apareylerdir.",
+      "en": "Removable dentures are appliances that can replace missing teeth."
+    },
+    {
+      "id": "dental-110",
+      "source": "dentures",
+      "tr": "Tam protez, bir çenedeki bütün dişlerin yerini alabilir.",
+      "en": "A complete denture can replace all teeth in one jaw."
+    },
+    {
+      "id": "dental-111",
+      "source": "glossary",
+      "tr": "Parsiyel protez, diş dizisindeki bazı eksik dişlerin yerini alır.",
+      "en": "A partial denture replaces some missing teeth in the dental arch."
+    },
+    {
+      "id": "dental-112",
+      "source": "dentures",
+      "tr": "İmmediat protez, diş çekimiyle aynı gün takılabilir.",
+      "en": "An immediate denture can be fitted on the extraction day."
+    },
+    {
+      "id": "dental-113",
+      "source": "dentures",
+      "tr": "İyileşme sonrasında immediat protezin uyumu değişebilir.",
+      "en": "The fit of an immediate denture can change after healing."
+    },
+    {
+      "id": "dental-114",
+      "source": "dentures",
+      "tr": "Örtü protez, hazırlanmış doğal dişlerden destek alabilir.",
+      "en": "An overdenture can receive support from prepared natural teeth."
+    },
+    {
+      "id": "dental-115",
+      "source": "dentures",
+      "tr": "İmplantlar, hareketli protezin desteğine katkı sağlayabilir.",
+      "en": "Implants can contribute to support for a removable denture."
+    },
+    {
+      "id": "dental-116",
+      "source": "dentures",
+      "tr": "Yeni proteze alışırken tükürük akışı geçici artabilir.",
+      "en": "Saliva flow may temporarily increase when adapting to new dentures."
+    },
+    {
+      "id": "dental-117",
+      "source": "dentures",
+      "tr": "Protez yüzeyinde de besin artıkları ve plak birikebilir.",
+      "en": "Food debris and plaque can also collect on denture surfaces."
+    },
+    {
+      "id": "dental-118",
+      "source": "dentures",
+      "tr": "Protez uyumu, kontrol ziyaretlerinde değerlendirilip ayarlanabilir.",
+      "en": "Denture fit can be assessed and adjusted at follow-up visits."
+    },
+    {
+      "id": "dental-119",
+      "source": "bridges",
+      "tr": "Diş köprüsü, bir veya daha fazla eksik dişi tamamlayabilir.",
+      "en": "A dental bridge can replace one or more missing teeth."
+    },
+    {
+      "id": "dental-120",
+      "source": "bridges",
+      "tr": "Sabit köprüler, dayanak dişlerden destek alabilir.",
+      "en": "Fixed bridges can receive support from abutment teeth."
+    },
+    {
+      "id": "dental-121",
+      "source": "bridges",
+      "tr": "İmplantlar da köprü restorasyonlarına dayanak olabilir.",
+      "en": "Implants can also support bridge restorations."
+    },
+    {
+      "id": "dental-122",
+      "source": "bridges",
+      "tr": "Köprülerde porselen, metal alaşımları veya birleşimleri kullanılabilir.",
+      "en": "Bridges can use porcelain, metal alloys or their combinations."
+    },
+    {
+      "id": "dental-123",
+      "source": "bridges",
+      "tr": "Sabit köprü, hasta tarafından çıkarılıp takılmak üzere tasarlanmaz.",
+      "en": "A fixed bridge is not designed for patient removal."
+    },
+    {
+      "id": "dental-124",
+      "source": "bridges",
+      "tr": "Dayanakların sağlığı, köprünün uzun dönem başarısını etkiler.",
+      "en": "The health of supporting structures affects long-term bridge success."
+    },
+    {
+      "id": "dental-125",
+      "source": "fillings",
+      "tr": "Dolgu, dişteki küçük bir çürük boşluğunu onarmak için kullanılabilir.",
+      "en": "A filling can repair a small cavity in a tooth."
+    },
+    {
+      "id": "dental-126",
+      "source": "fillings",
+      "tr": "Dolgu öncesinde çürümüş diş dokusu uzaklaştırılır.",
+      "en": "Decayed tooth tissue is removed before placing a filling."
+    },
+    {
+      "id": "dental-127",
+      "source": "fillings",
+      "tr": "Kompozit dolgular, diş renginde hazırlanabilir.",
+      "en": "Composite fillings can be made in tooth-like colours."
+    },
+    {
+      "id": "dental-128",
+      "source": "fillings",
+      "tr": "Amalgam dolgular, gümüş renkli görünümleriyle bilinir.",
+      "en": "Amalgam fillings are known for their silver-coloured appearance."
+    },
+    {
+      "id": "dental-129",
+      "source": "fillings",
+      "tr": "Dolguların zaman içinde yenilenmesi gerekebilir.",
+      "en": "Fillings may need replacement over time."
+    },
+    {
+      "id": "dental-130",
+      "source": "fillings",
+      "tr": "İleri doku kaybında dolgu dışında restorasyonlar da değerlendirilebilir.",
+      "en": "Extensive tissue loss may require restorations other than fillings."
+    },
+    {
+      "id": "dental-131",
+      "source": "fillings",
+      "tr": "Tedavisiz ilerleyen çürük, dişte enfeksiyona yol açabilir.",
+      "en": "Untreated progressing decay can lead to tooth infection."
+    },
+    {
+      "id": "dental-132",
+      "source": "fillings",
+      "tr": "Dolgu malzemeleri, farklı estetik ve kullanım özellikleri sunar.",
+      "en": "Filling materials offer different aesthetic and functional properties."
+    },
+    {
+      "id": "dental-133",
+      "source": "erosion",
+      "tr": "Dental erozyon, bakteri kaynaklı olmayan asitlerle doku kaybıdır.",
+      "en": "Dental erosion is tissue loss caused by non-bacterial acids."
+    },
+    {
+      "id": "dental-134",
+      "source": "erosion",
+      "tr": "Sık asitli içecek tüketimi eroziv aşınmayla ilişkili olabilir.",
+      "en": "Frequent acidic drinks can be associated with erosive wear."
+    },
+    {
+      "id": "dental-135",
+      "source": "erosion",
+      "tr": "Reflü, dişleri mide asidine maruz bırakabilir.",
+      "en": "Reflux can expose teeth to stomach acid."
+    },
+    {
+      "id": "dental-136",
+      "source": "erosion",
+      "tr": "Tekrarlayan kusma, dişlerde asit etkisini artırabilir.",
+      "en": "Repeated vomiting can increase acid exposure on teeth."
+    },
+    {
+      "id": "dental-137",
+      "source": "erosion",
+      "tr": "Erozyonda çiğneme yüzeylerinde düzleşme görülebilir.",
+      "en": "Erosion can cause flattening of chewing surfaces."
+    },
+    {
+      "id": "dental-138",
+      "source": "erosion",
+      "tr": "Eroziv aşınma, diş yüzeyindeki doğal dokuyu değiştirebilir.",
+      "en": "Erosive wear can alter the natural surface texture of teeth."
+    },
+    {
+      "id": "dental-139",
+      "source": "erosion",
+      "tr": "İleri erozyon, dentinin açığa çıkmasına yol açabilir.",
+      "en": "Advanced erosion can expose dentin."
+    },
+    {
+      "id": "dental-140",
+      "source": "erosion",
+      "tr": "Erozyon, farklı yaş gruplarında görülebilir.",
+      "en": "Erosion can occur in different age groups."
+    },
+    {
+      "id": "dental-141",
+      "source": "guards",
+      "tr": "Spor ağızlığı, darbenin dişlere etkisini azaltmaya yardımcı olur.",
+      "en": "A sports mouthguard helps cushion the impact on teeth."
+    },
+    {
+      "id": "dental-142",
+      "source": "guards",
+      "tr": "Ağızlık, dudak ve yanak gibi yumuşak dokuları da koruyabilir.",
+      "en": "A mouthguard can also protect soft tissues such as lips and cheeks."
+    },
+    {
+      "id": "dental-143",
+      "source": "guards",
+      "tr": "Kişiye özel ağızlıklar, bireyin ağız ölçülerine göre hazırlanır.",
+      "en": "Custom mouthguards are made to fit an individual's mouth."
+    },
+    {
+      "id": "dental-144",
+      "source": "guards",
+      "tr": "Hazır ağızlıklar, önceden biçimlendirilmiş olarak sunulur.",
+      "en": "Stock mouthguards are supplied in a preformed shape."
+    },
+    {
+      "id": "dental-145",
+      "source": "guards",
+      "tr": "Bazı ağızlıklar, üreticinin yöntemiyle ısıyla şekillendirilir.",
+      "en": "Some mouthguards are moulded using the manufacturer's heating method."
+    },
+    {
+      "id": "dental-146",
+      "source": "guards",
+      "tr": "Ortodontik braketler, spor ağızlığı seçiminde dikkate alınır.",
+      "en": "Orthodontic brackets are considered when choosing a sports mouthguard."
+    },
+    {
+      "id": "dental-147",
+      "source": "guards",
+      "tr": "Ağızlıkta hasar veya uyumsuzluk, yenileme gereksinimini gösterebilir.",
+      "en": "Damage or poor fit can indicate a need to replace a mouthguard."
+    },
+    {
+      "id": "dental-148",
+      "source": "guards",
+      "tr": "Havalandırmalı kutu, ağızlığın kullanımlar arasında kurumasını destekler.",
+      "en": "A ventilated case helps a mouthguard dry between uses."
+    },
+    {
+      "id": "dental-149",
+      "source": "ortho",
+      "tr": "Ortodonti, dişlerin ve çenelerin dizilim ilişkisini ele alır.",
+      "en": "Orthodontics addresses the alignment of teeth and jaws."
+    },
+    {
+      "id": "dental-150",
+      "source": "ortho",
+      "tr": "Düz görünen dişler, her zaman uyumlu kapanış anlamına gelmez.",
+      "en": "Straight-looking teeth do not always mean a well-aligned bite."
+    },
+    {
+      "id": "dental-151",
+      "source": "ortho",
+      "tr": "Diş teli sistemleri, kontrollü kuvvetlerle dişleri hareket ettirir.",
+      "en": "Braces move teeth by applying controlled forces."
+    },
+    {
+      "id": "dental-152",
+      "source": "ortho",
+      "tr": "Ortodontik braketler, metal veya diş renginde olabilir.",
+      "en": "Orthodontic brackets can be metal or tooth coloured."
+    },
+    {
+      "id": "dental-153",
+      "source": "ortho",
+      "tr": "Bazı braketler, dişlerin arka yüzüne yerleştirilir.",
+      "en": "Some brackets are placed behind the teeth."
+    },
+    {
+      "id": "dental-154",
+      "source": "ortho",
+      "tr": "Şeffaf plaklar, belirli ortodontik tedavilerde kullanılabilir.",
+      "en": "Clear aligners can be used in certain orthodontic treatments."
+    },
+    {
+      "id": "dental-155",
+      "source": "ortho",
+      "tr": "Sağlıklı dişlerde erişkin dönemde de ortodontik tedavi uygulanabilir.",
+      "en": "Healthy teeth can receive orthodontic treatment in adulthood too."
+    },
+    {
+      "id": "dental-156",
+      "source": "ortho",
+      "tr": "Pekiştirme apareyleri, tedavi sonrası diş konumlarının korunmasına yardım eder.",
+      "en": "Retainers help maintain tooth positions after orthodontic treatment."
+    },
+    {
+      "id": "dental-157",
+      "source": "xrays",
+      "tr": "Dental radyografiler, gömülü dişlerin saptanmasına yardımcı olabilir.",
+      "en": "Dental radiographs can help detect impacted teeth."
+    },
+    {
+      "id": "dental-158",
+      "source": "xrays",
+      "tr": "Röntgen gereksinimi, ağız muayenesi ve sağlık öyküsüyle değerlendirilir.",
+      "en": "The need for X-rays is assessed using examination and history."
+    },
+    {
+      "id": "dental-159",
+      "source": "xrays",
+      "tr": "Görüntüleme sıklığı, kişinin hastalık riskine göre değişebilir.",
+      "en": "Imaging frequency can vary with an individual's disease risk."
+    },
+    {
+      "id": "dental-160",
+      "source": "xrays",
+      "tr": "Çocuklarda gelişen dişler ve çeneler, görüntüleme planını etkileyebilir.",
+      "en": "Developing teeth and jaws can influence imaging plans for children."
+    },
+    {
+      "id": "dental-161",
+      "source": "xrays",
+      "tr": "Önceki radyografiler, zaman içindeki değişiklikleri karşılaştırmaya yardımcı olur.",
+      "en": "Earlier radiographs help compare changes over time."
+    },
+    {
+      "id": "dental-162",
+      "source": "xrays",
+      "tr": "Mevcut görüntülerin paylaşılması, gereksiz tekrar çekimlerini azaltabilir.",
+      "en": "Sharing existing images can reduce unnecessary repeat examinations."
+    },
+    {
+      "id": "dental-163",
+      "source": "xrays",
+      "tr": "Her diş hekimi ziyaretinde röntgen çekilmesi gerekmeyebilir.",
+      "en": "An X-ray may not be needed at every dental visit."
+    },
+    {
+      "id": "dental-164",
+      "source": "xrays",
+      "tr": "Doğru hasta konumu, radyografik görüntünün kalitesine katkı sağlar.",
+      "en": "Correct patient positioning contributes to radiographic image quality."
+    },
+    {
+      "id": "dental-165",
+      "source": "pregnancy",
+      "tr": "Bebeğin dişleri, doğumdan önce gelişmeye başlar.",
+      "en": "A baby's teeth begin developing before birth."
+    },
+    {
+      "id": "dental-166",
+      "source": "pregnancy",
+      "tr": "Gebelikte hormonal değişimler, diş etinin plağa yanıtını etkileyebilir.",
+      "en": "Hormonal changes in pregnancy can affect gum responses to plaque."
+    },
+    {
+      "id": "dental-167",
+      "source": "pregnancy",
+      "tr": "Gebelikte bazı kişilerde diş eti şişliği görülebilir.",
+      "en": "Some people develop swollen gums during pregnancy."
+    },
+    {
+      "id": "dental-168",
+      "source": "pregnancy",
+      "tr": "Gebelikte kusma, ağızdaki asit maruziyetini artırabilir.",
+      "en": "Vomiting during pregnancy can increase acid exposure in the mouth."
+    },
+    {
+      "id": "dental-169",
+      "source": "pregnancy",
+      "tr": "Gebelikte ağız bakımı, diş ve diş eti sağlığının parçasıdır.",
+      "en": "Oral care remains part of tooth and gum health during pregnancy."
+    },
+    {
+      "id": "dental-170",
+      "source": "pregnancy",
+      "tr": "Gebeliğin diş hekimine bildirilmesi, bakımın planlanmasını destekler.",
+      "en": "Informing the dentist about pregnancy supports care planning."
+    },
+    {
+      "id": "dental-171",
+      "source": "diabetes",
+      "tr": "Diyabet, periodontal hastalık riskini artırabilir.",
+      "en": "Diabetes can increase the risk of periodontal disease."
+    },
+    {
+      "id": "dental-172",
+      "source": "diabetes",
+      "tr": "Diyabette ağız dokularının iyileşmesi yavaşlayabilir.",
+      "en": "Healing of oral tissues can be slower with diabetes."
+    },
+    {
+      "id": "dental-173",
+      "source": "diabetes",
+      "tr": "Diyabetle birlikte ağız kuruluğu görülebilir.",
+      "en": "Dry mouth can occur alongside diabetes."
+    },
+    {
+      "id": "dental-174",
+      "source": "diabetes",
+      "tr": "Diyabet, ağızda mantar enfeksiyonu riskini artırabilir.",
+      "en": "Diabetes can increase the risk of oral fungal infection."
+    },
+    {
+      "id": "dental-175",
+      "source": "diabetes",
+      "tr": "Kan şekeri kontrolü, diş eti sağlığıyla ilişkilidir.",
+      "en": "Blood glucose control is linked to gum health."
+    },
+    {
+      "id": "dental-176",
+      "source": "diabetes",
+      "tr": "Diş eti hastalığı, kan şekeri kontrolünü zorlaştırabilir.",
+      "en": "Gum disease can make blood glucose control harder."
+    },
+    {
+      "id": "dental-177",
+      "source": "diabetes",
+      "tr": "Diyabette tükürükteki glikoz düzeyi artabilir.",
+      "en": "Salivary glucose levels can rise with diabetes."
+    },
+    {
+      "id": "dental-178",
+      "source": "diabetes",
+      "tr": "Sigara, diyabetle ilişkili ağız sağlığı sorunlarını ağırlaştırabilir.",
+      "en": "Smoking can worsen diabetes-related oral health problems."
+    },
+    {
+      "id": "dental-179",
+      "source": "cancer",
+      "tr": "Baş-boyun radyoterapisi, tükürük bezlerinin işlevini etkileyebilir.",
+      "en": "Head and neck radiotherapy can affect salivary gland function."
+    },
+    {
+      "id": "dental-180",
+      "source": "cancer",
+      "tr": "Bazı kanser tedavileri, ağızda yara oluşmasına yol açabilir.",
+      "en": "Some cancer treatments can cause mouth sores."
+    },
+    {
+      "id": "dental-181",
+      "source": "cancer",
+      "tr": "Kanser tedavisi sırasında tat algısı değişebilir.",
+      "en": "Taste perception can change during cancer treatment."
+    },
+    {
+      "id": "dental-182",
+      "source": "cancer",
+      "tr": "Ağız mukozasındaki ağrılı iltihaplanma, mukozit olarak adlandırılır.",
+      "en": "Painful inflammation of the oral lining is called mucositis."
+    },
+    {
+      "id": "dental-183",
+      "source": "cancer",
+      "tr": "Baş-boyun radyoterapisi, ağız açılmasında kısıtlılığa neden olabilir.",
+      "en": "Head and neck radiotherapy can limit mouth opening."
+    },
+    {
+      "id": "dental-184",
+      "source": "cancer",
+      "tr": "Ağız yan etkileri, kanser tedavisinden sonra da sürebilir.",
+      "en": "Oral side effects can persist after cancer treatment."
+    },
+    {
+      "id": "dental-185",
+      "source": "cancer",
+      "tr": "Onkoloji ve diş hekimliği ekiplerinin iletişimi, bakım planlamasını destekler.",
+      "en": "Communication between oncology and dental teams supports care planning."
+    },
+    {
+      "id": "dental-186",
+      "source": "cancer",
+      "tr": "Ağız sorunları, tedavi sırasında yemek yemeyi zorlaştırabilir.",
+      "en": "Oral problems can make eating harder during treatment."
+    },
+    {
+      "id": "dental-187",
+      "source": "glossary",
+      "tr": "Dental ark, dişlerin ağızdaki kavisli dizilimidir.",
+      "en": "The dental arch is the curved arrangement of teeth."
+    },
+    {
+      "id": "dental-188",
+      "source": "glossary",
+      "tr": "Gingival terimi, diş etiyle ilgili anlamına gelir.",
+      "en": "Gingival means relating to the gums."
+    },
+    {
+      "id": "dental-189",
+      "source": "glossary",
+      "tr": "Dentifris, diş macunu için kullanılan bir terimdir.",
+      "en": "Dentifrice is a term for toothpaste."
+    },
+    {
+      "id": "dental-190",
+      "source": "glossary",
+      "tr": "İntraoral terimi, ağız içini ifade eder.",
+      "en": "Intraoral means inside the mouth."
+    },
+    {
+      "id": "dental-191",
+      "source": "glossary",
+      "tr": "Kserostomi, ağız kuruluğu için kullanılan terimdir.",
+      "en": "Xerostomia is a term for dry mouth."
+    },
+    {
+      "id": "dental-192",
+      "source": "glossary",
+      "tr": "Bir kadran, diş arklarının dört bölümünden biridir.",
+      "en": "A quadrant is one of the four dental arch sections."
+    },
+    {
+      "id": "dental-193",
+      "source": "glossary",
+      "tr": "Veneer, dişin ön yüzünü örten ince bir restorasyondur.",
+      "en": "A veneer is a thin restoration covering a tooth's front."
+    },
+    {
+      "id": "dental-194",
+      "source": "glossary",
+      "tr": "Periimplantitis, implant çevresinde kemik kaybıyla ilişkili hastalıktır.",
+      "en": "Peri-implantitis is a disease around implants associated with bone loss."
+    },
+    {
+      "id": "dental-195",
+      "source": "whitening",
+      "tr": "Diş beyazlatma, doğal dişlerin rengini açmayı amaçlar.",
+      "en": "Tooth whitening aims to lighten natural tooth colour."
+    },
+    {
+      "id": "dental-196",
+      "source": "whitening",
+      "tr": "Kron ve dolgular, doğal dişler gibi beyazlamaz.",
+      "en": "Crowns and fillings do not whiten like natural teeth."
+    },
+    {
+      "id": "dental-197",
+      "source": "whitening",
+      "tr": "Kahve ve çay, diş yüzeyinde renklenmeye katkı sağlayabilir.",
+      "en": "Coffee and tea can contribute to tooth surface stains."
+    },
+    {
+      "id": "dental-198",
+      "source": "whitening",
+      "tr": "Tütün kullanımı, dişlerde renklenmeye neden olabilir.",
+      "en": "Tobacco use can cause tooth staining."
+    },
+    {
+      "id": "dental-199",
+      "source": "whitening",
+      "tr": "Beyazlatma sonrasında geçici diş hassasiyeti görülebilir.",
+      "en": "Temporary tooth sensitivity can occur after whitening."
+    },
+    {
+      "id": "dental-200",
+      "source": "whitening",
+      "tr": "Beyazlatma yöntemleri, her renklenme türünde aynı sonucu vermez.",
+      "en": "Whitening methods do not work equally for every discolouration."
+    }
+  ]
+}

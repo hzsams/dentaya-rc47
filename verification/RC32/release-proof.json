@@ -1,0 +1,24 @@
+{
+  "version": "1.0.0-rc.32",
+  "preparedAtUTC": "2026-10-10T23:56:47.230510+00:00",
+  "sourceKeys": 4610,
+  "translatedLocales": 30,
+  "languageChoices": 31,
+  "EUOfficialLanguages": 24,
+  "translations": 138300,
+  "manifestHash": "f621d8ba6b2bf2f8d42f918d199527904ec30a4c0ea0175bf74546e0a9c7e394",
+  "visibleCaptionsChecked": 2546,
+  "verification": {
+    "coreVerifyAndProductionBuild": true,
+    "lintZeroWarnings": true,
+    "typecheck": true,
+    "browserUILocales": 31,
+    "systemNotificationsAndEngineStatus": true,
+    "realCADAndWebGL": true,
+    "CADLocaleChangesPreserveScene": true,
+    "sculptUndoRedo": true,
+    "protectedScanAssets": 42,
+    "WindowsNSISInstallerBuiltOrRun": false
+  },
+  "scope": "Complete bundled fixed-interface translation coverage. User-authored text, patient names, file names and FDI codes remain unchanged. Standard technical names and units are preserved. Native-language editorial approval is not claimed."
+}

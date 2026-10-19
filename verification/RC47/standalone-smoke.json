@@ -1,0 +1,24 @@
+{
+  "pass": true,
+  "server": "Next standalone production build",
+  "routes": [
+    {
+      "route": "/",
+      "status": 200,
+      "html": true
+    },
+    {
+      "route": "/ai",
+      "status": 200,
+      "html": true
+    },
+    {
+      "route": "/design",
+      "status": 200,
+      "html": true
+    }
+  ],
+  "staticAssetsVerified": 27,
+  "externalBackend": false,
+  "nativeModelInference": false
+}

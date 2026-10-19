@@ -1,0 +1,184 @@
+[
+  {
+    "command": "npm run verify:runtime",
+    "exitCode": 0,
+    "seconds": 0.29
+  },
+  {
+    "command": "npm run verify:release",
+    "exitCode": 0,
+    "seconds": 0.2
+  },
+  {
+    "command": "npm run verify:release-env",
+    "exitCode": 0,
+    "seconds": 1.02
+  },
+  {
+    "command": "npm run verify:security",
+    "exitCode": 0,
+    "seconds": 0.19
+  },
+  {
+    "command": "npm run verify:localization",
+    "exitCode": 0,
+    "seconds": 7.01
+  },
+  {
+    "command": "npm run verify:system-translations",
+    "exitCode": 0,
+    "seconds": 4.67
+  },
+  {
+    "command": "npm run verify:aya",
+    "exitCode": 0,
+    "seconds": 0.52
+  },
+  {
+    "command": "npm run verify:local-aya",
+    "exitCode": 0,
+    "seconds": 0.3
+  },
+  {
+    "command": "npm run verify:aya-core",
+    "exitCode": 0,
+    "seconds": 0.28
+  },
+  {
+    "command": "npm run verify:aya-managed",
+    "exitCode": 0,
+    "seconds": 0.26
+  },
+  {
+    "command": "npm run verify:language-packs",
+    "exitCode": 0,
+    "seconds": 3.95
+  },
+  {
+    "command": "npm run verify:desktop-language",
+    "exitCode": 0,
+    "seconds": 0.23
+  },
+  {
+    "command": "npm run verify:experience",
+    "exitCode": 0,
+    "seconds": 0.56
+  },
+  {
+    "command": "npm run verify:tooth-appearance",
+    "exitCode": 0,
+    "seconds": 1.11
+  },
+  {
+    "command": "npm run verify:tooth-forms",
+    "exitCode": 0,
+    "seconds": 9.49
+  },
+  {
+    "command": "npm run verify:cad-library",
+    "exitCode": 0,
+    "seconds": 0.68
+  },
+  {
+    "command": "npm run verify:sculpt-integrity",
+    "exitCode": 0,
+    "seconds": 1.0
+  },
+  {
+    "command": "npm run verify:morphology-sculpt",
+    "exitCode": 0,
+    "seconds": 11.97
+  },
+  {
+    "command": "npm run verify:tooth-layout",
+    "exitCode": 0,
+    "seconds": 0.52
+  },
+  {
+    "command": "npm run verify:cad-display",
+    "exitCode": 0,
+    "seconds": 0.35
+  },
+  {
+    "command": "npm run verify:cad-view",
+    "exitCode": 0,
+    "seconds": 0.37
+  },
+  {
+    "command": "npm run verify:performance",
+    "exitCode": 0,
+    "seconds": 0.17
+  },
+  {
+    "command": "npm run verify:pilot",
+    "exitCode": 0,
+    "seconds": 0.17
+  },
+  {
+    "command": "npm run verify:cad",
+    "exitCode": 0,
+    "seconds": 0.43
+  },
+  {
+    "command": "npm run verify:cad-setup",
+    "exitCode": 0,
+    "seconds": 0.28
+  },
+  {
+    "command": "npm run verify:cad-daily",
+    "exitCode": 0,
+    "seconds": 8.21
+  },
+  {
+    "command": "npm run verify:cad-interaction",
+    "exitCode": 0,
+    "seconds": 0.17
+  },
+  {
+    "command": "npm run verify:cad-workflow",
+    "exitCode": 0,
+    "seconds": 0.16
+  },
+  {
+    "command": "npm run verify:cad-panel",
+    "exitCode": 0,
+    "seconds": 0.17
+  },
+  {
+    "command": "npm run verify:cad-guided",
+    "exitCode": 0,
+    "seconds": 0.28
+  },
+  {
+    "command": "npm run verify:migrations",
+    "exitCode": 0,
+    "seconds": 2.37
+  },
+  {
+    "command": "npm run verify:e2e",
+    "exitCode": 0,
+    "seconds": 2.5
+  },
+  {
+    "command": "npm run verify:operations",
+    "exitCode": 0,
+    "seconds": 0.31
+  },
+  {
+    "command": "npm run verify:validation",
+    "exitCode": 0,
+    "seconds": 0.32
+  },
+  {
+    "command": "npm run lint -- --max-warnings=0",
+    "exitCode": 0
+  },
+  {
+    "command": "npm run typecheck",
+    "exitCode": 0
+  },
+  {
+    "command": "npm run build",
+    "exitCode": 0
+  }
+]

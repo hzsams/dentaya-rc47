@@ -1,0 +1,29 @@
+# dependencies
+/node_modules
+
+# Next.js
+/.next
+/out
+
+# production bundles
+/build
+
+# local environment files
+.env
+.env.local
+.env.*.local
+
+# logs and tooling
+*.log
+.eslintcache
+*.tsbuildinfo
+
+# operating systems and editors
+.DS_Store
+Thumbs.db
+.idea
+.vscode
+
+# Supabase local state
+/supabase/.branches
+/supabase/.temp

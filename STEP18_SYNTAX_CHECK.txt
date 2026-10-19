@@ -1,0 +1,6 @@
+DentAYA MVP v6 Step 18 syntax check
+Method: TypeScript transpileModule parse over all src/**/*.ts and src/**/*.tsx
+FILES=53
+SYNTAX_ERRORS=0
+
+Note: This is a syntax/parser check only. The overlay package does not include the user's local node_modules/package metadata, so the real Next.js build must be run in C:\\Users\\ahmet\\dentaya with npm.cmd run build.

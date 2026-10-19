@@ -1,0 +1,9 @@
+{
+  "pass": true,
+  "version": "1.0.0-rc.38",
+  "command": "npm run build",
+  "exitCode": 0,
+  "buildId": "tU2H0Yi6DjYhOmCmhabgn",
+  "staticPagesGenerated": 36,
+  "standaloneServer": true
+}

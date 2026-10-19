@@ -1,0 +1,23 @@
+-- DentAYA MVP v6 Step 7 — Settings Control Center
+-- Canlı Supabase projesine uygulanmıştır.
+--
+-- Yeni tablo:
+--   user_notification_preferences
+--
+-- Alanlar:
+--   case_enabled
+--   design_enabled
+--   finance_enabled
+--   delivery_enabled
+--   message_enabled
+--   system_enabled
+--
+-- RLS:
+--   kullanıcı yalnız kendi tercihlerini okuyabilir / oluşturabilir / güncelleyebilir.
+--
+-- organizations için server-side guard eklendi:
+--   id / slug / org_type / demo_mode / created_at immutable
+--   name 2..120 karakter
+--   updated_at server tarafından güncellenir
+--
+-- Tam SQL Supabase migration history'dedir.

@@ -1,0 +1,17 @@
+{
+  "pass": true,
+  "checkedAt": "2026-10-15T19:52:37.124285+00:00",
+  "includes": [
+    "RC42",
+    "RC43"
+  ],
+  "readingSeconds": 10,
+  "sourceArchiveSha256": "4c5797f4204f4f1c8c51db4b24132c0eb629d7eeab65a1797c133dea127fdc7a",
+  "applicationCodeChanged": true,
+  "previous38ChecksRetainedAsHistorical": true,
+  "currentReadingChecks": 6,
+  "sourceManifestVerified": true,
+  "installerEntry": "DENTAYA_GUNCELLE_DERLE.cmd",
+  "windowsExeBuiltHere": false,
+  "changes": "10 saniyelik ortak okuma penceresi; aynı cümle, erken geçiş, uzun yüklemede ek bekleme olmaması."
+}

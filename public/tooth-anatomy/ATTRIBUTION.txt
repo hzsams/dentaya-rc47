@@ -1,0 +1,6 @@
+BodyParts3D, © The Database Center for Life Science licensed under CC Attribution 4.0 International
+https://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html
+https://creativecommons.org/licenses/by/4.0/
+BodyParts3D 4.0, official 99% reduction archive, binary conversion by OMFAtlas (https://github.com/choxos/OMFAtlas). DentAYA centers and scales individual models for schematic tooth selection. Third molars are representative resized second molars. These are anatomical reference models, not patient scans.
+
+RC24 display variants: optional width/depth/height adjustments of the reference crowns for visual selection only. Not patient anatomy or restoration geometry.

@@ -1,0 +1,30 @@
+'use client';
+import UiNode from '@/lib/i18n/UiNode';
+import {useEffect,useId,useMemo,useRef,useState} from 'react';
+import {useTranslation} from '@/lib/i18n';
+import {dentalFactLanguage} from '@/lib/dental-facts';
+import {LOADING_PLAY_TEXT} from '@/lib/i18n/loading-play';
+import {createKuspPuzzle,kuspSolved,kuspSolution,turnKusp,readKuspRecord,saveKuspWin,EMPTY_KUSP_RECORD,type KuspMove} from '@/lib/kusp-game';
+export default function KuspGame(){
+ const gradient=useId();
+ const {locale}=useTranslation(),language=dentalFactLanguage(locale),copy=LOADING_PLAY_TEXT[language];
+ const [state,setState]=useState(()=>createKuspPuzzle(4301,4)),[moves,setMoves]=useState(0),[selected,setSelected]=useState(0),[hint,setHint]=useState<KuspMove|null>(null),[record,setRecord]=useState(EMPTY_KUSP_RECORD),[recordFailed,setRecordFailed]=useState(false),buttons=useRef<(HTMLButtonElement|null)[]>([]),won=useRef(false);
+ useEffect(()=>{setRecord(readKuspRecord());},[]);
+ const solved=kuspSolved(state),solution=useMemo(()=>kuspSolution(state),[state]),aligned=state.filter(n=>n===0).length;
+ function change(index:number,direction:1|-1=1){if(solved||won.current)return;setSelected(index);setHint(null);const next=turnKusp(state,index,direction),count=moves+1;setState(next);setMoves(count);if(kuspSolved(next)){won.current=true;const result=saveKuspWin(count);setRecord(result.record);setRecordFailed(!result.saved);}}
+ function restart(){const seed=crypto.getRandomValues(new Uint32Array(1))[0];setState(createKuspPuzzle(seed,Math.min(8,4+record.wins)));setMoves(0);setHint(null);setRecordFailed(false);won.current=false;}
+ const locations=[[32.8,34],[67.2,34],[67.2,71.5],[32.8,71.5]],angles=[45,135,225,315];
+ return <UiNode as="section" translateChildren={false} className="kusp-game" lang={language} dir="ltr" data-kusp-state={state.join(',')} data-kusp-solved={solved} onKeyDown={e=>{if(e.key!=='Escape')e.stopPropagation();}}>
+  <UiNode as="p" translateChildren={false} className="kusp-intro">{copy.intro}</UiNode><UiNode as="p" translateChildren={false} className="kusp-instructions">{copy.instructions}</UiNode>
+  <UiNode as="div" translateChildren={false} className="kusp-metrics"><UiNode as="span" translateChildren={false}>{copy.moves}<UiNode as="b" translateChildren={false} data-kusp-moves>{moves}</UiNode></UiNode><UiNode as="span" translateChildren={false}>{copy.aligned}<UiNode as="b" translateChildren={false}>{aligned} / 4</UiNode></UiNode><UiNode as="span" translateChildren={false}>{copy.wins}<UiNode as="b" translateChildren={false}>{record.wins}</UiNode></UiNode><UiNode as="span" translateChildren={false}>{copy.best}<UiNode as="b" translateChildren={false}>{record.bestMoves??'—'}</UiNode></UiNode></UiNode>
+  <UiNode as="div" translateChildren={false} className={'kusp-board'+(solved?' kusp-board--solved':'')} aria-label={copy.game}>
+   <svg className="kusp-tooth" viewBox="0 0 360 330" aria-hidden="true"><defs><radialGradient id={gradient}><stop stopColor="var(--kusp-enamel-light,#fcf8e8)"/><stop offset="1" stopColor="var(--kusp-enamel-dark,#d9d4be)"/></radialGradient></defs><path d="M180 36C148 9 96 15 64 44C31 74 43 119 34 155C20 205 41 264 80 293C111 316 155 300 180 310C205 300 250 316 280 293C320 264 340 205 326 155C317 119 329 74 296 44C264 15 212 9 180 36Z" fill={`url(#${gradient})`}/><path d="M180 48V123M48 166H92M268 166H312M180 232V295" stroke="#aaa58c" strokeWidth="3" opacity=".45"/><path d="M118 112L180 174L242 112M118 236L180 174L242 236" fill="none" stroke="var(--dy-accent,#91d2c0)" strokeWidth="3" strokeDasharray="4 7" opacity=".6"/><circle cx="180" cy="174" r="10" fill="var(--dy-accent,#91d2c0)"/></svg>
+   {state.map((step,i)=><UiNode as="button" translateChildren={false} key={i} ref={node=>{buttons.current[i]=node;}} type="button" className={'kusp-cusp'+(selected===i?' is-selected':'')+(step===0?' is-aligned':'')+(hint?.index===i?' is-hint':'')} style={{left:locations[i][0]+'%',top:locations[i][1]+'%'}} aria-label={`${copy.selected} ${i+1}: ${copy.turn}`} aria-pressed={selected===i} disabled={solved} data-kusp={i} data-step={step} onClick={e=>change(i,e.shiftKey?-1:1)} onKeyDown={e=>{if(['ArrowRight','ArrowDown','ArrowLeft','ArrowUp'].includes(e.key)){e.preventDefault();const next=(i+(['ArrowRight','ArrowDown'].includes(e.key)?1:3))%4;setSelected(next);buttons.current[next]?.focus();}else if(e.key==='Enter'||e.key===' '){e.preventDefault();change(i,e.shiftKey?-1:1);}}}>
+    <svg viewBox="0 0 90 90" aria-hidden="true"><circle cx="45" cy="45" r="39" fill="none" stroke="currentColor" opacity=".18"/>{Array.from({length:8},(_,n)=><path key={n} d="M45 7V12" stroke="currentColor" strokeWidth="2" transform={`rotate(${n*45} 45 45)`}/>)}<g transform={`rotate(${angles[i]+step*45} 45 45)`}><path d="M45 45H78" stroke="currentColor" strokeWidth="5" strokeLinecap="round"/><path d="m70 38 8 7-8 7" fill="none" stroke="currentColor" strokeWidth="2"/></g><circle cx="45" cy="45" r="13" fill="var(--kusp-disc,#efecdf)"/><UiNode as="text" translateChildren={false} x="45" y="50" textAnchor="middle" fontSize="14" fill="currentColor">{i+1}</UiNode></svg>
+   </UiNode>)}
+  </UiNode>
+  <UiNode as="div" translateChildren={false} className="kusp-feedback" role="status" aria-live="polite">{solved?copy.solved:hint?`${hint.index+1} · ${copy.hintMessage} · ${hint.direction===1?copy.clockwise:copy.counter}`:'\u00a0'}</UiNode>
+  <UiNode as="div" translateChildren={false} className="kusp-actions"><UiNode as="button" translateChildren={false} type="button" disabled={solved} onClick={()=>change(selected,-1)}>{copy.reverse}</UiNode><UiNode as="button" translateChildren={false} type="button" disabled={solved||!solution.length} onClick={()=>{setHint(solution[0]);setSelected(solution[0].index);}}>{copy.hint}</UiNode><UiNode as="button" translateChildren={false} type="button" className="kusp-primary" onClick={restart}>{solved?copy.again:copy.restart}</UiNode></UiNode>
+  <UiNode as="p" translateChildren={false} className="kusp-keyboard">{copy.keyboard}</UiNode>{recordFailed&&<UiNode as="p" translateChildren={false} role="status">{copy.noRecord}</UiNode>}
+ </UiNode>;
+}

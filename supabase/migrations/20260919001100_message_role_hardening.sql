@@ -1,0 +1,6 @@
+-- Message write roles.
+--
+-- case_messages and organization_messages INSERT:
+-- owner/admin/dentist/assistant/technician only.
+-- viewer/courier cannot write clinical/lab messages.
+-- Server trigger stamps sender identity from auth + membership.

@@ -1,0 +1,33 @@
+{
+  "release": "1.0.0-rc.37",
+  "locales": 46,
+  "sourceKeys": 4746,
+  "translatedEntries": 213570,
+  "additionalTranslatedEntries": 71190,
+  "hash": "bc473b446890f969223f8d35b17f2d01cd3a5f37c2941ee293cb9658346c3209",
+  "additionalLocales": [
+    "no",
+    "is",
+    "sr",
+    "bs",
+    "sq",
+    "mk",
+    "az",
+    "ka",
+    "hy",
+    "he",
+    "fa",
+    "hi",
+    "bn",
+    "id",
+    "vi"
+  ],
+  "desktopCopiesMatch": true,
+  "segmentAndVariableMarkersAbsent": true,
+  "coreTokensPreserved": true,
+  "noteTemplateSuffixCorrected": [
+    "hy",
+    "he"
+  ],
+  "nativeEditorialReviewClaimed": false
+}

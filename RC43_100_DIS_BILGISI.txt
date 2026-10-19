@@ -1,0 +1,116 @@
+DentAYA RC43 — 100 kısa diş bilgisi
+
+1. Mine, diş kronunun dışını örten sert dokudur.
+2. Dentin, mine ve sementin altında bulunur.
+3. Pulpa; damar, sinir ve bağ dokusu içerir.
+4. Sement, diş kökünün dış yüzeyini örter.
+5. Periodontal ligament, kökü diş yuvasına bağlayan lifler içerir.
+6. Alveol kemiği, diş köklerini çevreleyen çene kemiğidir.
+7. Dişin boyun bölgesi, kron ile kökün birleştiği alandır.
+8. Pulpa odası, kronun içindeki yumuşak dokuyu barındırır.
+9. Kök kanalı, pulpa boşluğunun kök içindeki devamıdır.
+10. Dentin, mikroskobik tübüllerden oluşan bir ağ içerir.
+11. Mine dokusu canlı hücre içermez.
+12. Diş eti, dişlerin çevresindeki yumuşak dokudur.
+13. Tipik süt dişi dizisi 20 diş içerir.
+14. Tipik daimi diş dizisi, yirmiliklerle birlikte 32 diş içerir.
+15. Dişlerin boyutları ve biçimleri görevlerine göre farklılaşır.
+16. Dişlerin çenedeki konumu çiğnemedeki görevlerini etkiler.
+17. Süt dişleri çocukluk boyunca farklı zamanlarda değişir.
+18. Süt ve daimi dişlerin birlikte bulunduğu dönem karma dişlenmedir.
+19. İlk süt dişleri çoğunlukla altıncı ay civarında sürmeye başlar.
+20. Dişler, çiğnemenin yanında konuşmaya da katkı sağlar.
+21. Dişler, yüzün biçimini destekleyen yapılardan biridir.
+22. Süt dişlerinin sürme sırası ile daimi dişlerinki aynı değildir.
+23. Çürük, bakterilerin ürettiği asitlerin diş dokusunu etkilemesiyle başlar.
+24. Şeker ve nişasta, çürükle ilişkili bakterilere kaynak sağlayabilir.
+25. Tekrarlayan asit etkisi, mineden mineral kaybına neden olabilir.
+26. Erken mineral kaybı, dişte beyaz bir leke olarak görülebilir.
+27. Başlangıç çürüğü her zaman ağrı yapmaz.
+28. Dişte oyuk oluşmadan önceki mineral kaybı geri dönebilir.
+29. Tükürük mineralleri ve florür, minenin yeniden minerallenmesini destekler.
+30. Diş kökünün açığa çıkan yüzeyi de çürüyebilir.
+31. Çürük yalnız çocuklarda değil, her yaşta görülebilir.
+32. Radyografiler, gözle görülemeyen bazı çürüklerin saptanmasına yardımcı olur.
+33. Diş plağı, diş yüzeyinde oluşan yapışkan bir bakteri tabakasıdır.
+34. Plak, gözle her zaman kolayca seçilemez.
+35. Florürlü macun, mineyi çürüğe karşı korumaya yardımcı olur.
+36. Diş arası temizliği, fırçanın erişemediği alanlara ulaşmaya yardımcı olur.
+37. Yıpranan fırça kılları, fırçanın yenilenmesi gerektiğini gösterebilir.
+38. Dişlerin iç, dış ve çiğneme yüzeyleri ayrı ayrı temizlenir.
+39. Diş ipi, dişlerin arasındaki plak ve artıkları uzaklaştırabilir.
+40. Diş taşı, diş yüzeyinde sertleşmiş plaktır.
+41. Dolgu bulunan dişlerde de yeni çürük oluşabilir.
+42. Dilin yüzeyi de ağız temizliğinin bir parçasıdır.
+43. Tükürük, tükürük bezleri tarafından üretilir.
+44. Tükürük, besinlerin nemlenmesine ve parçalanmasına yardımcı olur.
+45. Tükürük akışı, ağızdaki besin artıklarının uzaklaştırılmasını destekler.
+46. Tükürük, kalsiyum ve fosfat gibi mineraller içerir.
+47. Yeterli tükürük bulunmaması çürük riskini artırabilir.
+48. Ağız kuruluğu, yaşlanmanın kaçınılmaz bir sonucu değildir.
+49. Bazı ilaçlar tükürük üretimini azaltabilir.
+50. Tükürük, rahat yutkunmaya ve konuşmaya katkı sağlar.
+51. Periodontal hastalık, dişleri destekleyen dokuları etkiler.
+52. Diş eti çekilmesi, kök yüzeyini açığa çıkarabilir.
+53. Diş eti hastalığında kızarıklık ve şişlik görülebilir.
+54. Diş eti kanaması, değerlendirilmesi gereken bir bulgu olabilir.
+55. İleri periodontal hastalık dişleri destekleyen kemiği etkileyebilir.
+56. Sigara kullanımı, periodontal hastalık için önemli bir risk etkenidir.
+57. Periodontal sond, diş çevresindeki ceplerin ölçülmesinde kullanılır.
+58. Diş taşı, profesyonel temizlikle uzaklaştırılır.
+59. Bruksizm, diş sıkma veya gıcırdatma davranışını ifade eder.
+60. Bruksizm uyanıkken de uyku sırasında da görülebilir.
+61. Çocuklar ve erişkinler bruksizm yaşayabilir.
+62. Şiddetli bruksizm dişlerde aşınma ve çatlaklara katkıda bulunabilir.
+63. Bruksizm, çiğneme kaslarında yorgunlukla ilişkili olabilir.
+64. Uyku bruksizmi, kişi fark etmeden gerçekleşebilir.
+65. Bruksizmde dişler ve restorasyonlar birlikte değerlendirilir.
+66. Bruksizmin ortaya çıkışında birden fazla etken rol oynayabilir.
+67. Fissür örtücüler, arka dişlerin çiğneme yüzeylerini koruyan kaplamalardır.
+68. Azı dişlerinin çiğneme yüzeylerinde çukur ve oluklar bulunur.
+69. Derin oluklar, besin ve bakterilerin tutunmasına elverişli olabilir.
+70. Fissür örtücüler, olukların içinde koruyucu bir bariyer oluşturur.
+71. İlk daimi azılar çoğunlukla altı yaş civarında sürer.
+72. İkinci daimi azılar çoğunlukla on iki yaş civarında sürer.
+73. Dentin, üzerindeki koruyucu tabakalar kaybolduğunda hassaslaşabilir.
+74. Açığa çıkan dentin tübülleri sıcak ve soğuk uyaranları iletebilir.
+75. Diş eti çekilmesi, dentinin açığa çıkmasına yol açabilir.
+76. Çatlak bir diş, hassasiyetin olası nedenlerinden biridir.
+77. Yıpranmış dolgular diş hassasiyetine katkıda bulunabilir.
+78. Mine aşınması, alttaki dentinin korumasını azaltabilir.
+79. Hassasiyetin nedeni her dişte aynı olmak zorunda değildir.
+80. Hassasiyete yaklaşım, altta yatan nedene göre değişir.
+81. Dental implant gövdesi, çene kemiği içine yerleştirilen bir tıbbi cihazdır.
+82. Abutment, implant gövdesiyle üstteki restorasyon arasında bağlantı sağlar.
+83. İmplant destekli restorasyonlar kron, köprü veya protez biçiminde olabilir.
+84. İmplant sistemlerinde abutmenti sabitlemek için bir vida bulunabilir.
+85. İmplant çevresindeki dokuların temizliği uzun dönem bakımın parçasıdır.
+86. Titanyum ve zirkonyum oksit, implant sistemlerinde kullanılan malzemelerdendir.
+87. İmplant iyileşmesi, kişinin genel sağlık durumundan etkilenebilir.
+88. İmplantın markası ve modeli, takip kayıtlarında önemli bilgilerdir.
+89. Endodonti, dişin pulpası ve kök çevresiyle ilgilenen alandır.
+90. Kanal tedavisinde iltihaplı veya enfekte pulpa uzaklaştırılır.
+91. Kanal tedavisi, doğal dişi korumayı amaçlayan bir yaklaşımdır.
+92. Kök kanalları tedavi sırasında temizlenir ve dezenfekte edilir.
+93. Temizlenen kök kanalları doldurularak kapatılır.
+94. Gelişimini tamamlamış bir diş, pulpası olmadan da ağızda kalabilir.
+95. Protetik kron, dişin biçimini ve işlevini yeniden oluşturabilir.
+96. Kronlar, zayıflamış bir dişi desteklemek için kullanılabilir.
+97. Kron, büyük dolgulu bir dişin örtülmesinde kullanılabilir.
+98. Protetik kron, bir implantın üstünde de yer alabilir.
+99. Protetik kron, kırılmış bir dişin biçimini tamamlayabilir.
+100. Kron kenarındaki diş dokusu da çürüğe karşı korunmalıdır.
+
+Kaynaklar:
+ADA · Tooth anatomy — https://www.mouthhealthy.org/all-topics-a-z/tooth
+ADA · Eruption charts — https://www.mouthhealthy.org/all-topics-a-z/eruption-charts
+NIDCR · Tooth decay — https://www.nidcr.nih.gov/health-info/tooth-decay
+NIDCR · Oral hygiene — https://www.nidcr.nih.gov/health-info/oral-hygiene
+NIDCR · Dry mouth — https://www.nidcr.nih.gov/health-info/dry-mouth
+NIDCR · Periodontal disease — https://www.nidcr.nih.gov/health-info/gum-disease
+NIDCR · Bruxism — https://www.nidcr.nih.gov/health-info/bruxism
+NIDCR · Dental sealants — https://www.nidcr.nih.gov/health-info/dental-sealants
+ADA · Sensitive teeth — https://www.mouthhealthy.org/all-topics-a-z/sensitive-teeth
+FDA · Dental implants — https://www.fda.gov/medical-devices/dental-devices/dental-implants-what-you-should-know
+AAE · Root canal treatment — https://www.aae.org/patients/root-canal-treatment/what-is-a-root-canal/
+ADA · Crowns — https://www.mouthhealthy.org/all-topics-a-z/crowns

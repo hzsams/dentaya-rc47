@@ -1,0 +1,21 @@
+ProsthoObjects3D: Three dimensional STL dental dataset of prosthetic objects
+Creator/Data collector: Tehran University of Medical Sciences.
+Copyright (C) 2026 The Authors.
+Source DOI: https://doi.org/10.5281/zenodo.18488594
+Record: https://zenodo.org/records/18488594
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+License: https://creativecommons.org/licenses/by/4.0/
+
+Included: original 601, 605, 606, 608 STL files and their JSON annotations, copied from 601-650.zip. Original STL bytes unchanged; source archive MD5 and included SHA256 verified. See public/training-scans/provenance.json and selected-metadata.csv.
+
+The publisher describes these as cleaned and standardized surface meshes from clinical intraoral scans. These are research surface records, not ready-to-manufacture restorations. DentAYA adds fictional demo labels and manual workflow cards; those labels are not identities of the source patients. No clinical correspondence between the fictional person and original scanned person is asserted.
+
+Source labels:
+601: scan body, 46.
+605: scan bodies, 15 14 13 23 24 25.
+606: scan bodies, 47 44.
+608: crowns and scan bodies in the upper arch; see selected-metadata.csv.
+
+No matching crown-preparation or fully edentulous denture scan is included for DEMO-005/006/007. Those scenarios are explicitly marked as awaiting appropriate scan files. No artificial scan is represented as a real scan.
+
+Güncelleme: 602.stl ve 602.json eklendi; DEMO-005 için 36 bölgesinde scan body içeren referans taraması. Kapşon preparasyonu değildir. Kaynak ve lisans yukarıdaki veri setiyle aynıdır. Geometri değiştirilmedi.

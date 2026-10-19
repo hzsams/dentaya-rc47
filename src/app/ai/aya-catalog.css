@@ -1,0 +1,17 @@
+/* RC46: bounded, accessible question browser. */
+.aya-question-library{border:1px solid var(--dy-border);border-radius:12px;padding:14px 16px;background:var(--dy-surface);margin:12px 0;min-width:0}
+.aya-question-library>summary{cursor:pointer;font-size:13px;font-weight:600;line-height:1.6}
+.aya-question-library>div>p{font-size:12px;color:var(--dy-muted);line-height:1.6}
+.aya-library-filters{display:flex;flex-wrap:wrap;gap:10px}
+.aya-library-filters input,.aya-library-filters select{min-width:0;max-width:100%;flex:1 1 200px;border:1px solid var(--dy-border);border-radius:8px;padding:10px;background:var(--dy-surface2);color:var(--dy-text);font:inherit;font-size:12px}
+.aya-question-library ul{list-style:none;padding:0;margin:12px 0;display:grid;gap:8px;max-height:480px;overflow:auto;overscroll-behavior:contain}
+.aya-question-library li{padding:12px;border:1px solid var(--dy-border);border-radius:8px;display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;overflow-wrap:anywhere}
+.aya-question-library li details{flex:1 1 280px;min-width:0;font-size:12px;line-height:1.7}
+.aya-question-library li summary{cursor:pointer}
+.aya-question-library small{display:block;color:var(--dy-muted);font-size:10px}
+.aya-question-library a{color:var(--dy-accent)}
+.aya-question-library button{cursor:pointer;font:inherit;font-size:11px;padding:8px 12px;background:var(--dy-surface2);border:1px solid var(--dy-border);color:var(--dy-text);border-radius:7px}
+.aya-question-library button:disabled{opacity:.45;cursor:default}
+.aya-question-library nav{display:flex;justify-content:space-between;gap:12px}
+.aya-question-library :focus-visible{outline:2px solid var(--dy-accent);outline-offset:3px}
+.aya-chat .aya-working-memory{padding:12px 16px;margin:8px 0;border:1px solid var(--dy-border);border-radius:10px;font-size:12px;line-height:1.7;overflow-wrap:anywhere}.aya-working-memory summary{cursor:pointer;font-weight:600}.aya-working-memory>strong{display:block}.aya-working-memory button{margin-top:8px;padding:8px 12px;border:1px solid var(--dy-border);border-radius:6px;color:var(--dy-text);background:var(--dy-surface2)}

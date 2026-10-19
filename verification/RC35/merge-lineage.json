@@ -1,0 +1,11 @@
+{
+  "rc33Files": 769,
+  "rc34Files": 781,
+  "missingFromRc34RestoredFromRc33": [
+    "electron/aya/core.cjs"
+  ],
+  "restoredHashes": {
+    "electron/aya/core.cjs": "dd6522736b18c778d9e7524218da6eec9c54974204a991e4c14e93266c6a38ca"
+  },
+  "mergedFrom": "RC34 with RC33 source preservation"
+}

@@ -1,0 +1,65 @@
+{
+  "release": 38,
+  "wordmark": "DENTAYA",
+  "colors": {
+    "ink": "#17343A",
+    "green": "#166858",
+    "paper": "#F7F7F2",
+    "mint": "#B7DBCD",
+    "gold": "#987540"
+  },
+  "logos": [
+    {
+      "id": "01",
+      "file": "01_dental_form",
+      "style": "Atelier"
+    },
+    {
+      "id": "02",
+      "file": "02_dental_arch",
+      "style": "Arch"
+    },
+    {
+      "id": "03",
+      "file": "03_cad_geometry",
+      "style": "Precision"
+    },
+    {
+      "id": "06",
+      "file": "06_crown",
+      "style": "Heritage"
+    },
+    {
+      "id": "09",
+      "file": "09_link",
+      "style": "Monogram"
+    },
+    {
+      "id": "12",
+      "file": "12_shield",
+      "style": "Seal"
+    },
+    {
+      "id": "13",
+      "file": "13_apex",
+      "style": "Apex"
+    },
+    {
+      "id": "18",
+      "file": "18_bridge",
+      "style": "Bridge"
+    }
+  ],
+  "legacyFiles": {
+    "04_scan": "03_cad_geometry",
+    "05_orbit": "09_link",
+    "07_prism": "03_cad_geometry",
+    "08_wave": "02_dental_arch",
+    "10_spark": "01_dental_form",
+    "11_layer": "18_bridge",
+    "14_diamond": "03_cad_geometry",
+    "15_focus": "12_shield",
+    "16_flow": "09_link",
+    "17_petal": "02_dental_arch"
+  }
+}

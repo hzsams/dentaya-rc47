@@ -1,0 +1,13 @@
+import type {QaEntry,QaTopic} from './qa-catalog.cjs';
+export type ConversationMessage={role:string;content:string;references?:{id:string;title:string;href:string}[]};
+export type CoreReply={ok:true;engine:'core';output:string;references:{id:string;title:string;href:string}[]};
+export type ConversationContext={locale?:string;history?:ConversationMessage[];options?:{style?:string};modelError?:string;modelEnabled?:boolean};
+export function fold(s:unknown):string;
+export function oneEdit(a:string,b:string):boolean;
+export function scoreQuery(query:string,limit?:number):{topic:QaTopic;score:number}[];
+export function safetyReply(prompt:string,context?:ConversationContext):CoreReply|null;
+export function smallTalk(prompt:string,context?:ConversationContext):CoreReply|null;
+export function answerCatalog(prompt:string,context?:ConversationContext):CoreReply|null;
+export function fallbackReply(prompt:string,context?:ConversationContext):CoreReply;
+export function retrieveCatalog(query:string,limit?:number):QaEntry[];
+export function isCatalogQuestion(query:string):boolean;

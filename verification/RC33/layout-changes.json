@@ -1,0 +1,146 @@
+{
+  "files": 35,
+  "copyPairsSeparated": 95,
+  "changes": [
+    {
+      "file": "src/app/ConnectionStatus.tsx",
+      "copyPairsSeparated": 1
+    },
+    {
+      "file": "src/app/HomeClient.tsx",
+      "copyPairsSeparated": 5
+    },
+    {
+      "file": "src/app/HomeDashboard.tsx",
+      "copyPairsSeparated": 4
+    },
+    {
+      "file": "src/app/ModuleQuickLink.tsx",
+      "copyPairsSeparated": 1
+    },
+    {
+      "file": "src/app/NotificationCenter.tsx",
+      "copyPairsSeparated": 2
+    },
+    {
+      "file": "src/app/OnboardingGuide.tsx",
+      "copyPairsSeparated": 2
+    },
+    {
+      "file": "src/app/WorkspaceChrome.tsx",
+      "copyPairsSeparated": 1
+    },
+    {
+      "file": "src/app/appointments/page.tsx",
+      "copyPairsSeparated": 2
+    },
+    {
+      "file": "src/app/cases/[id]/page.tsx",
+      "copyPairsSeparated": 5
+    },
+    {
+      "file": "src/app/community/CommunityClient.tsx",
+      "copyPairsSeparated": 1
+    },
+    {
+      "file": "src/app/design/CadBrushPresets.tsx",
+      "copyPairsSeparated": 1
+    },
+    {
+      "file": "src/app/design/CadJobSetupPanel.tsx",
+      "copyPairsSeparated": 6
+    },
+    {
+      "file": "src/app/design/DesignStudioClient.tsx",
+      "copyPairsSeparated": 2
+    },
+    {
+      "file": "src/app/design/DesignViewport.tsx",
+      "copyPairsSeparated": 2
+    },
+    {
+      "file": "src/app/design/page.tsx",
+      "copyPairsSeparated": 1
+    },
+    {
+      "file": "src/app/finance/page.tsx",
+      "copyPairsSeparated": 3
+    },
+    {
+      "file": "src/app/labs/page.tsx",
+      "copyPairsSeparated": 1
+    },
+    {
+      "file": "src/app/loading.tsx",
+      "copyPairsSeparated": 1
+    },
+    {
+      "file": "src/app/logistics/page.tsx",
+      "copyPairsSeparated": 3
+    },
+    {
+      "file": "src/app/messages/page.tsx",
+      "copyPairsSeparated": 4
+    },
+    {
+      "file": "src/app/notifications/page.tsx",
+      "copyPairsSeparated": 1
+    },
+    {
+      "file": "src/app/operations/page.tsx",
+      "copyPairsSeparated": 2
+    },
+    {
+      "file": "src/app/pilot-check/page.tsx",
+      "copyPairsSeparated": 1
+    },
+    {
+      "file": "src/app/pilot-flow/page.tsx",
+      "copyPairsSeparated": 5
+    },
+    {
+      "file": "src/app/release-check/page.tsx",
+      "copyPairsSeparated": 5
+    },
+    {
+      "file": "src/app/scan-studio/LocalScanPreview.tsx",
+      "copyPairsSeparated": 1
+    },
+    {
+      "file": "src/app/scan-studio/ScanStudioClient.tsx",
+      "copyPairsSeparated": 5
+    },
+    {
+      "file": "src/app/scan-studio/page.tsx",
+      "copyPairsSeparated": 1
+    },
+    {
+      "file": "src/app/scans/ScanCompareViewer.tsx",
+      "copyPairsSeparated": 1
+    },
+    {
+      "file": "src/app/scans/ScanModelViewer.tsx",
+      "copyPairsSeparated": 1
+    },
+    {
+      "file": "src/app/scans/page.tsx",
+      "copyPairsSeparated": 2
+    },
+    {
+      "file": "src/app/settings/page.tsx",
+      "copyPairsSeparated": 16
+    },
+    {
+      "file": "src/app/start/page.tsx",
+      "copyPairsSeparated": 1
+    },
+    {
+      "file": "src/app/team/page.tsx",
+      "copyPairsSeparated": 4
+    },
+    {
+      "file": "src/app/twin/page.tsx",
+      "copyPairsSeparated": 1
+    }
+  ]
+}

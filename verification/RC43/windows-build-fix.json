@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-10-15T22:32:58.456243+00:00",
+  "kind": "Windows EBUSY build-command repair",
+  "sourceArchiveSha256": "28c333e3e207ce53093c8649a4bdad674e154eb57b0344c787d1d6c990325e55",
+  "applicationCodeChanged": false,
+  "dependenciesChanged": false,
+  "loadingReadingSecondsPreserved": 10,
+  "oneCmdEntry": true,
+  "freshLocalStaging": true,
+  "existingNextCacheNotCopied": true,
+  "sourceNeverDeleted": true,
+  "robocopyFailureThreshold": 8,
+  "nativeWindowsExecutionTested": false,
+  "windowsInstallerBuiltHere": false,
+  "review": "Batch control flow and quoted paths reviewed; original application byte equality and archive hashes checked. Native Windows execution remains to be confirmed on the user computer.",
+  "references": [
+    "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/robocopy",
+    "https://nextjs.org/docs/pages/api-reference/config/next-config-js/distDir"
+  ]
+}

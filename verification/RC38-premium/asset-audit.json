@@ -1,0 +1,27 @@
+{
+  "pass": true,
+  "logoFamilies": 8,
+  "outlinedVariants": 48,
+  "icoFiles": 19,
+  "icoSizes": [
+    16,
+    24,
+    32,
+    48,
+    64,
+    128,
+    256
+  ],
+  "uppercaseWordmark": "DENTAYA",
+  "logoFontsRequired": false,
+  "externalSvgResources": false,
+  "premiumCapHeight": 100,
+  "morphologyFamilies": 24,
+  "uniqueGeometryThumbnails": 24,
+  "thumbnailDimensions": [
+    360,
+    180
+  ],
+  "sourceKeys": 4814,
+  "desktopAndWebPacksMatch": true
+}

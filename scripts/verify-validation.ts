@@ -1,0 +1,16 @@
+import assert from "node:assert/strict";
+import { VALIDATION_REQUIREMENTS, latestValidationRuns, validationDraftError, validationReport, validationCsv, type ValidationRun, type ValidationDraft } from "../src/lib/validation-center.ts";
+const draft:ValidationDraft={requirement_id:"D-04",protocol_ref:"P-001/r1",release_version:"1.0.0-rc.33",data_scope:"synthetic",outcome:"passed",expected_result:"Coordinates remain the same",observed_result:"No geometry or FDI change",evidence_ref:"report://CAD-001",authorization_ref:"",duration_seconds:2,issue_severity:"none",corrective_action:"",case_id:null,supersedes:null};
+assert.equal(validationDraftError(draft),null);
+for(const invalid of [{data_scope:"prospective"},{outcome:"failed"},{issue_severity:"critical"},{duration_seconds:NaN},{duration_seconds:2.5},{duration_seconds:-1},{outcome:"__proto__"},{requirement_id:"constructor"},{evidence_ref:""}])assert.notEqual(validationDraftError({...draft,...invalid} as ValidationDraft),null);
+const base={...draft,organization_id:"org-1",created_by:"user-1",created_at:"2026-10-11T10:00:00Z"};
+const original:ValidationRun={...base,id:"z-original"};
+const correction:ValidationRun={...base,id:"a-correction",supersedes:original.id,outcome:"blocked",corrective_action:"Repeat the calibration test"};
+const olderVersion:ValidationRun={...base,id:"old-version",release_version:"1.0.0-rc.32"};
+const otherProtocol:ValidationRun={...base,id:"other-protocol",protocol_ref:"P-OTHER"};
+const otherScope:ValidationRun={...base,id:"other-scope",data_scope:"prospective",authorization_ref:"AUTH-01"};
+assert.deepEqual(latestValidationRuns([original,correction,olderVersion,otherProtocol,otherScope],draft.release_version,draft.protocol_ref,draft.data_scope),[correction],"Corrections win even when timestamps tie; other versions cannot close this release");
+const report=validationReport([original,correction,olderVersion],draft.release_version,draft.protocol_ref,draft.data_scope,s=>s);
+assert.equal(report.records.length,2);assert.equal(report.clinical_validation_verified,false);assert.equal(report.regulatory_approval_verified,false);assert.equal(report.requirements.length,12);assert.equal(new Set(VALIDATION_REQUIREMENTS.map(r=>r.id)).size,12);
+const csv=validationCsv([{...original,observed_result:' \t=HYPERLINK("external")'}]);assert.ok(csv.includes('"\' \t=HYPERLINK(""external"")"'),"CSV formulas must remain text");
+console.log(JSON.stringify({status:"pass",requirements:12,versionIsolation:true,correctionHistory:true,clinicalApprovalNotInferred:true,formulaSafeCsv:true}));

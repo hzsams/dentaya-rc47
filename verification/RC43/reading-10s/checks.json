@@ -1,0 +1,33 @@
+[
+  {
+    "command": "npm run lint",
+    "exitCode": 0,
+    "log": "lint.log"
+  },
+  {
+    "command": "npm run typecheck",
+    "exitCode": 0,
+    "log": "typecheck.log"
+  },
+  {
+    "command": "npm run verify:localization",
+    "exitCode": 0,
+    "log": "localization.log"
+  },
+  {
+    "command": "npm run verify:loading-play",
+    "exitCode": 0,
+    "log": "loading.log"
+  },
+  {
+    "command": "npm run build",
+    "exitCode": 0,
+    "log": "build.log"
+  },
+  {
+    "command": "npm run verify:loading-reading-browser",
+    "exitCode": 0,
+    "log": "browser.json",
+    "mode": "Production standalone, controlled browser clock, intercepted fixture"
+  }
+]

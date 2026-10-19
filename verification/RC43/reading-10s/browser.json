@@ -1,0 +1,16 @@
+{
+  "pass": true,
+  "productionStandalone": true,
+  "readingSeconds": 10,
+  "sameSentence": true,
+  "automaticCloseAtTenSeconds": true,
+  "readyPageInBackground": true,
+  "earlyContinue": true,
+  "focusRestored": true,
+  "longLoadNotInterrupted": true,
+  "noExtraDelayAfterLongLoad": true,
+  "gameSurvivesReading": true,
+  "mobileBounds": true,
+  "pageErrors": 0,
+  "backend": "intercepted test fixture, no production data"
+}

@@ -1,0 +1,15 @@
+export function ayaErrorMessage(code:unknown){const messages:Record<string,string>={
+ AI_MODEL_NOT_CONFIGURED:'AYA bağlantısı tanımlı değil. Bağlantı ayarından API anahtarınızı girin.',
+ UNAUTHORIZED:'Oturumunuz sona erdi veya doğrulanamadı. DentAYA’ya yeniden giriş yapın.',
+ MODEL_AUTH_INVALID:'API anahtarı geçersiz. Bağlantı ayarından güncelleyin.',
+ MODEL_QUOTA_EXCEEDED:'API bakiyesi veya kullanım kotası yetersiz. Sağlayıcı hesabındaki kullanım sınırını kontrol edin.',
+ MODEL_NOT_AVAILABLE:'Seçili modele erişilemiyor. Model adını ve proje erişimini kontrol edin.',
+ MODEL_ACCESS_DENIED:'API projesinin seçili model için erişim izni yok.',
+ MODEL_REQUEST_INVALID:'Model isteği kabul edilmedi. Bağlantı ayarındaki modelin Responses API desteğini kontrol edin.',
+ MODEL_RATE_LIMITED:'Modelin istek sınırına ulaşıldı. Biraz sonra yeniden deneyin.',
+ RATE_LIMITED:'Çok sık istek gönderildi. Bir dakika sonra yeniden deneyin.',
+ MODEL_TIMEOUT:'Model yanıtı zaman aşımına uğradı. Kısa yanıt seçeneğiyle yeniden deneyin.',
+ MODEL_UNAVAILABLE:'Model sunucusuna ulaşılamadı. İnternet bağlantısını kontrol edip yeniden deneyin.',
+ INCOMPLETE_MODEL_RESPONSE:'Model yanıtı tamamlanamadı. Soruyu daraltıp yeniden deneyin.',
+ EMPTY_MODEL_RESPONSE:'Model boş yanıt döndürdü. Yeniden deneyin.',
+};return messages[String(code)]??'AYA isteği tamamlanamadı. Sorunuz korundu; yeniden deneyebilirsiniz.';}

@@ -1,0 +1,250 @@
+{
+  "release": "1.0.0-rc.41",
+  "verifiedAt": "2026-10-15",
+  "mainChecks": 35,
+  "browserChecks": 5,
+  "checks": [
+    {
+      "command": "npm run verify:runtime",
+      "status": "passed",
+      "log": "verification/RC41/verify-runtime.log",
+      "logSha256": "9dfa5c7bf1075c9753f160f5a621f15abf6ad0b8f9f64b5d51be51e424c2a310"
+    },
+    {
+      "command": "npm run verify:release",
+      "status": "passed",
+      "log": "verification/RC41/verify-release.log",
+      "logSha256": "d811162af58a4c11979202773e44dcb8e09386ebb480e0268463a7f44a62d42a"
+    },
+    {
+      "command": "npm run verify:release-env",
+      "status": "passed",
+      "log": "verification/RC41/verify-release-env.log",
+      "logSha256": "0ee35eb355c0d2fd2a0e6a9445dd7bf9238b49a7cbf49d4dcf2f018ac1791765"
+    },
+    {
+      "command": "npm run verify:security",
+      "status": "passed",
+      "log": "verification/RC41/verify-security.log",
+      "logSha256": "9c743ea5dc04922c6ab00e03f9e8eb127e0fdcfeb1eb33cf6bceb15fbe74e4e6"
+    },
+    {
+      "command": "npm run verify:localization",
+      "status": "passed",
+      "log": "verification/RC41/verify-localization.log",
+      "logSha256": "8a1179b1de420307a7521db3ef30f96d4b5011a3e9ec210b4be17e8127c19590"
+    },
+    {
+      "command": "npm run verify:system-translations",
+      "status": "passed",
+      "log": "verification/RC41/verify-system-translations.log",
+      "logSha256": "31eccf7974db2907e876b9fdfa5eb9d2849e6f48cce2d97554657e160e10aeb4"
+    },
+    {
+      "command": "npm run verify:aya",
+      "status": "passed",
+      "log": "verification/RC41/verify-aya.log",
+      "logSha256": "1ffaa60170f058e631f4ae62bb45d60419179016fb0e28cb0e9ac0a81d9714ce"
+    },
+    {
+      "command": "npm run verify:local-aya",
+      "status": "passed",
+      "log": "verification/RC41/verify-local-aya.log",
+      "logSha256": "836fd4e3e1ccedf49dd3ea4b059466f5bdad5ecf00284aeb2f4927e4127d85c6"
+    },
+    {
+      "command": "npm run verify:aya-core",
+      "status": "passed",
+      "log": "verification/RC41/verify-aya-core.log",
+      "logSha256": "90ef91b6b5add2cea87549ced58e6239cbceb6c0144a816df93de637874c34cd"
+    },
+    {
+      "command": "npm run verify:language-packs",
+      "status": "passed",
+      "log": "verification/RC41/verify-language-packs.log",
+      "logSha256": "aecff25f07ec3a31e98a79167363f1bf60444211d1bd893022bbaa212b15b758"
+    },
+    {
+      "command": "npm run verify:desktop-language",
+      "status": "passed",
+      "log": "verification/RC41/verify-desktop-language.log",
+      "logSha256": "5eca2ac0873b602ef91560f61e75ab5858ae599137e3ca9d6be90dc89be4e812"
+    },
+    {
+      "command": "npm run verify:experience",
+      "status": "passed",
+      "log": "verification/RC41/verify-experience.log",
+      "logSha256": "dae9b319aa017997cf50833621ea9d788e87ac534974b5d13feb8c64367d5369"
+    },
+    {
+      "command": "npm run verify:tooth-appearance",
+      "status": "passed",
+      "log": "verification/RC41/verify-tooth-appearance.log",
+      "logSha256": "206096c1a6f835e84ff4250c226ad61b30ce3925ec206f4c1998410dd9192859"
+    },
+    {
+      "command": "npm run verify:tooth-forms",
+      "status": "passed",
+      "log": "verification/RC41/verify-tooth-forms.log",
+      "logSha256": "c711abb05e220ea23758380888b5ce0503886970db5c2639517205ef011d19c1"
+    },
+    {
+      "command": "npm run verify:cad-library",
+      "status": "passed",
+      "log": "verification/RC41/verify-cad-library.log",
+      "logSha256": "6e31460a9f82fc22eae66f0bc4653f331ba2ce4ad30c2dcf2116027fdb4590c5"
+    },
+    {
+      "command": "npm run verify:sculpt-integrity",
+      "status": "passed",
+      "log": "verification/RC41/verify-sculpt-integrity.log",
+      "logSha256": "7670d3a14ae7f3a7c4abb52a7635335dfd90f093ada98bf6b621834615753c92"
+    },
+    {
+      "command": "npm run verify:morphology-sculpt",
+      "status": "passed",
+      "log": "verification/RC41/verify-morphology-sculpt.log",
+      "logSha256": "78abd27cfb8ee9e73f6a5394721c6502ebe5ea063f8f07f2bb12cea3682c5414"
+    },
+    {
+      "command": "npm run verify:tooth-layout",
+      "status": "passed",
+      "log": "verification/RC41/verify-tooth-layout.log",
+      "logSha256": "eb8db0343afb9b8f327454b4ea1d8a7befc977dd28a40fed17bccb7d7b77ecbd"
+    },
+    {
+      "command": "npm run verify:cad-display",
+      "status": "passed",
+      "log": "verification/RC41/verify-cad-display.log",
+      "logSha256": "7da5109a79a0c92dc7ea418a78fd9407818bd9c14c8fad26d331b07c1c4d3f24"
+    },
+    {
+      "command": "npm run verify:performance",
+      "status": "passed",
+      "log": "verification/RC41/verify-performance.log",
+      "logSha256": "94d1f5284d8d823900c242b1ee970c24ce2c01738bdd5ab695329171fa4adfe9"
+    },
+    {
+      "command": "npm run verify:pilot",
+      "status": "passed",
+      "log": "verification/RC41/verify-pilot.log",
+      "logSha256": "268f25722320ec5a056c69a2d1ebee00fa8643be205dcff7804cdc0b339d29e6"
+    },
+    {
+      "command": "npm run lint -- --max-warnings=0",
+      "status": "passed",
+      "log": "verification/RC41/lint.log",
+      "logSha256": "4c3a3334c22b77b64ba2b844806dcd5a2285624ac6c6991290fcd45e3391e599"
+    },
+    {
+      "command": "npm run typecheck",
+      "status": "passed",
+      "log": "verification/RC41/typecheck.log",
+      "logSha256": "26bcb655ea7bbb813cb9a11036ebc5b8d979b1abda2fbf43e9dacec499814670"
+    },
+    {
+      "command": "npm run verify:cad",
+      "status": "passed",
+      "log": "verification/RC41/verify-cad.log",
+      "logSha256": "0fa1a56db24571e119bc893f70fe7a6ac7e8104b2ca6cce21896399d4f2d6262"
+    },
+    {
+      "command": "npm run verify:cad-setup",
+      "status": "passed",
+      "log": "verification/RC41/verify-cad-setup.log",
+      "logSha256": "268905c041d5219e903f7a789518176ac4bae1dc3413052ab96dea3a001c598c"
+    },
+    {
+      "command": "npm run verify:cad-daily",
+      "status": "passed",
+      "log": "verification/RC41/verify-cad-daily.log",
+      "logSha256": "db6c11c7159dd0fd21d7087d19633ffb66e7bc08eeb629e31ad0c804a71daa37"
+    },
+    {
+      "command": "npm run verify:cad-interaction",
+      "status": "passed",
+      "log": "verification/RC41/verify-cad-interaction.log",
+      "logSha256": "b345bc6666983b1d55d9c913ffaf130a0be2cb0bc1992a0996210ea40292f86d"
+    },
+    {
+      "command": "npm run verify:cad-workflow",
+      "status": "passed",
+      "log": "verification/RC41/verify-cad-workflow.log",
+      "logSha256": "69168aaceded44890391e21ce45409e94ddcd258975a11b4bea0777fe85c19f6"
+    },
+    {
+      "command": "npm run verify:cad-panel",
+      "status": "passed",
+      "log": "verification/RC41/verify-cad-panel.log",
+      "logSha256": "913178651bdc6293e7b66901483fd48a71ac5b63aafbcbb60bde5f16910d4968"
+    },
+    {
+      "command": "npm run verify:cad-guided",
+      "status": "passed",
+      "log": "verification/RC41/verify-cad-guided.log",
+      "logSha256": "55e6302472c5f6e9ae8ad3ed29d7fb6c9edc99eba0fab99d5c0b4f7e4f666385"
+    },
+    {
+      "command": "npm run verify:migrations",
+      "status": "passed",
+      "log": "verification/RC41/verify-migrations.log",
+      "logSha256": "f24832cac153ad1999f0357c4d659e10b9e0437669e23699a9db52af87f79ab2"
+    },
+    {
+      "command": "npm run verify:e2e",
+      "status": "passed",
+      "log": "verification/RC41/verify-e2e.log",
+      "logSha256": "e3398d121e1b0b2a8fecef90a528460f1ddb908b9226b269b86f17f49eebb78a"
+    },
+    {
+      "command": "npm run verify:operations",
+      "status": "passed",
+      "log": "verification/RC41/verify-operations.log",
+      "logSha256": "9fd9202a0e59b87d379b4830f457c81b8b0767e0bfe5884be02feec93c414045"
+    },
+    {
+      "command": "npm run verify:validation",
+      "status": "passed",
+      "log": "verification/RC41/verify-validation.log",
+      "logSha256": "62938e860c2794687290711b0d9e8eaf7fec87a9edb9085a42c1f66363ef0b24"
+    },
+    {
+      "command": "npm run build",
+      "status": "passed",
+      "log": "verification/RC41/build.log",
+      "logSha256": "16fbcfbdae20f1b5f2b28dc42be5b306debee204f58ee621f394bc461f8c5e1a"
+    },
+    {
+      "command": "node --import tsx scripts/verify-tooth-appearance-browser.mjs",
+      "status": "passed",
+      "log": "verification/RC41/verify-tooth-appearance-browser.log",
+      "logSha256": "345f57b1c5906a285258fafa4e8a7af014a29a60b2ddeecee22e8412592e1769"
+    },
+    {
+      "command": "node --import tsx scripts/verify-cad-browser.mjs",
+      "status": "passed",
+      "log": "verification/RC41/verify-cad-browser.log",
+      "logSha256": "74dc1980e44cc20b73be86a554152efcbcfbd84ad48e67160e76576488340d53"
+    },
+    {
+      "command": "node --import tsx scripts/verify-cad-guided-browser.mjs",
+      "status": "passed",
+      "log": "verification/RC41/verify-cad-guided-browser.log",
+      "logSha256": "109117e4fcbd3fb62739ea1e29929fbc15b8a8af232b36d67c9a09b656ca3fda"
+    },
+    {
+      "command": "node --import tsx scripts/verify-ui-browser.mjs",
+      "status": "passed",
+      "log": "verification/RC41/verify-ui-browser.log",
+      "logSha256": "741939a914afc4cba18501ed66068074ddf8e1f222e3b68e9cb7607c118b4775"
+    },
+    {
+      "command": "node --import tsx scripts/verify-cad-library-browser.mjs",
+      "status": "passed",
+      "log": "verification/RC41/verify-cad-library-browser.log",
+      "logSha256": "dbc61c93a67dea77caac974253cc4b73da27c1d2ea4494b0a819715984a0b1fc"
+    }
+  ],
+  "liveBackend": false,
+  "windowsInstallerBuilt": false
+}

@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {cadLayerPatch,allCadHidden,allCadVisible,viewDefaults,cadScanColor,workingJaw,antagonistAutoHidden,unitDisplayState,jawOpening} from '../src/lib/cad-view-state';
+import {layerState} from '../src/lib/cad-display';
+import {buildMeshSpatialIndex} from '../src/lib/cad-spatial-engine';
+import {analyzeMeshContact,buildContactColors} from '../src/lib/cad-contact-engine';
+const base={show_scan:true,show_design:true,opacity:1,...viewDefaults(undefined,'lower')};
+assert.equal(cadScanColor(base,'lower','lower'),'#83827e');assert.equal(cadScanColor(base,'upper','lower'),'#ff4800');assert.equal(workingJaw('11'),'upper');assert.equal(workingJaw('46'),'lower');
+let state={...base,...cadLayerPatch(base,'upper','opacity',.37)};state={...state,...cadLayerPatch(state,'upper','opacity',0)};assert.equal(layerState(state,'upper').visible,false);state={...state,...cadLayerPatch(state,'upper','visible',true)};assert.equal(layerState(state,'upper').opacity,.37);
+assert.equal(layerState({...state,...allCadHidden()},'upper').visible,false);assert.equal(layerState({...state,...allCadVisible()},'upper').visible,true);
+const zeroGroup={...state,...cadLayerPatch(state,'scan','opacity',0)},restoredGroup={...zeroGroup,...cadLayerPatch(zeroGroup,'scan','visible',true)};assert.equal(layerState(restoredGroup,'upper').opacity,.37);assert.equal(layerState(restoredGroup,'lower').visible,true);
+assert.equal(cadLayerPatch(zeroGroup,'scan','opacity',.8).scan_opacity,.8);assert.ok(cadLayerPatch(zeroGroup,'upper','isolate',true).scan_opacity!>0);
+const isolated={...state,...cadLayerPatch(state,'design','isolate',true)};assert.equal(layerState(isolated,'upper').visible,false);assert.equal(layerState(isolated,'design').visible,true);assert.equal(unitDisplayState({...base,unit_visibility:{u:{visible:false}}},'u').visible,false);
+assert.equal(antagonistAutoHidden(true,new THREE.Vector3(0,0,20),new THREE.Vector3(0,0,1)),true);assert.equal(antagonistAutoHidden(true,new THREE.Vector3(0,0,-20),new THREE.Vector3(0,0,1)),false);assert.equal(jawOpening({...base,jaw_opening_mm:90}),12);
+const target=new THREE.Mesh(new THREE.PlaneGeometry(30,30)),index=buildMeshSpatialIndex(target),crown=new THREE.Mesh(new THREE.BoxGeometry(1,1,1));crown.position.z=1;
+const before=Array.from(target.geometry.getAttribute('position').array),original=analyzeMeshContact(crown,index),offset=new THREE.Vector3(0,0,8),opened=analyzeMeshContact(crown,index,.18,offset);
+assert.ok(opened.averageAbsoluteDistanceMm>original.averageAbsoluteDistanceMm+5);assert.notDeepEqual(buildContactColors(crown,index,.18),buildContactColors(crown,index,.18,offset));assert.deepEqual(Array.from(target.geometry.getAttribute('position').array),before);assert.deepEqual(analyzeMeshContact(crown,index),original);
+console.log('PASS: technical jaw roles, zero-opacity restore, isolate/all-hide/all-show, per-unit visibility, transient auto-hide, opening bounds, real antagonist distance translation and unchanged source geometry.');

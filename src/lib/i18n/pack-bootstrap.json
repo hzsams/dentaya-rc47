@@ -1,0 +1,314 @@
+{
+  "keys": [
+    "Tam arayüz çevirisi",
+    "Tam dil paketi henüz hazır değil.",
+    "Tam dil paketi hazır.",
+    "Tam dil paketini hazırla / devam et",
+    "Çeviri modeli",
+    "Model seçin",
+    "Durumu ve modelleri yenile",
+    "Hazırlamayı durdur"
+  ],
+  "values": {
+    "en": [
+      "Full interface translation",
+      "The full language pack is not ready yet.",
+      "The full language pack is ready.",
+      "Prepare / resume the full language pack",
+      "Translation model",
+      "Choose a model",
+      "Refresh status and models",
+      "Stop preparation"
+    ],
+    "de": [
+      "Vollständige Übersetzung der Oberfläche",
+      "Das vollständige Sprachpaket ist noch nicht bereit.",
+      "Das vollständige Sprachpaket ist bereit.",
+      "Vollständiges Sprachpaket erstellen / fortsetzen",
+      "Übersetzungsmodell",
+      "Modell auswählen",
+      "Status und Modelle aktualisieren",
+      "Vorbereitung stoppen"
+    ],
+    "fr": [
+      "Traduction complète de l’interface",
+      "Le pack de langue complet n’est pas encore prêt.",
+      "Le pack de langue complet est prêt.",
+      "Préparer / reprendre le pack de langue complet",
+      "Modèle de traduction",
+      "Choisir un modèle",
+      "Actualiser l’état et les modèles",
+      "Arrêter la préparation"
+    ],
+    "es": [
+      "Traducción completa de la interfaz",
+      "El paquete de idioma completo aún no está listo.",
+      "El paquete de idioma completo está listo.",
+      "Preparar / reanudar el paquete de idioma completo",
+      "Modelo de traducción",
+      "Seleccionar un modelo",
+      "Actualizar el estado y los modelos",
+      "Detener la preparación"
+    ],
+    "it": [
+      "Traduzione completa dell’interfaccia",
+      "Il pacchetto linguistico completo non è ancora pronto.",
+      "Il pacchetto linguistico completo è pronto.",
+      "Preparare / riprendere il pacchetto linguistico completo",
+      "Modello di traduzione",
+      "Scegli un modello",
+      "Aggiorna lo stato e i modelli",
+      "Interrompi la preparazione"
+    ],
+    "pt": [
+      "Tradução completa da interface",
+      "O pacote de idioma completo ainda não está pronto.",
+      "O pacote de idioma completo está pronto.",
+      "Preparar / retomar o pacote de idioma completo",
+      "Modelo de tradução",
+      "Escolher um modelo",
+      "Atualizar o estado e os modelos",
+      "Parar a preparação"
+    ],
+    "nl": [
+      "Volledige vertaling van de interface",
+      "Het volledige taalpakket is nog niet klaar.",
+      "Het volledige taalpakket is klaar.",
+      "Volledig taalpakket voorbereiden / hervatten",
+      "Vertaalmodel",
+      "Kies een model",
+      "Status en modellen vernieuwen",
+      "Voorbereiding stoppen"
+    ],
+    "pl": [
+      "Pełne tłumaczenie interfejsu",
+      "Pełny pakiet językowy nie jest jeszcze gotowy.",
+      "Pełny pakiet językowy jest gotowy.",
+      "Przygotuj / wznów pełny pakiet językowy",
+      "Model tłumaczenia",
+      "Wybierz model",
+      "Odśwież stan i modele",
+      "Zatrzymaj przygotowanie"
+    ],
+    "ro": [
+      "Traducerea completă a interfeței",
+      "Pachetul lingvistic complet nu este încă pregătit.",
+      "Pachetul lingvistic complet este pregătit.",
+      "Pregătește / reia pachetul lingvistic complet",
+      "Model de traducere",
+      "Alege un model",
+      "Actualizează starea și modelele",
+      "Oprește pregătirea"
+    ],
+    "sv": [
+      "Fullständig översättning av gränssnittet",
+      "Det fullständiga språkpaketet är inte klart ännu.",
+      "Det fullständiga språkpaketet är klart.",
+      "Förbered / återuppta det fullständiga språkpaketet",
+      "Översättningsmodell",
+      "Välj modell",
+      "Uppdatera status och modeller",
+      "Stoppa förberedelsen"
+    ],
+    "da": [
+      "Fuld oversættelse af brugerfladen",
+      "Den fulde sprogpakke er endnu ikke klar.",
+      "Den fulde sprogpakke er klar.",
+      "Forbered / genoptag den fulde sprogpakke",
+      "Oversættelsesmodel",
+      "Vælg model",
+      "Opdater status og modeller",
+      "Stop forberedelsen"
+    ],
+    "el": [
+      "Πλήρης μετάφραση του περιβάλλοντος",
+      "Το πλήρες πακέτο γλώσσας δεν είναι ακόμη έτοιμο.",
+      "Το πλήρες πακέτο γλώσσας είναι έτοιμο.",
+      "Προετοιμασία / συνέχιση πλήρους πακέτου γλώσσας",
+      "Μοντέλο μετάφρασης",
+      "Επιλέξτε μοντέλο",
+      "Ανανέωση κατάστασης και μοντέλων",
+      "Διακοπή προετοιμασίας"
+    ],
+    "cs": [
+      "Úplný překlad rozhraní",
+      "Úplný jazykový balíček ještě není připraven.",
+      "Úplný jazykový balíček je připraven.",
+      "Připravit / pokračovat v úplném jazykovém balíčku",
+      "Překladový model",
+      "Vybrat model",
+      "Obnovit stav a modely",
+      "Zastavit přípravu"
+    ],
+    "bg": [
+      "Пълен превод на интерфейса",
+      "Пълният езиков пакет още не е готов.",
+      "Пълният езиков пакет е готов.",
+      "Подготовка / продължаване на пълния езиков пакет",
+      "Модел за превод",
+      "Изберете модел",
+      "Обновяване на състоянието и моделите",
+      "Спиране на подготовката"
+    ],
+    "hr": [
+      "Potpuni prijevod sučelja",
+      "Potpuni jezični paket još nije spreman.",
+      "Potpuni jezični paket je spreman.",
+      "Pripremi / nastavi potpuni jezični paket",
+      "Model za prijevod",
+      "Odaberi model",
+      "Osvježi status i modele",
+      "Zaustavi pripremu"
+    ],
+    "et": [
+      "Kogu kasutajaliidese tõlge",
+      "Täielik keelepakett pole veel valmis.",
+      "Täielik keelepakett on valmis.",
+      "Valmista ette / jätka täielikku keelepaketti",
+      "Tõlkemudel",
+      "Vali mudel",
+      "Värskenda olekut ja mudeleid",
+      "Peata ettevalmistus"
+    ],
+    "fi": [
+      "Koko käyttöliittymän käännös",
+      "Täydellinen kielipaketti ei ole vielä valmis.",
+      "Täydellinen kielipaketti on valmis.",
+      "Valmistele / jatka täydellistä kielipakettia",
+      "Käännösmalli",
+      "Valitse malli",
+      "Päivitä tila ja mallit",
+      "Pysäytä valmistelu"
+    ],
+    "hu": [
+      "A teljes felület fordítása",
+      "A teljes nyelvi csomag még nem áll készen.",
+      "A teljes nyelvi csomag készen áll.",
+      "Teljes nyelvi csomag előkészítése / folytatása",
+      "Fordítási modell",
+      "Modell kiválasztása",
+      "Állapot és modellek frissítése",
+      "Előkészítés leállítása"
+    ],
+    "ga": [
+      "Aistriúchán iomlán an chomhéadain",
+      "Níl an pacáiste teanga iomlán réidh go fóill.",
+      "Tá an pacáiste teanga iomlán réidh.",
+      "Ullmhaigh / atosú an pacáiste teanga iomlán",
+      "Samhail aistriúcháin",
+      "Roghnaigh samhail",
+      "Stádas athlonnaithe agus samhlacha",
+      "Stop ullmhú"
+    ],
+    "lv": [
+      "Pilns saskarnes tulkojums",
+      "Pilnā valodas pakotne vēl nav gatava.",
+      "Pilnā valodas pakotne ir gatava.",
+      "Sagatavot / turpināt pilno valodas pakotni",
+      "Tulkošanas modelis",
+      "Izvēlēties modeli",
+      "Atjaunināt statusu un modeļus",
+      "Apturēt sagatavošanu"
+    ],
+    "lt": [
+      "Visas sąsajos vertimas",
+      "Visas kalbos paketas dar neparuoštas.",
+      "Visas kalbos paketas paruoštas.",
+      "Paruošti / tęsti visą kalbos paketą",
+      "Vertimo modelis",
+      "Pasirinkti modelį",
+      "Atnaujinti būseną ir modelius",
+      "Sustabdyti paruošimą"
+    ],
+    "mt": [
+      "It-traduzzjoni sħiħa tal-interface",
+      "Il-pakkett sħiħ tal-lingwa għadu mhux lest.",
+      "Il-pakkett sħiħ tal-lingwa huwa lest.",
+      "Ipprepara / kompli l-pakkett sħiħ tal-lingwa",
+      "Mudell tat-traduzzjoni",
+      "Agħżel mudell",
+      "L-istatus u l-mudelli ta’ aġġornament",
+      "Waqqaf il-preparazzjoni"
+    ],
+    "sk": [
+      "Úplný preklad rozhrania",
+      "Úplný jazykový balík ešte nie je pripravený.",
+      "Úplný jazykový balík je pripravený.",
+      "Pripraviť / pokračovať v úplnom jazykovom balíku",
+      "Prekladový model",
+      "Vybrať model",
+      "Obnoviť stav a modely",
+      "Zastaviť prípravu"
+    ],
+    "sl": [
+      "Celoten prevod vmesnika",
+      "Celoten jezikovni paket še ni pripravljen.",
+      "Celoten jezikovni paket je pripravljen.",
+      "Pripravi / nadaljuj celoten jezikovni paket",
+      "Prevajalski model",
+      "Izberi model",
+      "Osveži stanje in modele",
+      "Ustavi pripravo"
+    ],
+    "ru": [
+      "Полный перевод интерфейса",
+      "Полный языковой пакет ещё не готов.",
+      "Полный языковой пакет готов.",
+      "Подготовить / продолжить полный языковой пакет",
+      "Модель перевода",
+      "Выберите модель",
+      "Обновить статус и модели",
+      "Остановить подготовку"
+    ],
+    "uk": [
+      "Повний переклад інтерфейсу",
+      "Повний мовний пакет ще не готовий.",
+      "Повний мовний пакет готовий.",
+      "Підготувати / продовжити повний мовний пакет",
+      "Модель перекладу",
+      "Виберіть модель",
+      "Оновити стан і моделі",
+      "Зупинити підготовку"
+    ],
+    "ar": [
+      "ترجمة الواجهة بالكامل",
+      "حزمة اللغة الكاملة ليست جاهزة بعد.",
+      "حزمة اللغة الكاملة جاهزة.",
+      "إعداد / استئناف حزمة اللغة الكاملة",
+      "نموذج الترجمة",
+      "اختر نموذجًا",
+      "تحديث الحالة والنماذج",
+      "إيقاف الإعداد"
+    ],
+    "zh": [
+      "全界面翻译",
+      "完整的语言包还没有准备好。",
+      "全部语言都准备好了",
+      "准备/ 恢复全部语言包",
+      "翻译模式",
+      "选择模型",
+      "更新状态和模型",
+      "停止准备"
+    ],
+    "ja": [
+      "インターフェイス翻訳",
+      "完全な言語パッケージはまだ準備ができていません。",
+      "全言語パッケージが準備中です。",
+      "準備/再編 全言語パッケージ",
+      "翻訳モデル",
+      "モデルを選ぶ",
+      "モデルとモデルを更新",
+      "準備停止"
+    ],
+    "ko": [
+      "전체 인터페이스 번역",
+      "전체 언어 팩이 아직 준비되지 않았습니다.",
+      "전체 언어 팩이 준비되었습니다.",
+      "전체 언어 팩 준비 / 계속",
+      "번역 모델",
+      "모델 선택",
+      "상태 및 모델 새로 고침",
+      "준비 중지"
+    ]
+  }
+}

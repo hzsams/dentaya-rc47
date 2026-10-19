@@ -1,0 +1,26 @@
+-- DentAYA MVP v6 Step 6 — Team & Access
+-- Canlı Supabase projesine uygulanmıştır.
+--
+-- Yeni tablo:
+--   organization_invites
+--
+-- Yeni RPC'ler:
+--   dentaya_create_team_invite(email, role, expires_days)
+--   dentaya_accept_team_invite(token)
+--   dentaya_revoke_team_invite(invite_id)
+--   dentaya_team_members()
+--   dentaya_set_team_member_status(membership_id, status)
+--   dentaya_set_team_member_role(membership_id, role)
+--
+-- Güvenlik:
+-- * Raw davet tokenı DB'de tutulmaz; SHA-256 hash saklanır.
+-- * Davet yalnız ilgili Auth e-postası tarafından kabul edilir.
+-- * Owner/Admin davet oluşturabilir.
+-- * Owner rolü davetle verilemez.
+-- * Roller organization type'a göre server-side doğrulanır.
+-- * Kullanıcı başına tek active membership partial unique index ile korunur.
+-- * Owner pasifleştirilemez.
+-- * Admin başka admini yönetemez.
+-- * Rol değişimi yalnız owner tarafından yapılır.
+--
+-- Tam çalıştırılan SQL Supabase migration history'dedir.

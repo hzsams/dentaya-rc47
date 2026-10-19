@@ -1,0 +1,247 @@
+{
+  "release": "1.0.0-rc.40",
+  "source": "1.0.0-rc.39",
+  "validatedAtUtc": "2026-10-14T06:22:07.277487+00:00",
+  "verifyChainChecks": 35,
+  "additionalBrowserChecks": 4,
+  "results": [
+    {
+      "command": "verify:runtime",
+      "result": "passed",
+      "log": "verify-runtime.log",
+      "sha256": "150afed3689e902073d778330c12d3b6391ebe5403eaeeef157d108060b4416a"
+    },
+    {
+      "command": "verify:release",
+      "result": "passed",
+      "log": "verify-release.log",
+      "sha256": "309540f72883d9a8f24938004c397c7417c861dfb16ca9947f70c92a1ecb6ec4"
+    },
+    {
+      "command": "verify:release-env",
+      "result": "passed",
+      "log": "verify-release-env.log",
+      "sha256": "21d7b68fbbcebee92b32ef9876902c12dc096dcd06ccdcc6c41988b21f90a1fd"
+    },
+    {
+      "command": "verify:security",
+      "result": "passed",
+      "log": "verify-security.log",
+      "sha256": "f7b4258a90c8c5e45d522194994141d779344c460620efa158e7e89aaf6047bf"
+    },
+    {
+      "command": "verify:localization",
+      "result": "passed",
+      "log": "verify-localization.log",
+      "sha256": "8a3dcf853fe76c5dd0b9e8f9a4b956a35dfdc80114eb044b12f4b8f140114b26"
+    },
+    {
+      "command": "verify:system-translations",
+      "result": "passed",
+      "log": "verify-system-translations.log",
+      "sha256": "75cf8e46d80d23a693aece694cbdfd6847325fce4f9eba003facfed192dc1b32"
+    },
+    {
+      "command": "verify:aya",
+      "result": "passed",
+      "log": "verify-aya.log",
+      "sha256": "31b4a6dc2657a0a08596923ecceeef4e6639f2e4b3d3fbe04d362fe5cbaccd50"
+    },
+    {
+      "command": "verify:local-aya",
+      "result": "passed",
+      "log": "verify-local-aya.log",
+      "sha256": "42aac73a7019717d51e3dc05a4b747671570771de8a7a4f38956519f9729a541"
+    },
+    {
+      "command": "verify:aya-core",
+      "result": "passed",
+      "log": "verify-aya-core.log",
+      "sha256": "c9b05b3330001001ed31848bbe17c9817052a3e1009e40988481516f951609a8"
+    },
+    {
+      "command": "verify:language-packs",
+      "result": "passed",
+      "log": "verify-language-packs.log",
+      "sha256": "a532c5de720478487fc8f2ae3877675a780a0431531fc3f30356b6fcba0c050d"
+    },
+    {
+      "command": "verify:desktop-language",
+      "result": "passed",
+      "log": "verify-desktop-language.log",
+      "sha256": "4232d56b64423c0690c7503412374bce2281c25426a08a86d34434fd39d6a5b6"
+    },
+    {
+      "command": "verify:experience",
+      "result": "passed",
+      "log": "verify-experience.log",
+      "sha256": "027a496f546260f4393a59d60376726ac38439a7b75c8a4757236a6138c640a6"
+    },
+    {
+      "command": "verify:tooth-appearance",
+      "result": "passed",
+      "log": "verify-tooth-appearance.log",
+      "sha256": "90316ecc2ecb8cb39b73ca6f7289f16e4e7c36ca0f7bbbf525722317ab7421e7"
+    },
+    {
+      "command": "verify:tooth-forms",
+      "result": "passed",
+      "log": "verify-tooth-forms.log",
+      "sha256": "f1cb873ba890c1227d20a40657955e151faab5153cdab15cc3c1296cadc8f4ae"
+    },
+    {
+      "command": "verify:form-previews",
+      "result": "passed",
+      "log": "verify-form-previews.log",
+      "sha256": "3e0f435ca839cc5676c5a096d34a25cdcd8b48d15821e6e0f412d71d1cc5b0b9"
+    },
+    {
+      "command": "verify:sculpt-integrity",
+      "result": "passed",
+      "log": "verify-sculpt-integrity.log",
+      "sha256": "4e50cf10c8250d6ab7bc2881b88e9ed03f1ac644be0de568b72c5ddf9ecc4a78"
+    },
+    {
+      "command": "verify:morphology-sculpt",
+      "result": "passed",
+      "log": "verify-morphology-sculpt.log",
+      "sha256": "0533c17f4346343bf71cf0619ed9639fb3a23cdd88d86297a64ee6690344d081"
+    },
+    {
+      "command": "verify:tooth-layout",
+      "result": "passed",
+      "log": "verify-tooth-layout.log",
+      "sha256": "a9c856f3e9a741fe6b74b09b2eceefc2bf4b287b2cb698de658b8b242c61fee5"
+    },
+    {
+      "command": "verify:cad-display",
+      "result": "passed",
+      "log": "verify-cad-display.log",
+      "sha256": "dbb3864958c659aa7f348ecda56efc7469d2e13cc17e3ca68232db23315b2af8"
+    },
+    {
+      "command": "verify:performance",
+      "result": "passed",
+      "log": "verify-performance.log",
+      "sha256": "22a1d271d18753b76eb71107992b3fe350b0a9ff13df2b2d36c25dfbe4bc5203"
+    },
+    {
+      "command": "verify:pilot",
+      "result": "passed",
+      "log": "verify-pilot.log",
+      "sha256": "3236e8746a780d61ffaa3fc13d7c742f51bc2d1e30b73a5597b8989256e11fe6"
+    },
+    {
+      "command": "lint",
+      "result": "passed",
+      "log": "lint.log",
+      "sha256": "f249c4903519bcd4bc3e4b1d749984fa8085aa95a2e200e973a645335a25c316"
+    },
+    {
+      "command": "typecheck",
+      "result": "passed",
+      "log": "typecheck.log",
+      "sha256": "d4ad732ed18811f2830f06e23da59f47f700e0be465ababb0be8534d0f9f7f99"
+    },
+    {
+      "command": "verify:cad",
+      "result": "passed",
+      "log": "verify-cad.log",
+      "sha256": "e9890011b6b3eddbf9592c01d0eb81083a6a7c18e2e2053f80b5bf32c3ba4da7"
+    },
+    {
+      "command": "verify:cad-setup",
+      "result": "passed",
+      "log": "verify-cad-setup.log",
+      "sha256": "5073b681a5b996e0e596ad7d4dc90c282096e687f5c3a47dc9434e6a6febf1d7"
+    },
+    {
+      "command": "verify:cad-daily",
+      "result": "passed",
+      "log": "verify-cad-daily.log",
+      "sha256": "b1153f75ee7660557fe2d2b755604c375ec0ddf00c66b86bb615ca263c627b5a"
+    },
+    {
+      "command": "verify:cad-interaction",
+      "result": "passed",
+      "log": "verify-cad-interaction.log",
+      "sha256": "8f5243c54c6bb668b82e692fd8ca24d84ead9d7fa2d360a28757e7f08a6d5715"
+    },
+    {
+      "command": "verify:cad-workflow",
+      "result": "passed",
+      "log": "verify-cad-workflow.log",
+      "sha256": "adccaa4d134ec20f7db0f380ce75f3655f7adbda6cab23aaeaf365ea9bd586b8"
+    },
+    {
+      "command": "verify:cad-panel",
+      "result": "passed",
+      "log": "verify-cad-panel.log",
+      "sha256": "f4571561942b7cd888af4d0785ae6208dc9906aea2243fa319804f3d843b2ffb"
+    },
+    {
+      "command": "verify:cad-guided",
+      "result": "passed",
+      "log": "verify-cad-guided.log",
+      "sha256": "8d75804f158f98362339e0e39f8b26c56a3ba2f5a148dc27ae2b087cce96cb99"
+    },
+    {
+      "command": "verify:migrations",
+      "result": "passed",
+      "log": "verify-migrations.log",
+      "sha256": "7951adb1e536e42422eb9afbaee9517d750ab6df931bb550a0e4d045ad385db8"
+    },
+    {
+      "command": "verify:e2e",
+      "result": "passed",
+      "log": "verify-e2e.log",
+      "sha256": "db71ea6000717013eff9accffbf0b03928dba9c65832c7b87fad138935a35682"
+    },
+    {
+      "command": "verify:operations",
+      "result": "passed",
+      "log": "verify-operations.log",
+      "sha256": "95f52a0a2412f60319b9e6d070bd85ac1e4ed05d6e2049797f974ffcfc46c6d7"
+    },
+    {
+      "command": "verify:validation",
+      "result": "passed",
+      "log": "verify-validation.log",
+      "sha256": "17918cc4bd38415a0037a73e57c48e849c0cff75ac28f1bcfd817d54f1b9bf47"
+    },
+    {
+      "command": "build",
+      "result": "passed",
+      "log": "build.log",
+      "sha256": "79a004cd62a79ee93b5b9ce6760c6ba72e62dce6df3c4314edce27986cba3681"
+    },
+    {
+      "command": "cad-daily-browser",
+      "result": "passed",
+      "log": "cad-daily-browser.log",
+      "sha256": "db705045d04ccd9c06cc0d62d70ed09df2ed8659d6a01044741a04f5806d8c79"
+    },
+    {
+      "command": "cad-browser",
+      "result": "passed",
+      "log": "cad-browser.log",
+      "sha256": "29eff65b6a0ccb1d5b7d34119a5e2cfc4c5a321ff6cac4b2c0e1e4d6ea277df2"
+    },
+    {
+      "command": "cad-guided-browser",
+      "result": "passed",
+      "log": "cad-guided-browser.log",
+      "sha256": "f382ecc74978bb12a8c0ee29f8e00c83e8f740dbf2db59d5a06156e29e40bc9a"
+    },
+    {
+      "command": "ui-browser",
+      "result": "passed",
+      "log": "ui-browser.log",
+      "sha256": "741939a914afc4cba18501ed66068074ddf8e1f222e3b68e9cb7607c118b4775"
+    }
+  ],
+  "liveBackendTested": false,
+  "windowsInstallerExecuted": false,
+  "localModelInference": "mocked; no response-quality claim",
+  "temporaryPreviewRoutesRemoved": true
+}

@@ -1,0 +1,193 @@
+{
+  "pass": true,
+  "locales": 31,
+  "translatedLocales": 30,
+  "sourceKeys": 4517,
+  "translations": 135510,
+  "hash": "49f3019ec629cbc3956582619997eb52e4979af52c59d9149c966db044f8c996",
+  "reviewedCorrectionsApplied": 115,
+  "nativeEditorialApproval": false,
+  "generationLocation": "local offline inference; no source text sent to a translation service",
+  "packs": [
+    {
+      "locale": "en",
+      "completed": 4517,
+      "reviewedSourceKeys": 989,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "de",
+      "completed": 4517,
+      "reviewedSourceKeys": 14,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "fr",
+      "completed": 4517,
+      "reviewedSourceKeys": 13,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "es",
+      "completed": 4517,
+      "reviewedSourceKeys": 12,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "it",
+      "completed": 4517,
+      "reviewedSourceKeys": 13,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "pt",
+      "completed": 4517,
+      "reviewedSourceKeys": 12,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "nl",
+      "completed": 4517,
+      "reviewedSourceKeys": 12,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "pl",
+      "completed": 4517,
+      "reviewedSourceKeys": 17,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "ro",
+      "completed": 4517,
+      "reviewedSourceKeys": 12,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "ru",
+      "completed": 4517,
+      "reviewedSourceKeys": 11,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "uk",
+      "completed": 4517,
+      "reviewedSourceKeys": 11,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "ar",
+      "completed": 4517,
+      "reviewedSourceKeys": 18,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "zh",
+      "completed": 4517,
+      "reviewedSourceKeys": 19,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "ja",
+      "completed": 4517,
+      "reviewedSourceKeys": 11,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "sv",
+      "completed": 4517,
+      "reviewedSourceKeys": 13,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "da",
+      "completed": 4517,
+      "reviewedSourceKeys": 11,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "el",
+      "completed": 4517,
+      "reviewedSourceKeys": 12,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "cs",
+      "completed": 4517,
+      "reviewedSourceKeys": 11,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "ko",
+      "completed": 4517,
+      "reviewedSourceKeys": 16,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "bg",
+      "completed": 4517,
+      "reviewedSourceKeys": 12,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "hr",
+      "completed": 4517,
+      "reviewedSourceKeys": 20,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "et",
+      "completed": 4517,
+      "reviewedSourceKeys": 14,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "fi",
+      "completed": 4517,
+      "reviewedSourceKeys": 11,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "hu",
+      "completed": 4517,
+      "reviewedSourceKeys": 14,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "ga",
+      "completed": 4517,
+      "reviewedSourceKeys": 23,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "lv",
+      "completed": 4517,
+      "reviewedSourceKeys": 11,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "lt",
+      "completed": 4517,
+      "reviewedSourceKeys": 12,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "mt",
+      "completed": 4517,
+      "reviewedSourceKeys": 21,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "sk",
+      "completed": 4517,
+      "reviewedSourceKeys": 12,
+      "copiedEnglishParagraphs": 0
+    },
+    {
+      "locale": "sl",
+      "completed": 4517,
+      "reviewedSourceKeys": 12,
+      "copiedEnglishParagraphs": 0
+    }
+  ]
+}

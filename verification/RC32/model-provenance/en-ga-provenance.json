@@ -1,0 +1,8 @@
+{
+  "repo": "HPLT/translate-en-ga-v2.0-hplt_opus",
+  "commit": "ef3c1ae766a9e3596e5661b14c52be33459cdde9",
+  "license": "cc-by-4.0",
+  "source_spm": "source.spm",
+  "target_spm": "target.spm",
+  "attribution": "HPLT Consortium, University of Edinburgh and Charles University in Prague, HPLT MT release v2.0."
+}

@@ -1,0 +1,7 @@
+{
+  "repo": "Helsinki-NLP/opus-mt-en-es",
+  "commit": "5bc4493d463cf000c1f0b50f8d56886a392ed4ab",
+  "license": "apache-2.0",
+  "source_spm": "source.spm",
+  "target_spm": "target.spm"
+}

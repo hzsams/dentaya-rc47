@@ -1,0 +1,680 @@
+[
+  {
+    "file": "src/app/AppRuntime.tsx",
+    "line": 92,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" className=\"runtime-notice runtime-notice--setup\" role=\"status\">\n          <UiNode as=\"strong\">Kurulum tamamlanmalı</UiNode>\n          <UiNode as=\"span\">\n            Supabase"
+  },
+  {
+    "file": "src/app/AppRuntime.tsx",
+    "line": 98,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" className=\"runtime-notice runtime-notice--offline\" role=\"status\">\n          <UiNode as=\"strong\">{uiText(\"Çevrimdışısınız\")}</UiNode>\n          <UiNode as=\"span\">Bağlantı gel"
+  },
+  {
+    "file": "src/app/AppRuntime.tsx",
+    "line": 102,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" className=\"runtime-notice\" role=\"status\">\n          <UiNode as=\"strong\">{uiText(\"Bağlantı geri geldi\")}</UiNode>\n          <UiNode as=\"span\">DentAYA yeniden çevrimiçi. İşlem"
+  },
+  {
+    "file": "src/app/ConnectionStatus.tsx",
+    "line": 89,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={styles.copy}>\n        <UiNode as=\"strong\">\n          {online\n                ? uiText(\"Bağlantı geri geldi\")\n                : \"İnternet bağlantısı kesildi\"}\n        "
+  },
+  {
+    "file": "src/app/CustomizationPanel.tsx",
+    "line": 50,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" className=\"customize-heading\"><UiNode as=\"h3\">Arayüz koleksiyonu</UiNode><UiNode as=\"span\">{value.style === 'custom' ? 'Özel düzen' : INTERFACE_STYLES.find(s => s.id === val"
+  },
+  {
+    "file": "src/app/HomeClient.tsx",
+    "line": 394,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n                <UiNode as=\"strong\">\n                  {uiText(\" Klinik \")}</UiNode>\n                <UiNode as=\"span\">\n                  Hasta, vaka,\n                  lab"
+  },
+  {
+    "file": "src/app/HomeClient.tsx",
+    "line": 404,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n                <UiNode as=\"strong\">\n                  {uiText(\" Laboratuvar \")}</UiNode>\n                <UiNode as=\"span\">\n                  Tasarım, üretim,\n            "
+  },
+  {
+    "file": "src/app/HomeClient.tsx",
+    "line": 414,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n                <UiNode as=\"strong\">\n                  Canlı takip\n                </UiNode>\n                <UiNode as=\"span\">\n                  Vaka teslimatlarını\n      "
+  },
+  {
+    "file": "src/app/HomeClient.tsx",
+    "line": 480,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={{ display: \"grid\", gap: 4 }}>\n                <UiNode as=\"strong\">Bekleyen Ekip Daveti</UiNode>\n                <UiNode as=\"span\">\n                  Bir çalışma alanı"
+  },
+  {
+    "file": "src/app/HomeClient.tsx",
+    "line": 563,
+    "tag": "button",
+    "text": "<UiNode as=\"button\" type=\"button\" onClick={onClick} style={{\n            ...orgChoice,\n            ...(active\n                ? orgChoiceActive\n                : {}),\n        }}>\n      <UiNo"
+  },
+  {
+    "file": "src/app/HomeDashboard.tsx",
+    "line": 78,
+    "tag": "div",
+    "text": "<UiNode as=\"div\"><UiNode as=\"strong\"><UserText>{p.organization.name}</UserText></UiNode><UiNode as=\"small\">{kind}{p.organization.demo_mode ? ' · Demo' : ''}</UiNode></UiNode>"
+  },
+  {
+    "file": "src/app/HomeDashboard.tsx",
+    "line": 92,
+    "tag": "div",
+    "text": "<UiNode as=\"div\"><UiNode as=\"h2\">{p.name ? <UiMessage source=\"Merhaba, {0}\" values={[p.name.split(' ')[0]]} userValues={[0]}/> : 'Hoş geldiniz'}</UiNode><UiNode as=\"p\">{courier ? 'Alımlarını"
+  },
+  {
+    "file": "src/app/HomeDashboard.tsx",
+    "line": 101,
+    "tag": "span",
+    "text": "<UiNode as=\"span\" className=\"home-work-copy\"><UiNode as=\"strong\">{s.tracking_code || 'Takip kodu bekleniyor'}</UiNode><UiNode as=\"small\">{s.courier_name || 'Kurye bilgisi belirtilmedi'}</UiN"
+  },
+  {
+    "file": "src/app/HomeDashboard.tsx",
+    "line": 101,
+    "tag": "span",
+    "text": "<UiNode as=\"span\" className=\"home-work-copy\"><UiNode as=\"strong\">{c.case_number} · <UserText>{c.title || uiText('Vaka')}</UserText></UiNode><UiNode as=\"small\">{homeStatus(c.status)} · {c.due"
+  },
+  {
+    "file": "src/app/HomeDashboard.tsx",
+    "line": 104,
+    "tag": "span",
+    "text": "<UiNode as=\"span\"><UiNode as=\"strong\">{c.case_number}</UiNode><UiNode as=\"small\"><UserText>{c.title || uiText('Vaka')}</UserText></UiNode></UiNode>"
+  },
+  {
+    "file": "src/app/HomeNotifications.tsx",
+    "line": 91,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" className=\"home-panel-heading\"><UiNode as=\"h2\" id=\"home-notifications-title\">{uiText(\"Bildirimler\")}</UiNode><UiNode as=\"span\" className=\"home-count\">{unread === null ? '—' "
+  },
+  {
+    "file": "src/app/ModuleQuickLink.tsx",
+    "line": 13,
+    "tag": "span",
+    "text": "<UiNode as=\"span\" className=\"dy-title-detail\"><UiNode as=\"strong\">{t(title)}</UiNode><UiNode as=\"span\">{t(detail)}</UiNode></UiNode>"
+  },
+  {
+    "file": "src/app/NotificationCenter.tsx",
+    "line": 193,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n              <UiNode as=\"strong\" style={styles.title}>\n                {uiText(\" Bildirim Merkezi \")}</UiNode>\n\n              <UiNode as=\"span\" style={styles.sub}>\n       "
+  },
+  {
+    "file": "src/app/NotificationCenter.tsx",
+    "line": 232,
+    "tag": "span",
+    "text": "<UiNode as=\"span\" style={styles.itemTop}>\n                          <UiNode as=\"strong\">\n                            <UserText>{notificationTitle(item,uiText)}</UserText>\n                   "
+  },
+  {
+    "file": "src/app/NotificationCenter.tsx",
+    "line": 250,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={styles.empty}>\n                <UiNode as=\"strong\">\n                  Yeni bildirim yok\n                </UiNode>\n                <UiNode as=\"span\">\n                 "
+  },
+  {
+    "file": "src/app/OnboardingGuide.tsx",
+    "line": 493,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" className=\"onboarding-progress\" style={styles.fullProgress}>\n          <UiNode as=\"strong\">\n            {doneCount}/{steps.length}\n          </UiNode>\n\n          <UiNode as="
+  },
+  {
+    "file": "src/app/OnboardingGuide.tsx",
+    "line": 549,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={styles.boundary}>\n        <UiNode as=\"strong\">\n          Rol sınırı\n        </UiNode>\n\n        <UiNode as=\"span\">\n          {roleBoundary(org.org_type)}\n        </UiN"
+  },
+  {
+    "file": "src/app/WorkspaceChrome.tsx",
+    "line": 105,
+    "tag": "span",
+    "text": "<UiNode as=\"span\"><UiNode as=\"strong\">{uiText(label)}</UiNode><UiNode as=\"small\">{uiText(detail)}</UiNode></UiNode>"
+  },
+  {
+    "file": "src/app/WorkspaceLauncher.tsx",
+    "line": 150,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.context}>\n          <UiNode as=\"strong\"><UserText>{org.name}</UserText></UiNode>\n          <UiNode as=\"span\">{orgLabel(org.org_type)} · {roleLabel(membership?.role"
+  },
+  {
+    "file": "src/app/ai/AyaChat.tsx",
+    "line": 138,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" className=\"aya-chat-welcome\"><UiNode as=\"h2\">Nasıl yardımcı olabilirim?</UiNode><UiNode as=\"p\">Bir iş akışını açıklayabilir, mesaj taslağı hazırlayabilir veya kontrol adımla"
+  },
+  {
+    "file": "src/app/appointments/page.tsx",
+    "line": 285,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.timeBox}><UiNode as=\"strong\">{timeOnly(a.scheduled_at, intlLocale())}</UiNode><UiNode as=\"span\">{dateOnly(a.scheduled_at, intlLocale())}</UiNode></UiNode>"
+  },
+  {
+    "file": "src/app/appointments/page.tsx",
+    "line": 286,
+    "tag": "div",
+    "text": "<UiNode as=\"div\"><UiNode as=\"strong\" style={ui.patientName}>{p ? <UiMessage source=\"{0} {1}\" values={[p.first_name, p.last_name]} userValues={[0, 1]}/> : uiText(\"Hasta\")}</UiNode><UiNode as="
+  },
+  {
+    "file": "src/app/cases/[id]/page.tsx",
+    "line": 1222,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.cardRight}>\n                  <UiNode as=\"strong\">\n                    {scan.completeness_score !==\n                    null\n                    ? <UiMessage sourc"
+  },
+  {
+    "file": "src/app/cases/[id]/page.tsx",
+    "line": 1399,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n                    <UiNode as=\"strong\">\n                      {item.file_name}\n                    </UiNode>\n\n                    <UiNode as=\"span\" style={ui.cardSub}>\n   "
+  },
+  {
+    "file": "src/app/cases/[id]/page.tsx",
+    "line": 1461,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.infoBox}>\n        <UiNode as=\"strong\">\n          Fiyat görünürlüğü\n        </UiNode>\n\n        <UiNode as=\"span\">\n          {isClinic\n            ? \"Klinik kendi ha"
+  },
+  {
+    "file": "src/app/cases/[id]/page.tsx",
+    "line": 1600,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.cardRight}>\n                  <UiNode as=\"strong\">\n                    {item.courier_name ??\n                    \"Kurye atanmadı\"}\n                  </UiNode>\n\n   "
+  },
+  {
+    "file": "src/app/cases/[id]/page.tsx",
+    "line": 1671,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n        <UiNode as=\"strong\">\n          {title}\n        </UiNode>\n\n        <UiNode as=\"span\">\n          {detail}\n        </UiNode>\n      </UiNode>"
+  },
+  {
+    "file": "src/app/cases/[id]/page.tsx",
+    "line": 1691,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.sectionTitle}>\n      <UiNode as=\"strong\">\n        {uiText(title)}\n      </UiNode>\n\n      <UiNode as=\"span\">\n        {description}\n      </UiNode>\n    </UiNode>"
+  },
+  {
+    "file": "src/app/cases/[id]/page.tsx",
+    "line": 1752,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.empty}>\n      <UiNode as=\"strong\">\n        {title}\n      </UiNode>\n\n      <UiNode as=\"span\">\n        {text}\n      </UiNode>\n    </UiNode>"
+  },
+  {
+    "file": "src/app/community/CommunityClient.tsx",
+    "line": 413,
+    "tag": "span",
+    "text": "<UiNode as=\"span\"><UiNode as=\"strong\"><UserText>{post.author.display_name}</UserText></UiNode><UiNode as=\"small\">{profileKind(post.author.kind)} · {new Date(post.created_at).toLocaleDateStri"
+  },
+  {
+    "file": "src/app/community/CommunityClient.tsx",
+    "line": 476,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" className=\"community-empty\"><UiNode as=\"h2\">{initialPostId ? \"Paylaşım bulunamadı veya görünür değil.\" : \"Burada henüz paylaşım yok.\"}</UiNode><UiNode as=\"p\">{initialPostId "
+  },
+  {
+    "file": "src/app/design/CadBrushPresets.tsx",
+    "line": 65,
+    "tag": "button",
+    "text": "<UiNode as=\"button\" type=\"button\" onClick={() => { onApply({ brush_radius_mm: preset.brush.brush_radius_mm, brush_strength_mm: preset.brush.brush_strength_mm, brush_hardness: preset.brush.br"
+  },
+  {
+    "file": "src/app/design/CadJobSetupPanel.tsx",
+    "line": 158,
+    "tag": "span",
+    "text": "<UiNode as=\"span\">\n                  <UiNode as=\"strong\" style={s.unitTitle}>{fdiToothLabel(unit.tooth_code)}</UiNode>\n                  <UiNode as=\"small\" style={s.unitSummary}>\n           "
+  },
+  {
+    "file": "src/app/design/CadJobSetupPanel.tsx",
+    "line": 170,
+    "tag": "button",
+    "text": "<UiNode as=\"button\" type=\"button\" onClick={() => setPrimaryDesign(unit, \"crown\")} style={{ ...s.designCard, ...(unit.design_type === \"anatomic_crown\" || unit.design_type === \"anatomic_pontic"
+  },
+  {
+    "file": "src/app/design/CadJobSetupPanel.tsx",
+    "line": 174,
+    "tag": "button",
+    "text": "<UiNode as=\"button\" type=\"button\" onClick={() => setPrimaryDesign(unit, \"coping\")} style={{ ...s.designCard, ...(unit.design_type === \"coping\" || unit.design_type === \"reduced_pontic\" ? s.de"
+  },
+  {
+    "file": "src/app/design/CadJobSetupPanel.tsx",
+    "line": 178,
+    "tag": "button",
+    "text": "<UiNode as=\"button\" type=\"button\" onClick={() => setPrimaryDesign(unit, \"cutback\")} style={{ ...s.designCard, ...(unit.design_type === \"cutback_crown\" ? s.designCardActive : {}) }}>\n        "
+  },
+  {
+    "file": "src/app/design/CadJobSetupPanel.tsx",
+    "line": 241,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={s.formHint}>\n                <UiNode as=\"strong\">Canlı başlangıç geometrisi</UiNode>\n                <UiNode as=\"span\">\n                  Kron seçildiğinde seçilen di"
+  },
+  {
+    "file": "src/app/design/CadJobSetupPanel.tsx",
+    "line": 257,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={s.footerInfo}>\n            <UiNode as=\"strong\">{setup.units.length} ünite tanımlı</UiNode>\n            <UiNode as=\"span\">Seçimler proje ayarlarıyla birlikte kaydedili"
+  },
+  {
+    "file": "src/app/design/DesignStudioClient.tsx",
+    "line": 1640,
+    "tag": "div",
+    "text": "<UiNode as=\"div\"><UiNode as=\"strong\">Kurtarma kaydı bulundu</UiNode><UiNode as=\"span\">{formatRecoveryTime(recoveryCandidate.savedAt, intlLocale())} · Geometri ve ayarlar</UiNode></UiNode>"
+  },
+  {
+    "file": "src/app/design/DesignStudioClient.tsx",
+    "line": 1934,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n                      <UiNode as=\"strong\">Simetri / Mirror</UiNode>\n                      <UiNode as=\"span\">Karşı tarafa aynı sculpt darbesini uygula</UiNode>\n             "
+  },
+  {
+    "file": "src/app/design/DesignStudioClient.tsx",
+    "line": 2349,
+    "tag": "span",
+    "text": "<UiNode as=\"span\" style={ui.qualityText}>\n        <UiNode as=\"strong\">{title}</UiNode>\n        <UiNode as=\"small\">{detail}</UiNode>\n      </UiNode>"
+  },
+  {
+    "file": "src/app/design/DesignViewport.tsx",
+    "line": 2053,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={styles.overlay}><UiNode as=\"strong\">Tasarıma başlamak için bir tarama veya model seç.</UiNode><UiNode as=\"span\">Tarama Stüdyosu kayıtları otomatik görünür.</UiNode></"
+  },
+  {
+    "file": "src/app/design/DesignViewport.tsx",
+    "line": 2054,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={styles.error}><UiNode as=\"strong\">3D model açılamadı</UiNode><UiNode as=\"span\">{error}</UiNode></UiNode>"
+  },
+  {
+    "file": "src/app/design/page.tsx",
+    "line": 18,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={{\n            width: \"min(520px, calc(100% - 32px))\",\n            padding: \"24px\",\n            borderRadius: \"16px\",\n            border: \"1px solid var(--dy-border, #"
+  },
+  {
+    "file": "src/app/finance/page.tsx",
+    "line": 587,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.infoBox}>\n                    <UiNode as=\"strong\">\n                      Fiyat ayrımı\n                    </UiNode>\n                    <UiNode as=\"span\">\n        "
+  },
+  {
+    "file": "src/app/finance/page.tsx",
+    "line": 670,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.infoBox}>\n                    <UiNode as=\"strong\">\n                      Klinik ve hasta fiyatı ayrıdır\n                    </UiNode>\n                    <UiNode a"
+  },
+  {
+    "file": "src/app/finance/page.tsx",
+    "line": 805,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.sectionTitle}>\n      <UiNode as=\"strong\">\n        {uiText(title)}\n      </UiNode>\n      <UiNode as=\"span\">\n        {description}\n      </UiNode>\n    </UiNode>"
+  },
+  {
+    "file": "src/app/labs/page.tsx",
+    "line": 257,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={styles.scoreBox}>\n                <UiNode as=\"strong\">{lab.demo_rating ? lab.demo_rating.toFixed(1) : \"—\"}</UiNode>\n                <UiNode as=\"span\">{lab.demo_rating"
+  },
+  {
+    "file": "src/app/loading.tsx",
+    "line": 7,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={{ display: \"grid\", gap: 8, textAlign: \"center\" }}>\n        <UiNode as=\"strong\" style={{ color: \"var(--dy-text,#f2f6f8)\", fontSize: 18 }}>DentAYA</UiNode>\n        <UiN"
+  },
+  {
+    "file": "src/app/logistics/page.tsx",
+    "line": 627,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" className=\"dy-title-detail\"><UiNode as=\"strong\">Gönderiler</UiNode><UiNode as=\"span\">{filtered.length} kayıt</UiNode></UiNode>"
+  },
+  {
+    "file": "src/app/logistics/page.tsx",
+    "line": 700,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.notes}><UiNode as=\"strong\">Kurye notu</UiNode><UiNode as=\"span\">{proof.delivery_note}</UiNode></UiNode>"
+  },
+  {
+    "file": "src/app/logistics/page.tsx",
+    "line": 704,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.notes}><UiNode as=\"strong\">Gönderi notu</UiNode><UiNode as=\"span\">{selected.notes}</UiNode></UiNode>"
+  },
+  {
+    "file": "src/app/messages/page.tsx",
+    "line": 317,
+    "tag": "div",
+    "text": "<UiNode as=\"div\"><UiNode as=\"strong\">Sohbetler</UiNode><UiNode as=\"span\">{conversations.length} kurum kanalı</UiNode></UiNode>"
+  },
+  {
+    "file": "src/app/messages/page.tsx",
+    "line": 324,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.threadCopy}><UiNode as=\"strong\"><UserText>{cp?.name ?? uiText(\"Kurum\")}</UserText></UiNode><UiNode as=\"span\">{cp?.org_type === \"laboratory\" ? uiText(\"Laboratuvar\")"
+  },
+  {
+    "file": "src/app/messages/page.tsx",
+    "line": 337,
+    "tag": "div",
+    "text": "<UiNode as=\"div\"><UiNode as=\"strong\"><UserText>{selectedCounterpart?.name ?? uiText(\"Kurum\")}</UserText></UiNode><UiNode as=\"span\">{selectedCounterpart?.org_type === \"laboratory\" ? \"Laboratu"
+  },
+  {
+    "file": "src/app/messages/page.tsx",
+    "line": 366,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.emptyChat}><UiNode as=\"strong\">İlk mesajı gönder.</UiNode><UiNode as=\"span\">Genel koordinasyon için normal mesaj gönder; teknik ayrıntılarda ilgili vakayı seç.</Ui"
+  },
+  {
+    "file": "src/app/notifications/page.tsx",
+    "line": 373,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.empty}>\n            <UiNode as=\"strong\">\n              Bu filtrede bildirim yok\n            </UiNode>\n            <UiNode as=\"span\">\n              Yeni bir işlem\n "
+  },
+  {
+    "file": "src/app/operations/page.tsx",
+    "line": 331,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" key={label} style={ui.pipelineStep}>\n              <UiNode as=\"strong\" style={ui.pipelineValue}>{value}</UiNode>\n              <UiNode as=\"span\" style={ui.pipelineLabel}>{la"
+  },
+  {
+    "file": "src/app/operations/page.tsx",
+    "line": 389,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.attentionCopy}>\n        <UiNode as=\"strong\">{item.title}</UiNode>\n        <UiNode as=\"span\">{item.detail}</UiNode>\n      </UiNode>"
+  },
+  {
+    "file": "src/app/pilot-check/page.tsx",
+    "line": 75,
+    "tag": "div",
+    "text": "<UiNode as=\"div\"><UiNode as=\"strong\">{item.label}</UiNode><UiNode as=\"p\">{item.detail}</UiNode></UiNode>"
+  },
+  {
+    "file": "src/app/pilot-check/page.tsx",
+    "line": 79,
+    "tag": "div",
+    "text": "<UiNode as=\"div\"><UiNode as=\"strong\">Hızlı pilot rotaları</UiNode><UiNode as=\"span\" style={{ display: \"block\", marginTop: 3, color: dy.muted, fontSize: 13 }}>Teknik kontrolden sonra uçtan uc"
+  },
+  {
+    "file": "src/app/pilot-flow/page.tsx",
+    "line": 618,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.caseMeta}>\n                  <UiNode as=\"strong\">\n                    {caseStatusLabel(selectedCase.status)}\n                  </UiNode>\n\n                  <UiNode"
+  },
+  {
+    "file": "src/app/pilot-flow/page.tsx",
+    "line": 691,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.panelTitle}>\n                <UiNode as=\"strong\">\n                  Uçtan uca akış\n                </UiNode>\n\n                <UiNode as=\"span\">\n                  "
+  },
+  {
+    "file": "src/app/pilot-flow/page.tsx",
+    "line": 723,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.stageTitleRow}>\n                          <UiNode as=\"strong\">\n                            {stage.title}\n                          </UiNode>\n\n                     "
+  },
+  {
+    "file": "src/app/pilot-flow/page.tsx",
+    "line": 754,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.panelTitle}>\n                  <UiNode as=\"strong\">\n                    Tutarlılık kontrolü\n                  </UiNode>\n\n                  <UiNode as=\"span\">\n     "
+  },
+  {
+    "file": "src/app/pilot-flow/page.tsx",
+    "line": 776,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.okBox}>\n                    <UiNode as=\"strong\">\n                      Tutarsızlık görünmüyor\n                    </UiNode>\n\n                    <UiNode as=\"span\">"
+  },
+  {
+    "file": "src/app/pilot-flow/page.tsx",
+    "line": 790,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.panelTitle}>\n                  <UiNode as=\"strong\">\n                    Pilot telemetrisi\n                  </UiNode>\n\n                  <UiNode as=\"span\">\n       "
+  },
+  {
+    "file": "src/app/release-check/page.tsx",
+    "line": 182,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" className=\"dy-title-detail\"><UiNode as=\"strong\">Otomatik release gates</UiNode><UiNode as=\"span\">Env, auth, RLS erişimi, WebGL ve ana veri yüzeyleri.</UiNode></UiNode>"
+  },
+  {
+    "file": "src/app/release-check/page.tsx",
+    "line": 193,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" className=\"dy-title-detail\"><UiNode as=\"strong\">Manuel kabul kapıları</UiNode><UiNode as=\"span\">Bunları yalnız gerçekten test ettikten sonra işaretle.</UiNode></UiNode>"
+  },
+  {
+    "file": "src/app/release-check/page.tsx",
+    "line": 201,
+    "tag": "span",
+    "text": "<UiNode as=\"span\" className=\"dy-title-detail\"><UiNode as=\"strong\">{gate.title}</UiNode><UiNode as=\"small\">{gate.detail}</UiNode></UiNode>"
+  },
+  {
+    "file": "src/app/release-check/page.tsx",
+    "line": 209,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n          <UiNode as=\"strong\">RC20 final doğrulama sırası</UiNode>\n          <UiNode as=\"span\">Build → Release Check → Pilot Flow → gerçek rol smoke test → staging → freeze"
+  },
+  {
+    "file": "src/app/release-check/page.tsx",
+    "line": 241,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" className=\"dy-title-detail\"><UiNode as=\"strong\">{item.label}</UiNode><UiNode as=\"p\" style={ui.detail}>{item.detail}</UiNode></UiNode>"
+  },
+  {
+    "file": "src/app/scan-studio/LocalScanPreview.tsx",
+    "line": 137,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={s.empty}><UiNode as=\"strong\">STL / PLY önizleme</UiNode><UiNode as=\"span\">Tarama dosyasını seçtiğinde 3D mesh burada açılır.</UiNode></UiNode>"
+  },
+  {
+    "file": "src/app/scan-studio/ScanStudioClient.tsx",
+    "line": 605,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n                <UiNode as=\"strong\">\n                  Mesh intake kontrolü\n                </UiNode>\n                <UiNode as=\"span\">\n                  Dosya geometrisi "
+  },
+  {
+    "file": "src/app/scan-studio/ScanStudioClient.tsx",
+    "line": 660,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n                <UiNode as=\"strong\">\n                  Tarama bütünlüğü\n                </UiNode>\n                <UiNode as=\"span\">\n                  Manuel kayıt değeri\n "
+  },
+  {
+    "file": "src/app/scan-studio/ScanStudioClient.tsx",
+    "line": 900,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.sync}>\n            <UiNode as=\"strong\">\n              Senkronizasyon\n            </UiNode>\n            <UiNode as=\"span\">\n              {isLab\n            ? \"Vaka "
+  },
+  {
+    "file": "src/app/scan-studio/ScanStudioClient.tsx",
+    "line": 934,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.sectionTitle}>\n      <UiNode as=\"strong\">\n        {uiText(title)}\n      </UiNode>\n      <UiNode as=\"span\">\n        {description}\n      </UiNode>\n    </UiNode>"
+  },
+  {
+    "file": "src/app/scan-studio/ScanStudioClient.tsx",
+    "line": 952,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n        <UiNode as=\"strong\">\n          {title}\n        </UiNode>\n        <UiNode as=\"small\">\n          {detail}\n        </UiNode>\n      </UiNode>"
+  },
+  {
+    "file": "src/app/scan-studio/page.tsx",
+    "line": 18,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={{\n            width: \"min(520px, calc(100% - 32px))\",\n            padding: \"24px\",\n            borderRadius: \"16px\",\n            border: \"1px solid var(--dy-border, #"
+  },
+  {
+    "file": "src/app/scans/ScanCompareViewer.tsx",
+    "line": 489,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={errorLayer}>\n              <UiNode as=\"strong\">Karşılaştırma açılamadı</UiNode>\n              <UiNode as=\"p\">{error}</UiNode>\n            </UiNode>"
+  },
+  {
+    "file": "src/app/scans/ScanModelViewer.tsx",
+    "line": 488,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={errorLayer}>\n                <UiNode as=\"strong\">Model açılamadı</UiNode>\n                <UiNode as=\"p\">{error}</UiNode>\n              </UiNode>"
+  },
+  {
+    "file": "src/app/scans/page.tsx",
+    "line": 188,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={s.sectionHead}><UiNode as=\"h2\" style={s.h2}>Tarama Zaman Çizelgesi</UiNode><UiNode as=\"span\">{filtered.length} kayıt</UiNode></UiNode>"
+  },
+  {
+    "file": "src/app/scans/page.tsx",
+    "line": 190,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={s.quality}><UiNode as=\"strong\">{scan.completeness_score != null ? <UiMessage source=\"%{0}\" values={[scan.completeness_score]} userValues={[]}/> : \"—\"}</UiNode><UiNode"
+  },
+  {
+    "file": "src/app/scans/page.tsx",
+    "line": 202,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={s.sideBox}><UiNode as=\"strong\">3D Zaman Karşılaştırması</UiNode><UiNode as=\"span\">Son iki aynı-ark taramasını yan yana veya üst üste aç. Üst üste görünüm görsel önizl"
+  },
+  {
+    "file": "src/app/scans/page.tsx",
+    "line": 202,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={s.sideBox}><UiNode as=\"strong\">Güvenlik</UiNode><UiNode as=\"span\">Demo kayıtları SENTETİK DEMO etiketiyle ayrılır. Gerçek taramalar hasta/kurum yetkisi üzerinden RLS "
+  },
+  {
+    "file": "src/app/settings/page.tsx",
+    "line": 725,
+    "tag": "Link",
+    "text": "<Link href=\"/start\" style={s.guideLink}>\n            <UiNode as=\"strong\">Öğrenim Rehberi</UiNode>\n            <UiNode as=\"span\">Rolüne göre kullanım akışı</UiNode>\n          </Link>"
+  },
+  {
+    "file": "src/app/settings/page.tsx",
+    "line": 730,
+    "tag": "Link",
+    "text": "<Link href=\"/ai\" style={s.guideLink}>\n            <UiNode as=\"strong\">AYA · Akıllı Yardım Asistanı</UiNode>\n            <UiNode as=\"span\">Vaka, modül, ayar ve kullanım yardımı</UiNode>\n     "
+  },
+  {
+    "file": "src/app/settings/page.tsx",
+    "line": 861,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n                      <UiNode as=\"strong\">Vurgu rengi</UiNode>\n                      <UiNode as=\"span\">Butonlar, aktif durumlar ve vurgu çizgileri.</UiNode>\n               "
+  },
+  {
+    "file": "src/app/settings/page.tsx",
+    "line": 868,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n                      <UiNode as=\"strong\">Özel rengi kullan</UiNode>\n                      <UiNode as=\"span\">Kapatırsan seçili temanın kendi vurgusu kullanılır.</UiNode>\n  "
+  },
+  {
+    "file": "src/app/settings/page.tsx",
+    "line": 921,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n                        <UiNode as=\"strong\">\n                          DentAYA\n                          Workspace\n                        </UiNode>\n\n                      "
+  },
+  {
+    "file": "src/app/settings/page.tsx",
+    "line": 1034,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n                    <UiNode as=\"strong\">Modül simgeleri</UiNode>\n                    <UiNode as=\"span\">Modül başlıklarının yanında işlevsel ikonları göster.</UiNode>\n      "
+  },
+  {
+    "file": "src/app/settings/page.tsx",
+    "line": 1042,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n                    <UiNode as=\"strong\">Lobide AYA</UiNode>\n                    <UiNode as=\"span\">İsteğe bağlı AYA yardım bağlantısını ana ekranda göster.</UiNode>\n        "
+  },
+  {
+    "file": "src/app/settings/page.tsx",
+    "line": 1050,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n                    <UiNode as=\"strong\">Çalışma düzeni önerisi</UiNode>\n                    <UiNode as=\"span\">Ana sayfadaki çalışma düzeni önerisini göster. Öncelikli işler"
+  },
+  {
+    "file": "src/app/settings/page.tsx",
+    "line": 1058,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n                    <UiNode as=\"strong\">Merkezlenmiş içerik</UiNode>\n                    <UiNode as=\"span\">Geniş ekranlarda içerik genişliğini kontrollü tut.</UiNode>\n     "
+  },
+  {
+    "file": "src/app/settings/page.tsx",
+    "line": 1068,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n                    <UiNode as=\"strong\">\n                      Kompakt görünüm\n                    </UiNode>\n\n                    <UiNode as=\"span\">\n                      K"
+  },
+  {
+    "file": "src/app/settings/page.tsx",
+    "line": 1184,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n                          <UiNode as=\"strong\">\n                            Dizinde görünür\n                          </UiNode>\n\n                          <UiNode as=\"span\">"
+  },
+  {
+    "file": "src/app/settings/page.tsx",
+    "line": 1487,
+    "tag": "span",
+    "text": "<UiNode as=\"span\" style={{ display: \"grid\", gap: 3, textAlign: \"left\" }}>\n        <UiNode as=\"strong\">{label}</UiNode>\n        <UiNode as=\"small\">{detail}</UiNode>\n      </UiNode>"
+  },
+  {
+    "file": "src/app/settings/page.tsx",
+    "line": 1525,
+    "tag": "button",
+    "text": "<UiNode as=\"button\" type=\"button\" className=\"settings-card\" onClick={onClick} style={{\n            ...s.choiceCard,\n            borderColor: active\n                ? dy.accent\n              "
+  },
+  {
+    "file": "src/app/settings/page.tsx",
+    "line": 1571,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n        <UiNode as=\"strong\">\n          {title}\n        </UiNode>\n\n        <UiNode as=\"span\">\n          {description}\n        </UiNode>\n      </UiNode>"
+  },
+  {
+    "file": "src/app/settings/page.tsx",
+    "line": 1635,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n        <UiNode as=\"strong\">\n          {title}\n        </UiNode>\n\n        <UiNode as=\"span\">\n          {detail}\n        </UiNode>\n      </UiNode>"
+  },
+  {
+    "file": "src/app/settings/page.tsx",
+    "line": 1657,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n        <UiNode as=\"strong\">\n          {title}\n        </UiNode>\n\n        <UiNode as=\"span\">\n          {detail}\n        </UiNode>\n      </UiNode>"
+  },
+  {
+    "file": "src/app/start/page.tsx",
+    "line": 161,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n                  <UiNode as=\"h3\" style={ui.cardTitle}>{step.title}</UiNode>\n                  <UiNode as=\"p\" style={ui.cardText}>{step.text}</UiNode>\n                </UiN"
+  },
+  {
+    "file": "src/app/start/page.tsx",
+    "line": 187,
+    "tag": "div",
+    "text": "<UiNode as=\"div\">\n          <UiNode as=\"strong\">Takıldığında ne yapmalısın?</UiNode>\n          <UiNode as=\"span\">Önce AYA&apos;ya sor; sonra Bildirimler ve ilgili modülü aç. Teknik kontrol g"
+  },
+  {
+    "file": "src/app/team/page.tsx",
+    "line": 264,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.panelTitle}>\n            <UiNode as=\"strong\">Yeni ekip daveti</UiNode>\n            <UiNode as=\"span\">Davet bağlantısı yalnız yazdığın e-posta hesabı tarafından kab"
+  },
+  {
+    "file": "src/app/team/page.tsx",
+    "line": 293,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" className=\"dy-title-detail\"><UiNode as=\"strong\">Davet hazır</UiNode><UiNode as=\"span\">{freshInviteEmail} için bağlantıyı güvenli şekilde paylaş.</UiNode></UiNode>"
+  },
+  {
+    "file": "src/app/team/page.tsx",
+    "line": 302,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.panelTitle}>\n            <UiNode as=\"strong\">Aktif ekip</UiNode>\n            <UiNode as=\"span\">Kurum sahibi sabittir. Rol değiştirme yalnız kurum sahibindedir.</Ui"
+  },
+  {
+    "file": "src/app/team/page.tsx",
+    "line": 337,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={ui.panelTitle}>\n            <UiNode as=\"strong\">Bekleyen davetler</UiNode>\n            <UiNode as=\"span\">Eski bağlantıyı yeniden paylaşmak yerine yeni bağlantı üret.<"
+  },
+  {
+    "file": "src/app/twin/page.tsx",
+    "line": 499,
+    "tag": "div",
+    "text": "<UiNode as=\"div\" style={styles.miniMetric}>\n      <UiNode as=\"strong\">{value}</UiNode>\n      <UiNode as=\"span\">{label}</UiNode>\n    </UiNode>"
+  }
+]

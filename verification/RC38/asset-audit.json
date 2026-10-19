@@ -1,0 +1,20 @@
+{
+  "pass": true,
+  "families": 8,
+  "outlinedVariants": 48,
+  "legacyAssetAliases": 10,
+  "icoFiles": 19,
+  "icoSizes": [
+    16,
+    24,
+    32,
+    48,
+    64,
+    128,
+    256
+  ],
+  "cadAndToothFilesUnchanged": 44,
+  "uppercaseWordmark": "DENTAYA",
+  "logoFontsRequired": false,
+  "externalSvgResources": false
+}

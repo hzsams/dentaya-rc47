@@ -1,0 +1,17 @@
+DENTAYA RC38 - PREMIUM TIPOGRAFI VE 24 MORFOLOJI AILESI
+
+1. ZIP'i yeni bir klasore cikarin. DentAYA_Production_RC38 klasorunu acin.
+2. Calisan projenizdeki .env.local dosyasini package.json yanina kopyalayin.
+3. DENTAYA_GUNCELLE_DERLE.cmd dosyasini calistirin.
+4. dist-desktop icindeki DentAYA-Setup-1.0.0-rc.38.exe dosyasini kurun.
+
+Ana logo: DENTAYA, ozel cizilmis premium serif harfler.
+Logo secimi: Ayarlar > Gorunum. Sekiz vektor tasarim.
+Dis formlari: 24 aile, 6 morfoloji sinifi.
+Form secimi: Dis gorunumu ayarlari ve CAD > Is tanimi.
+Genislik/yukseklik/derinlik: ayri gelismis olcu ayarlari.
+Eski form kayitlari yeni ailelere eslenir. 46 dil, 16 gorunum stili.
+Yeni SQL gocu gerekmez.
+
+Bu ZIP kaynak paketidir. Hazir Windows EXE'si icermez.
+Ayrintilar: RC38_KULLANIM.md ve RC38_KONTROL_RAPORU.md.
