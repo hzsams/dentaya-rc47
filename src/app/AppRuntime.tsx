@@ -13,12 +13,14 @@ import { useDentayaThemeRuntime } from "@/app/dentaya-theme";
 import { useCustomizationRuntime } from "./customization";
 import { useBrandIconRuntime } from "@/app/BrandLogo";
 import { usePathname } from "next/navigation";
-import { supabaseConfiguration } from "@/lib/supabase";
+import { supabase, supabaseConfiguration } from "@/lib/supabase";
+import { professionalShellText, needsOrganizationConnection } from '@/lib/i18n/professional-shell';
 import { reportOperationalEvent } from "@/lib/operational-telemetry";
 export default function AppRuntime({ children }: {
     children: ReactNode;
 }) {
-    const { t: uiText } = useTranslation();
+    const { t: uiText, locale } = useTranslation();
+    const copy = professionalShellText(locale);
     useDentayaThemeRuntime();
     useCustomizationRuntime();
     const pathname = usePathname();
@@ -36,6 +38,9 @@ export default function AppRuntime({ children }: {
         const handleOnline = () => {
             const downtimeMs = offlineStartedAt ? Date.now() - offlineStartedAt : 0;
             setOnline(true);
+            if (supabaseConfiguration.isConfigured) {
+                try { supabase.realtime.connect(); } catch { /* The client retries; records remain unchanged. */ }
+            }
             window.dispatchEvent(new CustomEvent("dentaya-network-restored"));
             if (downtimeMs >= 5000) {
                 setReconnected(true);
@@ -91,15 +96,14 @@ export default function AppRuntime({ children }: {
     }, []);
     return (<>
       <LanguageRuntime /><LanguagePackRuntime /><LanguageSelect compact/><ExperienceRuntime />
-      {!supabaseConfiguration.isConfigured && pathname !== "/" ? (<UiNode as="div" className="runtime-notice runtime-notice--setup" role="status">
-          <UiNode as="strong">Kurulum tamamlanmalı</UiNode>
-          <UiNode as="span">
-            Supabase bağlantı bilgilerini <UiNode as="code">.env.local</UiNode> dosyasına ekleyin.
-          </UiNode>
+      {!supabaseConfiguration.isConfigured && needsOrganizationConnection(pathname) ? (<UiNode as="div" translateChildren={false} className="runtime-notice runtime-notice--setup" role="status">
+          <UiNode as="strong">{supabaseConfiguration.status === 'invalid' ? copy.invalidTitle : copy.setupTitle}</UiNode>
+          <UiNode as="span">{supabaseConfiguration.status === 'invalid' ? copy.invalidDescription : copy.setupDescription}</UiNode>
+          <UiNode as="details"><UiNode as="summary">{copy.setupDetails}</UiNode><UiNode as="p">{copy.setupTechnical}</UiNode></UiNode>
         </UiNode>) : null}
       {!online ? (<UiNode as="div" className="runtime-notice runtime-notice--offline" role="status">
           <UiNode as="strong">{uiText("Çevrimdışısınız")}</UiNode>
-          <UiNode as="span">Bağlantı gelene kadar yeni işlemler kaydedilemez; açık ekranı incelemeye devam edebilirsiniz.</UiNode>
+          <UiNode as="span" translateChildren={false}>{copy.offline}</UiNode>
         </UiNode>) : null}
       {online && reconnected ? (<UiNode as="div" className="runtime-notice" role="status">
           <UiNode as="strong">{uiText("Bağlantı geri geldi")}</UiNode>

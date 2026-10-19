@@ -1,0 +1,623 @@
+{
+  "commit": "577bd37b96c02d1833b2c9eed2de9f96964e96cb",
+  "datasetLicense": "CC-BY-4.0",
+  "counts": {
+    "xmlDocuments": 11274,
+    "allQuestionAnswerPairs": 47441,
+    "nonemptyAnswers": 16407,
+    "screenedDocuments": 100,
+    "screenedPairs": 332,
+    "screenedNonemptyAnswers": 133
+  },
+  "newCardPassagesMatched": 20,
+  "screenIsClinicalValidation": false,
+  "pinnedSHA256": {
+    "readme.txt": "e51e3ef59ec8aa923dd79f2b4132bb3cb1deccbf1b1aca59f3dd668e001397d8",
+    "LICENSE.txt": "5b63c5abb5f4218f79230730b3733ce681383e2d656044069b8c73cbdb8e7fb7",
+    "4_MPlus_Health_Topics_QA/0000531.xml": "c6ca51cdded8fa3b178dc7dfdd2960e44931cf00b89f918de892fca7ab374a0d",
+    "4_MPlus_Health_Topics_QA/0000205.xml": "4a880d0617a988e220ee70279dfcbb62b088e495406c927fb761b43708d6da41",
+    "4_MPlus_Health_Topics_QA/0000791.xml": "aee7c9f6cca78a7f57073377f4b516ae04450a0163eb8432b0da83e80b62c5a6"
+  },
+  "screenedDocuments": [
+    {
+      "file": "10_MPlus_ADAM_QA/0000587.xml",
+      "focus": "Broken or knocked out tooth",
+      "questions": 1,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0000600.xml",
+      "focus": "Brushing Your Childs Teeth",
+      "questions": 1,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0000601.xml",
+      "focus": "Bruxism",
+      "questions": 9,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0000863.xml",
+      "focus": "Cleft lip and palate",
+      "questions": 8,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0000864.xml",
+      "focus": "Cleft lip and palate repair",
+      "questions": 4,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0000865.xml",
+      "focus": "Cleft lip and palate repair - discharge",
+      "questions": 3,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0000866.xml",
+      "focus": "Cleft palate - resources",
+      "questions": 1,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0001136.xml",
+      "focus": "Dental care - adult",
+      "questions": 1,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0001137.xml",
+      "focus": "Dental care - child",
+      "questions": 1,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0001138.xml",
+      "focus": "Dental cavities",
+      "questions": 9,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0001139.xml",
+      "focus": "Dental crowns",
+      "questions": 1,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0001140.xml",
+      "focus": "Dental plaque identification at home",
+      "questions": 3,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0001141.xml",
+      "focus": "Dental sealants",
+      "questions": 1,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0001142.xml",
+      "focus": "Dental x-rays",
+      "questions": 1,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0001297.xml",
+      "focus": "Dry mouth during cancer treatment",
+      "questions": 1,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0001732.xml",
+      "focus": "Gingivitis",
+      "questions": 9,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0001733.xml",
+      "focus": "Gingivostomatitis",
+      "questions": 8,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0001809.xml",
+      "focus": "Hand-foot-mouth disease",
+      "questions": 9,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0001958.xml",
+      "focus": "Herpes - oral",
+      "questions": 1,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0002152.xml",
+      "focus": "Impacted tooth",
+      "questions": 8,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0002253.xml",
+      "focus": "Jaw - broken or dislocated",
+      "questions": 1,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0002516.xml",
+      "focus": "Malocclusion of teeth",
+      "questions": 9,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0002674.xml",
+      "focus": "Mouth and neck radiation - discharge",
+      "questions": 1,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0002675.xml",
+      "focus": "Mouth sores",
+      "questions": 5,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0002676.xml",
+      "focus": "Mouth ulcers",
+      "questions": 9,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0002747.xml",
+      "focus": "Natal teeth",
+      "questions": 6,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0002864.xml",
+      "focus": "Oral cancer",
+      "questions": 10,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0002866.xml",
+      "focus": "Oral mucositis",
+      "questions": 1,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0002921.xml",
+      "focus": "Palatal myoclonus",
+      "questions": 3,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0003019.xml",
+      "focus": "Periodontitis",
+      "questions": 9,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0003108.xml",
+      "focus": "Plaque and tartar on teeth",
+      "questions": 1,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0003455.xml",
+      "focus": "Salivary duct stones",
+      "questions": 7,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0003456.xml",
+      "focus": "Salivary gland biopsy",
+      "questions": 1,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0003457.xml",
+      "focus": "Salivary gland infections",
+      "questions": 9,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0003458.xml",
+      "focus": "Salivary gland tumors",
+      "questions": 8,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0003965.xml",
+      "focus": "Tooth - abnormal colors",
+      "questions": 6,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0003966.xml",
+      "focus": "Tooth - abnormal shape",
+      "questions": 5,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0003967.xml",
+      "focus": "Tooth abscess",
+      "questions": 9,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0003968.xml",
+      "focus": "Tooth anatomy",
+      "questions": 1,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0003969.xml",
+      "focus": "Tooth decay - early childhood",
+      "questions": 2,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0003970.xml",
+      "focus": "Tooth extraction",
+      "questions": 1,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0003971.xml",
+      "focus": "Tooth formation - delayed or absent",
+      "questions": 1,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0004029.xml",
+      "focus": "Trench mouth",
+      "questions": 9,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "10_MPlus_ADAM_QA/0004314.xml",
+      "focus": "Widely spaced teeth",
+      "questions": 5,
+      "nonemptyAnswers": 0
+    },
+    {
+      "file": "1_CancerGov_QA/0000024_10.xml",
+      "focus": "Oral Cavity and Oropharyngeal Cancer",
+      "questions": 3,
+      "nonemptyAnswers": 3
+    },
+    {
+      "file": "1_CancerGov_QA/0000024_3.xml",
+      "focus": "Lip and Oral Cavity Cancer",
+      "questions": 8,
+      "nonemptyAnswers": 8
+    },
+    {
+      "file": "1_CancerGov_QA/0000024_8.xml",
+      "focus": "Salivary Gland Cancer",
+      "questions": 8,
+      "nonemptyAnswers": 8
+    },
+    {
+      "file": "1_CancerGov_QA/0000024_9.xml",
+      "focus": "Oral Cavity and Oropharyngeal Cancer",
+      "questions": 3,
+      "nonemptyAnswers": 3
+    },
+    {
+      "file": "2_GARD_QA/0000100.xml",
+      "focus": "Acrorenal mandibular syndrome",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0000371.xml",
+      "focus": "Ankylosis of teeth",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0001057.xml",
+      "focus": "Cerebral gigantism jaw cysts",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0001368.xml",
+      "focus": "Cleft palate short stature vertebral anomalies",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0001369.xml",
+      "focus": "Cleft palate stapes fixation oligodontia",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0001370.xml",
+      "focus": "Cleft palate X-linked",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0001435.xml",
+      "focus": "Coloboma, cleft lip/palate and mental retardation syndrome",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0001780.xml",
+      "focus": "Dens in dente and palatal invaginations",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0002034.xml",
+      "focus": "Ectodermal dysplasia with natal teeth Turnpenny type",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0002040.xml",
+      "focus": "Ectrodactyly and ectodermal dysplasia without cleft lip/palate",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0002042.xml",
+      "focus": "Ectrodactyly cleft palate syndrome",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0002060.xml",
+      "focus": "Ehlers-Danlos syndrome, periodontitis type",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0002403.xml",
+      "focus": "Focal palmoplantar and gingival keratoderma",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0002554.xml",
+      "focus": "Gingival fibromatosis, 1",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0003013.xml",
+      "focus": "Hyperparathyroidism-jaw tumor syndrome",
+      "questions": 2,
+      "nonemptyAnswers": 2
+    },
+    {
+      "file": "2_GARD_QA/0003174.xml",
+      "focus": "Impairment of oral perception",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0003780.xml",
+      "focus": "Mandibuloacral dysplasia",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0003781.xml",
+      "focus": "Mandibuloacral dysplasia with type A lipodystrophy",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0003783.xml",
+      "focus": "Mandibulofacial dysostosis with microcephaly",
+      "questions": 6,
+      "nonemptyAnswers": 6
+    },
+    {
+      "file": "2_GARD_QA/0003958.xml",
+      "focus": "Mesomelic dwarfism cleft palate camptodactyly",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0003975.xml",
+      "focus": "Metaphyseal dysplasia maxillary hypoplasia brachydactyly",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0004025.xml",
+      "focus": "Microcephaly, corpus callosum dysgenesis and cleft lip-palate",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0004319.xml",
+      "focus": "Natal teeth, intestinal pseudoobstruction and patent ductus",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0004537.xml",
+      "focus": "Omphalocele cleft palate syndrome lethal",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0004570.xml",
+      "focus": "Oral leukoplakia",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0004571.xml",
+      "focus": "Oral lichen planus",
+      "questions": 2,
+      "nonemptyAnswers": 2
+    },
+    {
+      "file": "2_GARD_QA/0004574.xml",
+      "focus": "Oral submucous fibrosis",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0004682.xml",
+      "focus": "Palant cleft palate syndrome",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0005459.xml",
+      "focus": "Salivary gland cancer, adult",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0005881.xml",
+      "focus": "Steatocystoma multiplex with natal teeth",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0005959.xml",
+      "focus": "Symphalangism, distal, with microdontia, dental pulp stones, and narrowed zygomatic arch",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "2_GARD_QA/0006014.xml",
+      "focus": "Taurodontia absent teeth sparse hair",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "3_GHR_QA/0000061.xml",
+      "focus": "ankyloblepharon-ectodermal defects-cleft lip/palate syndrome",
+      "questions": 5,
+      "nonemptyAnswers": 5
+    },
+    {
+      "file": "3_GHR_QA/0000498.xml",
+      "focus": "hyperparathyroidism-jaw tumor syndrome",
+      "questions": 5,
+      "nonemptyAnswers": 5
+    },
+    {
+      "file": "3_GHR_QA/0000622.xml",
+      "focus": "mandibuloacral dysplasia",
+      "questions": 5,
+      "nonemptyAnswers": 5
+    },
+    {
+      "file": "3_GHR_QA/0000623.xml",
+      "focus": "mandibulofacial dysostosis with microcephaly",
+      "questions": 5,
+      "nonemptyAnswers": 5
+    },
+    {
+      "file": "3_GHR_QA/0000754.xml",
+      "focus": "oral-facial-digital syndrome",
+      "questions": 5,
+      "nonemptyAnswers": 5
+    },
+    {
+      "file": "4_MPlus_Health_Topics_QA/0000178.xml",
+      "focus": "Child Dental Health",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "4_MPlus_Health_Topics_QA/0000205.xml",
+      "focus": "Cleft Lip and Palate",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "4_MPlus_Health_Topics_QA/0000240.xml",
+      "focus": "Cosmetic Dentistry",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "4_MPlus_Health_Topics_QA/0000262.xml",
+      "focus": "Dental Health",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "4_MPlus_Health_Topics_QA/0000304.xml",
+      "focus": "Dry Mouth",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "4_MPlus_Health_Topics_QA/0000531.xml",
+      "focus": "Jaw Injuries and Disorders",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "4_MPlus_Health_Topics_QA/0000622.xml",
+      "focus": "Mouth Disorders",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "4_MPlus_Health_Topics_QA/0000662.xml",
+      "focus": "Oral Cancer",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "4_MPlus_Health_Topics_QA/0000790.xml",
+      "focus": "Salivary Gland Cancer",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "4_MPlus_Health_Topics_QA/0000791.xml",
+      "focus": "Salivary Gland Disorders",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "4_MPlus_Health_Topics_QA/0000903.xml",
+      "focus": "Tooth Decay",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "4_MPlus_Health_Topics_QA/0000904.xml",
+      "focus": "Tooth Disorders",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "5_NIDDK_QA/0000059.xml",
+      "focus": "Prevent diabetes problems: Keep your mouth healthy",
+      "questions": 1,
+      "nonemptyAnswers": 1
+    },
+    {
+      "file": "7_SeniorHealth_QA/0000018.xml",
+      "focus": "Dry Mouth",
+      "questions": 15,
+      "nonemptyAnswers": 15
+    },
+    {
+      "file": "7_SeniorHealth_QA/0000029.xml",
+      "focus": "Gum (Periodontal) Disease",
+      "questions": 19,
+      "nonemptyAnswers": 19
+    }
+  ]
+}

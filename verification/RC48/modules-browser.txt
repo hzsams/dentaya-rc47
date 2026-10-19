@@ -1,0 +1,13 @@
+
+> dentaya-production-rc@1.0.0-rc.48 verify:professional-modules-browser
+> node scripts/verify-professional-modules-browser.mjs
+
+PASS: financial loading failure, stale/zero-row write, exact currency, draft protection and duplicate submission guards.
+PASS: desktop composer and Send fit 1366×768 / 1440×1000, long histories scroll internally without body growth, and mobile remains accessible without horizontal overflow.
+PASS: newest message paging, stale thread isolation, per-recipient drafts, verified duplicate recovery and send-in-flight editing.
+{"status":"pass","backend":"synthetic intercepted Supabase HTTP","liveBackendVerified":false,"finance":true,"messaging":true}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

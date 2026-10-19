@@ -2,6 +2,7 @@
 import LoadingExperience from '@/app/loading-play/LoadingExperience';
 import UiNode from "@/lib/i18n/UiNode";
 import { useTranslation } from '@/lib/i18n';
+import { workflowText } from '@/lib/i18n/workflow-safety';
 import { useCallback, useEffect, useRef, useState, type CSSProperties, } from "react";
 import Link from "@/lib/i18n/UiLink";
 import { BrandLogo } from "@/app/BrandLogo";
@@ -47,7 +48,7 @@ type ShipmentRow = {
     updated_at: string;
 };
 export default function HomePage() {
-    const { t: uiText } = useTranslation();
+    const { t: uiText, locale } = useTranslation();
     useDentayaThemeRuntime();
     const [dashboardCounts, setDashboardCounts] = useState<HomeCounts | null>(null);
     const [dashboardLoading, setDashboardLoading] = useState(false);
@@ -448,6 +449,7 @@ export default function HomePage() {
                     ? uiText("Giriş Yap")
                     : "Hesap Oluştur"}
             </UiNode>
+            <Link href="/invite" style={secondaryButton}>{workflowText(locale, "Davet koduyla katıl")}</Link>
           </UiNode>
         </UiNode>
       </UiNode>);
@@ -476,6 +478,7 @@ export default function HomePage() {
                 Daveti Aç
               </Link>
             </UiNode>)}
+          <Link href="/invite" style={secondaryButton}>{workflowText(locale, "Davet koduyla katıl")}</Link>
 
           <UiNode as="p" style={eyebrow}>
             İLK KURULUM

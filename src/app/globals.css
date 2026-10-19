@@ -675,3 +675,39 @@ body:has(.cad-professional) .app-content{padding-bottom:0}
 
 .appearance-collections{display:grid;gap:12px;margin:14px 0}.appearance-collection-tabs{display:flex;gap:6px;overflow-x:auto;max-width:100%;padding:2px}.appearance-collection-tabs>button{font:inherit;font-size:10px;padding:7px 10px;white-space:nowrap;border:1px solid var(--dy-border);border-radius:8px;background:var(--dy-surface);color:var(--dy-muted);cursor:pointer}.appearance-collection-tabs>button[aria-pressed=true]{color:var(--dy-accent);border-color:var(--dy-accent)}.appearance-collection-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.appearance-collection-grid>button{min-width:0;display:grid;gap:9px;text-align:start;border:1px solid var(--dy-border);background:var(--dy-surface2);border-radius:9px;padding:9px;color:var(--dy-text);cursor:pointer}.appearance-collection-grid>button[aria-pressed=true]{outline:2px solid var(--dy-accent);outline-offset:-2px}.appearance-collection-grid strong{font-size:10px;line-height:1.4;font-weight:500}.appearance-collection-grid .palette-strip{height:18px;min-height:18px;width:100%;border-radius:4px;overflow:hidden;display:flex}.appearance-collection-grid .palette-strip>i{flex:1}.appearance-collections button:focus-visible{outline:2px solid var(--dy-accent);outline-offset:2px}
 .aya-work-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 0}.aya-work-tools strong{font-size:12px;margin-inline-end:4px}.aya-work-tools button{font-size:12px;padding:7px 12px}.aya-response-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.aya-response-tools small{font-size:11px;color:var(--dy-muted)}.aya-message .aya-response-tools{white-space:normal}.aya-response-tools button{font-size:11px;padding:6px 10px}
+
+/* The branded loading interlude has one five-second budget per operation chain. */
+.dy-loading-pending{box-sizing:border-box;display:flex;flex-direction:column;align-items:flex-start;gap:10px;margin:24px auto;padding:20px 24px;width:min(680px,100%);border:1px solid var(--dy-border,#324449);border-radius:12px;background:var(--dy-surface,#18262c);color:var(--dy-text,#edf4f2);text-align:start}.dy-loading-pending strong{font-size:14px;font-weight:600}.dy-loading-pending>span{font-size:12px;line-height:1.65;color:var(--dy-muted,#98a7aa)}
+@media(prefers-reduced-motion:reduce){.dy-loading-line:after{animation:none!important;transition:none!important}}
+html[data-workspace-reduced-motion=true] .dy-loading-line:after,html[data-dentaya-motion=off] .dy-loading-line:after{animation:none!important;transition:none!important}
+
+/* DentAYA Atelier: scoped brand collection, shared theme tokens and focus states. */
+.brand-premium-collection{overflow:hidden;border:1px solid var(--dy-border,#34404a);border-radius:16px;margin:0 0 20px;background:#f7f6f0;color:#17343a;box-shadow:0 10px 30px #061c1810}
+.brand-premium-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid #d6ded5;font-size:10px;letter-spacing:.16em;font-weight:700}
+.brand-premium-heading>span:last-child{color:#577069;white-space:nowrap}
+.brand-premium-artwork{display:block;width:100%;height:auto;max-width:100%}
+.brand-premium-collection>p{margin:0;padding:16px 20px;font-size:12px;line-height:1.6;border-top:1px solid #d6ded5}
+.brand-premium-status{font-size:12px;line-height:1.6;min-height:20px;color:var(--dy-muted,#8ba0af)}
+.brand-premium-result-count{margin:-2px 0 12px;font-size:11px;color:var(--dy-muted,#8ba0af);font-variant-numeric:tabular-nums}
+.brand-premium-choice{overflow:hidden;gap:10px;transition:border-color .15s ease,box-shadow .15s ease}
+.brand-premium-choice:hover{border-color:var(--dy-accent,#6de2cf);box-shadow:0 4px 16px #0000000d}
+.brand-premium-choice .logo-choice-preview{min-height:96px;background:linear-gradient(145deg,#fcfcf8,#eff2eb);border:1px solid #dce4dc;border-radius:8px;padding:20px 12px}
+.brand-premium-choice-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;font-size:12px}
+.brand-premium-choice-heading strong{font-weight:650}
+.brand-premium-material{font-size:9px;line-height:1.5;border:1px solid var(--dy-border,#34404a);color:var(--dy-muted,#8ba0af);padding:2px 6px;border-radius:5px;white-space:nowrap}
+.brand-premium-choice>span:last-child{font-size:11px;line-height:1.5}
+.brand-premium-empty{padding:24px 16px;border:1px dashed var(--dy-border,#34404a);border-radius:10px;text-align:center;color:var(--dy-muted,#8ba0af)}
+@media(max-width:520px){.brand-premium-heading{padding:12px;letter-spacing:.08em;font-size:9px}.brand-premium-collection>p{padding:12px;font-size:11px}.brand-premium-choice-heading{flex-wrap:wrap}.brand-premium-choice .logo-choice-preview{min-height:80px}}
+@media(prefers-reduced-motion:reduce){.brand-premium-choice{transition:none}}
+
+/* Shared workspace: the module owns its primary heading and actions. */
+.professional-chrome .module-header{min-height:76px;padding-block:16px;border-bottom:1px solid var(--dy-border);background:var(--dy-surface)}
+.professional-chrome .module-header-context{margin:5px 0 0;font-size:12px;color:var(--dy-muted)}
+.professional-chrome .module-content{min-width:0}
+.professional-chrome .module-system-tools{margin-top:14px;border-top:1px solid var(--dy-border);padding-top:12px}
+.professional-chrome .module-system-tools summary{cursor:pointer;font-size:11px;font-weight:700;color:var(--dy-muted);padding:8px}
+.professional-chrome .module-system-tools[open] summary{margin-bottom:6px}
+.workspace-settings button:focus-visible,.workspace-launcher-dialog button:focus-visible{outline:2px solid var(--dy-accent);outline-offset:3px}
+
+/* Keep the sidebar's final links clear of the fixed language control. */
+@media(min-width:1101px){.professional-chrome .module-navigation{padding-bottom:112px}}

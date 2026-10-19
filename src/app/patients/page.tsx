@@ -2,7 +2,8 @@
 import LoadingExperience from '@/app/loading-play/LoadingExperience';
 import UserText from "@/lib/i18n/UserText";
 import UiNode from "@/lib/i18n/UiNode";
-import { useTranslation } from '@/lib/i18n';
+import { getLocale, useTranslation } from '@/lib/i18n';
+import { workflowText } from '@/lib/i18n/workflow-safety';
 import ToothChart from "@/app/ToothChart";
 import { EMPTY_TOOTH_PLAN, writeToothPlan, type ToothPlan } from "@/lib/tooth-plan";
 import { useEffect, useMemo, useRef, useState, type CSSProperties, } from "react";
@@ -13,6 +14,7 @@ import EmptyStateCard from "@/app/EmptyStateCard";
 import ConnectionStatus from "@/app/ConnectionStatus";
 import { dentayaError, isNonFutureDate, isReasonablePhone, isValidEmail, isFutureDate } from "@/lib/dentaya-errors";
 import { supabase } from "@/lib/supabase";
+import { requestIdentity, type RequestIdentity } from "@/lib/workflow-safety";
 import { dy, useDentayaThemeRuntime } from "@/app/dentaya-theme";
 type Organization = {
     id: string;
@@ -96,9 +98,9 @@ export default function PatientsPage() {
     const [caseForm, setCaseForm] = useState<CaseForm>(EMPTY_CASE);
     const [savingCase, setSavingCase] = useState(false);
     const patientSubmitLock = useRef(false);
-    const patientRequestId = useRef<string | null>(null);
+    const patientRequestId = useRef<RequestIdentity | null>(null);
     const caseSubmitLock = useRef(false);
-    const caseRequestId = useRef<string | null>(null);
+    const caseRequestId = useRef<RequestIdentity | null>(null);
     useEffect(() => {
         let active = true;
         let channel: RealtimeChannel | null = null;
@@ -230,8 +232,9 @@ export default function PatientsPage() {
             return;
         }
         patientSubmitLock.current = true;
-        const requestId = patientRequestId.current ?? crypto.randomUUID();
-        patientRequestId.current = requestId;
+        const identity = requestIdentity(patientRequestId.current, { org: org.id, form });
+        patientRequestId.current = identity;
+        const requestId = identity.id;
         setSavingPatient(true);
         setNotice("");
         const result = await supabase.from("patients").insert({
@@ -296,7 +299,7 @@ export default function PatientsPage() {
             setNotice("Laboratuvar seç.");
             return;
         }
-        const teeth = caseForm.toothCodes.split(/[,\s]+/).map(x => x.trim()).filter(Boolean);
+        const teeth = [...new Set(caseForm.toothCodes.split(/[,\s]+/).map(x => x.trim()).filter(Boolean))];
         if (!teeth.length) {
             setNotice("En az bir FDI diş numarası gerekli. Örnek: 16");
             return;
@@ -314,8 +317,9 @@ export default function PatientsPage() {
             return;
         }
         caseSubmitLock.current = true;
-        const requestId = caseRequestId.current ?? crypto.randomUUID();
-        caseRequestId.current = requestId;
+        const identity = requestIdentity(caseRequestId.current, { patient: casePatient.id, caseForm });
+        caseRequestId.current = identity;
+        const requestId = identity.id;
         setSavingCase(true);
         setNotice("");
         const { data, error } = await supabase.rpc("create_case_from_patient", {
@@ -332,9 +336,13 @@ export default function PatientsPage() {
             setNotice(dentayaError(error));
             return;
         }
+        if (typeof data !== "string" || !data) {
+            setNotice(workflowText(getLocale(), "Vaka kaydı doğrulanamadı. Bilgileriniz korundu; tekrar deneyin."));
+            return;
+        }
         caseRequestId.current = null;
         setCasePatient(null);
-        if (typeof data === "string" && data) {
+        if (data) {
             router.push(`/cases/${data}`);
             return;
         }

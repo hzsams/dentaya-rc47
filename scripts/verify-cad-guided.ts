@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
-import { CAD_STAGE_ORDER, CAD_GUIDED_TASKS, cadStagePolicy, cadTaskForStage, cadTaskIndex, cadTaskTransitionBlock, cadTransitionBlock, cadActivationAllowed, uniqueCadCommands, toolPanel } from '../src/lib/cad-workflow';
+import { CAD_STAGE_ORDER, CAD_GUIDED_TASKS, cadStagePolicy, cadViewsForScene, cadTaskForStage, cadTaskIndex, cadTaskTransitionBlock, cadTransitionBlock, cadActivationAllowed, uniqueCadCommands, toolPanel } from '../src/lib/cad-workflow';
 import { DENTAYA_CAD_TOOL_MATRIX } from '../src/lib/dentaya-cad-tool-matrix';
 import { uniqueModuleDestinations } from '../src/lib/workspace-navigation';
+assert.deepEqual(cadViewsForScene(['natural','contact','section'],false),['natural','section'],'A missing antagonist cannot expose a contact map');
+assert.deepEqual(cadViewsForScene(['natural','contact','section'],true),['natural','contact','section'],'Real antagonist enables the stage-permitted contact view');
 const complete = { setupComplete: true, sourceReady: true, modelReady: true, marginReady: true };
 for (const [index, stage] of CAD_STAGE_ORDER.entries()) {
     const policy = cadStagePolicy(stage, 'wizard');

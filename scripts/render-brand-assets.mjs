@@ -12,6 +12,6 @@ for(const name of await fs.readdir(logos)) {
   await sharp(path.join(logos,name),{density:384}).resize(512,512).png().toFile(path.join(logos,name.replace(/\.svg$/,'.png')));
 }
 for(const size of [192,512])await sharp(path.join(root,'public/icon.svg'),{density:384}).resize(size,size).png().toFile(path.join(root,`public/icon-${size}.png`));
-const board=path.join(root,'public/brand/DentAYA_RC38_Logo_Ailesi');
+const board=path.join(root,'public/brand/DentAYA_Premium_Logo_Koleksiyonu');
 await sharp(board+'.svg',{density:72}).png().toFile(board+'.png');
-console.log('RC38: all PNG icons and the logo presentation rendered from the SVG outlines.');
+console.log('DentAYA Premium: PNG icons and the 18-logo collection rendered from SVG outlines.');

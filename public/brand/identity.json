@@ -1,5 +1,5 @@
 {
-  "release": 38,
+  "version": "premium-2",
   "wordmark": "DENTAYA",
   "colors": {
     "ink": "#17343A",
@@ -8,58 +8,144 @@
     "mint": "#B7DBCD",
     "gold": "#987540"
   },
+  "materials": {
+    "emerald": [
+      "#DDFBEF",
+      "#8ED7BC",
+      "#2E826B",
+      "#145044",
+      "#092E29"
+    ],
+    "jade": [
+      "#E8FFF5",
+      "#A5E6CF",
+      "#4B9D85",
+      "#286853",
+      "#174438"
+    ],
+    "titanium": [
+      "#FAFFFF",
+      "#C4DDE0",
+      "#6C9DA6",
+      "#376371",
+      "#203F4A"
+    ],
+    "champagne": [
+      "#FFF5D9",
+      "#EDD39F",
+      "#C29C60",
+      "#906D37",
+      "#59431F"
+    ]
+  },
   "logos": [
     {
       "id": "01",
       "file": "01_dental_form",
-      "style": "Atelier"
+      "style": "Atelier",
+      "material": "emerald"
     },
     {
       "id": "02",
       "file": "02_dental_arch",
-      "style": "Arch"
+      "style": "Arch",
+      "material": "jade"
     },
     {
       "id": "03",
       "file": "03_cad_geometry",
-      "style": "Precision"
+      "style": "Precision",
+      "material": "titanium"
+    },
+    {
+      "id": "04",
+      "file": "04_scan",
+      "style": "Scan",
+      "material": "titanium"
+    },
+    {
+      "id": "05",
+      "file": "05_orbit",
+      "style": "Orbit",
+      "material": "emerald"
     },
     {
       "id": "06",
       "file": "06_crown",
-      "style": "Heritage"
+      "style": "Heritage",
+      "material": "champagne"
+    },
+    {
+      "id": "07",
+      "file": "07_prism",
+      "style": "Prism",
+      "material": "jade"
+    },
+    {
+      "id": "08",
+      "file": "08_wave",
+      "style": "Wave",
+      "material": "emerald"
     },
     {
       "id": "09",
       "file": "09_link",
-      "style": "Monogram"
+      "style": "Monogram",
+      "material": "champagne"
+    },
+    {
+      "id": "10",
+      "file": "10_spark",
+      "style": "Lumen",
+      "material": "champagne"
+    },
+    {
+      "id": "11",
+      "file": "11_layer",
+      "style": "Layer",
+      "material": "titanium"
     },
     {
       "id": "12",
       "file": "12_shield",
-      "style": "Seal"
+      "style": "Seal",
+      "material": "emerald"
     },
     {
       "id": "13",
       "file": "13_apex",
-      "style": "Apex"
+      "style": "Apex",
+      "material": "titanium"
+    },
+    {
+      "id": "14",
+      "file": "14_diamond",
+      "style": "Crystal",
+      "material": "champagne"
+    },
+    {
+      "id": "15",
+      "file": "15_focus",
+      "style": "Focus",
+      "material": "jade"
+    },
+    {
+      "id": "16",
+      "file": "16_flow",
+      "style": "Flow",
+      "material": "jade"
+    },
+    {
+      "id": "17",
+      "file": "17_petal",
+      "style": "Lotus",
+      "material": "champagne"
     },
     {
       "id": "18",
       "file": "18_bridge",
-      "style": "Bridge"
+      "style": "Bridge",
+      "material": "emerald"
     }
-  ],
-  "legacyFiles": {
-    "04_scan": "03_cad_geometry",
-    "05_orbit": "09_link",
-    "07_prism": "03_cad_geometry",
-    "08_wave": "02_dental_arch",
-    "10_spark": "01_dental_form",
-    "11_layer": "18_bridge",
-    "14_diamond": "03_cad_geometry",
-    "15_focus": "12_shield",
-    "16_flow": "09_link",
-    "17_petal": "02_dental_arch"
-  }
+  ]
 }

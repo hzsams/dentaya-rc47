@@ -1,0 +1,34 @@
+// AYA's conversation shell keeps existing language packs and uses English for new copy outside Turkish.
+const tr = {
+ title:'AYA',subtitle:'Çalışma asistanınız',back:'Çalışma alanı',newChat:'Yeni sohbet',settings:'Sohbet ayarları',close:'Kapat',
+ conversation:'AYA sohbeti',checking:'Bağlantı kontrol ediliyor',answering:'Yanıt hazırlanıyor',coreStatus:'Core · çevrimdışı rehber',modelReady:'Yerel model hazır',modelVerified:'Yerel model · yanıt alındı',modelFailed:'Son istek tamamlanamadı',
+ localNote:'Mesajlarınız bu bilgisayarda işlenir.',coreNote:'Bilgi rehberi ve çalışma araçları kullanıma hazır.',browserNote:'Tarayıcıda Core rehberi açıktır. Açık uçlu sohbet için masaüstünde yerel model kurabilirsiniz.',
+ welcome:'Bugün ne üzerinde çalışıyoruz?',welcomeNote:'Bir konu sorun, işinizi adımlara ayıralım veya bir kontrol listesi hazırlayalım.',
+ promptTitles:['CAD adımlarını açıkla','Kontrol listesi hazırla','Birim dönüştür','Teslim notu oluştur'],
+ prompts:['CAD iş akışında adımları nasıl takip ederim?','Kontrol listesi','12 cm kaç mm?','Teslim notu taslağı'],
+ placeholder:'Sorunuzu veya yapmak istediğiniz işi yazın…',message:'AYA’ya mesajınız',you:'Siz',local:'AYA · yerel model',core:'AYA · Core rehberi',document:'AYA · kullanım belgesi',send:'Gönder',stop:'Durdur',retry:'Tekrar gönder',edit:'Soruyu düzenle',
+ enterHelp:'Enter ile gönder · Shift + Enter yeni satır',buttonHelp:'Gönder düğmesiyle gönder',saved:'Sohbet bu cihazda saklanıyor.',temporary:'Geçmiş kaydı kapalı.',
+ panelNote:'Sohbet alanı aynı kalır; ihtiyacınız olan ayrıntıyı buradan açın.',setup:'Genel',memory:'Bellek ve notlar',library:'Soru kütüphanesi',history:'Geçmiş',preferences:'Tercihler',
+ tools:'Hızlı çalışma araçları',calculate:'Hesapla',convert:'Birim dönüştür',checklist:'Kontrol listesi',handoff:'Teslim notu',engine:'Yanıt motoru',automatic:'Otomatik · varsa yerel model',coreOnly:'Core · yalnız çevrimdışı rehber',engineHelp:'Otomatik seçiliyken hazır yerel model kullanılır. Model yoksa Core rehberiyle devam edebilirsiniz.',
+ detailed:'Ayrıntılı yanıt',test:'Yerel yanıtı test et',modelTestPrompt:'Kısaca kendini tanıt ve DentAYA içinde neler yapabileceğini açıkla.',
+ memoryEmpty:'Henüz bir hedef veya karar yok. Yerel modelin doğrulanan yanıtları çalışma belleğini günceller.',historyEmpty:'Henüz saklanan sohbet yok.',historyOff:'Geçmiş saklama kapalı. Tercihlerden açabilirsiniz.',openConversation:'Sohbeti aç',remove:'Sil',
+ memoryLimits:'En fazla 500 karakterlik hedef, her biri 240 karakterlik 5 karar ve 3 açık soru kaydedebilirsiniz.',editMemory:'Belleği düzenle',saveMemory:'Belleği kaydet',cancel:'Vazgeç',memoryInputHelp:'Her satıra bir karar veya açık soru yazın. Burada eklediğiniz bilgiler sohbetinize ait çalışma notlarıdır; model eğitimi değildir.',goal:'Çalışma hedefi',memoryHint:'Hedefi, kararları ve açık soruları görüntüle',noDecisions:'Henüz karar yok.',noQuestions:'Açık soru yok.',export:'Sohbeti dışa aktar',
+ modelError:'Yerel model yanıt veremedi. Sohbet ayarlarından motoru ve model seçimini kontrol edin.',statusError:'Yerel motor kontrol edilemedi.',storageError:'Sohbet bu cihazda saklanamadı.',modelStorageError:'Model tercihi bu cihazda kaydedilemedi.',
+};
+const en: typeof tr = {
+ title:'AYA',subtitle:'Your work assistant',back:'Workspace',newChat:'New conversation',settings:'Conversation settings',close:'Close',
+ conversation:'AYA conversation',checking:'Checking connection',answering:'Preparing a reply',coreStatus:'Core · offline guide',modelReady:'Local model ready',modelVerified:'Local model · response received',modelFailed:'Last request could not complete',
+ localNote:'Messages are processed on this computer.',coreNote:'The information guide and work tools are ready.',browserNote:'Core guidance is available in the browser. Install a local model in the desktop app for open-ended conversation.',
+ welcome:'What are we working on today?',welcomeNote:'Ask a question, break down a task, or prepare a checklist.',
+ promptTitles:['Explain CAD steps','Prepare a checklist','Convert a unit','Create a handoff note'],
+ prompts:['How do I follow the CAD workflow steps?','Workspace checklist','12 cm to mm?','Handoff draft'],
+ placeholder:'Write your question or the task you want to complete…',message:'Your message to AYA',you:'You',local:'AYA · local model',core:'AYA · Core guide',document:'AYA · user documentation',send:'Send',stop:'Stop',retry:'Retry',edit:'Edit question',
+ enterHelp:'Enter to send · Shift + Enter for a new line',buttonHelp:'Use Send to submit',saved:'This conversation is stored on this device.',temporary:'History storage is off.',
+ panelNote:'Your conversation stays in place; open the details you need here.',setup:'General',memory:'Memory and notes',library:'Question library',history:'History',preferences:'Preferences',
+ tools:'Quick work tools',calculate:'Calculate',convert:'Convert a unit',checklist:'Checklist',handoff:'Handoff note',engine:'Response engine',automatic:'Automatic · local model when available',coreOnly:'Core · offline guide only',engineHelp:'Automatic uses a ready local model. When no model is available, you can continue with the Core guide.',
+ detailed:'Detailed response',test:'Test local response',modelTestPrompt:'Briefly introduce yourself and explain how you can help in DentAYA.',
+ memoryEmpty:'No goal or decision yet. Validated local model responses update working memory.',historyEmpty:'No stored conversations yet.',historyOff:'History storage is off. You can enable it in Preferences.',openConversation:'Open conversation',remove:'Delete',
+ memoryLimits:'Use a goal up to 500 characters, up to 5 decisions and 3 open questions, each up to 240 characters.',editMemory:'Edit memory',saveMemory:'Save memory',cancel:'Cancel',memoryInputHelp:'Use one line per decision or open question. These are work notes for this conversation; they do not train the model.',goal:'Work goal',memoryHint:'View the goal, decisions, and open questions',noDecisions:'No decisions yet.',noQuestions:'No open questions.',export:'Export conversation',
+ modelError:'The local model could not respond. Check the engine and selected model in Conversation settings.',statusError:'The local engine could not be checked.',storageError:'The conversation could not be stored on this device.',modelStorageError:'The model preference could not be saved on this device.',
+};
+export function ayaExperienceText(locale:string) { return locale === 'tr' ? tr : en; }

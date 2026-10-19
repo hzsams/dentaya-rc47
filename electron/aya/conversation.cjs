@@ -54,19 +54,30 @@ function smallTalk(prompt,{locale='tr'}={}){
  const q=fold(prompt).replace(/^(kanka|aya) /,''),tr=locale==='tr';
  if(/^(kanka |aya |hey )?(merhaba|selam|selamlar|gunaydin|iyi aksamlar|iyi gunler|hello|hi|hey)( kanka| aya)?( nasilsin| naber| how are you)?$/.test(q))return response(tr?'Selam! Buradayım. Diş bilgisi, CAD, kayıt sorunları veya AYA hakkında sorabilirsin. Örneğin “Koleyi nasıl kontrol ederim?” yazabilirsin.':'Hi! Ask me about dental terms, CAD, saving work or AYA. The built-in question catalogue is currently Turkish; a local model can help with broader conversation.');
  if(/^(kanka |aya )?(nasilsin|naber|ne haber|napiyon|ne yapiyorsun|nasil gidiyor|how are you|whats up)$/.test(q))return response(tr?'Buradayım, yardımcı olmaya hazırım. Senin işler nasıl; CAD tarafında mı ilerleyelim, bir soruna mı bakalım?':'I’m here and ready to help. How is your work going—shall we work on CAD or a question?');
- if(/^(cok |kanka |aya )?(tesekkurler|tesekkur ederim|sag ol|sagol|eyvallah|thanks|thank you)( kanka)?$/.test(q))return response(tr?'Rica ederim kanka. Başka bir konuya geçebiliriz ya da son yanıtı adım adım açabilirim.':'You’re welcome. We can switch topics or go through the last answer step by step.');
+ if(/^(cok |kanka |aya )?(tesekkurler|tesekkur ederim|sag ol|sagol|eyvallah|thanks|thank you)( kanka)?$/.test(q))return response(tr?'Rica ederim. Son konuyu adım adım açabilir veya yeni bir işe geçebiliriz.':'You’re welcome. We can switch topics or go through the last answer step by step.');
  if(/^(tamam|ok|okay|anladim|olur|peki|guzel|evet|hayir)$/.test(q))return response(tr?'Tamam. Devam etmek istediğin adımı veya yeni sorunu yazabilirsin.':'Okay. Tell me the next step or your new question.');
  if(/^(kanka )?(iyi degilim|moralim bozuk|cok yoruldum|bunaldim|i am tired|im tired)$/.test(q))return response(tr?'Üzgünüm kanka. İstersen ne olduğunu anlat; iş tarafını da tek küçük adıma bölebiliriz.':'I’m sorry it’s been difficult. You can tell me what happened, or we can break the work into one small next step.');
- if(/^(yardim|yardim eder misin|bana yardim et|help|neler yapabilirsin|ne yapabilirsin|ne ise yararsin|ne biliyorsun|kac soruya cevap verebilirsin|kac soru biliyorsun|what can you do)$/.test(q))return response(tr?`${stats.questions} hazır soru-cevapla ${stats.topics} konuda yardımcı olabilirim: CAD iş akışı, geometri, dosyalar, renkler, temel diş bilgisi ve FDI numaraları. Hesaplama ve birim dönüşümü de yaparım. Her konuyu bilen bir model değilim; açık uçlu sohbet için kurulu yerel model kullanılabilir.`:`I have ${stats.questions} built-in Turkish Q&A records across ${stats.topics} topics, plus calculations and work tools. Broader conversation uses an installed local model. I am not an independently trained foundation model.`);
+ if(/^(yardim|yardim eder misin|bana yardim et|help|neler yapabilirsin|ne yapabilirsin|ne ise yararsin|ne biliyorsun|kac soruya cevap verebilirsin|kac soru biliyorsun|what can you do)$/.test(q))return response(tr?`İş akışını açıklayabilir, kontrol listesi ve teslim notu hazırlayabilir, hesaplama ve birim dönüşümü yapabilirim. Örneğin “Kontrol listesi”, “Teslim notu taslağı” veya “12 cm kaç mm?” yazın. Çevrimdışı rehberde ${stats.topics} konuda ${stats.questions} kayıt var. Açık uçlu sohbet için kurulu yerel model kullanılır.`:`I can explain workflows, prepare checklists and handoff notes, and calculate or convert units. Try “Workspace checklist”, “Handoff draft” or “12 cm to mm?”. The offline guide contains ${stats.questions} Turkish records across ${stats.topics} topics. Open-ended conversation uses an installed local model.`);
  if(/^(benim )?(adim|ismim) .{2,70}$/.test(q))return response(tr?'Memnun oldum! Bu konuşmada seni tanıyarak ilerleyebiliriz. Ne üzerinde çalışmak istersin? Bu mesaj kendiliğinden kalıcı bilgi defterine kaydedilmez.':'Nice to meet you! What would you like to work on? This message is not automatically added to permanent notebook memory.');
  return null;
 }
 function priorEntry(history){
- const safe=Array.isArray(history)?history.slice(-12):[];
- const last=safe.at(-1);if(last?.role!=='assistant')return null;
- for(const reference of Array.isArray(last.references)?last.references:[]){const id=typeof reference?.id==='string'?reference.id.replace(/^aya-qa-/,''):'';if(byId.has(id))return byId.get(id);}
- const previous=[...safe].reverse().find(m=>m?.role==='user'&&typeof m.content==='string'&&!isFollowup(m.content));
- if(!previous)return null;return exact.get(fold(previous.content))||(()=>{const hit=scoreQuery(previous.content,1)[0];return hit?entryFor(hit.topic,facetOf(previous.content)):null;})();
+ const safe=Array.isArray(history)?history.slice(-24):[];
+ // Acknowledgements do not erase a topic; a substantive unrelated request does.
+ for(let i=safe.length-1;i>=0;i--){
+  const message=safe[i];
+  if(message?.role==='assistant'){
+   const references=Array.isArray(message.references)?message.references:[];
+   for(const reference of references){const id=typeof reference?.id==='string'?reference.id.replace(/^aya-qa-/,''):'';if(byId.has(id))return byId.get(id);}
+   if(references.length||message.engine==='model'||message.engine==='guide')return null;
+  }else if(message?.role==='user'&&typeof message.content==='string'){
+   if(isFollowup(message.content)||smallTalk(message.content))continue;
+   const canonical=exact.get(fold(message.content));if(canonical)return canonical;
+   const hit=scoreQuery(message.content,1)[0];
+   return hit?entryFor(hit.topic,facetOf(message.content)):null;
+  }
+ }
+ return null;
 }
 function isFollowup(prompt){return /^(peki |bunu |onu |biraz |daha |o zaman )*(devam|sonra|orne[kgi]|ornek ver|anlat|acikla|kisa|kisalt|ayrintili|detay|madde madde|kontrol|nasil|nasil kontrol|nasil kontrol ederim|neyi kontrol|neye dikkat|hangi hata|hangi hatalar|tekrar|ingilizce|english|continue|more|shorter|steps|check)(.*)?$/.test(fold(prompt));}
 function answerCatalog(prompt,{history=[],options={},locale='tr'}={}){
@@ -100,7 +111,7 @@ function fallbackReply(prompt,{locale='tr',history=[],modelError='',modelEnabled
  else output=tr?'Mesajını aldım; buna hazır bilgi tabanımda güvenilir bir yanıt eşleştiremedim. Bir kavramı mı açıklayayım, bir hatayı mı çözelim, yoksa bir metin mi hazırlayalım? Konuyu bir cümle daha açabilir misin?':'I received your message, but could not match a reliable built-in answer. Do you want an explanation, troubleshooting, or a draft? Please add a little context.';
  if(modelError==='LOCAL_CANCELLED')output=tr?'Yanıtı durdurdun. Sorun konuşmada duruyor; yeniden gönderebilir veya daha kısa sorabilirsin.':'Response stopped. Your question is still in the conversation; you can retry or shorten it.';
  else if(modelError)output+=(tr?' Yerel model bu isteği tamamlayamadı; soru kaybolmadı.':' The local model could not complete this request; your question has been kept.');
- else if(!modelEnabled&&q.length>=3)output+=(tr?' Daha geniş sohbet için masaüstünde yerel modeli kurup Core seçimini kapatabilirsin.':' For broader conversation, use an installed desktop model with Core-only mode off.');
+ else if(!modelEnabled&&q.length>=3)output+=(tr?' Daha geniş sohbet için Sohbet ayarları → Genel bölümünde yerel modeli kurup Yanıt motorunu Otomatik seçin.':' For broader conversation, install a desktop local model in Conversation settings → General and set Response engine to Automatic.');
  return response(output);
 }
 function retrieveCatalog(query,limit=3){const exactEntry=exact.get(fold(query));return exactEntry?[exactEntry]:scoreQuery(query,limit).map(h=>entryFor(h.topic,topicFacet(h.topic,query)));}

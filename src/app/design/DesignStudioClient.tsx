@@ -7,7 +7,7 @@ import { useTranslation } from '@/lib/i18n';
 import { playExperienceCue } from '@/lib/experience-audio';
 import { animateExperienceSurface } from '@/lib/experience-motion';
 import { cadSetupFromCase } from "@/lib/cad-job-setup";
-import { CAD_GUIDED_TASKS, cadStagePolicy, cadTransitionBlock, cadTaskTransitionBlock, cadTaskForStage, cadTaskIndex, CAD_STAGE_ORDER, cadActivationAllowed, uniqueCadCommands, stagePanel, toolPanel, type CadPanelTab, type CadWorkflowStage } from '@/lib/cad-workflow';
+import { CAD_GUIDED_TASKS, cadStagePolicy, cadViewsForScene, cadTransitionBlock, cadTaskTransitionBlock, cadTaskForStage, cadTaskIndex, CAD_STAGE_ORDER, cadActivationAllowed, uniqueCadCommands, stagePanel, toolPanel, type CadPanelTab, type CadWorkflowStage } from '@/lib/cad-workflow';
 import { LanguageSelect } from '../LanguageSettings';
 import CadAyaPanel from "./CadAyaPanel";
 import {cadStateToken,summarizeAyaReport,availableAyaTools,createAyaActionDispatcher,type AyaActionResult} from '@/lib/aya-cad-agent';
@@ -267,12 +267,14 @@ const STEPS: StepDefinition[] = [
 ];
 export default function DesignStudioClient() {
     const { t: uiText, intlLocale, locale } = useTranslation();
+    const cadCopy=ayaAgentText(locale);
     useDentayaThemeRuntime();
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const viewportRef = useRef<DesignViewportHandle | null>(null);
     const submitLock = useRef(false);
+    const caseSwitchLock=useRef(false),contextSequence=useRef({value:0});
     const temporaryOrbitToolRef = useRef<CadTool | null>(null);
     const [user, setUser] = useState<User | null>(null);
     const [org, setOrg] = useState<Org | null>(null);
@@ -326,6 +328,7 @@ export default function DesignStudioClient() {
     const [toolCategory, setToolCategory] = useState("Tümü");
     const [loading, setLoading] = useState(true);
     const [contextLoading, setContextLoading] = useState(false);
+    const [contextLoadError,setContextLoadError]=useState('');
     const [saving, setSaving] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [status, setStatus] = useState("DentAYA CAD hazırlanıyor…");
@@ -346,6 +349,7 @@ export default function DesignStudioClient() {
     const saveChainRef=useRef<Promise<boolean>>(Promise.resolve(true));
     const savedSettingsRef=useRef<{projectId:string;settings:CadSettings}|null>(null);
     const dirtyRevisionRef=useRef(0),cleanRevisionRef=useRef(-1);
+    const [hasUnsavedChanges,setHasUnsavedChanges]=useState(true);
     const [ayaOpen,setAyaOpen]=useState(false);
     const [ayaEvidence,setAyaEvidence]=useState<AyaCadEvidence|null>(null),[ayaEpoch,setAyaEpoch]=useState(0);
     const ayaContextRef=useRef<AyaCadContext|null>(null),ayaDispatch=useRef(createAyaActionDispatcher());
@@ -354,7 +358,7 @@ export default function DesignStudioClient() {
     const [exiting,setExiting]=useState(false),[exitFailure,setExitFailure]=useState(false);
     const localExitReadyRef=useRef(false);
     const saveDialogRef=useRef<HTMLDialogElement>(null);
-    useEffect(()=>{const dialog=saveDialogRef.current;if(!dialog)return;if(exiting||exitFailure||submitting){if(!dialog.open)dialog.showModal();}else if(dialog.open)dialog.close();},[exiting,exitFailure,submitting]);
+    useEffect(()=>{const dialog=saveDialogRef.current;if(!dialog)return;if(exiting||exitFailure||submitting||contextLoading){if(!dialog.open)dialog.showModal();}else if(dialog.open)dialog.close();},[exiting,exitFailure,submitting,contextLoading]);
     const [localRecoverySavedAt, setLocalRecoverySavedAt] = useState<number | null>(null);
     const selectedCase = useMemo(() => cases.find((item) => item.id === selectedCaseId) ?? null, [cases, selectedCaseId]);
     const jobSetup = settings.job_setup;
@@ -429,7 +433,7 @@ export default function DesignStudioClient() {
     }, [tool, viewMode, activeStepId, project?.id]);
     const saveStateRef=useRef({project,user,selectedCase,settings,marginPoints,measurements,activeSource,sourceKey,panelTab,workspaceMode,recoveryKey,contextLoading});
     saveStateRef.current={project,user,selectedCase,settings,marginPoints,measurements,activeSource,sourceKey,panelTab,workspaceMode,recoveryKey,contextLoading};
-    useEffect(()=>{dirtyRevisionRef.current++;},[settings,marginPoints,measurements,geometryRevision,sourceKey,project?.workflow_stage,project?.status]);
+    useEffect(()=>{dirtyRevisionRef.current++;setHasUnsavedChanges(true);},[settings,marginPoints,measurements,geometryRevision,sourceKey,project?.workflow_stage,project?.status]);
     useEffect(()=>{const guard=(event:BeforeUnloadEvent)=>{if(saveStateRef.current.project&&dirtyRevisionRef.current!==cleanRevisionRef.current){event.preventDefault();event.returnValue='';}};window.addEventListener('beforeunload',guard);return()=>window.removeEventListener('beforeunload',guard);},[]);
     const gates = useMemo(() => ({
         source: Boolean(activeSource),
@@ -457,12 +461,12 @@ export default function DesignStudioClient() {
     const hasBridge = jobSetup.units.length > 1;
     const stagePolicy = useMemo(() => cadStagePolicy(activeStep.id, workspaceMode, hasBridge, panelTab), [activeStep.id, workspaceMode, hasBridge, panelTab]);
     const activeTools = stagePolicy.tools;
-    const activeViews = stagePolicy.views;
+    const activeViews = useMemo(()=>cadViewsForScene(stagePolicy.views,sceneState.antagonistReady),[stagePolicy.views,sceneState.antagonistReady]);
     const visiblePanelTabs = stagePolicy.tabs.flatMap(id => CAD_PANEL_TABS.filter(tab => tab.id === id));
     const availableCommands = useMemo(() => uniqueCadCommands(DENTAYA_CAD_TOOL_MATRIX).map(item => {
         const step = item.activation?.startsWith('stage:') ? STEPS.find(step => step.id === item.activation?.slice(6)) : null;
         return step ? { ...item, label: step.label, description: step.description } : item;
-    }).filter(item => cadActivationAllowed(item.activation, activeStep.id, workspaceMode, hasBridge, panelTab)), [activeStep.id, workspaceMode, hasBridge, panelTab]);
+    }).filter(item => cadActivationAllowed(item.activation, activeStep.id, workspaceMode, hasBridge, panelTab)&&(!item.activation?.startsWith('view:')||activeViews.includes(item.activation.slice(5) as CadViewMode))), [activeStep.id, workspaceMode, hasBridge, panelTab,activeViews]);
     const filteredToolMatrix = useMemo(() => {
         const query = toolSearch.trim().toLocaleLowerCase(intlLocale());
         return availableCommands.filter((item) => {
@@ -522,12 +526,13 @@ export default function DesignStudioClient() {
         let active = true;
         async function initialize() {
             const { data: sessionData } = await supabase.auth.getSession();
+            if(!active)return;
             const currentUser = sessionData.session?.user;
             if (!currentUser) {
                 router.replace("/workspace");
                 return;
             }
-            setUser(currentUser);
+            setUser(current=>current?.id===currentUser.id?current:currentUser);
             const { data: membership, error: membershipError } = await supabase
                 .from("memberships")
                 .select("organization_id")
@@ -535,6 +540,7 @@ export default function DesignStudioClient() {
                 .eq("status", "active")
                 .limit(1)
                 .maybeSingle();
+            if(!active)return;
             if (membershipError || !membership) {
                 setBlocked(dentayaError(membershipError, "Aktif kurum bulunamadı."));
                 setLoading(false);
@@ -545,13 +551,14 @@ export default function DesignStudioClient() {
                 .select("id,name,org_type")
                 .eq("id", membership.organization_id)
                 .maybeSingle();
+            if(!active)return;
             if (orgError || !orgData) {
                 setBlocked(dentayaError(orgError, "Kurum bilgisi alınamadı."));
                 setLoading(false);
                 return;
             }
             const currentOrg = orgData as Org;
-            setOrg(currentOrg);
+            setOrg(current=>current&&sameCadJson(current,currentOrg)?current:currentOrg);
             if (currentOrg.org_type !== "laboratory") {
                 setBlocked("DentAYA CAD çalışma alanı laboratuvar CAD kullanıcılarına aittir. Klinik tasarımı vaka ekranından inceler, onaylar veya revizyon ister.");
                 setLoading(false);
@@ -563,6 +570,7 @@ export default function DesignStudioClient() {
                 .eq("lab_org_id", currentOrg.id)
                 .neq("status", "cancelled")
                 .order("updated_at", { ascending: false });
+            if(!active)return;
             if (caseError) {
                 setBlocked(dentayaError(caseError, "Laboratuvar vakaları yüklenemedi."));
                 setLoading(false);
@@ -571,7 +579,12 @@ export default function DesignStudioClient() {
             if (!active)
                 return;
             const rows = (caseData ?? []) as CaseRow[];
-            setCases(rows);
+            // Query navigation must not replace unchanged case objects and reload the live CAD scene.
+            setCases(current=>{
+                const existing=new Map(current.map(item=>[item.id,item]));
+                const next=rows.map(row=>{const previous=existing.get(row.id);return previous&&sameCadJson(previous,row)?previous:row;});
+                return next.length===current.length&&next.every((row,index)=>row===current[index])?current:next;
+            });
             const requested = searchParams.get("case") ?? "";
             const nextId = rows.some((item) => item.id === requested)
                 ? requested
@@ -584,11 +597,127 @@ export default function DesignStudioClient() {
             active = false;
         };
     }, [router, searchParams]);
+    const loadCaseContext=useCallback(async(activeCase: CaseRow, activeOrg: Org, activeUser: User)=>{
+        const sequence=++contextSequence.current.value,previousProject=saveStateRef.current.project;
+        const fail=(error:unknown,fallback:string)=>{
+            if(sequence!==contextSequence.current.value)return;
+            const message=dentayaError(error,fallback);setStatus(message);setContextLoadError(message);setContextLoading(false);
+            if(previousProject&&previousProject.case_id!==activeCase.id){setSelectedCaseId(previousProject.case_id);router.replace(`${pathname==='/cad'?'/cad':'/design'}?case=${previousProject.case_id}`);}
+        };
+        setContextLoading(true);
+        setStatus(`${activeCase.case_number} yükleniyor…`);
+        const [scanResult, attachmentResult, projectResult] = await Promise.all([
+            supabase
+                .from("scan_sessions")
+                .select("id,scan_ref,patient_id,case_id,arch,captured_at,file_name,storage_bucket,storage_path,scanner_brand,scanner_model,scan_origin,scan_purpose")
+                .eq("patient_id", activeCase.patient_id)
+                .order("captured_at", { ascending: false }),
+            supabase
+                .from("attachments")
+                .select("id,file_name,storage_bucket,storage_path,category,created_at")
+                .eq("case_id", activeCase.id)
+                .order("created_at", { ascending: false }),
+            supabase
+                .from("design_projects")
+                .select("id,case_id,lab_org_id,source_scan_id,title,restoration_type,tooth_codes,material,shade,workflow_stage,status,settings,margin_points,measurements,updated_at")
+                .eq("case_id", activeCase.id)
+                .maybeSingle(),
+        ]);
+        if(sequence!==contextSequence.current.value)return;
+        const contextError = scanResult.error ?? attachmentResult.error ?? projectResult.error;
+        if (contextError) {
+            fail(contextError,"Vaka verileri alınamadı. Bağlantıyı kontrol edip vakayı yeniden açın.");
+            return;
+        }
+        const scanRows = (scanResult.data ?? []) as ScanRow[];
+        const fileRows = (attachmentResult.data ?? []) as Attachment[];
+        setScans(scanRows);
+        setAttachments(fileRows);
+        let nextProject = projectResult.data as Project | null;
+        if (!nextProject) {
+            const preferredScan = scanRows.find((scan) => scan.case_id === activeCase.id &&
+                scan.storage_path &&
+                scan.scan_purpose === "master_model") ??
+                scanRows.find((scan) => scan.case_id === activeCase.id && scan.storage_path) ??
+                scanRows.find((scan) => scan.storage_path) ??
+                null;
+            const { data: created, error: createError } = await supabase
+                .from("design_projects")
+                .insert({
+                case_id: activeCase.id,
+                lab_org_id: activeOrg.id,
+                source_scan_id: preferredScan?.id ?? null,
+                title: `${activeCase.case_number} · ${activeCase.title}`,
+                restoration_type: activeCase.case_type,
+                tooth_codes: activeCase.tooth_codes,
+                material: activeCase.material,
+                shade: activeCase.shade,
+                workflow_stage: "scan",
+                status: "working",
+                settings: {
+                    ...DEFAULT_SETTINGS,
+                    job_setup: cadSetupFromCase(activeCase.tooth_codes, activeCase.case_type, activeCase.material, activeCase.clinical_notes),
+                },
+                margin_points: [],
+                measurements: [],
+                created_by: activeUser.id,
+                updated_by: activeUser.id,
+            })
+                .select("id,case_id,lab_org_id,source_scan_id,title,restoration_type,tooth_codes,material,shade,workflow_stage,status,settings,margin_points,measurements,updated_at")
+                .single();
+            if(sequence!==contextSequence.current.value)return;
+            if (createError || !created) {
+                fail(createError,"CAD projesi açılamadı.");
+                return;
+            }
+            nextProject = created as Project;
+        }
+        savedVersionRef.current.set(nextProject.id,nextProject.updated_at);
+        setProject(nextProject);
+        const normalizedJobSetup = normalizeCadJobSetup(nextProject.settings?.job_setup, activeCase.tooth_codes, activeCase.case_type, activeCase.material);
+        setSettings({
+            ...DEFAULT_SETTINGS,
+            ...viewDefaults(nextProject.settings,workingJaw(activeCadUnit(normalizedJobSetup)?.tooth_code)),
+            ...(nextProject.settings ?? {}),
+            job_setup: normalizedJobSetup,
+        });
+        setSetupOpen(!normalizedJobSetup.complete);
+        const unitId=normalizedJobSetup.active_unit_id??'';
+        const initialMargin=nextProject.settings?.unit_margins?.[unitId]??(Array.isArray(nextProject.margin_points)?nextProject.margin_points:[]);
+        setMarginPoints(initialMargin);
+        setMeasurements(Array.isArray(nextProject.measurements) ? nextProject.measurements : []);
+        const preferredKey = nextProject.source_scan_id
+            ? `scan:${nextProject.source_scan_id}`
+            : scanRows.find((scan) => scan.case_id === activeCase.id &&
+                scan.storage_path &&
+                scan.scan_purpose === "master_model")
+                ? `scan:${scanRows.find((scan) => scan.case_id === activeCase.id &&
+                    scan.storage_path &&
+                    scan.scan_purpose === "master_model")!.id}`
+                : scanRows.find((scan) => scan.case_id === activeCase.id && scan.storage_path)
+                    ? `scan:${scanRows.find((scan) => scan.case_id === activeCase.id && scan.storage_path)!.id}`
+                    : fileRows.find((file) => /\.(stl|ply)$/i.test(file.file_name))
+                        ? `file:${fileRows.find((file) => /\.(stl|ply)$/i.test(file.file_name))!
+                            .id}`
+                        : "";
+        setSourceKey(preferredKey);
+        const { data: versionData } = await supabase
+            .from("design_versions")
+            .select("id,version_number,status,note,created_at")
+            .eq("project_id", nextProject.id)
+            .order("version_number", { ascending: false });
+        if(sequence!==contextSequence.current.value)return;
+        setVersions((versionData ?? []) as VersionRow[]);
+        setStatus(`${activeCase.case_number} · çalışma alanı hazır`);
+        setContextLoading(false);
+    },[pathname,router]);
     useEffect(() => {
         if (!selectedCase || !org || !user)
             return;
         void loadCaseContext(selectedCase, org, user);
-    }, [selectedCase, org, user]);
+        const requestState=contextSequence.current;
+        return()=>{requestState.value++;};
+    }, [selectedCase, org, user,loadCaseContext]);
     useEffect(() => {
         if (!project || contextLoading || !cadReady || exiting || submitting || recoveryDecisionPending)
             return;
@@ -604,6 +733,7 @@ export default function DesignStudioClient() {
         measurements,
         geometryRevision,
         cadReady,
+        contextLoading,
         exiting,
         submitting,
         recoveryDecisionPending,
@@ -914,113 +1044,6 @@ export default function DesignStudioClient() {
         // Shortcut handlers intentionally track active tool/workflow state.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeStepIndex, activeTools, activeViews, activeStepId, panelTab, workspaceMode, stagePolicy.tabs, hasBridge, jobSetup.complete, gates.source, gates.margin, project?.workflow_stage, shortcutBindings, tool, setupOpen, toolLibraryOpen, contextPoint, cadReady, exiting]);
-    async function loadCaseContext(activeCase: CaseRow, activeOrg: Org, activeUser: User) {
-        setContextLoading(true);
-        setStatus(`${activeCase.case_number} yükleniyor…`);
-        const [scanResult, attachmentResult, projectResult] = await Promise.all([
-            supabase
-                .from("scan_sessions")
-                .select("id,scan_ref,patient_id,case_id,arch,captured_at,file_name,storage_bucket,storage_path,scanner_brand,scanner_model,scan_origin,scan_purpose")
-                .eq("patient_id", activeCase.patient_id)
-                .order("captured_at", { ascending: false }),
-            supabase
-                .from("attachments")
-                .select("id,file_name,storage_bucket,storage_path,category,created_at")
-                .eq("case_id", activeCase.id)
-                .order("created_at", { ascending: false }),
-            supabase
-                .from("design_projects")
-                .select("id,case_id,lab_org_id,source_scan_id,title,restoration_type,tooth_codes,material,shade,workflow_stage,status,settings,margin_points,measurements,updated_at")
-                .eq("case_id", activeCase.id)
-                .maybeSingle(),
-        ]);
-        const contextError = scanResult.error ?? attachmentResult.error ?? projectResult.error;
-        if (contextError) {
-            setStatus(dentayaError(contextError, "Vaka verileri alınamadı. Bağlantıyı kontrol edip vakayı yeniden açın."));
-            setContextLoading(false);
-            return;
-        }
-        const scanRows = (scanResult.data ?? []) as ScanRow[];
-        const fileRows = (attachmentResult.data ?? []) as Attachment[];
-        setScans(scanRows);
-        setAttachments(fileRows);
-        let nextProject = projectResult.data as Project | null;
-        if (!nextProject) {
-            const preferredScan = scanRows.find((scan) => scan.case_id === activeCase.id &&
-                scan.storage_path &&
-                scan.scan_purpose === "master_model") ??
-                scanRows.find((scan) => scan.case_id === activeCase.id && scan.storage_path) ??
-                scanRows.find((scan) => scan.storage_path) ??
-                null;
-            const { data: created, error: createError } = await supabase
-                .from("design_projects")
-                .insert({
-                case_id: activeCase.id,
-                lab_org_id: activeOrg.id,
-                source_scan_id: preferredScan?.id ?? null,
-                title: `${activeCase.case_number} · ${activeCase.title}`,
-                restoration_type: activeCase.case_type,
-                tooth_codes: activeCase.tooth_codes,
-                material: activeCase.material,
-                shade: activeCase.shade,
-                workflow_stage: "scan",
-                status: "working",
-                settings: {
-                    ...DEFAULT_SETTINGS,
-                    job_setup: cadSetupFromCase(activeCase.tooth_codes, activeCase.case_type, activeCase.material, activeCase.clinical_notes),
-                },
-                margin_points: [],
-                measurements: [],
-                created_by: activeUser.id,
-                updated_by: activeUser.id,
-            })
-                .select("id,case_id,lab_org_id,source_scan_id,title,restoration_type,tooth_codes,material,shade,workflow_stage,status,settings,margin_points,measurements,updated_at")
-                .single();
-            if (createError || !created) {
-                setStatus(dentayaError(createError, "CAD projesi açılamadı."));
-                setContextLoading(false);
-                return;
-            }
-            nextProject = created as Project;
-        }
-        savedVersionRef.current.set(nextProject.id,nextProject.updated_at);
-        setProject(nextProject);
-        const normalizedJobSetup = normalizeCadJobSetup(nextProject.settings?.job_setup, activeCase.tooth_codes, activeCase.case_type, activeCase.material);
-        setSettings({
-            ...DEFAULT_SETTINGS,
-            ...viewDefaults(nextProject.settings,workingJaw(activeCadUnit(normalizedJobSetup)?.tooth_code)),
-            ...(nextProject.settings ?? {}),
-            job_setup: normalizedJobSetup,
-        });
-        setSetupOpen(!normalizedJobSetup.complete);
-        const unitId=normalizedJobSetup.active_unit_id??'';
-        const initialMargin=nextProject.settings?.unit_margins?.[unitId]??(Array.isArray(nextProject.margin_points)?nextProject.margin_points:[]);
-        setMarginPoints(initialMargin);
-        setMeasurements(Array.isArray(nextProject.measurements) ? nextProject.measurements : []);
-        const preferredKey = nextProject.source_scan_id
-            ? `scan:${nextProject.source_scan_id}`
-            : scanRows.find((scan) => scan.case_id === activeCase.id &&
-                scan.storage_path &&
-                scan.scan_purpose === "master_model")
-                ? `scan:${scanRows.find((scan) => scan.case_id === activeCase.id &&
-                    scan.storage_path &&
-                    scan.scan_purpose === "master_model")!.id}`
-                : scanRows.find((scan) => scan.case_id === activeCase.id && scan.storage_path)
-                    ? `scan:${scanRows.find((scan) => scan.case_id === activeCase.id && scan.storage_path)!.id}`
-                    : fileRows.find((file) => /\.(stl|ply)$/i.test(file.file_name))
-                        ? `file:${fileRows.find((file) => /\.(stl|ply)$/i.test(file.file_name))!
-                            .id}`
-                        : "";
-        setSourceKey(preferredKey);
-        const { data: versionData } = await supabase
-            .from("design_versions")
-            .select("id,version_number,status,note,created_at")
-            .eq("project_id", nextProject.id)
-            .order("version_number", { ascending: false });
-        setVersions((versionData ?? []) as VersionRow[]);
-        setStatus(`${activeCase.case_number} · çalışma alanı hazır`);
-        setContextLoading(false);
-    }
     async function saveProject(showMessage = true):Promise<boolean> {
         const requestedProject=project?.id;if(!requestedProject)return false;
         const task=async()=>{
@@ -1043,13 +1066,23 @@ export default function DesignStudioClient() {
                 savedSettingsRef.current={projectId:state.project.id,settings:payloadSettings};
                 if(state.recoveryKey&&record)await acknowledgeCadRecoveryDraft(state.recoveryKey,record.savedAt).catch(()=>undefined);
                 setProject(current=>current?.id===state.project!.id?{...current,updated_at:data.updated_at,settings:payloadSettings}:current);
-                if(revision===dirtyRevisionRef.current){cleanRevisionRef.current=revision;localExitReadyRef.current=false;setLocalRecoverySavedAt(null);}
+                if(revision===dirtyRevisionRef.current){cleanRevisionRef.current=revision;setHasUnsavedChanges(false);localExitReadyRef.current=false;setLocalRecoverySavedAt(null);}
                 if(showMessage){setStatus('CAD projesi kaydedildi.');playExperienceCue('complete');}
                 return true;
             } catch(error){const conflict=error&&typeof error==='object'&&'code' in error&&error.code==='PGRST116';setStatus(conflict?'Kayıt tamamlanamadı. Bağlantıyı ve yetkinizi kontrol edip kayıtları yenileyin.':dentayaError(error,'CAD projesi kaydedilemedi.'));if(showMessage)playExperienceCue('error');return false;}
             finally{setSaving(false);}
         };
         const queued=saveChainRef.current.catch(()=>false).then(task);saveChainRef.current=queued;return queued;
+    }
+    async function switchCase(nextId:string){
+        if(nextId===selectedCaseId||!cases.some(item=>item.id===nextId)||caseSwitchLock.current||saving||exiting||submitting||contextLoading)return;
+        caseSwitchLock.current=true;setContextLoadError('');setExiting(true);setExitFailure(false);
+        try{
+            // Keep the current case and full scene until its save is acknowledged.
+            if(project&&!await saveProject(true))return;
+            setContextLoading(true);setSelectedCaseId(nextId);
+            router.replace(`${pathname==='/cad'?'/cad':'/design'}?case=${nextId}`);
+        }finally{caseSwitchLock.current=false;setExiting(false);}
     }
     async function saveAndExit(){
         if(exiting||submitting||contextLoading)return false;localExitReadyRef.current=false;if(!project){router.push('/lab');return true;}setExiting(true);setExitFailure(false);
@@ -1118,7 +1151,7 @@ export default function DesignStudioClient() {
         setFocusMode(false);
         const policy = cadStagePolicy(stage, workspaceMode, hasBridge, requestedTask);
         setTool(policy.tool);
-        setViewMode(policy.view);
+        setViewMode(policy.view==='contact'&&!sceneState.antagonistReady?'natural':policy.view);
         return true;
     }
     async function moveStep(delta: -1 | 1) {
@@ -1456,7 +1489,7 @@ export default function DesignStudioClient() {
             return;
         }
         if (activation.startsWith("view:")) {
-            selectViewMode(activation.slice(5) as CadViewMode);
+            if(!selectViewMode(activation.slice(5) as CadViewMode))return;
             setToolLibraryOpen(false);
             setStatus(`${item.label} görünümü açıldı.`);
             return;
@@ -1593,8 +1626,8 @@ export default function DesignStudioClient() {
         setStatus(`${toolLabel(next)} aktif.`);
     }
     function selectViewMode(next: CadViewMode) {
-        if (!cadReady || !activeViews.includes(next)) return;
-        setViewMode(next);
+        if (!cadReady || !activeViews.includes(next)){if(next==='contact'&&!sceneState.antagonistReady)setStatus(cadCopy.noAntagonist);return false;}
+        setViewMode(next);return true;
     }
     function runContextAction(action: string) {
         if (action === 'undo')
@@ -1681,7 +1714,8 @@ export default function DesignStudioClient() {
       <UiNode as="header" className="cad-main-header">
         <UiNode as="button" type="button" className="cad-hub-link" title="DentAYA Hub" disabled={saving||exiting} onClick={()=>void saveAndExit()}><CadIcon name="back" size={19}/></UiNode>
         <UiNode as="div" className="cad-product"><BrandLogo width={122} height={27}/><UiNode as="strong">CAD</UiNode></UiNode>
-        <UiNode as="select" aria-label="Çalışma vakası" className="cad-case-select" value={selectedCaseId} onChange={event => { const next = event.target.value; setSelectedCaseId(next); router.replace(`${pathname === '/cad' ? '/cad' : '/design'}?case=${next}`); }}>{cases.map(item => <UiNode as="option" key={item.id} value={item.id}><UserText>{item.case_number} · {item.title}</UserText></UiNode>)}</UiNode>
+        <UiNode as="select" aria-label="Çalışma vakası" className="cad-case-select" value={selectedCaseId} disabled={saving||exiting||submitting||contextLoading} onChange={event=>void switchCase(event.target.value)}>{cases.map(item => <UiNode as="option" key={item.id} value={item.id}><UserText>{item.case_number} · {item.title}</UserText></UiNode>)}</UiNode>
+        <UiNode as="span" className="cad-save-state" data-save-state={saving?'saving':hasUnsavedChanges?'dirty':'saved'} translateChildren={false} title={saving?uiText('Kaydediliyor…'):hasUnsavedChanges?cadCopy.unsaved:cadCopy.saved}><CadIcon name={saving?'save':hasUnsavedChanges?'save':'check'} size={14}/>{saving?uiText('Kaydediliyor…'):hasUnsavedChanges?cadCopy.unsaved:uiText('Kaydedildi')}</UiNode>
         <UiNode as="div" className="cad-case-material"><UiNode as="span">{selectedCase?.material || '—'}</UiNode><UiNode as="b">{selectedCase?.shade || '—'}</UiNode><StatusBadge value={project?.status ?? 'draft'}/></UiNode>
         <UiNode as="details" className="cad-chrome-menu cad-app-menu" name="cad-chrome" data-cad-menu="app">
           <UiNode as="summary"><CadIcon name="settings" size={18}/><UiNode as="span">Ayarlar</UiNode></UiNode>
@@ -1702,6 +1736,7 @@ export default function DesignStudioClient() {
         <UiNode as="button" type="button" className="cad-button" aria-pressed={ayaOpen} onClick={()=>setAyaOpen(v=>!v)}><CadIcon name="help" size={18}/>AYA</UiNode>
       </UiNode>
       {workspaceMode === 'expert' && <UiNode as="nav" className="cad-workflow" aria-label="Tasarım adımları">{STEPS.map(step => <UiNode as="button" type="button" key={step.id} data-cad-stage={step.id} aria-current={step.id === activeStep.id ? 'step' : undefined} disabled={!project || !cadReady} onClick={() => void setStage(step.id)}><UiNode as="span" className="cad-step-index">{step.index - 1 < activeStepIndex ? <CadIcon name="check" size={13}/> : step.index}</UiNode><CadIcon name={step.id} size={18}/><UiNode as="span">{step.label}</UiNode></UiNode>)}<UiNode as="span" className="cad-workflow-progress">{progress}%</UiNode></UiNode>}
+      {contextLoadError&&<UiNode as="div" role="alert" className="cad-context-error"><UserText>{contextLoadError}</UserText><UiNode as="button" type="button" onClick={()=>{if(selectedCase&&org&&user){setContextLoadError('');void loadCaseContext(selectedCase,org,user);}}}>Tekrar dene</UiNode><UiNode as="button" type="button" onClick={()=>setContextLoadError('')}>Kapat</UiNode></UiNode>}
       <UiNode as="section" className="cad-shell" aria-label="Üç boyutlu CAD çalışma alanı">
         <UiNode as="div" className="cad-viewport-toolbar">
           <UiNode as="div" className="cad-history-actions"><CadCommand label="Geri al" icon="undo" shortcut="Ctrl Z" disabled={historyState.undoCount === 0} onClick={() => viewportRef.current?.undo()}/><CadCommand label="Yinele" icon="redo" shortcut="Ctrl Y" disabled={historyState.redoCount === 0} onClick={() => viewportRef.current?.redo()}/><UiNode as="span" className="cad-history-count">{historyState.undoCount} / {historyState.redoCount}</UiNode></UiNode>
@@ -1770,8 +1805,8 @@ export default function DesignStudioClient() {
 
         </UiNode>
         {ayaOpen&&<CadAyaPanel key={ayaScope} context={ayaContext} onRun={runAyaAction} onClose={()=>setAyaOpen(false)}/>} 
-        <UiNode as="dialog" ref={saveDialogRef} className="cad-save-dialog" aria-label={exitFailure?'CAD projesi kaydedilemedi.':'Kaydediliyor…'} onCancel={e=>{e.preventDefault();if(!exiting&&!submitting)setExitFailure(false);}}>
-          {exitFailure?<><UiNode as="strong">CAD projesi kaydedilemedi.</UiNode><UiNode as="button" type="button" onClick={()=>void saveAndExit()}>Kaydet ve çık</UiNode>{localExitReadyRef.current&&<UiNode as="button" type="button" onClick={()=>void exitWithLocalCopy()}>Yerel kaydet ve çık</UiNode>}<UiNode as="button" type="button" onClick={()=>setExitFailure(false)}>Kapat</UiNode></>:<UiNode as="p" role="status">Kaydediliyor…</UiNode>}
+        <UiNode as="dialog" ref={saveDialogRef} className="cad-save-dialog" aria-label={exitFailure?'CAD projesi kaydedilemedi.':contextLoading?'Vaka yükleniyor…':'Kaydediliyor…'} onCancel={e=>{e.preventDefault();if(!exiting&&!submitting)setExitFailure(false);}}>
+          {exitFailure?<><UiNode as="strong">CAD projesi kaydedilemedi.</UiNode><UiNode as="button" type="button" onClick={()=>void saveAndExit()}>Kaydet ve çık</UiNode>{localExitReadyRef.current&&<UiNode as="button" type="button" onClick={()=>void exitWithLocalCopy()}>Yerel kaydet ve çık</UiNode>}<UiNode as="button" type="button" onClick={()=>setExitFailure(false)}>Kapat</UiNode></>:<UiNode as="p" role="status">{contextLoading?'Vaka yükleniyor…':'Kaydediliyor…'}</UiNode>}
         </UiNode>
         <UiNode as="footer" className="cad-status-bar"><UiNode as="span" role="status">{contextLoading ? 'Vaka yükleniyor…' : status}</UiNode><UiNode as="span">{activeSource?.source.fileName ? <UserText>{activeSource.source.fileName}</UserText> : 'Kaynak seçilmedi'} · mm</UiNode><UiNode as="span" title={performanceInfo ? `${performanceInfo.sourceTriangles} kaynak / ${performanceInfo.renderTriangles} görünüm / ${performanceInfo.kernelTriangles} analiz üçgeni` : undefined}>{performanceInfo ? <UiMessage source="{0} üçgen" values={[performanceInfo.renderTriangles.toLocaleString(intlLocale())]} userValues={[]}/> : ''}{localRecoverySavedAt && !recoveryDecisionPending ? <UiMessage source=" · Yerel {0}" values={[formatRecoveryTime(localRecoverySavedAt, intlLocale())]} userValues={[]}/> : ''}</UiNode></UiNode>
       </UiNode>
@@ -2076,9 +2111,7 @@ export default function DesignStudioClient() {
               </UiNode>
               </>}
 
-              <UiNode as="p" style={ui.helperText}>
-                Contact görünümü kaynak mesh&apos;e göre imzalı en yakın yüzey mesafesini kullanır. Dinamik artikülatör veya klinik oklüzyon analizi değildir.
-              </UiNode>
+              <UiNode as="p" style={ui.helperText} translateChildren={false}>{sceneState.antagonistReady?cadCopy.contactHelp:cadCopy.noAntagonist}</UiNode>
             </Section>)}
 
           {true && (<Section tab={panelTab} category="inspect" title="Kalınlık & kontrol">

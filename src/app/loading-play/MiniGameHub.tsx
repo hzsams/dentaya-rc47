@@ -2,7 +2,7 @@
 import UiNode from '@/lib/i18n/UiNode';
 import {useEffect,useId,useState} from 'react';
 import {useTranslation} from '@/lib/i18n';
-import {dentalFactLanguage} from '@/lib/dental-facts';
+import {dentalFactLanguage} from '@/lib/dental-language';
 import {MINI_GAME_TEXT} from '@/lib/i18n/mini-games';
 import {MINI_GAMES,type MiniGameId} from '@/lib/mini-games';
 import KuspGame from './KuspGame';

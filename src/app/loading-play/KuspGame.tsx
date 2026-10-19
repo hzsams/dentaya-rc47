@@ -2,7 +2,7 @@
 import UiNode from '@/lib/i18n/UiNode';
 import {useEffect,useId,useMemo,useRef,useState} from 'react';
 import {useTranslation} from '@/lib/i18n';
-import {dentalFactLanguage} from '@/lib/dental-facts';
+import {dentalFactLanguage} from '@/lib/dental-language';
 import {LOADING_PLAY_TEXT} from '@/lib/i18n/loading-play';
 import {createKuspPuzzle,kuspSolved,kuspSolution,turnKusp,readKuspRecord,saveKuspWin,EMPTY_KUSP_RECORD,type KuspMove} from '@/lib/kusp-game';
 export default function KuspGame(){

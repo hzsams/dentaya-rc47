@@ -11,7 +11,7 @@ import {normalizeMemory,type AyaWorkingMemory,type AyaProposal,type AyaCadTool} 
 import {ayaAgentText} from '@/lib/i18n/aya-agent';
 import {CopyAyaResponse} from '../ai/AyaMessageTools';
 import {WORK_TOOLS_TEXT} from '@/lib/i18n/work-tools';
-import {dentalFactLanguage} from '@/lib/dental-facts';
+import {dentalFactLanguage} from '@/lib/dental-language';
 import {cadChecklist,nextCadAction} from '../../../electron/aya/assistant.cjs';
 import {readAyaKnowledge} from '@/lib/aya-knowledge';
 import {readAyaState,type AyaMessage} from '@/lib/aya-local-state';
@@ -34,7 +34,7 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
  const [draft,setDraft]=useState(''),[messages,setMessages]=useState<Message[]>(()=>saved?.messages??[]),[memory,setMemory]=useState(()=>saved?.memory??normalizeMemory(null)),[events,setEvents]=useState<Event[]>(()=>saved?.events??[]);
  const [activeAction,setActiveAction]=useState<AyaCadTool|null>(null);
  const [busy,setBusy]=useState(false),[model,setModel]=useState(''),[error,setError]=useState(''),[models,setModels]=useState<{name:string;size:number;label?:string}[]>([]);
- const live=useRef(true),lock=useRef(false),request=useRef(''),contextRef=useRef(context),logRef=useRef<HTMLDivElement|null>(null),followBottom=useRef(true);
+ const live=useRef(true),lock=useRef(false),request=useRef(''),contextRef=useRef(context),inputRef=useRef<HTMLTextAreaElement|null>(null),logRef=useRef<HTMLDivElement|null>(null),followBottom=useRef(true);
  const cancelPending=useRef<((reason:string)=>void)|null>(null),requestSnapshot=useRef('');
  // Publish committed context before a click; render must never mutate a shared ref.
  useLayoutEffect(()=>{contextRef.current=context;if(request.current&&requestSnapshot.current!==context.snapshot)cancelPending.current?.('LOCAL_CONTEXT_CHANGED');},[context]);
@@ -48,6 +48,11 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
   return()=>{listeners.delete(update);if(!listeners.size)sessionListeners.delete(scope);};
  },[scope]);
  useEffect(()=>{const log=logRef.current;if(log&&followBottom.current)log.scrollTop=log.scrollHeight;},[messages,busy]);
+ useEffect(()=>{
+  const previous=document.activeElement;
+  const frame=requestAnimationFrame(()=>inputRef.current?.focus());
+  return()=>{cancelAnimationFrame(frame);if(previous instanceof HTMLElement&&previous.isConnected)previous.focus();};
+ },[]);
  async function refreshModels(){
   try{const result=await window.dentayaDesktop?.localAyaStatus?.();if(live.current&&result?.ok){setModels(result.models);setModel(current=>result.models.some(m=>m.name===current)?current:result.models[0]?.name??'');}}catch{}
  }
@@ -63,7 +68,7 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
   let timeout:ReturnType<typeof setTimeout>|undefined;
   try{
    const notebook=readAyaKnowledge(),api=window.dentayaDesktop,options=readAyaState().options,cadContext={...captured,recentActions:actionEvents.slice(-8)};
-   const result=await resolveAyaReply({prompt,cadContext,knowledge:notebook.enabled?notebook.items:[],history:base,options,locale},{t,callModel:model&&api?.localAyaChat?()=>{
+   const result=await resolveAyaReply({prompt,cadContext,workingMemory:memory,knowledge:notebook.enabled?notebook.items:[],history:base,options,locale},{t,callModel:model&&api?.localAyaChat?()=>{
     const cancelled=new Promise<{ok:false;error:string}>(resolve=>{cancelPending.current=reason=>{resolve({ok:false,error:reason});if(reason!=='LOCAL_CANCELLED')void api.localAyaCancel?.();};timeout=setTimeout(()=>cancelPending.current?.('LOCAL_TIMEOUT'),185000);});
     return Promise.race([api.localAyaChat!({agent:true,workingMemory:memory,requestId,prompt,model,locale,detail:'detailed',options,history:base,knowledge:notebook.enabled?notebook.items:[],useMemory:notebook.enabled,cadContext}),cancelled]);
    }:undefined});
@@ -99,17 +104,19 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
  }
  const checks=cadChecklist(context,t),legacy=nextCadAction(context),legacyActions={setup:{label:t('İş tanımı'),run:onSetup},show:{label:t('Tümünü göster'),run:onShow},place:{label:t('Koleye yerleştir'),run:onPlace},save:{label:t('Kaydet ve çık'),run:onSave},next:{label:t('Sonraki'),run:onNext}};
  const currentProposal=(tool:AyaCadTool):AyaProposal=>({tool,reason:copy.tools[tool],scope:context.scope??'',snapshot:context.snapshot??''});
- return <UiNode as="section" className="cad-aya-panel" role="dialog" aria-label="AYA çalışma asistanı">
+ return <UiNode as="section" className="cad-aya-panel" role="dialog" aria-label="AYA çalışma asistanı" onKeyDown={e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();onClose();}}}>
   <UiNode as="header"><UiNode as="strong" translateChildren={false}>{copy.title}</UiNode><UiNode as="button" type="button" onClick={onClose}>Kapat</UiNode></UiNode>
   <UiNode as="p"><UiNode as="span">Çalışma ünitesi</UiNode><UserText>{' · '+(context.unit||'—')}</UserText></UiNode>
   <UiNode as="p" className="aya-agent-status" translateChildren={false}>{model?copy.model:copy.fallback}</UiNode>
-  <UiNode as="details" className="cad-aya-checklist"><UiNode as="summary" translateChildren={false}>{toolsCopy.check}<UiNode as="small">{checks.filter(item=>item.state==='ready').length} / {checks.length}</UiNode></UiNode><UiNode as="p" translateChildren={false}>{toolsCopy.snapshot}</UiNode><UiNode as="ul">{checks.map(item=><UiNode as="li" key={item.id} data-check-id={item.id} data-check-state={item.state} title={item.state==='ready'?undefined:item.message} translateChildren={false}><UiNode as="span">{toolsCopy[item.id]}</UiNode><UiNode as="strong">{toolsCopy[item.state]}</UiNode></UiNode>)}</UiNode></UiNode>
   {!onRun&&legacy&&<UiNode as="div" className="cad-aya-next" translateChildren={false}><UiNode as="small">{toolsCopy.nextAction}</UiNode><UiNode as="button" type="button" onClick={legacyActions[legacy].run}>{legacyActions[legacy].label}</UiNode></UiNode>}
   {onRun&&<UiNode as="div" className="cad-aya-actions" translateChildren={false}><UiNode as="button" type="button" disabled={busy||context.isSaving} onClick={()=>void send(copy.review)}>{copy.refresh}</UiNode>{(['inspect','show-all','undo','save'] as const).filter(id=>context.availableTools?.includes(id)).map(id=><UiNode as="button" type="button" key={id} data-aya-tool={id} disabled={busy} onClick={()=>void apply(currentProposal(id))}>{copy.tools[id]}</UiNode>)}</UiNode>}
+  <UiNode as="details" className="cad-aya-context" translateChildren={false}><UiNode as="summary">{copy.context}<UiNode as="small">{checks.filter(item=>item.state==='ready').length} / {checks.length}</UiNode></UiNode><UiNode as="div" className="cad-aya-context-body">
+  <UiNode as="details" className="cad-aya-checklist"><UiNode as="summary" translateChildren={false}>{toolsCopy.check}<UiNode as="small">{checks.filter(item=>item.state==='ready').length} / {checks.length}</UiNode></UiNode><UiNode as="p" translateChildren={false}>{toolsCopy.snapshot}</UiNode><UiNode as="ul">{checks.map(item=><UiNode as="li" key={item.id} data-check-id={item.id} data-check-state={item.state} title={item.state==='ready'?undefined:item.message} translateChildren={false}><UiNode as="span">{toolsCopy[item.id]}</UiNode><UiNode as="strong">{toolsCopy[item.state]}</UiNode></UiNode>)}</UiNode></UiNode>
   <UiNode as="details" className="aya-working-memory" translateChildren={false}><UiNode as="summary">{copy.memory}</UiNode><UiNode as="strong">{copy.goal}</UiNode><UserText>{memory.goal||'—'}</UserText>{memory.decisions.map((s,i)=><UiNode as="p" key={'d'+i}><UserText>{s}</UserText></UiNode>)}{memory.openQuestions.map((s,i)=><UiNode as="p" key={'q'+i}><UserText>{s}</UserText></UiNode>)}<UiNode as="button" disabled={busy} onClick={()=>setMemory(normalizeMemory(null))}>{copy.clear}</UiNode></UiNode>
   {onRun&&<UiNode as="details" className="aya-cad-evidence" translateChildren={false}><UiNode as="summary">{copy.evidence}</UiNode>{context.report?<UiNode as="div"><UiNode as="p">{context.report.boundaryEdges??'—'} {copy.openEdges}</UiNode><UiNode as="p">{context.report.contactReference==='antagonist'?`${context.report.collisionSamples??0} / ${context.report.samples??0} ${copy.samples}`:copy.noAntagonist}</UiNode>{context.report.minimumWallEstimateMm!==undefined&&<UiNode as="p">{copy.estimate}: {context.report.minimumWallEstimateMm.toFixed(2)} mm</UiNode>}{context.report.warnings.map((s,i)=><UiNode as="p" key={i}><UserText>{s}</UserText></UiNode>)}</UiNode>:<UiNode as="p">{copy.noReport}</UiNode>}</UiNode>}
-  {models.length>0&&<UiNode as="label">Kurulu yerel model<UiNode as="select" value={model} disabled={busy} onChange={e=>setModel(e.target.value)} aria-label="Kurulu yerel model">{models.map(m=><UiNode as="option" key={m.name} value={m.name} translateChildren={false}>{m.label??m.name}</UiNode>)}</UiNode></UiNode>}
   <AyaKnowledgePanel/>
+  </UiNode></UiNode>
+  {models.length>0&&<UiNode as="label">Kurulu yerel model<UiNode as="select" value={model} disabled={busy} onChange={e=>setModel(e.target.value)} aria-label="Kurulu yerel model">{models.map(m=><UiNode as="option" key={m.name} value={m.name} translateChildren={false}>{m.label??m.name}</UiNode>)}</UiNode></UiNode>}
   <UiNode as="div" role="log" ref={logRef} onScroll={e=>{const log=e.currentTarget;followBottom.current=log.scrollHeight-log.scrollTop-log.clientHeight<40;}} className="cad-aya-messages" aria-live="polite">
    {messages.map((m,i)=><UiNode as="article" key={i}><UiNode as="strong">{m.role==='user'?'Siz':m.engine==='model'?'AYA · yerel':m.engine==='core'?'AYA Core':'Uygulama rehberi · belge metni'}</UiNode><UserText>{m.content}</UserText>{m.references?.map(r=><UiNode as="small" key={r.id}><UserText>{r.title}</UserText></UiNode>)}
     {Boolean(m.proposals?.length)&&<UiNode as="div" className="aya-proposals" translateChildren={false}><UiNode as="strong">{copy.actions}</UiNode>{m.proposals!.map(p=>{const stale=ayaProposalBlock(p,context)!==null;return <UiNode as="div" key={p.tool} data-proposal-tool={p.tool}><UiNode as="strong">{copy.tools[p.tool]}</UiNode><UserText>{p.reason}</UserText><UiNode as="button" type="button" disabled={busy||stale||!onRun} onClick={()=>void apply(p)}>{stale?copy.stale:copy.apply}</UiNode></UiNode>;})}</UiNode>}
@@ -117,7 +124,7 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
    {busy&&<UiNode as="p" role="status" translateChildren={false}>{copy.planning}</UiNode>}
   </UiNode>
   {error&&<UiNode as="p" role="alert"><UserText>{error}</UserText></UiNode>}
-  <UiNode as="form" onSubmit={e=>{e.preventDefault();void send();}}><UiNode as="textarea" aria-label="AYA’ya mesajınız" placeholder="AYA’ya bir şey sorun…" maxLength={8000} rows={3} value={draft} onChange={e=>setDraft(e.target.value)} disabled={busy||context.isSaving}/>{busy?activeAction?<UiNode as="button" key="action" type="button" disabled translateChildren={false}>{copy.tools[activeAction]}</UiNode>:<UiNode as="button" key="stop" type="button" onClick={e=>{e.preventDefault();cancel();}}>Durdur</UiNode>:<UiNode as="button" key="send" type="submit" disabled={context.isSaving||!draft.trim()}>Gönder</UiNode>}</UiNode>
+  <UiNode as="form" onSubmit={e=>{e.preventDefault();void send();}}><UiNode as="textarea" ref={inputRef} aria-keyshortcuts="Control+Enter Meta+Enter" onKeyDown={e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();void send();}}} aria-label="AYA’ya mesajınız" placeholder="AYA’ya bir şey sorun…" maxLength={8000} rows={3} value={draft} onChange={e=>setDraft(e.target.value)} disabled={busy||context.isSaving}/>{busy?activeAction?<UiNode as="button" key="action" type="button" disabled translateChildren={false}>{copy.tools[activeAction]}</UiNode>:<UiNode as="button" key="stop" type="button" onClick={e=>{e.preventDefault();cancel();}}>Durdur</UiNode>:<UiNode as="button" key="send" type="submit" disabled={context.isSaving||!draft.trim()}>Gönder</UiNode>}</UiNode>
   <UiNode as="small" translateChildren={false}>{copy.copied}</UiNode>
  </UiNode>;
 }

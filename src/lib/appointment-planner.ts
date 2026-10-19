@@ -1,5 +1,11 @@
 export type Slot={id:string;patient_id:string;scheduled_at:string;duration_minutes:number;status:string};
 export function dateKey(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+/** HTML time inputs always need HH:mm, regardless of the user's display locale. */
+export function timeKey(value: string | Date) { const d = typeof value === 'string' ? new Date(value) : value; return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; }
+export function appointmentDateTime(day: string, time: string): Date | null {
+ const value = new Date(`${day}T${time}:00`);
+ return /^\d{4}-\d{2}-\d{2}$/.test(day) && /^\d{2}:\d{2}$/.test(time) && Number.isFinite(+value) && dateKey(value) === day && timeKey(value) === time ? value : null;
+}
 export function shiftDate(key:string,n:number){const d=new Date(`${key}T12:00:00`);d.setDate(d.getDate()+n);return dateKey(d);}
 export function weekDays(key:string){const d=new Date(`${key}T12:00:00`);const monday=shiftDate(key,-((d.getDay()+6)%7));return Array.from({length:7},(_,i)=>shiftDate(monday,i));}
 export function conflicts(rows:Slot[],slot:Slot){const start=Date.parse(slot.scheduled_at),end=start+slot.duration_minutes*60000;return rows.filter(a=>a.id!==slot.id&&a.patient_id===slot.patient_id&&['scheduled','confirmed'].includes(a.status)&&Date.parse(a.scheduled_at)<end&&Date.parse(a.scheduled_at)+a.duration_minutes*60000>start);}

@@ -1,4 +1,5 @@
 "use client";
+import { workflowText, type WorkflowMessage } from "@/lib/i18n/workflow-safety";
 import LoadingExperience from '@/app/loading-play/LoadingExperience';
 import {vehicleLabel} from '@/lib/display-labels';
 import UiMessage from "@/lib/i18n/UiMessage";
@@ -120,8 +121,9 @@ function distanceMeters(a: Pick<Location, "latitude" | "longitude">, b: Pick<Loc
     return 2 * earth * Math.asin(Math.min(1, Math.sqrt(h)));
 }
 export default function LogisticsPage() {
-    const { t: uiText, intlLocale } = useTranslation();
+    const { t: uiText, intlLocale, locale } = useTranslation();
     useDentayaThemeRuntime();
+    const copy = (source: WorkflowMessage, values?: readonly string[]) => workflowText(locale, source, values);
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [org, setOrg] = useState<Org | null>(null);
@@ -150,6 +152,8 @@ export default function LogisticsPage() {
     const [deliveryPhoto, setDeliveryPhoto] = useState<File | null>(null);
     const [nowMs, setNowMs] = useState(() => Date.now());
     const operationLock = useRef(false);
+    const selectedShipmentRef = useRef("");
+    const routeSequence = useRef(0);
     const locationWatch = useRef<number | null>(null);
     const lastLocationSentAt = useRef(0);
     useEffect(() => {
@@ -199,6 +203,8 @@ export default function LogisticsPage() {
         };
     }, [router]);
     useEffect(() => {
+        selectedShipmentRef.current = selectedId;
+        routeSequence.current += 1;
         if (!selectedId)
             return;
         if (locationWatch.current !== null && typeof navigator !== "undefined") {
@@ -206,6 +212,7 @@ export default function LogisticsPage() {
             locationWatch.current = null;
             setTrackingActive(false);
         }
+        setRouteBusy(false);
         setLocation(null);
         setRoute(null);
         setRouteError("");
@@ -217,15 +224,18 @@ export default function LogisticsPage() {
         setDeliveryNote("");
         setDeliveryPhoto(null);
         let channel: RealtimeChannel | null = null;
+        let active = true;
         async function run() {
             await Promise.all([loadLocation(selectedId), loadDeliveryProof(selectedId)]);
+            if (!active) return;
             channel = supabase.channel(`shipment-location-${selectedId}`)
                 .on("postgres_changes", { event: "INSERT", schema: "public", table: "courier_locations", filter: `shipment_id=eq.${selectedId}` }, payload => {
-                setLocation(payload.new as Location);
+                if (active) setLocation(payload.new as Location);
             }).subscribe();
         }
         void run();
         return () => {
+            active = false;
             if (channel)
                 void supabase.removeChannel(channel);
         };
@@ -271,22 +281,25 @@ export default function LogisticsPage() {
     }
     async function loadLocation(shipmentId: string) {
         const { data } = await supabase.from("courier_locations").select("latitude,longitude,accuracy_m,heading_deg,speed_kmh,recorded_at").eq("shipment_id", shipmentId).order("recorded_at", { ascending: false }).limit(1).maybeSingle();
-        setLocation((data as Location | null) ?? null);
+        if (selectedShipmentRef.current === shipmentId) setLocation((data as Location | null) ?? null);
     }
     async function loadDeliveryProof(shipmentId: string) {
         const { data } = await supabase.from("shipment_delivery_proofs")
             .select("id,recipient_name,confirmation_code_last4,delivery_note,photo_path,created_at,created_by")
             .eq("shipment_id", shipmentId).maybeSingle();
+        if (selectedShipmentRef.current !== shipmentId) return;
         const next = (data as DeliveryProof | null) ?? null;
         setProof(next);
         setProofPhotoUrl("");
         if (next?.photo_path) {
             const { data: signed } = await supabase.storage.from("dentaya-files").createSignedUrl(next.photo_path, 600);
-            if (signed?.signedUrl)
+            if (signed?.signedUrl && selectedShipmentRef.current === shipmentId)
                 setProofPhotoUrl(signed.signedUrl);
         }
     }
     async function loadRoute(shipmentId: string, announce = true) {
+        const sequence = ++routeSequence.current;
+        const isCurrent = () => selectedShipmentRef.current === shipmentId && sequence === routeSequence.current;
         const target = shipments.find(item => item.id === shipmentId);
         if (!target || target.pickup_lat == null || target.pickup_lng == null || target.dropoff_lat == null || target.dropoff_lng == null) {
             setRouteError("Rota için klinik ve laboratuvar koordinatları gerekli.");
@@ -295,14 +308,13 @@ export default function LogisticsPage() {
         setRouteBusy(true);
         if (announce)
             setRouteError("");
+        try {
         const { data: sessionData } = await supabase.auth.getSession();
         const token = sessionData.session?.access_token;
         if (!token) {
-            setRouteBusy(false);
-            setRouteError("Oturum doğrulaması bulunamadı.");
+            if (isCurrent()) setRouteError("Oturum doğrulaması bulunamadı.");
             return;
         }
-        try {
             const response = await fetchWithRetry("/api/maps/route", {
                 method: "POST",
                 headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
@@ -313,6 +325,7 @@ export default function LogisticsPage() {
             };
             if (!response.ok)
                 throw new Error(payload.error || "Rota hesaplanamadı.");
+            if (!isCurrent()) return;
             setRoute(payload);
             setRouteError("");
             if (announce)
@@ -320,7 +333,7 @@ export default function LogisticsPage() {
         }
         catch (error) {
             const message = error instanceof Error ? error.message : "Rota hesaplanamadı.";
-            setRouteError(message);
+            if (isCurrent()) setRouteError(message);
             void reportOperationalEvent({
                 eventType: "route_refresh_failed",
                 severity: "warning",
@@ -331,7 +344,7 @@ export default function LogisticsPage() {
             });
         }
         finally {
-            setRouteBusy(false);
+            if (isCurrent()) setRouteBusy(false);
         }
     }
     async function persistLocation(position: GeolocationPosition, announce = true) {
@@ -456,32 +469,25 @@ export default function LogisticsPage() {
         return () => window.removeEventListener("dentaya-network-restored", recover);
     }, [org, selectedId]);
     async function updateShipment(patch: Partial<Pick<Shipment, "status" | "courier_driver_id" | "courier_name" | "pickup_at" | "delivered_at">>) {
-        if (!selectedId || org?.org_type !== "courier" || operationLock.current)
-            return;
-        if (typeof navigator !== "undefined" && !navigator.onLine) {
-            setNotice("İnternet bağlantısı yok. Kurye durumunu değiştirmeden önce bağlantının gelmesini bekle.");
-            return;
-        }
+        if (!selected || org?.org_type !== "courier" || selected.courier_org_id !== org.id || operationLock.current) return;
+        if (!navigator.onLine) { setNotice("İnternet bağlantısı yok. Kurye durumunu değiştirmeden önce bağlantının gelmesini bekle."); return; }
+        const shipment = selected;
         operationLock.current = true;
         setBusy(true);
         setNotice("");
-        const { error } = await supabase.from("shipments").update({ ...patch, updated_at: new Date().toISOString() }).eq("id", selectedId);
-        setBusy(false);
-        operationLock.current = false;
-        if (error) {
+        try {
+            let query = supabase.from("shipments").update({ ...patch, updated_at: new Date().toISOString() })
+                .eq("id", shipment.id).eq("courier_org_id", org.id).eq("status", shipment.status);
+            query = shipment.courier_driver_id ? query.eq("courier_driver_id", shipment.courier_driver_id) : query.is("courier_driver_id", null);
+            const { data, error } = await query.select("id");
+            if (error) throw error;
+            if (!data?.length) { setNotice(copy("Gönderi başka bir oturumda değiştirildi veya işlem yetkiniz yok. Güncel gönderileri yeniden yükleyin.")); await loadShipments(); return; }
+            await loadShipments();
+        } catch (error) {
             const message = dentayaError(error, "Gönderi güncellenemedi.");
             setNotice(message);
-            void reportOperationalEvent({
-                eventType: "shipment_update_failed",
-                severity: "error",
-                source: "client",
-                message,
-                route: "/logistics",
-                details: { shipmentId: selectedId, status: patch.status ?? null },
-            });
-            return;
-        }
-        await loadShipments();
+            void reportOperationalEvent({ eventType: "shipment_update_failed", severity: "error", source: "client", message, route: "/logistics", details: { shipmentId: shipment.id, status: patch.status ?? null } });
+        } finally { setBusy(false); operationLock.current = false; }
     }
     function setStatus(next: ShipmentStatus) {
         if (next === "delivered") {
@@ -498,13 +504,14 @@ export default function LogisticsPage() {
         await updateShipment({ courier_driver_id: id || null, courier_name: d?.full_name ?? null });
     }
     async function completeDelivery() {
-        if (!selected || org?.org_type !== "courier" || busy)
-            return;
+        if (!selected || org?.org_type !== "courier" || selected.courier_org_id !== org.id || operationLock.current) return;
+        if (!navigator.onLine) { setNotice(copy("Teslimat kaydı için bağlantı gerekli. Teslimat bilgileri bu ekranda korunuyor.")); return; }
         const recipient = recipientName.trim();
-        if (recipient.length < 2) {
-            setNotice("Teslim alan kişinin adını gir.");
+        if (recipient.length < 2 || recipient.length > 160) {
+            setNotice(copy("Teslim alan kişinin adı 2 ile 160 karakter arasında olmalı."));
             return;
         }
+        if (deliveryNote.trim().length > 2000 || confirmationCode.trim().length > 12) { setNotice(copy("Teslimat notu en fazla 2000, onay kodu en fazla 12 karakter olabilir.")); return; }
         if (deliveryPhoto && deliveryPhoto.size > 8 * 1024 * 1024) {
             setNotice("Teslimat fotoğrafı en fazla 8 MB olabilir.");
             return;
@@ -517,6 +524,7 @@ export default function LogisticsPage() {
         setBusy(true);
         setNotice("");
         let uploadedPath: string | null = null;
+        let committed = false;
         try {
             if (deliveryPhoto) {
                 const cleanName = deliveryPhoto.name.replace(/[^A-Za-z0-9._-]/g, "-").slice(-120) || "proof.jpg";
@@ -534,6 +542,7 @@ export default function LogisticsPage() {
             });
             if (error)
                 throw error;
+            committed = true;
             setNotice("Teslimat tamamlandı ve teslimat kanıtı kaydedildi.");
             setDeliveryFormOpen(false);
             setRecipientName("");
@@ -543,7 +552,7 @@ export default function LogisticsPage() {
             await Promise.all([loadShipments(), loadDeliveryProof(selected.id)]);
         }
         catch (error) {
-            if (uploadedPath)
+            if (uploadedPath && !committed)
                 await supabase.storage.from("dentaya-files").remove([uploadedPath]);
             const message = dentayaError(error, "Teslimat tamamlanamadı.");
             setNotice(message);
@@ -628,7 +637,7 @@ export default function LogisticsPage() {
         <UiNode as="div" style={ui.shipmentList}>{filtered.map(s => {
             const c = caseMap.get(s.case_id);
             const active = s.id === selectedId;
-            return <UiNode as="button" key={s.id} type="button" className="shipment-row" onClick={() => setSelectedId(s.id)} style={{ ...ui.shipmentRow, background: active ? dy.accentSoft : dy.surface2, borderColor: active ? dy.accent : dy.border }}>
+            return <UiNode as="button" key={s.id} type="button" className="shipment-row" disabled={busy} onClick={() => setSelectedId(s.id)} style={{ ...ui.shipmentRow, background: active ? dy.accentSoft : dy.surface2, borderColor: active ? dy.accent : dy.border }}>
             <UiNode as="div" style={ui.shipmentTop}><UiNode as="strong">{s.tracking_code || shortId(s.id)}</UiNode><Status value={s.status}/></UiNode>
             <UiNode as="div" style={ui.caseName}>{c?.case_number ?? "Vaka"} · <UserText>{c?.title ?? "—"}</UserText></UiNode>
             <UiNode as="div" style={ui.routeMini}><UiNode as="span">{orgMap.get(s.from_org_id)?.name ?? s.pickup_label ?? "Başlangıç"}</UiNode><UiNode as="b">→</UiNode><UiNode as="span">{orgMap.get(s.to_org_id)?.name ?? s.dropoff_label ?? "Varış"}</UiNode></UiNode>

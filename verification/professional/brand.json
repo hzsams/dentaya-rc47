@@ -1,0 +1,51 @@
+{
+  "checkedAt": "2026-10-19T08:37:55.580Z",
+  "pass": true,
+  "assets": {
+    "pass": true,
+    "uniqueMarks": 18,
+    "svgVariants": 126,
+    "smallIconRenders": 54,
+    "windowsIcoSizes": 7,
+    "outlinedWordmark": "DENTAYA",
+    "uiAndDesktopAllowlistMatch": true,
+    "shippedAtelierArtwork": true
+  },
+  "desktop": {
+    "pass": true,
+    "output": "PASS: allowlist, platform, icon persistence, shortcut create/update, foreign shortcut protection, failure result. Windows shell is mocked.",
+    "windowsShell": "mocked"
+  },
+  "browser": {
+    "pass": true,
+    "logos": 18,
+    "themes": 2,
+    "displayModes": 3,
+    "logoThemeModeCombinations": 108,
+    "compatibleIds": 10,
+    "restoredIdPreserved": true,
+    "artworkLoaded": true,
+    "searchAndEmptyState": true,
+    "reloadAndScale": true,
+    "legacyAndCurrentImports": true,
+    "invalidImportBlocked": true,
+    "storageFailureReported": true,
+    "desktopIpc": "mocked",
+    "locales": 46,
+    "brandSpelling": "DENTAYA",
+    "mobileFits": true,
+    "backend": "mocked; no production data",
+    "serverClosed": true
+  },
+  "localization": {
+    "newBrandCaptions": "TR; explicit English fallback for every other locale",
+    "missingBrandLiterals": 0,
+    "existingLanguagePacksChanged": false
+  },
+  "visualEvidence": {
+    "collection": "public/brand/DentAYA_Premium_Logo_Koleksiyonu.png",
+    "generatedArtwork": "public/brand/DentAYA_Premium_Atelier.webp",
+    "selectedLogo": "/workspace/artifacts/brand/DentAYA_Premium_main_logo.png"
+  },
+  "note": "Browser tests passed before a screenshot-only change from full-height locator capture to viewport capture. The actual collection board is the complete visual evidence; earlier long grid screenshots contain clipping from the settings scroll surface."
+}

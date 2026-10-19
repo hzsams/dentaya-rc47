@@ -1,0 +1,49 @@
+
+> dentaya-production-rc@1.0.0-rc.48 verify:cad-daily-browser
+> node --import tsx scripts/verify-cad-daily-browser.mjs
+
+PASS: implant-abutment crown appears on its offset margin, sized locally.
+PASS: live CAD-aware AYA works without a model; real checks preserve the mesh.
+PASS: click-only CAD tools, actual report follow-up, replay/double-click guards, invalid JSON recovery, cancellation, late close, pending save reopen and unit memory boundaries (mock local bridge).
+PASS: AYA undo and manual redo use real history; geometry changes invalidate a pending model reply and old evidence.
+PASS: case switches await acknowledged scene save; failure preserves the selected case, and returning restores the edited mesh.
+PASS: sculpted topology, separate unit margins, unit switching and reopen survive cloud save.
+PASS: save-and-exit waits for committed save, with background editing blocked.
+PASS: a failed remote save stays in CAD; explicit local exit and recovery retain all geometry.
+PASS: publication saves complete geometry and save after publication accepts reordered JSONB metadata.
+{
+  "pass": true,
+  "realEditor": true,
+  "realWebGL": true,
+  "syntheticImplantAbutments": true,
+  "localMarginSizing": true,
+  "hiddenZeroOpacityRecovered": true,
+  "ayaChecksDoNotChangeMesh": true,
+  "fullMeshPersistence": true,
+  "perUnitPersistence": true,
+  "cloudReopen": true,
+  "saveExitAcknowledged": true,
+  "modalEditGuard": true,
+  "offlineExitRecovery": true,
+  "retainedLocalCheckpoint": true,
+  "publishCheckpoint": true,
+  "saveAfterPublish": true,
+  "optimisticConflictRejected": true,
+  "ayaContextGuide": true,
+  "ayaModelBridge": "mock; no native inference",
+  "ayaProposalClickOnly": true,
+  "ayaActualQcFollowup": true,
+  "ayaLateReplyGuard": true,
+  "ayaScopedMemory": true,
+  "saveBeforeCaseSwitch": true,
+  "caseFailureRetainsScene": true,
+  "targetReadFailureRestoresCase": true,
+  "ayaKeyboardAndLaptopComposer": true,
+  "noContactWithoutAntagonist": true,
+  "backend": "intercepted API fixture; no production data"
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

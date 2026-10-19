@@ -1,5 +1,7 @@
 {
-  "reviewedAt": "2026-10-15",
+  "schemaVersion": 1,
+  "contentUpdatedAt": "2026-10-19",
+  "clinicalReviewStatus": "not-recorded",
   "sources": {
     "anatomy": {
       "name": "ADA · Tooth anatomy",
@@ -100,6 +102,30 @@
     "whitening": {
       "name": "ADA · Teeth whitening",
       "url": "https://www.mouthhealthy.org/all-topics-a-z/teeth-whitening"
+    },
+    "jaw-overview": {
+      "name": "MedlinePlus · Jaw Injuries and Disorders (MedQuAD archive)",
+      "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000531.xml",
+      "originalUrl": "https://www.nlm.nih.gov/medlineplus/jawinjuriesanddisorders.html",
+      "attribution": "NIH MedlinePlus; MedQuAD: Asma Ben Abacha and Dina Demner-Fushman; Turkish translation and short summaries adapted for DentAYA.",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/LICENSE.txt"
+    },
+    "cleft-overview": {
+      "name": "MedlinePlus · Cleft Lip and Palate (MedQuAD archive)",
+      "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000205.xml",
+      "originalUrl": "https://www.nlm.nih.gov/medlineplus/cleftlipandpalate.html",
+      "attribution": "NIH MedlinePlus; MedQuAD: Asma Ben Abacha and Dina Demner-Fushman; Turkish translation and short summaries adapted for DentAYA.",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/LICENSE.txt"
+    },
+    "salivary-overview": {
+      "name": "MedlinePlus · Salivary Gland Disorders (MedQuAD archive)",
+      "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000791.xml",
+      "originalUrl": "https://www.nlm.nih.gov/medlineplus/salivaryglanddisorders.html",
+      "attribution": "NIH MedlinePlus; MedQuAD: Asma Ben Abacha and Dina Demner-Fushman; Turkish translation and short summaries adapted for DentAYA.",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/LICENSE.txt"
     }
   },
   "facts": [
@@ -1302,6 +1328,206 @@
       "source": "whitening",
       "tr": "Beyazlatma yöntemleri, her renklenme türünde aynı sonucu vermez.",
       "en": "Whitening methods do not work equally for every discolouration."
+    },
+    {
+      "id": "dental-201",
+      "source": "jaw-overview",
+      "tr": "Maksilla, üst çeneyi oluşturan kemiktir.",
+      "en": "The maxilla is the bone forming the upper jaw.",
+      "evidence": {
+        "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000531.xml",
+        "excerpt": "The upper part is the maxilla."
+      }
+    },
+    {
+      "id": "dental-202",
+      "source": "jaw-overview",
+      "tr": "Mandibula, alt çenenin hareketli kemiğidir.",
+      "en": "The mandible is the movable bone of the lower jaw.",
+      "evidence": {
+        "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000531.xml",
+        "excerpt": "The moveable lower part is called the mandible."
+      }
+    },
+    {
+      "id": "dental-203",
+      "source": "jaw-overview",
+      "tr": "Temporomandibular eklem, mandibulayı kafatasına bağlar.",
+      "en": "The temporomandibular joint connects the mandible to the skull.",
+      "evidence": {
+        "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000531.xml",
+        "excerpt": "The joint where the mandible meets your skull is the temporomandibular joint."
+      }
+    },
+    {
+      "id": "dental-204",
+      "source": "jaw-overview",
+      "tr": "Alt çene, konuşma ve çiğneme sırasında hareket eder.",
+      "en": "The lower jaw moves during speaking and chewing.",
+      "evidence": {
+        "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000531.xml",
+        "excerpt": "You move it when you talk or chew."
+      }
+    },
+    {
+      "id": "dental-205",
+      "source": "cleft-overview",
+      "tr": "Damak, ağız boşluğunun tavanını oluşturur.",
+      "en": "The palate forms the roof of the mouth.",
+      "evidence": {
+        "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000205.xml",
+        "excerpt": "The roof of the mouth is called the \"palate.\""
+      }
+    },
+    {
+      "id": "dental-206",
+      "source": "cleft-overview",
+      "tr": "Dudak yarığı, üst dudakta doğuştan bulunan bir açıklıktır.",
+      "en": "A cleft lip is a congenital opening in the upper lip.",
+      "evidence": {
+        "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000205.xml",
+        "excerpt": "This causes an opening in the upper lip."
+      }
+    },
+    {
+      "id": "dental-207",
+      "source": "cleft-overview",
+      "tr": "Damak yarığında, damağı oluşturan dokular tam olarak birleşmez.",
+      "en": "In a cleft palate, the tissues forming the palate do not join completely.",
+      "evidence": {
+        "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000205.xml",
+        "excerpt": "With a cleft palate, the tissue that makes up the roof of the mouth does not join correctly."
+      }
+    },
+    {
+      "id": "dental-208",
+      "source": "cleft-overview",
+      "tr": "Dudak yarığı ve damak yarığı, ayrı ayrı veya birlikte görülebilir.",
+      "en": "A cleft lip and a cleft palate can occur separately or together.",
+      "evidence": {
+        "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000205.xml",
+        "excerpt": "A baby can have a cleft lip, a cleft palate, or both."
+      }
+    },
+    {
+      "id": "dental-209",
+      "source": "cleft-overview",
+      "tr": "Dudak yarığı, dudağın tek veya her iki tarafında bulunabilir.",
+      "en": "A cleft lip can affect one or both sides of the lip.",
+      "evidence": {
+        "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000205.xml",
+        "excerpt": "It can be on one or both sides of the lip or, rarely, in the middle of the lip."
+      }
+    },
+    {
+      "id": "dental-210",
+      "source": "cleft-overview",
+      "tr": "Dudak yarığındaki açıklık, bazı durumlarda buruna kadar uzanabilir.",
+      "en": "The opening in a cleft lip can extend into the nose.",
+      "evidence": {
+        "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000205.xml",
+        "excerpt": "The opening can be a small slit or a large opening that goes through the lip into the nose."
+      }
+    },
+    {
+      "id": "dental-211",
+      "source": "cleft-overview",
+      "tr": "Damak yarığı, damağın önünü, arkasını veya her ikisini etkileyebilir.",
+      "en": "A cleft palate can affect the front, the back or both parts of the palate.",
+      "evidence": {
+        "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000205.xml",
+        "excerpt": "Babies may have both the front and back parts of the palate open, or they may have only one part open."
+      }
+    },
+    {
+      "id": "dental-212",
+      "source": "cleft-overview",
+      "tr": "Dudak veya damak yarığı, çocuklarda beslenmeyi zorlaştırabilir.",
+      "en": "A cleft lip or palate can make feeding difficult for children.",
+      "evidence": {
+        "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000205.xml",
+        "excerpt": "Children with a cleft lip or a cleft palate often have problems with feeding and talking."
+      }
+    },
+    {
+      "id": "dental-213",
+      "source": "cleft-overview",
+      "tr": "Dudak veya damak yarığı, konuşma gelişimini etkileyebilir.",
+      "en": "A cleft lip or palate can affect speech development.",
+      "evidence": {
+        "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000205.xml",
+        "excerpt": "Children with a cleft lip or a cleft palate often have problems with feeding and talking."
+      }
+    },
+    {
+      "id": "dental-214",
+      "source": "cleft-overview",
+      "tr": "Dudak ve damak yarıklarında, diş hekimliği ve ortodonti bakımı gerekebilir.",
+      "en": "Cleft lip and palate care may include dental and orthodontic treatment.",
+      "evidence": {
+        "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000205.xml",
+        "excerpt": "They may need additional surgeries, dental and orthodontic care, and speech therapy as they get older."
+      }
+    },
+    {
+      "id": "dental-215",
+      "source": "salivary-overview",
+      "tr": "Tükürük kanalları, bezlerde üretilen tükürüğü ağız içine taşır.",
+      "en": "Salivary ducts carry saliva from the glands into the mouth.",
+      "evidence": {
+        "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000791.xml",
+        "excerpt": "Your salivary glands make saliva - sometimes called spit - and empty it into your mouth through openings called ducts."
+      }
+    },
+    {
+      "id": "dental-216",
+      "source": "salivary-overview",
+      "tr": "Tükürük, ağızdaki mikroorganizmalara karşı görev alan antikorlar içerir.",
+      "en": "Saliva contains antibodies that help defend against microorganisms in the mouth.",
+      "evidence": {
+        "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000791.xml",
+        "excerpt": "It also cleans your mouth and contains antibodies that can kill germs."
+      }
+    },
+    {
+      "id": "dental-217",
+      "source": "salivary-overview",
+      "tr": "Enfeksiyonlar, tükürük bezlerinde sorunlara yol açabilir.",
+      "en": "Infections can cause problems in the salivary glands.",
+      "evidence": {
+        "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000791.xml",
+        "excerpt": "Causes of salivary gland problems include infections, obstruction or cancer."
+      }
+    },
+    {
+      "id": "dental-218",
+      "source": "salivary-overview",
+      "tr": "Tükürük akış yolundaki tıkanıklık, tükürük bezlerini etkileyebilir.",
+      "en": "An obstruction in the salivary drainage pathway can affect the glands.",
+      "evidence": {
+        "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000791.xml",
+        "excerpt": "Causes of salivary gland problems include infections, obstruction or cancer."
+      }
+    },
+    {
+      "id": "dental-219",
+      "source": "salivary-overview",
+      "tr": "Sjögren sendromu, tükürük bezlerinin işlevini etkileyebilir.",
+      "en": "Sjogren syndrome can affect salivary gland function.",
+      "evidence": {
+        "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000791.xml",
+        "excerpt": "Problems can also be due to other disorders, such as mumps or Sjogren's syndrome."
+      }
+    },
+    {
+      "id": "dental-220",
+      "source": "salivary-overview",
+      "tr": "Kabakulak, tükürük bezlerini etkileyen hastalıklardan biridir.",
+      "en": "Mumps is one of the illnesses that can affect the salivary glands.",
+      "evidence": {
+        "url": "https://github.com/abachaa/MedQuAD/blob/577bd37b96c02d1833b2c9eed2de9f96964e96cb/4_MPlus_Health_Topics_QA/0000791.xml",
+        "excerpt": "Problems can also be due to other disorders, such as mumps or Sjogren's syndrome."
+      }
     }
   ]
 }

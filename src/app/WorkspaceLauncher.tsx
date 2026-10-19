@@ -2,7 +2,9 @@
 import UserText from "@/lib/i18n/UserText";
 import {useTranslation} from '@/lib/i18n';
 import UiNode from "@/lib/i18n/UiNode";
-import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, } from "react";
+import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties, } from "react";
+import { launcherRegistry } from '@/lib/launcher-ownership';
+import { professionalShellText } from '@/lib/i18n/professional-shell';
 import { usePathname, useRouter } from "next/navigation";
 import { dy } from "@/app/dentaya-theme";
 import DentayaIcon, { type DentayaIconName } from "@/app/DentayaIcon";
@@ -27,29 +29,19 @@ type Item = {
     icon: DentayaIconName;
 };
 export default function WorkspaceLauncher() {
- const {t:uiText,intlLocale}=useTranslation();
+ const {t:uiText,intlLocale,locale}=useTranslation(),copy=professionalShellText(locale);
     const router = useRouter();
     const pathname = usePathname();
     const inputRef = useRef<HTMLInputElement | null>(null);
+    const dialogRef = useRef<HTMLDialogElement | null>(null);
     const ownerId = `launcher-${useId()}`;
-    const [isOwner, setIsOwner] = useState(false);
+    const isOwner = useSyncExternalStore(launcherRegistry.subscribe, () => launcherRegistry.owner() === ownerId, () => false);
     const [open, setOpen] = useState(false);
     const [query, setQuery] = useState("");
+    const [selectedIndex, setSelectedIndex] = useState(0);
     const [org, setOrg] = useState<Org | null>(null);
     const [membership, setMembership] = useState<Membership | null>(null);
-    useEffect(() => {
-        const id = ownerId;
-        const current = document.body.dataset.dentayaLauncherOwner;
-        if (!current) {
-            document.body.dataset.dentayaLauncherOwner = id;
-            setIsOwner(true);
-        }
-        return () => {
-            if (document.body.dataset.dentayaLauncherOwner === id) {
-                delete document.body.dataset.dentayaLauncherOwner;
-            }
-        };
-    }, [ownerId]);
+    useEffect(() => launcherRegistry.register(ownerId), [ownerId]);
     useEffect(() => {
         if (!isOwner)
             return;
@@ -85,10 +77,11 @@ export default function WorkspaceLauncher() {
         return () => { active = false; };
     }, [isOwner]);
     useEffect(() => {
-        if (!isOwner)
+        if (!isOwner || !org || pathname === '/design' || pathname === '/cad' || pathname === '/ai')
             return;
         function key(event: KeyboardEvent) {
             if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+                if (document.querySelector('dialog[open]') && !dialogRef.current?.open) return;
                 event.preventDefault();
                 setOpen(v => !v);
             }
@@ -97,15 +90,19 @@ export default function WorkspaceLauncher() {
         }
         window.addEventListener("keydown", key);
         return () => window.removeEventListener("keydown", key);
-    }, [isOwner]);
+    }, [isOwner, org, pathname]);
     useEffect(() => {
         if (!open) {
+            dialogRef.current?.close();
             setQuery("");
+            setSelectedIndex(0);
             return;
         }
+        if (!dialogRef.current?.open) dialogRef.current?.showModal();
         const timer = window.setTimeout(() => inputRef.current?.focus(), 30);
         return () => window.clearTimeout(timer);
     }, [open]);
+    useEffect(() => { setOpen(false); }, [pathname]);
     const items = useMemo(() => buildItems(org, membership), [org, membership]);
     const filtered = useMemo(() => {
         const q = query.trim().toLocaleLowerCase(intlLocale());
@@ -116,11 +113,14 @@ export default function WorkspaceLauncher() {
             .toLocaleLowerCase(intlLocale())
             .includes(q));
     }, [items, query, uiText, intlLocale]);
+    const activeIndex = Math.min(selectedIndex, Math.max(0, filtered.length - 1));
+    useEffect(() => { if (open) document.getElementById(ownerId+'-result-'+activeIndex)?.scrollIntoView({block:'nearest'}); }, [open,activeIndex,ownerId]);
     function go(href: string) {
+        if (!window.dispatchEvent(new CustomEvent('dentaya:before-navigation', { cancelable: true, detail: { href } }))) return;
         setOpen(false);
         router.push(href);
     }
-    if (!isOwner || !org || pathname === "/design" || pathname === "/ai")
+    if (!isOwner || !org || pathname === "/design" || pathname === "/cad" || pathname === "/ai")
         return null;
     return <>
 
@@ -131,17 +131,24 @@ export default function WorkspaceLauncher() {
       <UiNode as="kbd" style={ui.kbd}>⌘K</UiNode>
     </UiNode>
 
-    {open && <UiNode as="div" style={ui.overlay} onMouseDown={event => {
+    <UiNode as="dialog" ref={dialogRef} className="workspace-launcher-dialog" aria-label="DentAYA hızlı navigasyon" onClose={()=>setOpen(false)} onCancel={()=>setOpen(false)} onKeyDown={event=>{
+        if(event.key!=='Tab')return;
+        const controls=Array.from(event.currentTarget.querySelectorAll<HTMLElement>('button:not([disabled]),input:not([disabled]),[tabindex]:not([tabindex="-1"])')).filter(node=>node.getClientRects().length>0);
+        const first=controls[0],last=controls.at(-1);
+        if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus();}
+        else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}
+    }} style={{...ui.overlay,display:undefined,margin:0,border:0,maxWidth:'none',maxHeight:'none',width:'100%',height:'100%',color:dy.text}} onMouseDown={event => {
                 if (event.target === event.currentTarget)
                     setOpen(false);
             }}>
-      <UiNode as="section" style={ui.palette} role="dialog" aria-modal="true" aria-label="DentAYA hızlı navigasyon">
+      <UiNode as="section" style={ui.palette}>
         <UiNode as="div" style={ui.searchRow}>
           <UiNode as="span" style={ui.searchIcon}>⌕</UiNode>
-          <UiNode as="input" ref={inputRef} value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => {
-                if (e.key === "Enter" && filtered[0]) {
+          <UiNode as="input" ref={inputRef} value={query} role="combobox" aria-expanded={open} aria-controls={ownerId+'-results'} aria-activedescendant={filtered.length?ownerId+'-result-'+activeIndex:undefined} onChange={e => {setQuery(e.target.value);setSelectedIndex(0);}} onKeyDown={e => {
+                if ((e.key==='ArrowDown'||e.key==='ArrowUp')&&filtered.length) {e.preventDefault();setSelectedIndex((activeIndex+(e.key==='ArrowDown'?1:-1)+filtered.length)%filtered.length);}
+                if (e.key === "Enter" && filtered[activeIndex]) {
                     e.preventDefault();
-                    go(filtered[0].href);
+                    go(filtered[activeIndex].href);
                 }
             }} placeholder="Hasta, vaka, CAD, ayarlar..." style={ui.search}/>
           <UiNode as="kbd" style={ui.escape}>ESC</UiNode>
@@ -152,9 +159,9 @@ export default function WorkspaceLauncher() {
           <UiNode as="span">{orgLabel(org.org_type)} · {roleLabel(membership?.role)}</UiNode>
         </UiNode>
 
-        <UiNode as="div" style={ui.results}>
+        <UiNode as="div" id={ownerId+'-results'} role="listbox" aria-label="Hızlı Git" style={ui.results}>
           {filtered.length
-                ? filtered.map((item, index) => <UiNode as="button" type="button" key={item.id} onClick={() => go(item.href)} style={{ ...ui.result, ...(index === 0 ? ui.firstResult : {}) }}>
+                ? filtered.map((item, index) => <UiNode as="button" role="option" aria-selected={index===activeIndex} id={ownerId+'-result-'+index} type="button" key={item.id} onMouseEnter={()=>setSelectedIndex(index)} onClick={() => go(item.href)} style={{ ...ui.result, ...(index === activeIndex ? ui.firstResult : {}) }}>
                 <UiNode as="span" data-dy-module-icon style={ui.resultIcon}>
                   <DentayaIcon name={item.icon} size={19}/>
                 </UiNode>
@@ -169,11 +176,11 @@ export default function WorkspaceLauncher() {
         </UiNode>
 
         <UiNode as="footer" style={ui.footer}>
-          <UiNode as="span">Enter · İlk sonucu aç</UiNode>
+          <UiNode as="span" translateChildren={false}>{copy.navigationHint}</UiNode>
           <UiNode as="span">Esc · Kapat</UiNode>
         </UiNode>
       </UiNode>
-    </UiNode>}
+    </UiNode>
 
     <style>{`
       @media(max-width:700px){
@@ -181,6 +188,8 @@ export default function WorkspaceLauncher() {
         [data-dentaya-aya-dock="true"]{right:14px!important;bottom:66px!important}
         .dentaya-launcher-label{display:none}
       }
+      .workspace-launcher-dialog[open]{display:grid}
+      .workspace-launcher-dialog::backdrop{background:transparent}
     `}</style>
   </>;
 }
@@ -188,7 +197,7 @@ function buildItems(org: Org | null, membership: Membership | null): Item[] {
     if (!org)
         return [];
     const items: Item[] = [
-        { id: "home", icon: "home", label: "Ana Sayfa", detail: "DentAYA ana kontrol paneli.", href: "/", group: "Ana", keywords: "dashboard home" },
+        { id: "home", icon: "home", label: "Ana Sayfa", detail: "DentAYA ana kontrol paneli.", href: "/workspace", group: "Ana", keywords: "dashboard home" },
         { id: "operations", icon: "home", label: "Operasyon Merkezi", detail: "Termin, revizyon, üretim ve kurye öncelikleri.", href: "/operations", group: "Ana", keywords: "operasyon kapasite termin gecikme günlük öncelik" },
         { id: "notifications", icon: "notification", label: "Bildirimler", detail: "Vaka, CAD, fiyat ve teslimat bildirimleri.", href: "/notifications", group: "Araçlar", keywords: "uyarı" },
         { id: "settings", icon: "settings", label: "Ayarlar", detail: "Profil, görünüm, bildirim ve kurum ayarları.", href: "/settings", group: "Araçlar", keywords: "tema profil" },

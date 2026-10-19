@@ -2,14 +2,15 @@
 import UiNode from '@/lib/i18n/UiNode';
 import {useEffect,useRef,useState,useSyncExternalStore} from 'react';
 import {useTranslation} from '@/lib/i18n';
-import {dentalFactLanguage} from '@/lib/dental-facts';
+import {usePathname} from 'next/navigation';
+import {dentalFactLanguage} from '@/lib/dental-language';
 import {LOADING_PLAY_TEXT} from '@/lib/i18n/loading-play';
-import {dismissLoadingReading,loadingServerSnapshot,loadingSnapshot,subscribeLoading} from '@/lib/loading-activity';
+import {LOADING_READING_MS,dismissLoadingReading,loadingServerSnapshot,loadingSnapshot,subscribeLoading} from '@/lib/loading-activity';
 import LoadingExperience from './LoadingExperience';
 
 export default function LoadingReadingRuntime(){
- const {locale}=useTranslation(),copy=LOADING_PLAY_TEXT[dentalFactLanguage(locale)],activity=useSyncExternalStore(subscribeLoading,loadingSnapshot,loadingServerSnapshot),[seconds,setSeconds]=useState(10),button=useRef<HTMLButtonElement>(null);
- const visible=activity.session>0&&!activity.count&&!activity.readingDismissed;
+ const {locale}=useTranslation(),pathname=usePathname(),copy=LOADING_PLAY_TEXT[dentalFactLanguage(locale)],activity=useSyncExternalStore(subscribeLoading,loadingSnapshot,loadingServerSnapshot),[seconds,setSeconds]=useState(LOADING_READING_MS/1000),button=useRef<HTMLButtonElement>(null),dialog=useRef<HTMLElement>(null);
+ const visible=activity.session>0&&!activity.count&&!activity.readingDismissed&&(!activity.scope||activity.scope===pathname);
  useEffect(()=>{
   if(activity.readingDismissed)return;
   const remaining=activity.readUntil-Date.now();
@@ -20,11 +21,16 @@ export default function LoadingReadingRuntime(){
  },[activity.session,activity.readUntil,activity.readingDismissed]);
  useEffect(()=>{
   if(!visible)return;
-  const target=button.current;target?.focus();
-  return()=>{if(document.activeElement===target||document.activeElement===document.body)document.getElementById('main-content')?.focus();};
+  const target=button.current,surface=dialog.current,previous=document.activeElement;target?.focus();
+  return()=>{
+   if(document.activeElement===document.body||surface?.contains(document.activeElement)){
+    const restore=previous instanceof HTMLElement&&previous!==document.body&&previous.isConnected&&!surface?.contains(previous)?previous:document.getElementById('main-content');
+    restore?.focus({preventScroll:true});
+   }
+  };
  },[visible]);
  if(!visible)return null;
- return <UiNode as="section" translateChildren={false} className="dy-loading-reading" role="dialog" aria-label={copy.fact} data-loading-reading data-experience-silent onKeyDown={e=>{
+ return <UiNode as="section" translateChildren={false} ref={dialog} className="dy-loading-reading" role="dialog" aria-label={copy.fact} data-loading-reading data-loading-deadline={activity.readUntil} data-loading-session={activity.session} data-experience-silent onKeyDown={e=>{
   e.stopPropagation();if(e.key==='Escape')dismissLoadingReading(activity.session);
   if(e.key==='Tab'){
    const items=Array.from(e.currentTarget.querySelectorAll<HTMLElement>('button:not(:disabled),a[href]'));
@@ -34,6 +40,6 @@ export default function LoadingReadingRuntime(){
   }
  }}>
   <LoadingExperience reading title={copy.ready}/>
-  <UiNode as="footer" translateChildren={false} className="dy-loading-reading-controls"><UiNode as="span" translateChildren={false} aria-hidden="true">{copy.readingTime} · {seconds} {copy.seconds}</UiNode><UiNode as="button" translateChildren={false} ref={button} type="button" onClick={()=>dismissLoadingReading(activity.session)}>{copy.continueWork} →</UiNode></UiNode>
+  <UiNode as="footer" translateChildren={false} className="dy-loading-reading-controls"><UiNode as="span" translateChildren={false} aria-hidden="true">{copy.automaticTransition} · {seconds} {copy.seconds}</UiNode><UiNode as="button" translateChildren={false} ref={button} type="button" onClick={()=>dismissLoadingReading(activity.session)}>{copy.continueWork} →</UiNode></UiNode>
  </UiNode>;
 }

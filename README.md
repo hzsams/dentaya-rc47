@@ -1,11 +1,15 @@
-# DentAYA RC47 — yerel AYA ve CAD araçları
+# DentAYA RC48
 
-RC46 üzerine başlanan AYA çalışmasının kaynak güncellemesidir. Sürüm: `1.0.0-rc.47`, AYA Core: `0.5.0`. Model hazırken normal konuşmalar modele gider; çalışma belleği hedefi ve kararları taşır. CAD paneli gerçek çalışma bağlamıyla mevcut araçları önerir; işlemler kullanıcı tıklaması ve güncel durum kontrolüyle çalışır. Manuel CAD modelden bağımsızdır.
+Sürüm `1.0.0-rc.48`, AYA Core `0.6.0`. AYA sohbeti, çalışma belleği ve CAD paneli sadeleştirildi; manuel CAD deterministik ve modelden bağımsız kalır. Finans, mesajlaşma, randevu, ekip, lojistik ve vaka işlemlerinde taslak, hata ve eşzamanlı değişiklik kontrolleri güçlendirildi. Marka koleksiyonu 18 özgün ambleme çıkarıldı; ortak yükleme deneyiminin bütçesi 5 saniyedir.
 
-Başlangıç: [KURULUM.txt](KURULUM.txt). Kullanım: [RC47_KULLANIM.md](RC47_KULLANIM.md). Test sonuçları ve açık sınırlar: [RC47_KONTROL_RAPORU.md](RC47_KONTROL_RAPORU.md).
+Başlangıç: [KURULUM.txt](KURULUM.txt). Kullanım: [RC48_KULLANIM.md](RC48_KULLANIM.md). Güncel doğrulama ve tamamlanmayanlar: [RC48_KONTROL_RAPORU.md](RC48_KONTROL_RAPORU.md).
 
-Bu paket tam kaynak içerir; Windows Setup EXE'si, model ağırlıkları veya kişisel bağlantı ayarları içermez. Gerçek yerel model ve Windows paketleme durumunu test raporundan okuyun. Klinik/üretim onayı değildir.
+Ekranlar: [AYA](verification/RC48/AYA.png) · [CAD](verification/RC48/CAD.png) · [Mesajlar](verification/RC48/Messages.png) · [Logolar](public/brand/DentAYA_Premium_Logo_Koleksiyonu.png). Ekran kanıtları sentetik test verisi kullanır.
 
-Node.js 22.12+ ve npm 11+ gerekir. `npm ci` ve `npm run verify` temel kontrollerdir. `npm run verify:aya-conversation-browser` ve `npm run verify:cad-daily-browser` Playwright/Chromium gerektirir; harici kurulum `DENTAYA_PLAYWRIGHT_MODULE` ve `DENTAYA_CHROMIUM_PATH` ile seçilebilir. Bu kontrolleri sırayla çalıştırın; tarayıcı testi geçici bir route oluşturur. `npm run dev -- --hostname 127.0.0.1 --port 3010` web arayüzünü, `npm run desktop:dev` Electron köprüsünü başlatır. Yerel sohbet hesap veya bulut API anahtarı istemez; gerçek vaka ve sunucu kaydı için mevcut Supabase ayarları gerekir.
+Bilgi kartı sayısı **220**; kaynaklar ve 30.000 içerik hedefinin durumu [bilgi kataloğu raporunda](DENTAL_BILGI_KATALOGU_RAPORU.md). 30.000 kayıtlık kapasite testinin verileri ürüne eklenmez.
 
-`CODEX_BASLANGIC_PROMPTU.md` ve `CODEX_DEVIR_NOTLARI.md` ilk RC46/WIP devir kayıtlarıdır. Eski RCxx raporları RC47 test sonucu olarak kullanılmaz. Web sitesi deposu ayrıdır.
+Bu depo tam kaynak içerir. Windows Setup EXE'si, model ağırlıkları veya kişisel bağlantı ayarları içermez. Gerçek Windows, model ve sunucu doğrulamalarının sınırları test raporunda belirtilir.
+
+Node.js 22.12+ ve npm 11+ gerekir. `npm ci` ve `npm run verify` temel kontrollerdir. Tarayıcı kontrolleri Playwright ve Chromium gerektirir; harici kurulum `DENTAYA_PLAYWRIGHT_MODULE` ve `DENTAYA_CHROMIUM_PATH` ile seçilebilir. Geçici test route'ları kullanan kontrolleri ve genel verify zincirini sırayla çalıştırın. `npm run dev -- --hostname 127.0.0.1 --port 3010` arayüzü, `npm run desktop:dev` Electron köprüsünü başlatır. Yerel sohbet hesap veya bulut API anahtarı istemez; gerçek vaka ve sunucu kaydı mevcut Supabase bağlantısını kullanır.
+
+`CODEX_BASLANGIC_PROMPTU.md` ve `CODEX_DEVIR_NOTLARI.md` ilk RC46/WIP devir kayıtlarıdır. RC47 raporları önceki sürüme aittir. Web sitesi deposu ayrıdır.

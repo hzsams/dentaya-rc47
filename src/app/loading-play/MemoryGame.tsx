@@ -2,7 +2,7 @@
 import UiNode from '@/lib/i18n/UiNode';
 import {useEffect,useRef,useState} from 'react';
 import {useTranslation} from '@/lib/i18n';
-import {dentalFactLanguage} from '@/lib/dental-facts';
+import {dentalFactLanguage} from '@/lib/dental-language';
 import {MINI_GAME_TEXT} from '@/lib/i18n/mini-games';
 import {EMPTY_MINI_RECORD,memoryDeck,readMiniRecord,saveMiniWin} from '@/lib/mini-games';
 const shapes=['M20 13Q40 7 60 13L58 40Q52 46 48 69Q40 88 32 69Q28 46 22 40Z','M19 26L40 9L61 26L58 43L47 74Q40 87 33 74L22 43Z','M18 14Q29 7 40 18Q51 7 62 14L60 43L49 72Q40 86 31 72L20 43Z','M14 16Q26 5 40 14Q54 5 66 16L62 47L50 72Q40 85 30 72L18 47Z','M16 15Q40 5 64 15L61 44L56 76Q49 86 45 65L40 51L35 65Q31 86 24 76L19 44Z','M14 15Q27 5 40 14Q53 5 66 15L62 45L60 74Q55 86 49 65L45 53L43 77Q40 87 37 77L35 53L31 65Q25 86 20 74L18 45Z'];

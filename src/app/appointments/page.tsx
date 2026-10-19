@@ -1,4 +1,5 @@
 "use client";
+import { workflowText, type WorkflowMessage } from "@/lib/i18n/workflow-safety";
 import LoadingExperience from '@/app/loading-play/LoadingExperience';
 import UiMessage from "@/lib/i18n/UiMessage";
 import UserText from "@/lib/i18n/UserText";
@@ -7,11 +8,12 @@ import { useTranslation } from '@/lib/i18n';
 import { useEffect, useMemo, useRef, useState, type CSSProperties, } from "react";
 import Link from "@/lib/i18n/UiLink";
 import { useRouter } from "next/navigation";
-import { calendarFile, conflicts, dateKey, freeTimes, shiftDate, weekDays } from '@/lib/appointment-planner';
+import { appointmentDateTime, calendarFile, conflicts, dateKey, freeTimes, shiftDate, timeKey, weekDays } from '@/lib/appointment-planner';
 import EmptyStateCard from "@/app/EmptyStateCard";
 import ConnectionStatus from "@/app/ConnectionStatus";
 import { dentayaError } from "@/lib/dentaya-errors";
 import { supabase } from "@/lib/supabase";
+import { requestIdentity, type RequestIdentity } from "@/lib/workflow-safety";
 import { dy, useDentayaThemeRuntime } from "@/app/dentaya-theme";
 type Org = {
     id: string;
@@ -46,8 +48,9 @@ type Form = {
 };
 const EMPTY: Form = { patientId: "", type: "Kontrol", date: "", time: "10:00", duration: "30", notes: "" };
 export default function AppointmentsPage() {
-    const { t: uiText, intlLocale } = useTranslation();
+    const { t: uiText, intlLocale, locale } = useTranslation();
     useDentayaThemeRuntime();
+    const copy = (source: WorkflowMessage, values?: readonly string[]) => workflowText(locale, source, values);
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [org, setOrg] = useState<Org | null>(null);
@@ -64,7 +67,7 @@ export default function AppointmentsPage() {
     const [busy, setBusy] = useState(false);
     const createLock = useRef(false);
     const modalRef = useRef<HTMLElement | null>(null);
-    const appointmentRequestId = useRef<string | null>(null);
+    const appointmentRequestId = useRef<RequestIdentity | null>(null);
     useEffect(() => {
         async function init() {
             const { data: auth } = await supabase.auth.getSession();
@@ -110,7 +113,7 @@ export default function AppointmentsPage() {
             void load(org.id, selectedDay);
     }, [org, selectedDay]);
     function openCreate() { setEditing(null); setForm({ ...EMPTY, date: selectedDay, patientId: patients[0]?.id ?? '' }); setNotice(''); setShowCreate(true); }
-    function edit(a: Appointment) { setEditing(a); setForm({ patientId: a.patient_id, type: a.appointment_type, date: dateKey(new Date(a.scheduled_at)), time: timeOnly(a.scheduled_at, intlLocale()), duration: String(a.duration_minutes), notes: a.notes ?? '' }); setNotice(''); setShowCreate(true); }
+    function edit(a: Appointment) { setEditing(a); setForm({ patientId: a.patient_id, type: a.appointment_type, date: dateKey(new Date(a.scheduled_at)), time: timeKey(a.scheduled_at), duration: String(a.duration_minutes), notes: a.notes ?? '' }); setNotice(''); setShowCreate(true); }
     function downloadCalendar(a: Appointment) { const url = URL.createObjectURL(new Blob([calendarFile(a)], { type: 'text/calendar' })); const link = document.createElement('a'); link.href = url; link.download = 'DentAYA-Randevu.ics'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
     async function load(orgId: string, day = dateKey()) {
         const seq = ++loadSequence.current;
@@ -137,13 +140,12 @@ export default function AppointmentsPage() {
     tomorrow.setDate(tomorrow.getDate() + 1);
     const visible = appointments.filter(a => `${patientMap.get(a.patient_id)?.first_name ?? ''} ${patientMap.get(a.patient_id)?.last_name ?? ''} ${a.appointment_type}`.toLocaleLowerCase('tr').includes(query.toLocaleLowerCase('tr'))).filter(a => view === "all" ? true : view === "today" ? (new Date(a.scheduled_at) >= todayStart && new Date(a.scheduled_at) < tomorrow) : new Date(a.scheduled_at) >= new Date());
     const todayCount = appointments.filter(a => new Date(a.scheduled_at) >= todayStart && new Date(a.scheduled_at) < tomorrow).length;
-    const upcoming = appointments.filter(a => new Date(a.scheduled_at) >= new Date() && a.status !== "cancelled").length;
+    const upcoming = appointments.filter(a => new Date(a.scheduled_at) >= new Date() && ['scheduled', 'confirmed'].includes(a.status)).length;
     const completed = appointments.filter(a => a.status === "completed").length;
-    useEffect(() => { appointmentRequestId.current = null; }, [form]);
     async function create() {
         if (!org || createLock.current)
             return;
-        if (!form.patientId) {
+        if (!form.patientId || !patients.some(patient => patient.id === form.patientId)) {
             setNotice("Önce hasta seç.");
             return;
         }
@@ -156,8 +158,8 @@ export default function AppointmentsPage() {
             setNotice("Randevu süresi 5 ile 480 dakika arasında olmalı.");
             return;
         }
-        const scheduled = new Date(`${form.date}T${form.time}:00`);
-        if (!Number.isFinite(scheduled.getTime())) {
+        const scheduled = appointmentDateTime(form.date, form.time);
+        if (!scheduled) {
             setNotice("Geçerli bir randevu tarihi ve saati seç.");
             return;
         }
@@ -174,10 +176,12 @@ export default function AppointmentsPage() {
             return;
         }
         createLock.current = true;
-        const requestId = appointmentRequestId.current ?? crypto.randomUUID();
-        appointmentRequestId.current = requestId;
+        const identity = requestIdentity(appointmentRequestId.current, { org: org.id, editing: editing?.id, form });
+        appointmentRequestId.current = identity;
+        const requestId = identity.id;
         setBusy(true);
         setNotice("");
+        try {
         const nearby = await supabase.from('appointments').select('id,patient_id,scheduled_at,duration_minutes,status').eq('organization_id', org.id).eq('patient_id', form.patientId).gte('scheduled_at', new Date(+scheduled - 480 * 60000).toISOString()).lt('scheduled_at', new Date(+scheduled + duration * 60000).toISOString());
         if (nearby.error || ((!editing || ['scheduled', 'confirmed'].includes(editing.status)) && conflicts(nearby.data ?? [], { id: editing?.id ?? '', patient_id: form.patientId, scheduled_at: scheduled.toISOString(), duration_minutes: duration, status: 'scheduled' }).length)) {
             setBusy(false);
@@ -215,6 +219,12 @@ export default function AppointmentsPage() {
         setSelectedDay(form.date);
         await load(org.id, form.date);
         setNotice(editing ? "Randevu güncellendi." : "Randevu oluşturuldu.");
+        } catch (error) {
+            setNotice(dentayaError(error));
+        } finally {
+            setBusy(false);
+            createLock.current = false;
+        }
     }
     useEffect(() => {
         if (!showCreate)
@@ -251,14 +261,30 @@ export default function AppointmentsPage() {
             return;
         createLock.current = true;
         setBusy(true);
-        const { error } = await supabase.from("appointments").update({ status, updated_at: new Date().toISOString() }).eq("id", id).eq("organization_id", org.id);
-        setBusy(false);
-        createLock.current = false;
-        if (error) {
+        const appointment = appointments.find(row => row.id === id);
+        try {
+            if (!appointment || !['scheduled', 'confirmed'].includes(appointment.status)) {
+                setNotice(copy("Randevu artık aktif değil. Takvimi yenileyin."));
+                return;
+            }
+            const { data, error } = await supabase.from("appointments")
+                .update({ status, updated_at: new Date().toISOString() })
+                .eq("id", id).eq("organization_id", org.id).eq("updated_at", appointment.updated_at).select("id");
+            if (error) {
+                setNotice(dentayaError(error));
+                return;
+            }
+            if (!data?.length) {
+                setNotice(copy("Randevu başka bir oturumda değiştirildi veya işlem yetkiniz yok. Takvimi yenileyin."));
+                return;
+            }
+            await load(org.id, selectedDay);
+        } catch (error) {
             setNotice(dentayaError(error));
-            return;
+        } finally {
+            setBusy(false);
+            createLock.current = false;
         }
-        await load(org.id, selectedDay);
     }
     if (loading) return <LoadingExperience title="Randevular yükleniyor…"/>;
     if (org?.org_type !== "clinic")

@@ -1,364 +1,15 @@
 {
-  "release": "1.0.0-rc.47",
+  "release": "1.0.0-rc.48",
   "status": "source-release-candidate",
   "date": "2026-10-19",
-  "sourceRelease": "1.0.0-rc.46",
-  "handoffManifestSHA256": "f78b1222f276bec10a4dd5b5bea7203a83c5b72207d93f29bb08b6732caa3d02",
-  "handoffFilesVerified": 1261,
+  "baseRelease": "1.0.0-rc.47",
+  "baseCommit": "03c0baabcc8ee7d0438c5727ac359f1b94a45ba1",
   "nativeModelInferenceVerified": false,
   "windowsInstallerProduced": false,
-  "changedSinceHandoff": [
-    ".env.release.example",
-    "AGENTS.md",
-    "DENTAYA_BU_SURUM.md",
-    "DENTAYA_GUNCELLE_DERLE.cmd",
-    "KURULUM.txt",
-    "RC47_AYA_1008_SORU_CEVAP.json",
-    "RC47_KONTROL_RAPORU.md",
-    "RC47_KULLANIM.md",
-    "README.md",
-    "electron/aya-local.cjs",
-    "electron/aya/agent.cjs",
-    "electron/aya/agent.d.cts",
-    "electron/aya/assistant.cjs",
-    "electron/aya/core.cjs",
-    "electron/aya/managed-runtime.cjs",
-    "package-lock.json",
-    "package.json",
-    "scripts/export-aya-catalog.mjs",
-    "scripts/fixtures/rc46-conversation.tsx",
-    "scripts/verify-aya-agent.cjs",
-    "scripts/verify-aya-cad-agent.ts",
-    "scripts/verify-aya-catalog.cjs",
-    "scripts/verify-aya-conversation-browser.mjs",
-    "scripts/verify-aya-conversation.ts",
-    "scripts/verify-aya-core.cjs",
-    "scripts/verify-aya-managed.cjs",
-    "scripts/verify-aya-native-grammar.cjs",
-    "scripts/verify-aya-native.cjs",
-    "scripts/verify-cad-daily-browser.mjs",
-    "scripts/verify-local-aya.cjs",
-    "src/app/ai/AyaChat.tsx",
-    "src/app/design/CadAyaPanel.tsx",
-    "src/app/design/DesignStudioClient.tsx",
-    "src/app/design/DesignViewport.tsx",
-    "src/lib/aya-cad-agent.ts",
-    "src/lib/aya-cad-assistance.ts",
-    "src/lib/i18n/aya-agent.ts",
-    "src/lib/release.ts",
-    "src/lib/supabase.ts",
-    "verification/RC47/aya-conversation-browser.txt",
-    "verification/RC47/cad-daily-browser.txt",
-    "verification/RC47/native-grammar-report.json",
-    "verification/RC47/results.json",
-    "verification/RC47/standalone-smoke.json",
-    "verification/RC47/verify-final.txt"
-  ],
-  "omittedGeneratedHandoffLogs": [
-    "verification/RC31/cad-browser.log",
-    "verification/RC31/full-verify.log",
-    "verification/RC31/ui-browser.log",
-    "verification/RC32/browser-cad.log",
-    "verification/RC32/browser-ui.log",
-    "verification/RC32/final-build.log",
-    "verification/RC32/final-lint.log",
-    "verification/RC32/final-typecheck.log",
-    "verification/RC32/system-translation-final.log",
-    "verification/RC32/verification.log",
-    "verification/RC33/browser-cad.log",
-    "verification/RC33/browser-ui.log",
-    "verification/RC33/browser-validation.log",
-    "verification/RC33/bundled-languages.log",
-    "verification/RC33/e2e.log",
-    "verification/RC33/migrations.log",
-    "verification/RC33/release-env.log",
-    "verification/RC33/system-translations.log",
-    "verification/RC33/translation.log",
-    "verification/RC33/typecheck.log",
-    "verification/RC33/validation.log",
-    "verification/RC33/verification.log",
-    "verification/RC34/browser-appearance.log",
-    "verification/RC34/browser-cad.log",
-    "verification/RC34/browser-script-lint.log",
-    "verification/RC34/lint.log",
-    "verification/RC34/translations.log",
-    "verification/RC34/typecheck.log",
-    "verification/RC34/verification.log",
-    "verification/RC35/browser-appearance.log",
-    "verification/RC35/browser-cad.log",
-    "verification/RC35/browser-guided.log",
-    "verification/RC35/browser-scripts-lint.log",
-    "verification/RC35/guided-workflow.log",
-    "verification/RC35/verification.log",
-    "verification/RC36/browser-appearance.log",
-    "verification/RC36/browser-cad.log",
-    "verification/RC36/browser-guided.log",
-    "verification/RC36/guided-workflow.log",
-    "verification/RC36/lint.log",
-    "verification/RC36/translations.log",
-    "verification/RC36/typecheck.log",
-    "verification/RC36/verification.log",
-    "verification/RC37/appearance-browser.log",
-    "verification/RC37/appearance-lint-final.log",
-    "verification/RC37/bundled-languages-46.log",
-    "verification/RC37/bundled-languages.log",
-    "verification/RC37/cad-guided-browser-46.log",
-    "verification/RC37/cad-guided-browser.log",
-    "verification/RC37/core-and-build-46.log",
-    "verification/RC37/core-and-build.log",
-    "verification/RC37/palette-browser-46.log",
-    "verification/RC37/production-build-final.log",
-    "verification/RC37/release-final.log",
-    "verification/RC37/release-lint.log",
-    "verification/RC37/system-translations-46.log",
-    "verification/RC37/system-translations.log",
-    "verification/RC37/tooth-appearance-browser-46.log",
-    "verification/RC37/typecheck-final-46.log",
-    "verification/RC37/ui-language-browser-46.log",
-    "verification/RC37/ui-language-browser.log",
-    "verification/RC38-premium/appearance-browser.log",
-    "verification/RC38-premium/appearance-geometry.log",
-    "verification/RC38-premium/brand-browser.log",
-    "verification/RC38-premium/browser-script-lint.log",
-    "verification/RC38-premium/build.log",
-    "verification/RC38-premium/bundled-languages.log",
-    "verification/RC38-premium/cad-browser-final.log",
-    "verification/RC38-premium/cad-browser.log",
-    "verification/RC38-premium/cad-display.log",
-    "verification/RC38-premium/cad-guided-browser.log",
-    "verification/RC38-premium/cad-guided.log",
-    "verification/RC38-premium/cad-interaction.log",
-    "verification/RC38-premium/cad-kernel.log",
-    "verification/RC38-premium/cad-panel.log",
-    "verification/RC38-premium/cad-setup.log",
-    "verification/RC38-premium/cad-workflow.log",
-    "verification/RC38-premium/desktop-icon.log",
-    "verification/RC38-premium/desktop-language.log",
-    "verification/RC38-premium/experience.log",
-    "verification/RC38-premium/form-browser.log",
-    "verification/RC38-premium/form-geometry.log",
-    "verification/RC38-premium/language-packs.log",
-    "verification/RC38-premium/lint.log",
-    "verification/RC38-premium/localization.log",
-    "verification/RC38-premium/merged-lint.log",
-    "verification/RC38-premium/morphology-script-lint.log",
-    "verification/RC38-premium/morphology-sculpt.log",
-    "verification/RC38-premium/release-env.log",
-    "verification/RC38-premium/release.log",
-    "verification/RC38-premium/runtime.log",
-    "verification/RC38-premium/sculpt-integrity.log",
-    "verification/RC38-premium/security.log",
-    "verification/RC38-premium/system-translations.log",
-    "verification/RC38-premium/tooth-layout.log",
-    "verification/RC38-premium/typecheck.log",
-    "verification/RC38-premium/validation.log",
-    "verification/RC38-premium/visible-translations.log",
-    "verification/RC38/brand-browser.log",
-    "verification/RC38/build.log",
-    "verification/RC38/desktop-icon.log",
-    "verification/RC38/lint.log",
-    "verification/RC38/release.log",
-    "verification/RC38/translations.log",
-    "verification/RC38/typecheck.log",
-    "verification/RC39/build.log",
-    "verification/RC39/cad-browser.log",
-    "verification/RC39/cad-guided.log",
-    "verification/RC39/cad-interaction.log",
-    "verification/RC39/cad-kernel.log",
-    "verification/RC39/cad-panel.log",
-    "verification/RC39/cad-setup.log",
-    "verification/RC39/cad-workflow.log",
-    "verification/RC39/catalog-export.log",
-    "verification/RC39/catalog-render.log",
-    "verification/RC39/desktop-brand.log",
-    "verification/RC39/fdi-export.log",
-    "verification/RC39/fdi-render.log",
-    "verification/RC39/form-previews.log",
-    "verification/RC39/lint.log",
-    "verification/RC39/morphology-sculpt.log",
-    "verification/RC39/release-env.log",
-    "verification/RC39/release.log",
-    "verification/RC39/runtime.log",
-    "verification/RC39/sculpt-integrity.log",
-    "verification/RC39/tooth-appearance.log",
-    "verification/RC39/tooth-form-browser.log",
-    "verification/RC39/tooth-forms.log",
-    "verification/RC39/tooth-layout.log",
-    "verification/RC39/translations.log",
-    "verification/RC39/typecheck.log",
-    "verification/RC40/build.log",
-    "verification/RC40/cad-browser.log",
-    "verification/RC40/cad-daily-browser.log",
-    "verification/RC40/cad-guided-browser.log",
-    "verification/RC40/lint.log",
-    "verification/RC40/typecheck.log",
-    "verification/RC40/ui-browser.log",
-    "verification/RC40/verify-aya-core.log",
-    "verification/RC40/verify-aya.log",
-    "verification/RC40/verify-bundled-languages.log",
-    "verification/RC40/verify-cad-daily.log",
-    "verification/RC40/verify-cad-display.log",
-    "verification/RC40/verify-cad-guided.log",
-    "verification/RC40/verify-cad-interaction.log",
-    "verification/RC40/verify-cad-panel.log",
-    "verification/RC40/verify-cad-setup.log",
-    "verification/RC40/verify-cad-workflow.log",
-    "verification/RC40/verify-cad.log",
-    "verification/RC40/verify-desktop-language.log",
-    "verification/RC40/verify-e2e.log",
-    "verification/RC40/verify-experience.log",
-    "verification/RC40/verify-form-previews.log",
-    "verification/RC40/verify-language-packs.log",
-    "verification/RC40/verify-local-aya.log",
-    "verification/RC40/verify-localization.log",
-    "verification/RC40/verify-migrations.log",
-    "verification/RC40/verify-morphology-sculpt.log",
-    "verification/RC40/verify-operations.log",
-    "verification/RC40/verify-performance.log",
-    "verification/RC40/verify-pilot.log",
-    "verification/RC40/verify-release-env.log",
-    "verification/RC40/verify-release.log",
-    "verification/RC40/verify-runtime.log",
-    "verification/RC40/verify-sculpt-integrity.log",
-    "verification/RC40/verify-security.log",
-    "verification/RC40/verify-system-translations.log",
-    "verification/RC40/verify-tooth-appearance.log",
-    "verification/RC40/verify-tooth-forms.log",
-    "verification/RC40/verify-tooth-layout.log",
-    "verification/RC40/verify-validation.log",
-    "verification/RC41/build.log",
-    "verification/RC41/lint.log",
-    "verification/RC41/typecheck.log",
-    "verification/RC41/verify-aya-core.log",
-    "verification/RC41/verify-aya.log",
-    "verification/RC41/verify-bundled-languages.log",
-    "verification/RC41/verify-cad-browser.log",
-    "verification/RC41/verify-cad-daily.log",
-    "verification/RC41/verify-cad-display.log",
-    "verification/RC41/verify-cad-guided-browser.log",
-    "verification/RC41/verify-cad-guided.log",
-    "verification/RC41/verify-cad-interaction.log",
-    "verification/RC41/verify-cad-library-browser.log",
-    "verification/RC41/verify-cad-library.log",
-    "verification/RC41/verify-cad-panel.log",
-    "verification/RC41/verify-cad-setup.log",
-    "verification/RC41/verify-cad-workflow.log",
-    "verification/RC41/verify-cad.log",
-    "verification/RC41/verify-desktop-language.log",
-    "verification/RC41/verify-e2e.log",
-    "verification/RC41/verify-experience.log",
-    "verification/RC41/verify-language-packs.log",
-    "verification/RC41/verify-local-aya.log",
-    "verification/RC41/verify-localization.log",
-    "verification/RC41/verify-migrations.log",
-    "verification/RC41/verify-morphology-sculpt.log",
-    "verification/RC41/verify-operations.log",
-    "verification/RC41/verify-performance.log",
-    "verification/RC41/verify-pilot.log",
-    "verification/RC41/verify-release-env.log",
-    "verification/RC41/verify-release.log",
-    "verification/RC41/verify-runtime.log",
-    "verification/RC41/verify-sculpt-integrity.log",
-    "verification/RC41/verify-security.log",
-    "verification/RC41/verify-system-translations.log",
-    "verification/RC41/verify-tooth-appearance-browser.log",
-    "verification/RC41/verify-tooth-appearance.log",
-    "verification/RC41/verify-tooth-forms.log",
-    "verification/RC41/verify-tooth-layout.log",
-    "verification/RC41/verify-ui-browser.log",
-    "verification/RC41/verify-validation.log",
-    "verification/RC42/build.log",
-    "verification/RC42/lint.log",
-    "verification/RC42/native-inference.log",
-    "verification/RC42/production-browser.log",
-    "verification/RC42/typecheck.log",
-    "verification/RC42/verify-aya-core.log",
-    "verification/RC42/verify-aya-managed.log",
-    "verification/RC42/verify-aya.log",
-    "verification/RC42/verify-cad-browser.log",
-    "verification/RC42/verify-cad-daily.log",
-    "verification/RC42/verify-cad-display.log",
-    "verification/RC42/verify-cad-guided-browser.log",
-    "verification/RC42/verify-cad-guided.log",
-    "verification/RC42/verify-cad-interaction.log",
-    "verification/RC42/verify-cad-library-browser.log",
-    "verification/RC42/verify-cad-library.log",
-    "verification/RC42/verify-cad-panel.log",
-    "verification/RC42/verify-cad-setup.log",
-    "verification/RC42/verify-cad-view.log",
-    "verification/RC42/verify-cad-workflow.log",
-    "verification/RC42/verify-cad.log",
-    "verification/RC42/verify-desktop-language.log",
-    "verification/RC42/verify-e2e.log",
-    "verification/RC42/verify-experience.log",
-    "verification/RC42/verify-language-packs.log",
-    "verification/RC42/verify-local-aya.log",
-    "verification/RC42/verify-localization.log",
-    "verification/RC42/verify-migrations.log",
-    "verification/RC42/verify-morphology-sculpt.log",
-    "verification/RC42/verify-operations.log",
-    "verification/RC42/verify-performance.log",
-    "verification/RC42/verify-pilot.log",
-    "verification/RC42/verify-release-env.log",
-    "verification/RC42/verify-release.log",
-    "verification/RC42/verify-runtime.log",
-    "verification/RC42/verify-sculpt-integrity.log",
-    "verification/RC42/verify-security.log",
-    "verification/RC42/verify-system-translations.log",
-    "verification/RC42/verify-tooth-appearance.log",
-    "verification/RC42/verify-tooth-forms.log",
-    "verification/RC42/verify-tooth-layout.log",
-    "verification/RC42/verify-ui-browser.log",
-    "verification/RC42/verify-validation.log",
-    "verification/RC43/build.log",
-    "verification/RC43/lint.log",
-    "verification/RC43/production-browser.log",
-    "verification/RC43/reading-10s/browser-lint.log",
-    "verification/RC43/reading-10s/build.log",
-    "verification/RC43/reading-10s/final-lint.log",
-    "verification/RC43/reading-10s/lint.log",
-    "verification/RC43/reading-10s/loading.log",
-    "verification/RC43/reading-10s/localization.log",
-    "verification/RC43/reading-10s/typecheck.log",
-    "verification/RC43/typecheck.log",
-    "verification/RC43/verify-aya-core.log",
-    "verification/RC43/verify-aya-managed.log",
-    "verification/RC43/verify-aya.log",
-    "verification/RC43/verify-cad-daily.log",
-    "verification/RC43/verify-cad-display.log",
-    "verification/RC43/verify-cad-guided.log",
-    "verification/RC43/verify-cad-interaction.log",
-    "verification/RC43/verify-cad-library.log",
-    "verification/RC43/verify-cad-panel.log",
-    "verification/RC43/verify-cad-setup.log",
-    "verification/RC43/verify-cad-view.log",
-    "verification/RC43/verify-cad-workflow.log",
-    "verification/RC43/verify-cad.log",
-    "verification/RC43/verify-desktop-language.log",
-    "verification/RC43/verify-e2e.log",
-    "verification/RC43/verify-experience.log",
-    "verification/RC43/verify-language-packs.log",
-    "verification/RC43/verify-loading-play-browser.log",
-    "verification/RC43/verify-loading-play.log",
-    "verification/RC43/verify-local-aya.log",
-    "verification/RC43/verify-localization.log",
-    "verification/RC43/verify-migrations.log",
-    "verification/RC43/verify-morphology-sculpt.log",
-    "verification/RC43/verify-operations.log",
-    "verification/RC43/verify-performance.log",
-    "verification/RC43/verify-pilot.log",
-    "verification/RC43/verify-release-env.log",
-    "verification/RC43/verify-release.log",
-    "verification/RC43/verify-runtime.log",
-    "verification/RC43/verify-sculpt-integrity.log",
-    "verification/RC43/verify-security.log",
-    "verification/RC43/verify-system-translations.log",
-    "verification/RC43/verify-tooth-appearance.log",
-    "verification/RC43/verify-tooth-forms.log",
-    "verification/RC43/verify-tooth-layout.log",
-    "verification/RC43/verify-ui-browser.log",
-    "verification/RC43/verify-validation.log"
-  ],
+  "liveOrganizationBackendVerified": false,
+  "dentalFactsActual": 220,
+  "dentalFactsTarget": 30000,
+  "verification": "RC48_KONTROL_RAPORU.md",
   "files": [
     {
       "path": ".env.example",
@@ -368,7 +19,7 @@
     {
       "path": ".env.release.example",
       "size": 407,
-      "sha256": "2271785ca8e25b0cbb8d5da1f4d53a154a68d920bccdb65a7e0dbba410230eaf"
+      "sha256": "c0ed3751ba2492ac6acb357753e70ae9ef292df829fb9e010ba5be08da402edd"
     },
     {
       "path": ".gitignore",
@@ -382,8 +33,8 @@
     },
     {
       "path": "AGENTS.md",
-      "size": 1753,
-      "sha256": "e6bb2ff083f3a6f55ca446f50fe70fc446db07d9ad43180edf0c173b28035889"
+      "size": 1975,
+      "sha256": "873a8a8d25bb7c784a3e17ad1e38c124de50a457f717a39c4d358fbbea4cd28e"
     },
     {
       "path": "AYA_ACTIONS_QA.md",
@@ -486,6 +137,11 @@
       "sha256": "ab1c36ff988587f1d57e19993eb73b767c45aaf9e8778469cf28790947d936f6"
     },
     {
+      "path": "DENTAL_BILGI_KATALOGU_RAPORU.md",
+      "size": 7597,
+      "sha256": "6d0ad83224521186ba6ca96de72cbaa63d703bf5b8fe0602389c5e379955a8d4"
+    },
+    {
       "path": "DENTAYA_BU_SURUM.md",
       "size": 1030,
       "sha256": "7ab06ac860a2f22af4296c1d2f6043d03f14724e9ecdc5fa08c5605a14e8caf1"
@@ -498,7 +154,7 @@
     {
       "path": "DENTAYA_GUNCELLE_DERLE.cmd",
       "size": 3129,
-      "sha256": "00f9eea67f58e681f9b165b5e71fb6381b27eb9244729b6ca71e79c5bf184cb8"
+      "sha256": "55bf066402f49cd1169e5a1bc196b02b304960de4905f05d11cda55661cfe985"
     },
     {
       "path": "DentAYA_CAD_Degisiklikler.txt",
@@ -537,8 +193,8 @@
     },
     {
       "path": "KURULUM.txt",
-      "size": 2200,
-      "sha256": "fa59569709c5082bfeb6602e5b1a8d3d06a9a3f1e20f55fde9cb702541f33118"
+      "size": 2204,
+      "sha256": "bc51e3e2202a27b468b50ad62d55e875484abe738747df6f8f1b90942aa980c5"
     },
     {
       "path": "LOGO_GUNCELLEME.txt",
@@ -886,6 +542,21 @@
       "sha256": "03d4a0fbf8855637013b71885b9d618b02cee95a33dee65f823f6ef5e4c4c5eb"
     },
     {
+      "path": "RC48_AYA_1008_SORU_CEVAP.json",
+      "size": 365775,
+      "sha256": "44af228d9a35d96870c04b775ae50190367e70ace26d3b8e9d4146dc60441987"
+    },
+    {
+      "path": "RC48_KONTROL_RAPORU.md",
+      "size": 8562,
+      "sha256": "075fab9ead871f54f54a3846be877522196f4902448ef4a960f7021bb5ef4401"
+    },
+    {
+      "path": "RC48_KULLANIM.md",
+      "size": 2176,
+      "sha256": "2e5c8b377d2db16db3becab50d914717a0108fe358271b3ffbe855e91f3af704"
+    },
+    {
       "path": "RC6_CHANGELOG.md",
       "size": 805,
       "sha256": "3da664df997388f7c74588f417e0676b263ac4aa225fced31091f5f197b6a03f"
@@ -902,8 +573,8 @@
     },
     {
       "path": "README.md",
-      "size": 1657,
-      "sha256": "44059597848793c468f28624588fde7820c3eee313b4cf263fe4617b47e0593d"
+      "size": 1992,
+      "sha256": "a07506c096f8d2df952e2c4c86afb9b32dbe5e50e8b332d0f7d363178c719c5a"
     },
     {
       "path": "README_BUILD_FIX_01.md",
@@ -1172,8 +843,8 @@
     },
     {
       "path": "electron/aya/assistant.cjs",
-      "size": 9971,
-      "sha256": "ea1c8d048e414d09dbaa7d930d46dcb1882a0835e1450d36a202aa16caa4ee38"
+      "size": 10404,
+      "sha256": "d775a1d27c5aade52b7fdc14d4e4ec1138d914d1e4d21be16d8590a96bfddd00"
     },
     {
       "path": "electron/aya/assistant.d.cts",
@@ -1202,8 +873,8 @@
     },
     {
       "path": "electron/aya/conversation.cjs",
-      "size": 16252,
-      "sha256": "af432540ea94c788f058af9df8c7e736ecf801dab825a9d76ee8a7ab0fb10ec8"
+      "size": 16749,
+      "sha256": "a738b562f3190c62ec69d2eef7f7810f4976cb535ef89003b84d81e253cb293d"
     },
     {
       "path": "electron/aya/conversation.d.cts",
@@ -1502,8 +1173,8 @@
     },
     {
       "path": "electron/dentaya.ico",
-      "size": 23679,
-      "sha256": "e210511e2fc8b481490be989190116c5732e9d8e6b1850b8631c42be09086868"
+      "size": 69365,
+      "sha256": "ffffc2458fde21fd4ea5591c935ef851b67fec91fbc8dcca213f25d64f0ea5c1"
     },
     {
       "path": "electron/desktop-brand.cjs",
@@ -1512,93 +1183,93 @@
     },
     {
       "path": "electron/logos/01_dental_form_icon.ico",
-      "size": 23679,
-      "sha256": "e210511e2fc8b481490be989190116c5732e9d8e6b1850b8631c42be09086868"
+      "size": 69365,
+      "sha256": "ffffc2458fde21fd4ea5591c935ef851b67fec91fbc8dcca213f25d64f0ea5c1"
     },
     {
       "path": "electron/logos/02_dental_arch_icon.ico",
-      "size": 21359,
-      "sha256": "f864ba2dbdfee185bfadd2b927b073bfe847296c1ef79dc2e8048c8bd6ad12a9"
+      "size": 61199,
+      "sha256": "7793fb186fc82d33fbf0ea769a4c444d67a30b8a707b025ccd2b67ad51ffac51"
     },
     {
       "path": "electron/logos/03_cad_geometry_icon.ico",
-      "size": 15885,
-      "sha256": "8d93a61a8b2c041984290500cd5f3c4901d60164eddea20ac02e4902eb39bbc7"
+      "size": 61997,
+      "sha256": "e690d0e56cc5b6817bbe3b2ae1f8c6a1b41a98e5ff040ba975adfd10f9350885"
     },
     {
       "path": "electron/logos/04_scan_icon.ico",
-      "size": 15885,
-      "sha256": "8d93a61a8b2c041984290500cd5f3c4901d60164eddea20ac02e4902eb39bbc7"
+      "size": 68165,
+      "sha256": "cbad1b50bac8b05c940667665b252126f233bce5bc23c9a731f84dee81eec90a"
     },
     {
       "path": "electron/logos/05_orbit_icon.ico",
-      "size": 28735,
-      "sha256": "e34ffed8f16ec74e3e1daf84d3b2da67f2e67e3c73a2b93a81cf602185f7f462"
+      "size": 83448,
+      "sha256": "fbb53c31b0ad025a46ccc0e27a19543efff3bd89c4c5f93f91b804169901decd"
     },
     {
       "path": "electron/logos/06_crown_icon.ico",
-      "size": 29163,
-      "sha256": "1fe04ed57fc7a4d15dc4fc2a50bead4a7d305365f882ee829a3aa88163509f2c"
+      "size": 73488,
+      "sha256": "f975680902671bc9140bb553bc307dce580f897d05de31ce16dd58f9208fcd85"
     },
     {
       "path": "electron/logos/07_prism_icon.ico",
-      "size": 15885,
-      "sha256": "8d93a61a8b2c041984290500cd5f3c4901d60164eddea20ac02e4902eb39bbc7"
+      "size": 81267,
+      "sha256": "99f9a4459377a391873c7f95089f174c442d641adab02703b9da0da92e480992"
     },
     {
       "path": "electron/logos/08_wave_icon.ico",
-      "size": 21359,
-      "sha256": "f864ba2dbdfee185bfadd2b927b073bfe847296c1ef79dc2e8048c8bd6ad12a9"
+      "size": 71736,
+      "sha256": "f9eb28534eebfd7d0cf5fa51d34f186247566d4b90cffc40ac7091b19fa5ebf2"
     },
     {
       "path": "electron/logos/09_link_icon.ico",
-      "size": 28735,
-      "sha256": "e34ffed8f16ec74e3e1daf84d3b2da67f2e67e3c73a2b93a81cf602185f7f462"
+      "size": 84032,
+      "sha256": "d635cbdd2336bfd992a3b14459015005fef495ff958335b5a434fb98325fa578"
     },
     {
       "path": "electron/logos/10_spark_icon.ico",
-      "size": 23679,
-      "sha256": "e210511e2fc8b481490be989190116c5732e9d8e6b1850b8631c42be09086868"
+      "size": 76674,
+      "sha256": "7e1915fa68b783bc23838ce29485b88fc44125e69de78a0388a1854406169eaf"
     },
     {
       "path": "electron/logos/11_layer_icon.ico",
-      "size": 14754,
-      "sha256": "3200a6a4980dd001603438e7d3f84a26dbafb10a6c8cfc2c42cf094e0d2af51b"
+      "size": 94514,
+      "sha256": "eb49e5b6fa0529766de94843882176b5e6c9f8a3ae755ab4f6d652131e14ba89"
     },
     {
       "path": "electron/logos/12_shield_icon.ico",
-      "size": 43917,
-      "sha256": "6fae87c91012e10b54b7cae06d89dd5c5b7c1dee60e7b6eb8f356a0c812913a6"
+      "size": 86322,
+      "sha256": "07f34e0254f57eaff67948ba81c56b3fcc4a51acda779509df949b671d09d476"
     },
     {
       "path": "electron/logos/13_apex_icon.ico",
-      "size": 25592,
-      "sha256": "055ff3df3298cfb3816e1c9ad6722209a498d2aaca27f10aaede5c1a5b04c2c4"
+      "size": 69221,
+      "sha256": "9ede7e141eeab62de0a234b602e949b41674b13be8770c0e75f19953784bfa39"
     },
     {
       "path": "electron/logos/14_diamond_icon.ico",
-      "size": 15885,
-      "sha256": "8d93a61a8b2c041984290500cd5f3c4901d60164eddea20ac02e4902eb39bbc7"
+      "size": 81092,
+      "sha256": "4625843011332760cc1fe073459d5dcc2d2905a73b14f0e9a1113d33e9e36f8a"
     },
     {
       "path": "electron/logos/15_focus_icon.ico",
-      "size": 43917,
-      "sha256": "6fae87c91012e10b54b7cae06d89dd5c5b7c1dee60e7b6eb8f356a0c812913a6"
+      "size": 89992,
+      "sha256": "d428ce8762d6aec1dd27c6e990dad27ea33fed37e7851b02fafe7452e5214c93"
     },
     {
       "path": "electron/logos/16_flow_icon.ico",
-      "size": 28735,
-      "sha256": "e34ffed8f16ec74e3e1daf84d3b2da67f2e67e3c73a2b93a81cf602185f7f462"
+      "size": 75377,
+      "sha256": "b5cb85b1e1a9fba4761bdc8956af41530eb2ed320ba1685a3f9efe9cfa532947"
     },
     {
       "path": "electron/logos/17_petal_icon.ico",
-      "size": 21359,
-      "sha256": "f864ba2dbdfee185bfadd2b927b073bfe847296c1ef79dc2e8048c8bd6ad12a9"
+      "size": 88109,
+      "sha256": "4ac5f92a8b1be4bc737cb50f6d854ee722cba1ea8d7014bd57e57e18be1bd906"
     },
     {
       "path": "electron/logos/18_bridge_icon.ico",
-      "size": 14754,
-      "sha256": "3200a6a4980dd001603438e7d3f84a26dbafb10a6c8cfc2c42cf094e0d2af51b"
+      "size": 59408,
+      "sha256": "b8fee0988c2167a041cbef7fa3f54a57e5407304a8aa56087e8ca7fc25a6a8c4"
     },
     {
       "path": "electron/main.cjs",
@@ -1628,12 +1299,12 @@
     {
       "path": "package-lock.json",
       "size": 354831,
-      "sha256": "b728a3180ca50914d3f5f3fcb71746d62597d41e7d7fc43b73ba203971eadc45"
+      "sha256": "c34df001f295a5d58d0c9e89620b7573e990976c8e46fbe0b5fd7f317e3365f2"
     },
     {
       "path": "package.json",
-      "size": 7416,
-      "sha256": "2437ae8be9a72caa700d9e0aa3427ac9e767d04565f5e4aa31562a17510c8080"
+      "size": 8170,
+      "sha256": "235f6a3cb57edbf1d66fd94394cbf712b673276ed8551892e396d798a0761557"
     },
     {
       "path": "public/aya/aya-alert.png",
@@ -1681,6 +1352,21 @@
       "sha256": "461e191df91d2e7ad8840627459db9e3c33a790b97483de5ff60048dc20e3e9b"
     },
     {
+      "path": "public/brand/DentAYA_Premium_Atelier.webp",
+      "size": 76320,
+      "sha256": "1ad06c9e562f4ff2d1bbbef3440d73c6b7b6cc8a8409bb4fb447186fc32c9a90"
+    },
+    {
+      "path": "public/brand/DentAYA_Premium_Logo_Koleksiyonu.png",
+      "size": 361109,
+      "sha256": "2cb4a7d08dff1e32cedb44de1d7c71932cafa1d9826c6cc09db4661bbbd3395e"
+    },
+    {
+      "path": "public/brand/DentAYA_Premium_Logo_Koleksiyonu.svg",
+      "size": 66686,
+      "sha256": "cbd4e94c78ea3b3f7da5e25ab965742fa28ea673d9e036582e87116f29dc2f86"
+    },
+    {
       "path": "public/brand/DentAYA_RC38_Logo_Ailesi.png",
       "size": 147944,
       "sha256": "4cc22243c40808ea7c51808ee04ee38cb4db321ae387734b1b4e9f43d7a356d8"
@@ -1691,9 +1377,14 @@
       "sha256": "77619dd1e6fe596485acd6983ce76f63cfccfc5750f88e51750b74dd37789902"
     },
     {
+      "path": "public/brand/README.md",
+      "size": 1242,
+      "sha256": "6250c0e7d2d3ea5f1415bb99d426f47454da5c580bd0ea527fea60d001bbb8f4"
+    },
+    {
       "path": "public/brand/identity.json",
-      "size": 1206,
-      "sha256": "f235d5ce758b3ef126848e37926394399597e5d6de52db15b5564e50a7a2e4ea"
+      "size": 2649,
+      "sha256": "dd9da1c310bc0eef6135f191adcb70f946b5e8cdf6476c15a7080f811c1e42d7"
     },
     {
       "path": "public/community-setup.sql",
@@ -1712,48 +1403,48 @@
     },
     {
       "path": "public/dentaya-logo-light.svg",
-      "size": 1657,
-      "sha256": "7a2ef43048f5f44d1db68e704cf4385647a4fd381df9fea2bb0709ae709671d0"
+      "size": 2626,
+      "sha256": "cb6a6fd4db126471706ab55cb2af7095af9275fc3f36a54b73b37a03116341cc"
     },
     {
       "path": "public/dentaya-logo.svg",
-      "size": 1657,
-      "sha256": "356badab17c86ed05dc557b7ff799268a3aca46cf15b48ed3244122e362e0576"
+      "size": 2623,
+      "sha256": "9461aa4c945e270cf4f0ff75f2d15eacb6471af7a93cb84aefdbb0aa662de9e4"
     },
     {
       "path": "public/icon-192.png",
-      "size": 4034,
-      "sha256": "779af4fd49e7954e6a0967d985c281e46c02f7d12c0f598cc819acf458279cbc"
+      "size": 18135,
+      "sha256": "8331df69593c9bf50a9f6a7762a58b783a6683877227b15b4b7783f044a97e65"
     },
     {
       "path": "public/icon-512.png",
-      "size": 15096,
-      "sha256": "e096bd493880b335b65438b1509957fe4148ad13ba4fbbd2267648718f5b2839"
+      "size": 53202,
+      "sha256": "72100f882e62e8664afb7664984429f7111a5f7aca35b9e52b5cd7d85637587a"
     },
     {
       "path": "public/icon.svg",
-      "size": 345,
-      "sha256": "87261fcb09c703ed5a1a360c31c5597327151c0c96930bd168f19cc323bb78f7"
+      "size": 1554,
+      "sha256": "95d0025a89422547161c81ed477da9be7c14f2c867f31b78e7a6b833faf8d465"
     },
     {
       "path": "public/logos/01_dental_form.svg",
-      "size": 1657,
-      "sha256": "356badab17c86ed05dc557b7ff799268a3aca46cf15b48ed3244122e362e0576"
+      "size": 2623,
+      "sha256": "9461aa4c945e270cf4f0ff75f2d15eacb6471af7a93cb84aefdbb0aa662de9e4"
     },
     {
       "path": "public/logos/01_dental_form_icon.png",
-      "size": 15096,
-      "sha256": "e096bd493880b335b65438b1509957fe4148ad13ba4fbbd2267648718f5b2839"
+      "size": 53202,
+      "sha256": "72100f882e62e8664afb7664984429f7111a5f7aca35b9e52b5cd7d85637587a"
     },
     {
       "path": "public/logos/01_dental_form_icon.svg",
-      "size": 345,
-      "sha256": "87261fcb09c703ed5a1a360c31c5597327151c0c96930bd168f19cc323bb78f7"
+      "size": 1554,
+      "sha256": "95d0025a89422547161c81ed477da9be7c14f2c867f31b78e7a6b833faf8d465"
     },
     {
       "path": "public/logos/01_dental_form_light.svg",
-      "size": 1657,
-      "sha256": "7a2ef43048f5f44d1db68e704cf4385647a4fd381df9fea2bb0709ae709671d0"
+      "size": 2626,
+      "sha256": "cb6a6fd4db126471706ab55cb2af7095af9275fc3f36a54b73b37a03116341cc"
     },
     {
       "path": "public/logos/01_dental_form_mono.svg",
@@ -1777,33 +1468,33 @@
     },
     {
       "path": "public/logos/02_dental_arch.svg",
-      "size": 1633,
-      "sha256": "2350b5eab1757a6beeb91baaf72ebc81c7c480cc601254a77e0946f0118cd429"
+      "size": 2608,
+      "sha256": "33bb6016fe4f83f98fa94142d968dc5469bd94d7f7ea92c2b75d0179e17ba5d9"
     },
     {
       "path": "public/logos/02_dental_arch_icon.png",
-      "size": 14332,
-      "sha256": "46ba2817e522100fbb4096902d577448bf617cc1ea45858b6cc28a5efa0c683f"
+      "size": 46171,
+      "sha256": "874d1d6b4569c02009bfc84cf7cfb638e4c12a9ada118691f576f91689b98b63"
     },
     {
       "path": "public/logos/02_dental_arch_icon.svg",
-      "size": 321,
-      "sha256": "98b638856249c936ac54bfb4e06a51b23d7010b04a43e7cb2e8c1e254d4ca5ad"
+      "size": 1539,
+      "sha256": "c4787e48403e499bc5687b891a953848a7a5c76d64a421f58ac91afd91b36b84"
     },
     {
       "path": "public/logos/02_dental_arch_light.svg",
-      "size": 1633,
-      "sha256": "4f4d400ee03764abc3fb98c28d2510ea27ad93dcc6d0143a74c7436a8974015b"
+      "size": 2611,
+      "sha256": "ddedf197a36e4f1e2714971b99a7a9d6c00426b4fd52f6e8ff66294e4df72e35"
     },
     {
       "path": "public/logos/02_dental_arch_mono.svg",
-      "size": 1633,
-      "sha256": "20985f84a115da708e627a40f3d52357632fd8f4bcac61bbdcee43b03e5927e7"
+      "size": 1653,
+      "sha256": "e94d966b398775d17a918f7824fb6e84966add10493429ec9d0fba8391832669"
     },
     {
       "path": "public/logos/02_dental_arch_mono_white.svg",
-      "size": 1633,
-      "sha256": "3e015ab0d0ab0ab4e317c3acc802f908d18959ac4c0788101544999ca9d4d7c8"
+      "size": 1653,
+      "sha256": "1deb23b2e2c148fc5183b0503b27bb89a4552d2d1e225cec6129498a33c3e46c"
     },
     {
       "path": "public/logos/02_dental_arch_word.svg",
@@ -1817,23 +1508,23 @@
     },
     {
       "path": "public/logos/03_cad_geometry.svg",
-      "size": 1190,
-      "sha256": "fc48c21febd659e29ac3d7aa8689250aafb31c8d23bcf993f1e0124c47cc0a27"
+      "size": 2097,
+      "sha256": "c38b27d66ce7b392b83be4500d83d3f1a29f9405fd80884ae79efbb1847a50ce"
     },
     {
       "path": "public/logos/03_cad_geometry_icon.png",
-      "size": 11623,
-      "sha256": "a6023de4c7b10d8ee9ee645970322227192cc5b84051d3a1c23ff39fba8240bb"
+      "size": 44933,
+      "sha256": "75119c1e8429ec1422006740c9855a42b8a30aeb678b66f341a00a7c91faf88a"
     },
     {
       "path": "public/logos/03_cad_geometry_icon.svg",
-      "size": 315,
-      "sha256": "acb2730c0fba332e00ecd109c06e489d2d8931f5b003d99818a99d32f9408d53"
+      "size": 1465,
+      "sha256": "c74833d91138fc221fb62fa778a59e61cfd78817e59dd1155305167ed05ce4f3"
     },
     {
       "path": "public/logos/03_cad_geometry_light.svg",
-      "size": 1190,
-      "sha256": "d17302628bf8a5b927d2dad210e5046112d72b428035d2142da458ebfcdac222"
+      "size": 2100,
+      "sha256": "f97e38379177b88c180d58ee60bc8395a570387e3f8da4a852819351c70ab0a0"
     },
     {
       "path": "public/logos/03_cad_geometry_mono.svg",
@@ -1857,33 +1548,33 @@
     },
     {
       "path": "public/logos/04_scan.svg",
-      "size": 1190,
-      "sha256": "fc48c21febd659e29ac3d7aa8689250aafb31c8d23bcf993f1e0124c47cc0a27"
+      "size": 2343,
+      "sha256": "c78c60be8bdcc668ac7ebba041e1a2673005a91d39f48dc787851851b3dfb127"
     },
     {
       "path": "public/logos/04_scan_icon.png",
-      "size": 11623,
-      "sha256": "a6023de4c7b10d8ee9ee645970322227192cc5b84051d3a1c23ff39fba8240bb"
+      "size": 45425,
+      "sha256": "658f93b5aea0c656add0a5826a5e425937ac2e00644f2e8e02e45da8f19c7103"
     },
     {
       "path": "public/logos/04_scan_icon.svg",
-      "size": 315,
-      "sha256": "acb2730c0fba332e00ecd109c06e489d2d8931f5b003d99818a99d32f9408d53"
+      "size": 1711,
+      "sha256": "6828c96c1643ec4878bb9b7333b295e3fba853412ef574939bb93d68658ccd62"
     },
     {
       "path": "public/logos/04_scan_light.svg",
-      "size": 1190,
-      "sha256": "d17302628bf8a5b927d2dad210e5046112d72b428035d2142da458ebfcdac222"
+      "size": 2346,
+      "sha256": "de79af6d1b4829cc62f464f94587c447948fcca5df39700f371a4ba8ac7ae5b5"
     },
     {
       "path": "public/logos/04_scan_mono.svg",
-      "size": 1190,
-      "sha256": "2a97e875aef4a485394851c95e72fb03d56c3da858574c030a4536db55b35cb0"
+      "size": 1272,
+      "sha256": "ea4c810f737c8eeca2e12f36445529ab6537e24cc382e51b6910d950d9fce7f4"
     },
     {
       "path": "public/logos/04_scan_mono_white.svg",
-      "size": 1190,
-      "sha256": "79b004110a583a11b22e64ea0057acb5a89be8a9285a561123bc01d273707652"
+      "size": 1272,
+      "sha256": "198c9b2efab748afb1d50dd0c0197c329d67df45ec2ad47e75c4ccaeca29fbc6"
     },
     {
       "path": "public/logos/04_scan_word.svg",
@@ -1897,33 +1588,33 @@
     },
     {
       "path": "public/logos/05_orbit.svg",
-      "size": 1760,
-      "sha256": "ef189b1efdf599e2d3b73b588ab21098ed82f2ff2078907cdb1601bd7275808e"
+      "size": 2818,
+      "sha256": "c4a133502d5510d486bef319e9190e129613531e4b379a01be49922ea5356e16"
     },
     {
       "path": "public/logos/05_orbit_icon.png",
-      "size": 16773,
-      "sha256": "384f6fcf3dbf889b80d5cfd7f2346b5957f9e327c0670d444e8aa0c6d77ed741"
+      "size": 63267,
+      "sha256": "8187d9b23f886c9571f8c08a206b2dd687793337aa05c920f5d40049146e29d2"
     },
     {
       "path": "public/logos/05_orbit_icon.svg",
-      "size": 448,
-      "sha256": "304e68f33bc36cd81a3855d361a3877785af68184b301a67bcd58c29e54dc7e3"
+      "size": 1749,
+      "sha256": "91e64762af522f02a2ce9b4be0e592561b0023614700b27e2d071ee52562db1e"
     },
     {
       "path": "public/logos/05_orbit_light.svg",
-      "size": 1760,
-      "sha256": "858f76d03a9975e4325cf063e88a7a94f4c4b7c15f3d60bf7491bd48fe006e07"
+      "size": 2821,
+      "sha256": "18a277bae197dad04157181f67a94d669693337f1df9d4f197b8da20f6846407"
     },
     {
       "path": "public/logos/05_orbit_mono.svg",
-      "size": 1760,
-      "sha256": "fd3ce31815e25b7e3f835afaf0604814715c5bc2714182e623a1a838f960111f"
+      "size": 1722,
+      "sha256": "bd104cc22c1f00ea24e613a7e936518bfd36250731634afdc571ef5373ae7245"
     },
     {
       "path": "public/logos/05_orbit_mono_white.svg",
-      "size": 1760,
-      "sha256": "1d1c2a17ccd9043c7f9376311f3593435706c5d86169002cdabd0163616bca53"
+      "size": 1722,
+      "sha256": "204a234dbd7cdfab5ff5e69a26e32590c8ae71f8a6ff8fcbc4fccd860f7778dc"
     },
     {
       "path": "public/logos/05_orbit_word.svg",
@@ -1937,33 +1628,33 @@
     },
     {
       "path": "public/logos/06_crown.svg",
-      "size": 1757,
-      "sha256": "85383ff0947a19c85db7770d5b3939269635e67cc6cbde6de26f91122a5cafaa"
+      "size": 2723,
+      "sha256": "36f599f7f398609322dc721990277dbe69c283024c6e9d508e3c1bd1a5f8508a"
     },
     {
       "path": "public/logos/06_crown_icon.png",
-      "size": 17435,
-      "sha256": "5a9a3fa1b7eb0851417b8b4b71bb41d65e88abc48a90306dac95422d2856b492"
+      "size": 53764,
+      "sha256": "99eb730a85da9799623039d482b95da7f4238221bfc4f36aea403744e4a61559"
     },
     {
       "path": "public/logos/06_crown_icon.svg",
-      "size": 377,
-      "sha256": "543daf8b39afa5cc4a8b529bbb6fa4cf539ada1ae99d9e265a8bae916b456457"
+      "size": 1586,
+      "sha256": "70f19ac318eb188b2735f09cba84d776b2dc32cab4f9a853f057ce88ccd8ce89"
     },
     {
       "path": "public/logos/06_crown_light.svg",
-      "size": 1757,
-      "sha256": "65f769185d46bcec67016725de3bb2f971003119acd2c6d057cc5fbb28a5f499"
+      "size": 2726,
+      "sha256": "aa0899b095828fb6be38ab8aece8001d7786e90cbc0ef0680a0a1c500a161d7c"
     },
     {
       "path": "public/logos/06_crown_mono.svg",
-      "size": 1757,
-      "sha256": "21421058172f4b850e8d76abcf534e41227409df1a271468724ddbcfbd2f91e4"
+      "size": 1735,
+      "sha256": "f7fd867ffd9357a07738afc1c91a3c7fe7267a9bf3bc35662b86b69f7781983e"
     },
     {
       "path": "public/logos/06_crown_mono_white.svg",
-      "size": 1757,
-      "sha256": "f438a242c20629f2fb8010f33d5e28083437e288a9c485446b921b2d8ea3af32"
+      "size": 1735,
+      "sha256": "4ba3af675d8ef48ddda1d997ea0d8df0f8da16d0f42f0736c5c01daea35d3f6c"
     },
     {
       "path": "public/logos/06_crown_word.svg",
@@ -1977,33 +1668,33 @@
     },
     {
       "path": "public/logos/07_prism.svg",
-      "size": 1190,
-      "sha256": "fc48c21febd659e29ac3d7aa8689250aafb31c8d23bcf993f1e0124c47cc0a27"
+      "size": 2207,
+      "sha256": "a5a849855c62fe4422d3cfc478dcc035c81b957c2fdc54b0091c95923ef41f20"
     },
     {
       "path": "public/logos/07_prism_icon.png",
-      "size": 11623,
-      "sha256": "a6023de4c7b10d8ee9ee645970322227192cc5b84051d3a1c23ff39fba8240bb"
+      "size": 55922,
+      "sha256": "ba3ad6461ae7ee9721857c98075260975febb02f90f397926f93a0621e7a5228"
     },
     {
       "path": "public/logos/07_prism_icon.svg",
-      "size": 315,
-      "sha256": "acb2730c0fba332e00ecd109c06e489d2d8931f5b003d99818a99d32f9408d53"
+      "size": 1575,
+      "sha256": "4be9cbd4538cac46cf9a6489e244c2b12f89ed6e02a3f83d4cc1611148c61dd2"
     },
     {
       "path": "public/logos/07_prism_light.svg",
-      "size": 1190,
-      "sha256": "d17302628bf8a5b927d2dad210e5046112d72b428035d2142da458ebfcdac222"
+      "size": 2210,
+      "sha256": "e665f0f902ecb1d00dc975010763e091f5b165b7a6dea384d2886a084eee4333"
     },
     {
       "path": "public/logos/07_prism_mono.svg",
-      "size": 1190,
-      "sha256": "2a97e875aef4a485394851c95e72fb03d56c3da858574c030a4536db55b35cb0"
+      "size": 1228,
+      "sha256": "6c6a2bdc7224fd04316eaa4f2c424a8c8dfa2c83208b526708682939a17cf3e9"
     },
     {
       "path": "public/logos/07_prism_mono_white.svg",
-      "size": 1190,
-      "sha256": "79b004110a583a11b22e64ea0057acb5a89be8a9285a561123bc01d273707652"
+      "size": 1228,
+      "sha256": "972c7a8a454cc284adcf70978b42020d0f698beac5f293e75a3b6db74a37c1a1"
     },
     {
       "path": "public/logos/07_prism_word.svg",
@@ -2017,33 +1708,33 @@
     },
     {
       "path": "public/logos/08_wave.svg",
-      "size": 1633,
-      "sha256": "2350b5eab1757a6beeb91baaf72ebc81c7c480cc601254a77e0946f0118cd429"
+      "size": 2884,
+      "sha256": "8bc4a2432a7f57c8089cc40c84f5ac56ada0fdf37cfaa281d67819ce6e221567"
     },
     {
       "path": "public/logos/08_wave_icon.png",
-      "size": 14332,
-      "sha256": "46ba2817e522100fbb4096902d577448bf617cc1ea45858b6cc28a5efa0c683f"
+      "size": 54960,
+      "sha256": "420d626954768629b3cb89d1321b8a9bf3e62674e33c67b3b4049d7143a1f765"
     },
     {
       "path": "public/logos/08_wave_icon.svg",
-      "size": 321,
-      "sha256": "98b638856249c936ac54bfb4e06a51b23d7010b04a43e7cb2e8c1e254d4ca5ad"
+      "size": 1815,
+      "sha256": "ec13374e3fd8bfa4cf7825ea8d1c0d1721f11aa2d2c2aaf457e97e6f8a2fd5fb"
     },
     {
       "path": "public/logos/08_wave_light.svg",
-      "size": 1633,
-      "sha256": "4f4d400ee03764abc3fb98c28d2510ea27ad93dcc6d0143a74c7436a8974015b"
+      "size": 2887,
+      "sha256": "dfe10de027d1d6f03b39d28743977abc35eff9c01dc564b1da4592e53ca9d682"
     },
     {
       "path": "public/logos/08_wave_mono.svg",
-      "size": 1633,
-      "sha256": "20985f84a115da708e627a40f3d52357632fd8f4bcac61bbdcee43b03e5927e7"
+      "size": 1744,
+      "sha256": "d40d48d5404bebf305a663b583e551fb542c9e4a9dde5e66f416436ee7ec66e9"
     },
     {
       "path": "public/logos/08_wave_mono_white.svg",
-      "size": 1633,
-      "sha256": "3e015ab0d0ab0ab4e317c3acc802f908d18959ac4c0788101544999ca9d4d7c8"
+      "size": 1744,
+      "sha256": "8b7991912f38280705e9dcaab9087ca4cdefa4714217631c64f629f954b3f986"
     },
     {
       "path": "public/logos/08_wave_word.svg",
@@ -2057,33 +1748,33 @@
     },
     {
       "path": "public/logos/09_link.svg",
-      "size": 1760,
-      "sha256": "ef189b1efdf599e2d3b73b588ab21098ed82f2ff2078907cdb1601bd7275808e"
+      "size": 2793,
+      "sha256": "a29868c6bdf83e2a7e6146e2a997c35d9c090ef77058032c038ef01b217b6fd6"
     },
     {
       "path": "public/logos/09_link_icon.png",
-      "size": 16773,
-      "sha256": "384f6fcf3dbf889b80d5cfd7f2346b5957f9e327c0670d444e8aa0c6d77ed741"
+      "size": 65266,
+      "sha256": "afe9433218524dfca2bcdbc5d5c66a452cb8a22161b430685e0cc42ab518badc"
     },
     {
       "path": "public/logos/09_link_icon.svg",
-      "size": 448,
-      "sha256": "304e68f33bc36cd81a3855d361a3877785af68184b301a67bcd58c29e54dc7e3"
+      "size": 1724,
+      "sha256": "61cb80afda181c22dd9090d6e53a9aad602cd0ba1f2a472b93eca61fea0feb82"
     },
     {
       "path": "public/logos/09_link_light.svg",
-      "size": 1760,
-      "sha256": "858f76d03a9975e4325cf063e88a7a94f4c4b7c15f3d60bf7491bd48fe006e07"
+      "size": 2796,
+      "sha256": "13a50a02b0f7c4b87beb4ab2470e8d5af5abc70bca802f38595ae11b70175b60"
     },
     {
       "path": "public/logos/09_link_mono.svg",
-      "size": 1760,
-      "sha256": "fd3ce31815e25b7e3f835afaf0604814715c5bc2714182e623a1a838f960111f"
+      "size": 1713,
+      "sha256": "7f0954541bb609a35c18740246c51c91d1094b0e9307f8926eabcd5ec2b6df9a"
     },
     {
       "path": "public/logos/09_link_mono_white.svg",
-      "size": 1760,
-      "sha256": "1d1c2a17ccd9043c7f9376311f3593435706c5d86169002cdabd0163616bca53"
+      "size": 1713,
+      "sha256": "e0e0acf82c8b27b846bd2b52fc9f0b8343c127668f1689fd684b1238acdd0fe7"
     },
     {
       "path": "public/logos/09_link_word.svg",
@@ -2097,33 +1788,33 @@
     },
     {
       "path": "public/logos/10_spark.svg",
-      "size": 1657,
-      "sha256": "356badab17c86ed05dc557b7ff799268a3aca46cf15b48ed3244122e362e0576"
+      "size": 2655,
+      "sha256": "11351b35014261cdb182f394e5339cecf7f4d898712e3e2796d2d613799660db"
     },
     {
       "path": "public/logos/10_spark_icon.png",
-      "size": 15096,
-      "sha256": "e096bd493880b335b65438b1509957fe4148ad13ba4fbbd2267648718f5b2839"
+      "size": 50999,
+      "sha256": "050bce747e7d9e396ca3e6fe47fcf784a7cce92653136e9cfb3ff334653a9f19"
     },
     {
       "path": "public/logos/10_spark_icon.svg",
-      "size": 345,
-      "sha256": "87261fcb09c703ed5a1a360c31c5597327151c0c96930bd168f19cc323bb78f7"
+      "size": 1586,
+      "sha256": "a8dd568e76611f4a1932cb0b68a2ae4d79f03665109da58bef2425be68070b5e"
     },
     {
       "path": "public/logos/10_spark_light.svg",
-      "size": 1657,
-      "sha256": "7a2ef43048f5f44d1db68e704cf4385647a4fd381df9fea2bb0709ae709671d0"
+      "size": 2658,
+      "sha256": "c876ec2306017ae4fa5e2f39f85d204c9669f0a3bbb275b371986ec99c119a97"
     },
     {
       "path": "public/logos/10_spark_mono.svg",
-      "size": 1657,
-      "sha256": "77582c0b68a2f20731f72781fd809e938d356572898e6dce72e1a4f0766c413a"
+      "size": 1667,
+      "sha256": "9592215265c614e312c704a46cd2aecfe8f2218c165bd8e34933f5b9d24a8a67"
     },
     {
       "path": "public/logos/10_spark_mono_white.svg",
-      "size": 1657,
-      "sha256": "5b8e5df4c587611b6716bfdc2593ff830de4dd52a4f2c3590dd2c09f723b2d9e"
+      "size": 1667,
+      "sha256": "6452444c04c9357c241feb20344a3421d2f09282c21e3117a0f14ac022d83417"
     },
     {
       "path": "public/logos/10_spark_word.svg",
@@ -2137,73 +1828,73 @@
     },
     {
       "path": "public/logos/11_layer.svg",
-      "size": 1615,
-      "sha256": "7e58e3e05365eff86995026a827f43c91084e96917e3b256ef8ac0ecfe724a3c"
+      "size": 2277,
+      "sha256": "4d84fd9f57affcaa0fc34d934c16e60122c03a55ec9f82199b7cb0b605b17390"
     },
     {
       "path": "public/logos/11_layer_icon.png",
-      "size": 10508,
-      "sha256": "3c88596fb93a08eacac5b7487bbaf0ffca66826acc7cc88240c46996b63bc0c0"
+      "size": 62051,
+      "sha256": "7d9e14eb361dd0e60276d76c97469f7a0d88184b8234b743055636e78220a96d"
     },
     {
       "path": "public/logos/11_layer_icon.svg",
-      "size": 303,
-      "sha256": "dce28f97d57062a192bf323d6b13e398f9d600f0e304fa5d8fb0ff6907e1cd3e"
+      "size": 1645,
+      "sha256": "d6ff0647afe393ce1fabf637e04f50391f1b367372b8fc71b1ea896eda91856f"
     },
     {
       "path": "public/logos/11_layer_light.svg",
-      "size": 1615,
-      "sha256": "ff12bc251fcf02582f3008a497ee33e2277db61ccc9f2858725d90649645dfc0"
+      "size": 2280,
+      "sha256": "31f716630698e24f77d52641a9d0ce7aed8d27f325a03e4c68e83eb1c1aa61d5"
     },
     {
       "path": "public/logos/11_layer_mono.svg",
-      "size": 1615,
-      "sha256": "b8b0bab34a34079c9f1e155c9d8142a98ae8b89e6bcc092d5ad242e4b47305f6"
+      "size": 1250,
+      "sha256": "3de7e0055efb3da2d67fa5c7ce5819f465e3ba4afca8a212743d9c45136b856e"
     },
     {
       "path": "public/logos/11_layer_mono_white.svg",
-      "size": 1615,
-      "sha256": "750375df72e50e228e96fe01ea869ee3cec758dda3958acc87c5279690850cbd"
+      "size": 1250,
+      "sha256": "ce3ffdf7e92c6245955530441cf3b60b3feb51ecd8464ea215b25763e582a130"
     },
     {
       "path": "public/logos/11_layer_word.svg",
-      "size": 1488,
-      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
     },
     {
       "path": "public/logos/11_layer_word_light.svg",
-      "size": 1488,
-      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
     },
     {
       "path": "public/logos/12_shield.svg",
-      "size": 1735,
-      "sha256": "400d73b97e3e67b7cf24a8f9d01e2629cba09a9958e559dd99a63a333f4691fa"
+      "size": 2950,
+      "sha256": "d36d60282f51db72fbcd93af12a9520af14066df4e2ebc9bbac457a00d8bceac"
     },
     {
       "path": "public/logos/12_shield_icon.png",
-      "size": 22568,
-      "sha256": "9ee7b0f9c0b7799d9332b28cf40759fe1116df8ba0810dffbeb2b2157be159d3"
+      "size": 65803,
+      "sha256": "2099fb27e02cc8c54e395b60b6ca4c0912abe8ce4d1dec53a9281a0d7e6ab768"
     },
     {
       "path": "public/logos/12_shield_icon.svg",
-      "size": 423,
-      "sha256": "28d653cd968b61b971198c1f4ecc1f262d748e921762045b4eeab0151b6b6bf3"
+      "size": 1881,
+      "sha256": "080ddbff6b32adc8a16e506aecf126b17316598516c7196ba702f13ec248ad7c"
     },
     {
       "path": "public/logos/12_shield_light.svg",
-      "size": 1735,
-      "sha256": "57cab41c78c895f1bd178c7e217b941721b00f6eadb83a86f0c50cf7c42fe1b9"
+      "size": 2953,
+      "sha256": "8d687596c9cba48ad875c2f9fdc78fe1be5dae0adee3fec6e43b28d4cfc30841"
     },
     {
       "path": "public/logos/12_shield_mono.svg",
-      "size": 1735,
-      "sha256": "7ba37a0aebc47d487dc0afbc1f731e2db9a7d56b37cdb38b52904c96339220b1"
+      "size": 1766,
+      "sha256": "6606e36c76d16fa9b92df7a2436d432977c949035d126e150aea188fc2da25d3"
     },
     {
       "path": "public/logos/12_shield_mono_white.svg",
-      "size": 1735,
-      "sha256": "ba45356cbd3dd2f3c609791e3ab951c6b490fbcc3c0980b652982d0f37820344"
+      "size": 1766,
+      "sha256": "b8df888d6c2af172410f8fa28c33caa09bb4ed9cfce0677370302cef46ef9314"
     },
     {
       "path": "public/logos/12_shield_word.svg",
@@ -2217,23 +1908,23 @@
     },
     {
       "path": "public/logos/13_apex.svg",
-      "size": 1190,
-      "sha256": "4b349a26d952a355bfb6d5d2d869136d64bbf042d85c32542b3ed9515831f884"
+      "size": 2097,
+      "sha256": "33d9cbee704a89109283d4abc3b9caf0e1bd41d8919a17f30b30831018cb1dcc"
     },
     {
       "path": "public/logos/13_apex_icon.png",
-      "size": 15670,
-      "sha256": "40515442a40b98e2730183b17b820e517aa6873c12e02624c32935c749b72992"
+      "size": 47798,
+      "sha256": "791537ec0051f68200c2cde0a049fc11a72020137e4de501f68e39e347040bef"
     },
     {
       "path": "public/logos/13_apex_icon.svg",
-      "size": 315,
-      "sha256": "e565979e24d922c15f6ce462db50d9e39a78816de9961eafae96cf187c0877d5"
+      "size": 1465,
+      "sha256": "66a69469492f3dfaba11d39aa0ec555c128352b364394df50cf817f46636b5be"
     },
     {
       "path": "public/logos/13_apex_light.svg",
-      "size": 1190,
-      "sha256": "02008cc8fed935bca0c3f66b31edca991af0710f8e4a11cb5224a8bca4be0b9b"
+      "size": 2100,
+      "sha256": "ccde6ba968a688485020915886d51093122283a03ab9d3cd58ce4e4579738664"
     },
     {
       "path": "public/logos/13_apex_mono.svg",
@@ -2257,113 +1948,113 @@
     },
     {
       "path": "public/logos/14_diamond.svg",
-      "size": 1190,
-      "sha256": "fc48c21febd659e29ac3d7aa8689250aafb31c8d23bcf993f1e0124c47cc0a27"
+      "size": 2751,
+      "sha256": "05d53835ea52a1dfdf7e7e57a176d1b59ec59d9638db705585210822540e9a8c"
     },
     {
       "path": "public/logos/14_diamond_icon.png",
-      "size": 11623,
-      "sha256": "a6023de4c7b10d8ee9ee645970322227192cc5b84051d3a1c23ff39fba8240bb"
+      "size": 59798,
+      "sha256": "0f77053d836ffde58227889b029ab7e11702fd5757e00c261ae0f30c9923a817"
     },
     {
       "path": "public/logos/14_diamond_icon.svg",
-      "size": 315,
-      "sha256": "acb2730c0fba332e00ecd109c06e489d2d8931f5b003d99818a99d32f9408d53"
+      "size": 1682,
+      "sha256": "f71faf5f4fbfad441721c48df1922af237fdbbd0d8a6541f746e969b9f31faad"
     },
     {
       "path": "public/logos/14_diamond_light.svg",
-      "size": 1190,
-      "sha256": "d17302628bf8a5b927d2dad210e5046112d72b428035d2142da458ebfcdac222"
+      "size": 2754,
+      "sha256": "883df404b215597523fc2e8629485d876a86e15bd4c181d9f23526d08e156665"
     },
     {
       "path": "public/logos/14_diamond_mono.svg",
-      "size": 1190,
-      "sha256": "2a97e875aef4a485394851c95e72fb03d56c3da858574c030a4536db55b35cb0"
+      "size": 1699,
+      "sha256": "81765782c3af0108ad8c8ac84b77b2aeec77ac7c052bba78636a79f928432884"
     },
     {
       "path": "public/logos/14_diamond_mono_white.svg",
-      "size": 1190,
-      "sha256": "79b004110a583a11b22e64ea0057acb5a89be8a9285a561123bc01d273707652"
+      "size": 1699,
+      "sha256": "3a163e36c9ea5e52fb89c1fd6966906a715318994d46025cf90380c7d0f04e1a"
     },
     {
       "path": "public/logos/14_diamond_word.svg",
-      "size": 1059,
-      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
-    },
-    {
-      "path": "public/logos/14_diamond_word_light.svg",
-      "size": 1059,
-      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
-    },
-    {
-      "path": "public/logos/15_focus.svg",
-      "size": 1735,
-      "sha256": "400d73b97e3e67b7cf24a8f9d01e2629cba09a9958e559dd99a63a333f4691fa"
-    },
-    {
-      "path": "public/logos/15_focus_icon.png",
-      "size": 22568,
-      "sha256": "9ee7b0f9c0b7799d9332b28cf40759fe1116df8ba0810dffbeb2b2157be159d3"
-    },
-    {
-      "path": "public/logos/15_focus_icon.svg",
-      "size": 423,
-      "sha256": "28d653cd968b61b971198c1f4ecc1f262d748e921762045b4eeab0151b6b6bf3"
-    },
-    {
-      "path": "public/logos/15_focus_light.svg",
-      "size": 1735,
-      "sha256": "57cab41c78c895f1bd178c7e217b941721b00f6eadb83a86f0c50cf7c42fe1b9"
-    },
-    {
-      "path": "public/logos/15_focus_mono.svg",
-      "size": 1735,
-      "sha256": "7ba37a0aebc47d487dc0afbc1f731e2db9a7d56b37cdb38b52904c96339220b1"
-    },
-    {
-      "path": "public/logos/15_focus_mono_white.svg",
-      "size": 1735,
-      "sha256": "ba45356cbd3dd2f3c609791e3ab951c6b490fbcc3c0980b652982d0f37820344"
-    },
-    {
-      "path": "public/logos/15_focus_word.svg",
       "size": 1488,
       "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
     },
     {
-      "path": "public/logos/15_focus_word_light.svg",
+      "path": "public/logos/14_diamond_word_light.svg",
       "size": 1488,
       "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
     },
     {
+      "path": "public/logos/15_focus.svg",
+      "size": 2333,
+      "sha256": "f63889bc96f96dafb2321d230ecda24283e80817a77e63b754ddcba2f73b4b04"
+    },
+    {
+      "path": "public/logos/15_focus_icon.png",
+      "size": 63750,
+      "sha256": "582f672a6c89e0e1d514cae99d1f89f9f98d000167312282f0d54dfea33fba43"
+    },
+    {
+      "path": "public/logos/15_focus_icon.svg",
+      "size": 1701,
+      "sha256": "a1e7ab2de611b24e94a9009ba8510efc654f13aa456a592cbcb7e26523a43236"
+    },
+    {
+      "path": "public/logos/15_focus_light.svg",
+      "size": 2336,
+      "sha256": "69f86347d7232c02659c77929b8d88a5c1cc67acb623e05bb84ae1ff9a8cf97a"
+    },
+    {
+      "path": "public/logos/15_focus_mono.svg",
+      "size": 1270,
+      "sha256": "d0338a5c5ddbac9b17149b96f2126ed81dac66ff99e3d37e4c8dd7b542b84cae"
+    },
+    {
+      "path": "public/logos/15_focus_mono_white.svg",
+      "size": 1270,
+      "sha256": "d24b4f37c7414bdc39700be5cfc2b18cdf93655e52c11b6bb3c9b40065739f30"
+    },
+    {
+      "path": "public/logos/15_focus_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/15_focus_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
       "path": "public/logos/16_flow.svg",
-      "size": 1760,
-      "sha256": "ef189b1efdf599e2d3b73b588ab21098ed82f2ff2078907cdb1601bd7275808e"
+      "size": 2896,
+      "sha256": "b6f2b35debeeae03fe00d84dde8efcf5b999303d4726037f8ea6fb54b0c38b37"
     },
     {
       "path": "public/logos/16_flow_icon.png",
-      "size": 16773,
-      "sha256": "384f6fcf3dbf889b80d5cfd7f2346b5957f9e327c0670d444e8aa0c6d77ed741"
+      "size": 59867,
+      "sha256": "4d4d747d4ae540bc93c37dd9dc27b659574d6c0a81ccfb351354a9d22746aab3"
     },
     {
       "path": "public/logos/16_flow_icon.svg",
-      "size": 448,
-      "sha256": "304e68f33bc36cd81a3855d361a3877785af68184b301a67bcd58c29e54dc7e3"
+      "size": 1827,
+      "sha256": "89f378e634cb0c0a81706414ea0017fcdb63f68d55ba36211994116309151120"
     },
     {
       "path": "public/logos/16_flow_light.svg",
-      "size": 1760,
-      "sha256": "858f76d03a9975e4325cf063e88a7a94f4c4b7c15f3d60bf7491bd48fe006e07"
+      "size": 2899,
+      "sha256": "0451de95e65cd1694bf90ab0ade4dcca393519304ca27677cbc66216ad6df691"
     },
     {
       "path": "public/logos/16_flow_mono.svg",
-      "size": 1760,
-      "sha256": "fd3ce31815e25b7e3f835afaf0604814715c5bc2714182e623a1a838f960111f"
+      "size": 1749,
+      "sha256": "353836b8e918a89892f0e2bb6ba1b8bed6b2908170fe5a248eec7289b3cbed94"
     },
     {
       "path": "public/logos/16_flow_mono_white.svg",
-      "size": 1760,
-      "sha256": "1d1c2a17ccd9043c7f9376311f3593435706c5d86169002cdabd0163616bca53"
+      "size": 1749,
+      "sha256": "4fc58d3d6c32d2780b75db44e2bdcde24aab4ac329404048291edaa793a1377c"
     },
     {
       "path": "public/logos/16_flow_word.svg",
@@ -2377,33 +2068,33 @@
     },
     {
       "path": "public/logos/17_petal.svg",
-      "size": 1633,
-      "sha256": "2350b5eab1757a6beeb91baaf72ebc81c7c480cc601254a77e0946f0118cd429"
+      "size": 3087,
+      "sha256": "fd09209a71f6afb280288429f274bb3dcb290c264d795f38eaf734c382133abf"
     },
     {
       "path": "public/logos/17_petal_icon.png",
-      "size": 14332,
-      "sha256": "46ba2817e522100fbb4096902d577448bf617cc1ea45858b6cc28a5efa0c683f"
+      "size": 65473,
+      "sha256": "904691cfcf009d15386347ee7a1de15d33e377cf4e3ed698c48df643e1055025"
     },
     {
       "path": "public/logos/17_petal_icon.svg",
-      "size": 321,
-      "sha256": "98b638856249c936ac54bfb4e06a51b23d7010b04a43e7cb2e8c1e254d4ca5ad"
+      "size": 2018,
+      "sha256": "5208e1c2021575a986a7770c87e5d6063c3b48847f15c633caf2f62582f5cc77"
     },
     {
       "path": "public/logos/17_petal_light.svg",
-      "size": 1633,
-      "sha256": "4f4d400ee03764abc3fb98c28d2510ea27ad93dcc6d0143a74c7436a8974015b"
+      "size": 3090,
+      "sha256": "bb3ac4582e602a4d1376c222b716e62e95bbc57311eb2a4190b429056af976f7"
     },
     {
       "path": "public/logos/17_petal_mono.svg",
-      "size": 1633,
-      "sha256": "20985f84a115da708e627a40f3d52357632fd8f4bcac61bbdcee43b03e5927e7"
+      "size": 1811,
+      "sha256": "ca46da1e6c05844d565713b327c990e51a4715c466f144a64f38f70093025bf9"
     },
     {
       "path": "public/logos/17_petal_mono_white.svg",
-      "size": 1633,
-      "sha256": "3e015ab0d0ab0ab4e317c3acc802f908d18959ac4c0788101544999ca9d4d7c8"
+      "size": 1811,
+      "sha256": "59a7fcd07c45c886487551061914a2aa0baaa450065f811bcea4858f1dabf456"
     },
     {
       "path": "public/logos/17_petal_word.svg",
@@ -2417,33 +2108,33 @@
     },
     {
       "path": "public/logos/18_bridge.svg",
-      "size": 1615,
-      "sha256": "7e58e3e05365eff86995026a827f43c91084e96917e3b256ef8ac0ecfe724a3c"
+      "size": 2557,
+      "sha256": "1c41576ba512384a2dbc39a34e1f9a08462997e7c9f8c759d1686a1375c68438"
     },
     {
       "path": "public/logos/18_bridge_icon.png",
-      "size": 10508,
-      "sha256": "3c88596fb93a08eacac5b7487bbaf0ffca66826acc7cc88240c46996b63bc0c0"
+      "size": 49448,
+      "sha256": "7826eb00259092c2fc739bd3479faab6f90ce00f62bdea8c645fc0184c6ee33e"
     },
     {
       "path": "public/logos/18_bridge_icon.svg",
-      "size": 303,
-      "sha256": "dce28f97d57062a192bf323d6b13e398f9d600f0e304fa5d8fb0ff6907e1cd3e"
+      "size": 1488,
+      "sha256": "904bc3c24255d1b9c2149d5b4d906066189960abb17c1a1baabda8fa9d0d5cae"
     },
     {
       "path": "public/logos/18_bridge_light.svg",
-      "size": 1615,
-      "sha256": "ff12bc251fcf02582f3008a497ee33e2277db61ccc9f2858725d90649645dfc0"
+      "size": 2560,
+      "sha256": "894873c9934077bfa003ea90f6af10c4edbea29cadf757cf965bb7598e9146cd"
     },
     {
       "path": "public/logos/18_bridge_mono.svg",
-      "size": 1615,
-      "sha256": "b8b0bab34a34079c9f1e155c9d8142a98ae8b89e6bcc092d5ad242e4b47305f6"
+      "size": 1635,
+      "sha256": "1bc7308a0ebe6be042b2cfe2f86819fbd54589be3aea7a26e500099f716726a1"
     },
     {
       "path": "public/logos/18_bridge_mono_white.svg",
-      "size": 1615,
-      "sha256": "750375df72e50e228e96fe01ea869ee3cec758dda3958acc87c5279690850cbd"
+      "size": 1635,
+      "sha256": "46a0d093ac79c5eb07fa4f8cbdf58c84037190862e120e5520aeb7ae0fabad38"
     },
     {
       "path": "public/logos/18_bridge_word.svg",
@@ -2681,14 +2372,19 @@
       "sha256": "db7f5aceb812be6f8ff7300a9c4b68c216db2e8155a2fb18f3c170b434ab5590"
     },
     {
+      "path": "scripts/audit-dental-sources.py",
+      "size": 3676,
+      "sha256": "848eb12ac374fd37ee83dc4eba9aa451f071f89519bd015fca4fe2887f5b8fbb"
+    },
+    {
       "path": "scripts/brand-source/THIRD_PARTY_LICENSES.txt",
       "size": 4014,
       "sha256": "9c4421ef417460695db61a442ff1aa5d46f61509fbb06111fb885cbd0f449501"
     },
     {
       "path": "scripts/brand-source/build-icons.py",
-      "size": 644,
-      "sha256": "13af591233826fdca07259fdaa4f8da8951d5aa310c30e06e0a4c57c19c20372"
+      "size": 646,
+      "sha256": "72a376813214e2b6787ad57c6fa6378610374befb4becf1ee811af8a892780b0"
     },
     {
       "path": "scripts/brand-source/letterforms.json",
@@ -2697,8 +2393,8 @@
     },
     {
       "path": "scripts/build-brand-assets.py",
-      "size": 9157,
-      "sha256": "0d5d5635f38ab6529b170e974d5de5d30b0262692923b4e37e36ac3b92781de3"
+      "size": 12126,
+      "sha256": "c13385ad232018caf05ee46cf366c36b3d86e2fd2990a92b0cd268d267bc0d56"
     },
     {
       "path": "scripts/build-community-setup.mjs",
@@ -2726,6 +2422,11 @@
       "sha256": "7da99a91e14d4641c084c6b526211edda74299caa7d14290b96938bd9cc4a1ff"
     },
     {
+      "path": "scripts/fixtures/professional-shell.tsx",
+      "size": 1385,
+      "sha256": "e33643a4df88acda7c867f8804043c3c51d6946a7d7ee6afe7644ff1f7ad08af"
+    },
+    {
       "path": "scripts/fixtures/rc29-localization.tsx",
       "size": 3995,
       "sha256": "13bed53d402d3c7a34cdd429b3fb8f3bedc804d77aa0e99372e6dc053c92307a"
@@ -2737,8 +2438,13 @@
     },
     {
       "path": "scripts/fixtures/rc46-conversation.tsx",
-      "size": 1397,
-      "sha256": "3714db1374c01d1d72e5adaf5a898ed49e6df5658c779530c23ffefb3bd24652"
+      "size": 1407,
+      "sha256": "203926b38d331bb2e3e133755a7bab6d90f574b56427220c5ade6d9f691f98ae"
+    },
+    {
+      "path": "scripts/import-dental-facts.ts",
+      "size": 2874,
+      "sha256": "878a39f33d42b2cccfeea1cfbad3d15e1c877b06edc856f80c3f1683c85ded70"
     },
     {
       "path": "scripts/localize-ui.mjs",
@@ -2762,8 +2468,8 @@
     },
     {
       "path": "scripts/render-brand-assets.mjs",
-      "size": 1070,
-      "sha256": "5766ae3d253cb9de3197d4071e2195b5bad8ab20461e85cf4056f2db6b8fc6da"
+      "size": 1082,
+      "sha256": "58284ab7ae6cbfedeec218f1eec8a05022072c6ba04515bdd70b50aad1851627"
     },
     {
       "path": "scripts/render-morphology-catalog.py",
@@ -2802,8 +2508,8 @@
     },
     {
       "path": "scripts/verify-aya-catalog.cjs",
-      "size": 4496,
-      "sha256": "e2bdeece1442d03004616c7f3e1331a4130e38058a6e82f8d5671f74ab87526a"
+      "size": 5535,
+      "sha256": "dcd7e3a17b09a90809005d973ad4e407692f9da7214195fb290a992d3028bc99"
     },
     {
       "path": "scripts/verify-aya-config.cjs",
@@ -2812,13 +2518,13 @@
     },
     {
       "path": "scripts/verify-aya-conversation-browser.mjs",
-      "size": 14200,
-      "sha256": "6ad4bcb768f9e8546c7c2ced3d883966fadbff79bce7f2d1dd09497596843ba2"
+      "size": 17918,
+      "sha256": "dfb2b8c8d9247fcce6f51f5caf8c4664e3cfe79d99da99566396d99da9934f53"
     },
     {
       "path": "scripts/verify-aya-conversation.ts",
-      "size": 5805,
-      "sha256": "f8397e8f432f8661f06e172c3a06bfe35cfb3ea7a53d4a81aae8ec10bd269d97"
+      "size": 6637,
+      "sha256": "1d47ca4fdf8c9bd6f9ec86366d87924627ca0a20842e30ac6633b1cc80ad013f"
     },
     {
       "path": "scripts/verify-aya-core.cjs",
@@ -2861,9 +2567,14 @@
       "sha256": "55152e472218e1d544fb5400fbddb929dc6756c619fedca93fed16b8570350b1"
     },
     {
+      "path": "scripts/verify-brand-assets.mjs",
+      "size": 4363,
+      "sha256": "6f1779e6404746f6211b7fe9206b8e99a64de7d1a33ef9dc102e6e293adf87f8"
+    },
+    {
       "path": "scripts/verify-brand-browser.mjs",
-      "size": 11949,
-      "sha256": "88d59fea300095da789ea412b9d63fa79c6638b378f376aee4e7c1f9bc5387a1"
+      "size": 12715,
+      "sha256": "e57fafab641907ec93724671503ee56a50fdc2f7148a41169f3f9f126f52ffd6"
     },
     {
       "path": "scripts/verify-bundled-languages.mjs",
@@ -2877,8 +2588,8 @@
     },
     {
       "path": "scripts/verify-cad-daily-browser.mjs",
-      "size": 27623,
-      "sha256": "23b4016c670085f4ccc75d5125bc145f7fa18940761d04c0c2f07243a160d452"
+      "size": 39065,
+      "sha256": "4829bb3d42cf77cf178b95d0b8177b4505aa36d4498d1e45f3ef49005646f19a"
     },
     {
       "path": "scripts/verify-cad-daily.ts",
@@ -2897,13 +2608,13 @@
     },
     {
       "path": "scripts/verify-cad-guided-browser.mjs",
-      "size": 32150,
-      "sha256": "ec16bdf95c5cd9b67127492ae4a21376e749bbcc73b0c81770140a8c377b6f49"
+      "size": 32151,
+      "sha256": "a736f890d868a2dec5dd8fbbc50803eb181b35f0294e7f876ec818b3438a2a70"
     },
     {
       "path": "scripts/verify-cad-guided.ts",
-      "size": 7086,
-      "sha256": "2d7bf35223f75b2156c45dea7d65f2a081f64280767d12f4c9fa918f4ad36072"
+      "size": 7417,
+      "sha256": "3a25fae5a3bc750d7696f2ddec4a540076fae632cc504c3e76e2e037030d953a"
     },
     {
       "path": "scripts/verify-cad-interaction.mjs",
@@ -2946,9 +2657,14 @@
       "sha256": "24954bf5aa0d84e381ae08f4adabb7b3efbcc8f9a6b5a784741ede88f8baaa9f"
     },
     {
+      "path": "scripts/verify-dental-facts.ts",
+      "size": 6585,
+      "sha256": "0a1965cee8eac008dbddfd86b67e58619377f4b9bc82894ac6c87e1dd6c31fdc"
+    },
+    {
       "path": "scripts/verify-desktop-brand.cjs",
-      "size": 1589,
-      "sha256": "73f1d394b4c019547a3acdda1116b951d0e53884016413d9bd1e9f487285941d"
+      "size": 1844,
+      "sha256": "b3ced6f5f609dfe2c69288b738c1c596adc5b994052c7efd2f473b1239fca7b8"
     },
     {
       "path": "scripts/verify-desktop-language.cjs",
@@ -2957,8 +2673,8 @@
     },
     {
       "path": "scripts/verify-e2e-workflow.ts",
-      "size": 24313,
-      "sha256": "3706607a0373eb3c86d834453523211dda97260d8c80636bd523c768bf423623"
+      "size": 29008,
+      "sha256": "7ddd57ab6fa43b57bbb67825af0323225800529b6213654297fe929a4903d638"
     },
     {
       "path": "scripts/verify-env.mjs",
@@ -2987,13 +2703,13 @@
     },
     {
       "path": "scripts/verify-loading-play.ts",
-      "size": 3662,
-      "sha256": "8f6b4cca623a81d226f80e4f8cf88f9106e077c06e335002294fd862809c23f6"
+      "size": 5385,
+      "sha256": "bf64867f2ffa21d8e53a0953b7af9aa75c4606b09f73dec95b38da47ab291f48"
     },
     {
       "path": "scripts/verify-loading-reading-browser.mjs",
-      "size": 7417,
-      "sha256": "4bb767a4866aca3fea51ce68371815556a2a2a2e90863ebd5ab0feb0c3e6ab9c"
+      "size": 11764,
+      "sha256": "8a5d2e73f4f7be58bc8ba822a3dd3e695180cb73348b96bfec7c2a02288febbe"
     },
     {
       "path": "scripts/verify-local-aya.cjs",
@@ -3029,6 +2745,21 @@
       "path": "scripts/verify-pilot-candidate.mjs",
       "size": 2271,
       "sha256": "68c4bf9c188e8d49a5c825c55e6a8d2c5aeb6663a7de3a341764c4e2d56931ae"
+    },
+    {
+      "path": "scripts/verify-professional-modules-browser.mjs",
+      "size": 20690,
+      "sha256": "18adf39ca0e490eebcb8465cc1ac77ad8e5c4c1f2f19e5dde0bb69a6437a0679"
+    },
+    {
+      "path": "scripts/verify-professional-shell-browser.mjs",
+      "size": 13112,
+      "sha256": "e7edf490b7df2725afb970700e448a12376925be250e1f7e6f37d3621bfc91f0"
+    },
+    {
+      "path": "scripts/verify-professional-shell.ts",
+      "size": 2146,
+      "sha256": "3a4d0eaa6ee9b1b6ab76ed3bfaf65865974de6f2d49eb4321baf83f68854df36"
     },
     {
       "path": "scripts/verify-rc26.ts",
@@ -3097,8 +2828,8 @@
     },
     {
       "path": "scripts/verify-ui-browser.mjs",
-      "size": 30805,
-      "sha256": "170208a19ca281838dc05639b0247a58b923fa818ed95f08fb31cb2309556e1c"
+      "size": 31850,
+      "sha256": "f032902045ad741f4e5a9016fd8570ae825c13792ca6513095b7e9a34574de74"
     },
     {
       "path": "scripts/verify-validation-browser.mjs",
@@ -3121,24 +2852,29 @@
       "sha256": "f6fcbdce709a25ffd9c66313cd1e057f4b36ad149a7b1c38bdefcf8d8203e6d6"
     },
     {
+      "path": "scripts/verify-workflow-safety.ts",
+      "size": 4850,
+      "sha256": "f4008e3cc57940f4c26d05d064b8090a7f081fd320f9ad5341fdef71efebccda"
+    },
+    {
       "path": "src/app/AppRuntime.tsx",
-      "size": 5464,
-      "sha256": "b1cfd458ed236e9c9de7ea65736886df4ddfd7165b7be8958e8a23560999d254"
+      "size": 5978,
+      "sha256": "8ad52612b10d2dba89b9f6f5ca45e6f0f389c4ffec250523e1b330aa488ee854"
     },
     {
       "path": "src/app/AppearancePalette.tsx",
-      "size": 4946,
-      "sha256": "c8f7a31a8694e435d88ba776add9d14146896790c6a93287e9ed3b8698167653"
+      "size": 4949,
+      "sha256": "1be435cb8baed30774a7cf8b8a564ce4b79edf85b9fc59465a13faa929727d74"
     },
     {
       "path": "src/app/BrandLogo.tsx",
-      "size": 5236,
-      "sha256": "c31cad8cd4847cf70bc86ca9abedf0137db335740299df6855f382e77b473db9"
+      "size": 6492,
+      "sha256": "a906ca03003a412cb8f926ccdc51ba5b7ced67b0319a194f409c14d53fd31ce0"
     },
     {
       "path": "src/app/ConnectionStatus.tsx",
-      "size": 4497,
-      "sha256": "c2779f720f467c5d8a78b3fb9ea173877bfbce605fc61077e92f48bb6bc45d38"
+      "size": 225,
+      "sha256": "2f40cddf04abac1a6cc757a80dbd01b9c82dc7704807201d35261e4aa2ef83e9"
     },
     {
       "path": "src/app/CustomizationPanel.tsx",
@@ -3167,8 +2903,8 @@
     },
     {
       "path": "src/app/HomeClient.tsx",
-      "size": 29299,
-      "sha256": "f2b46d82a1c7b0132432098bcb73af99b34d4db83f161eab737d8aa692e87f08"
+      "size": 29586,
+      "sha256": "4acf52ae9d029f4eed5ed937ffbd19b37113b69afc2cdf3478a0c619f75e8177"
     },
     {
       "path": "src/app/HomeDashboard.tsx",
@@ -3207,13 +2943,13 @@
     },
     {
       "path": "src/app/LogoPicker.tsx",
-      "size": 2837,
-      "sha256": "f9af9fa1a70b830d30e4b27416a209c8a4980778e84d806ac52da649b5a654aa"
+      "size": 4234,
+      "sha256": "65f5b4b757f73e214f8bf64206d065a6e1f7c83a8c6920521a0c97f751ff3f3e"
     },
     {
       "path": "src/app/ModuleNavigation.tsx",
-      "size": 2791,
-      "sha256": "77cd1341b0b1c1109d74dd4b7e89b61c8fbc626ef176447dee3c4d6e8a90f047"
+      "size": 3225,
+      "sha256": "082251dbf12f72ec47c6870f7a98c8f83800d04d1c590765b04d0db81190c857"
     },
     {
       "path": "src/app/ModuleQuickLink.tsx",
@@ -3257,18 +2993,18 @@
     },
     {
       "path": "src/app/WorkspaceChrome.tsx",
-      "size": 8943,
-      "sha256": "8db385f9613b1b1dd79afc1ba7b4d54d823a836073f8207cbff2288ed12e1e5e"
+      "size": 9273,
+      "sha256": "5a2387b9299aca1652e76618e8fcd77e1654e10dffc4ad1bcedd824677f76aa3"
     },
     {
       "path": "src/app/WorkspaceLauncher.tsx",
-      "size": 16207,
-      "sha256": "4a00b88ba186802b90bf4add90cdb31ace7a49afba78d23b3ee5bcb2d3a9bde0"
+      "size": 18457,
+      "sha256": "87d4d8f5fd5b78cdd03ac8414f2366ea94251a5e8ff81ace91f669c2235476f3"
     },
     {
       "path": "src/app/ai/AyaChat.tsx",
-      "size": 15758,
-      "sha256": "fca771ca4b3be28281e31e3346da5f5ae53198c6d1460031b580635cf5389d7c"
+      "size": 20374,
+      "sha256": "bfd3bf7e85a75549b657d40fc004bb23bb8757c2a842ffb4837d0477aa1f88e4"
     },
     {
       "path": "src/app/ai/AyaConnection.tsx",
@@ -3292,8 +3028,8 @@
     },
     {
       "path": "src/app/ai/AyaMessageTools.tsx",
-      "size": 1805,
-      "sha256": "9ff6cf10eeac742744de687114d0507f39f6a84d0b73f893aec97348b8485b6a"
+      "size": 1808,
+      "sha256": "ad1640a3a7f10b1425df6aab8da4ba83b38e4158731fcd469a660fbd8a7c7bad"
     },
     {
       "path": "src/app/ai/AyaPreferencesPanel.tsx",
@@ -3311,19 +3047,24 @@
       "sha256": "5905cc19a9c4096cf8e769c04f7d2f83ac0e3ea7107fc58264f077e0cfba5a94"
     },
     {
+      "path": "src/app/ai/AyaWorkingMemoryPanel.tsx",
+      "size": 3700,
+      "sha256": "19533c8e544c97544c29c7f76171b38a812b62df11d4df0403061dd3e92f329b"
+    },
+    {
       "path": "src/app/ai/CloudAyaChat.tsx",
       "size": 8031,
       "sha256": "2437971f73d8e5ce8fb92de53d1e4bb000ae2767e7bd6f3050f7464d9efeef77"
     },
     {
       "path": "src/app/ai/aya-catalog.css",
-      "size": 2125,
-      "sha256": "67869f0b92301feb632c8983982da9ea608baf56449caa3842e9cb924b33ddce"
+      "size": 12258,
+      "sha256": "e8f6a47ec5d5fc0bc0d08dcd03d5b23fab2594ac3653580a15635f6348b88ac8"
     },
     {
       "path": "src/app/ai/page.tsx",
-      "size": 615,
-      "sha256": "f3f81ce73d4da6c754db8a8fcf645da308b9060cb96f27b527b26aa150651147"
+      "size": 618,
+      "sha256": "510c55cd2b5f21cf99f7b538810579036c13e9393795cea3ff0a1e3dafcefcc6"
     },
     {
       "path": "src/app/api/ai-assistant/route.ts",
@@ -3357,8 +3098,8 @@
     },
     {
       "path": "src/app/appointments/page.tsx",
-      "size": 30554,
-      "sha256": "ae6f445c171283936bbd2e8bbdc612f2a782690cf90c9afa259874f6c65d1ccf"
+      "size": 31818,
+      "sha256": "4f562fdbe61516aab92add114bca5fc4245062a7275e10ca1ccfd53f3af6c959"
     },
     {
       "path": "src/app/cad-library/CadFormLibrary.tsx",
@@ -3392,8 +3133,8 @@
     },
     {
       "path": "src/app/cases/page.tsx",
-      "size": 43259,
-      "sha256": "be797d8fef4dc69e617372ffc61821fe2cc603628a9a98b99eee2196f70a46d8"
+      "size": 43640,
+      "sha256": "dd9baf012fea93e0d8482991200da78824ccb594c7a2c249d14ed13de34dde96"
     },
     {
       "path": "src/app/clinic/page.tsx",
@@ -3437,8 +3178,8 @@
     },
     {
       "path": "src/app/design/CadAyaPanel.tsx",
-      "size": 14748,
-      "sha256": "3d5c76d28c2464fb8bb531fb0dc4a740b8f39f632ba78def4c0ffc8b29ab00f9"
+      "size": 15604,
+      "sha256": "3e68701538d34f25cee38487a22b807ecbe17c07c18b91167cbbe06372d0e5b4"
     },
     {
       "path": "src/app/design/CadBrushPresets.tsx",
@@ -3467,8 +3208,8 @@
     },
     {
       "path": "src/app/design/CadSceneControls.tsx",
-      "size": 7388,
-      "sha256": "3ca47c915c0943fd008f6fca98e8d3804ea8cf4833dc4c40b9a20c0a08e10611"
+      "size": 7391,
+      "sha256": "e5e071d0d118b2334e95117e2a79f164f8dede84b76df7c28863c67e5a5f0895"
     },
     {
       "path": "src/app/design/CadToolPalette.tsx",
@@ -3487,8 +3228,8 @@
     },
     {
       "path": "src/app/design/DesignStudioClient.tsx",
-      "size": 164797,
-      "sha256": "6bb6445ad113da3e7a887be249250bfed3bdc2d3ab231018c9f312e7c6fb5413"
+      "size": 168414,
+      "sha256": "e8432da7f091a8d8c51ed55c49bfc8721fc1709e5b25b115d6462272a3a29c2b"
     },
     {
       "path": "src/app/design/DesignViewport.tsx",
@@ -3497,8 +3238,8 @@
     },
     {
       "path": "src/app/design/cad-workspace.css",
-      "size": 39300,
-      "sha256": "32d85791cf7352c7bd7676c417c771b43e6f0e92763d1a1727c0cc5d832cfe15"
+      "size": 42535,
+      "sha256": "83a28813e07306f3df5110dc053ff852158175fab701d712ccd5d59404942c22"
     },
     {
       "path": "src/app/design/page.tsx",
@@ -3507,23 +3248,23 @@
     },
     {
       "path": "src/app/error.tsx",
-      "size": 2583,
-      "sha256": "41383e93a561d5284732b1fe873f951170c6d7bba34657e7b94eefe79304f587"
+      "size": 2789,
+      "sha256": "603699f41cb5b26aaa8c82f783f6e48428021af96b8056a1d3dd62bfa15acf51"
     },
     {
       "path": "src/app/finance/page.tsx",
-      "size": 37645,
-      "sha256": "4020f2d580ec238cbbd13cf5cabf839f61383da4db2a88edd42d0c0c2adc9773"
+      "size": 42455,
+      "sha256": "fbc909963b8c9e8006dcbc9a325b6e55d810dcb5dc6873b6f1a66398780f7dc3"
     },
     {
       "path": "src/app/globals.css",
-      "size": 121887,
-      "sha256": "afd4fff27331efc96f83efa6dc652622e746069633d3cc82719acc59f66d6002"
+      "size": 125953,
+      "sha256": "08f621a006870fdec25597c4674cb6f3c88f06f3951ebf73ec1517aca245cdb2"
     },
     {
       "path": "src/app/invite/page.tsx",
-      "size": 6802,
-      "sha256": "adfc05c46c87706a69c19bbfaef9d5323329fbccc08b00e79125f501dc4ae947"
+      "size": 8606,
+      "sha256": "ba4ac5e83232be1343cd77954d3c7d5dc4c84b5a75c64e1a2e9a75add177f457"
     },
     {
       "path": "src/app/lab/page.tsx",
@@ -3542,43 +3283,43 @@
     },
     {
       "path": "src/app/loading-play/DentalBreakRuntime.tsx",
-      "size": 2192,
-      "sha256": "9b46d73980cd1086f52d620c9b715da127049a87193bd5065a48cd33b917fe30"
+      "size": 2195,
+      "sha256": "7fc4479a6905394a36c9203260f99a12594755fa76221909fc4a380b91d79726"
     },
     {
       "path": "src/app/loading-play/DentalFacts.tsx",
-      "size": 3084,
-      "sha256": "ab6b98a6c7536ff0b87d38922837941a3144887b3dc41737b2c4d64f78957c12"
+      "size": 3193,
+      "sha256": "ce05763bcb8736a996bc5eee6d873aa70b9d39ea639a282b877ce01f12ba7ceb"
     },
     {
       "path": "src/app/loading-play/GrooveGame.tsx",
-      "size": 4514,
-      "sha256": "881d3464778e144c5fac7ba07a76c23e45981a2f2bef59877935e66a2e4ba51d"
+      "size": 4517,
+      "sha256": "6733d47ef34ede8f99d382818835e1c273fca6e3f0f152d433950410a2ffc2c0"
     },
     {
       "path": "src/app/loading-play/KuspGame.tsx",
-      "size": 6127,
-      "sha256": "2b79aa8e7dde18185f2f073e32794a423ab90847a351ac792b15dbd4f17a78df"
+      "size": 6130,
+      "sha256": "a03c9f68d658a218a0305e980cda1ee10797406361cb261d8ffda7eda29d950f"
     },
     {
       "path": "src/app/loading-play/LoadingExperience.tsx",
-      "size": 1436,
-      "sha256": "4b9d0033805b1dd173a88ad5f23982fd91e3d3d83debbadba40655a06bc11517"
+      "size": 2885,
+      "sha256": "f3800469d09c698f275b7a6c46cd0250c7228715fea7703168b604599cd69f76"
     },
     {
       "path": "src/app/loading-play/LoadingReadingRuntime.tsx",
-      "size": 2686,
-      "sha256": "6ae55089c55645ee27c78810366ab3d1b7625ad4dc520c337aa5b956900325b4"
+      "size": 3229,
+      "sha256": "e449cebacb1f8e4a5a45beedfeca722d6a5b1c61c4e8ecccd0a3f86f3b60d2b3"
     },
     {
       "path": "src/app/loading-play/MemoryGame.tsx",
-      "size": 4774,
-      "sha256": "e9f21a45ffe0a3fd7fac7654462f11f081f2fe8745bfc95c8560d4f1d11a7b39"
+      "size": 4777,
+      "sha256": "c3771b418ece476c1bd315bdb7b9c3636a1466eb270b2f09273078363985c643"
     },
     {
       "path": "src/app/loading-play/MiniGameHub.tsx",
-      "size": 2135,
-      "sha256": "cbfc6cc9fd047b1a69e2eb39d0db4516d95287b0abf43077806f5e0aa8a7edb8"
+      "size": 2138,
+      "sha256": "e71bf7740509adf32baf89094adc6551b2eaba5c0cefc444e08c50d90cf0340b"
     },
     {
       "path": "src/app/loading.tsx",
@@ -3587,8 +3328,8 @@
     },
     {
       "path": "src/app/logistics/page.tsx",
-      "size": 66203,
-      "sha256": "d2737af652cf3880c3c99bd65066d87c97458fe571319c9356039df2e8c0eae1"
+      "size": 67999,
+      "sha256": "a31abfcc2ed72c02ac7a02d7d0eea703dd53e7e3b7540669b57db7970b4f4834"
     },
     {
       "path": "src/app/manifest.ts",
@@ -3597,13 +3338,13 @@
     },
     {
       "path": "src/app/messages/page.tsx",
-      "size": 28720,
-      "sha256": "63a9865397a2867f7ec72c7109b12deca187db353820e316a7a091a1ec24d449"
+      "size": 37083,
+      "sha256": "5fb1bae7d671dab1eda86fa6558d4bf665f1bfb3bd675c07d073be05b0eccfaa"
     },
     {
       "path": "src/app/mini-game/page.tsx",
-      "size": 1188,
-      "sha256": "5d3ce0b046e01dc9e134d243ad6a83309dc9c68911840a359c268f572ce9abf5"
+      "size": 1191,
+      "sha256": "3ee6abd6af077512ad6a69cd8620bc3c670fb13e48608fc405479cf7223a12aa"
     },
     {
       "path": "src/app/not-found.tsx",
@@ -3617,8 +3358,8 @@
     },
     {
       "path": "src/app/operations/page.tsx",
-      "size": 28648,
-      "sha256": "56403332d5bef106a41d2c0214741cb17dc26635ca9a5c4ab58f73e5f3340fee"
+      "size": 30298,
+      "sha256": "a354181cb3170a6fb95fa421ce00436525bde12af616d91770e703ee19e0b8bd"
     },
     {
       "path": "src/app/ops-health/page.tsx",
@@ -3632,8 +3373,8 @@
     },
     {
       "path": "src/app/patients/page.tsx",
-      "size": 36009,
-      "sha256": "143b69628fb762023062650b6781c6d8f13f7a00c30edcab1baf6c7aa9e3efdb"
+      "size": 36485,
+      "sha256": "591026a318aeac202e5d8f81b84feff3e4e9ea7c91ff0e5849a8887b4ded1d7a"
     },
     {
       "path": "src/app/pilot-check/page.tsx",
@@ -3707,8 +3448,8 @@
     },
     {
       "path": "src/app/team/page.tsx",
-      "size": 23145,
-      "sha256": "40f3c226600aae67c32ad44744810208b3f7be44db7296afd716aad2b877ed92"
+      "size": 26186,
+      "sha256": "a28ff284746493fe0b95113344115af747de924ff9e7491c346d9e4111b228fb"
     },
     {
       "path": "src/app/training/ScanViewer.tsx",
@@ -3732,8 +3473,8 @@
     },
     {
       "path": "src/lib/appointment-planner.ts",
-      "size": 1797,
-      "sha256": "9f0547c686f9fd764928a3653fa8f81fccfb99ba7f4c1ad595360dc8aff71d66"
+      "size": 2380,
+      "sha256": "4b625ca35cb6e71a83090c2103b70d090d89db12e8adcd59444537043c3a52af"
     },
     {
       "path": "src/lib/aya-cad-agent.ts",
@@ -3752,8 +3493,8 @@
     },
     {
       "path": "src/lib/aya-conversation.ts",
-      "size": 3571,
-      "sha256": "048983315cae6fb154971e704d7fb84ed41f827de34e4fd89e110c88936fd370"
+      "size": 4718,
+      "sha256": "18fadde3af9f4727a3a6da157054693f2045bebc68b170db58c930d40b082a98"
     },
     {
       "path": "src/lib/aya-download-status.ts",
@@ -3912,8 +3653,8 @@
     },
     {
       "path": "src/lib/cad-workflow.ts",
-      "size": 9002,
-      "sha256": "510a1bbdb9b8e395f4c2f2679df30d2f289313a1e3772f9f6a05418eba4838a9"
+      "size": 9265,
+      "sha256": "d8d058b99c730fa59334fe272e62b099c69d084bca1f44fa59bc47d6a5cc7046"
     },
     {
       "path": "src/lib/cad-workspace-preferences.ts",
@@ -3926,9 +3667,19 @@
       "sha256": "db3eedc0469635174197c0cde03150f71cbe3a696bb7da17e00c59eb902f5e34"
     },
     {
+      "path": "src/lib/dental-fact-schema.ts",
+      "size": 4949,
+      "sha256": "1d4530dd4f3693ba7d73bd42f97701ba6013843955f622d76fee553ec35a4cce"
+    },
+    {
       "path": "src/lib/dental-facts.ts",
-      "size": 1158,
-      "sha256": "4d2a29fc1c67e664d3b73b54b90628a7990695eda6f04881403ed5acbbf1ecf5"
+      "size": 1902,
+      "sha256": "2cf4a797946a2dda7131717fdc4599364976a271d2e9201fb011ec3a943db07a"
+    },
+    {
+      "path": "src/lib/dental-language.ts",
+      "size": 198,
+      "sha256": "f634edf8e8de1472d0d561ed4af74b184dae4fa7ed4eb95ae16d87ee6906eff7"
     },
     {
       "path": "src/lib/dentaya-cad-tool-matrix.ts",
@@ -3937,8 +3688,8 @@
     },
     {
       "path": "src/lib/dentaya-errors.ts",
-      "size": 7811,
-      "sha256": "35e198c1910d9cb4a9c9850d08c8b44588eee8b5423f343354a54f5a48497ebf"
+      "size": 8323,
+      "sha256": "27bf318fae31e80dee6fa93a22caa1b6c4627edb366bb9b18e0d38508a745e81"
     },
     {
       "path": "src/lib/dentaya-workspace-personalization.ts",
@@ -4002,13 +3753,23 @@
     },
     {
       "path": "src/lib/i18n/aya-agent.ts",
-      "size": 5744,
-      "sha256": "bc969a4ff79b431e4c9a204f2d8da3e06a3da10d2b89adad7cd492c46bbd6bf7"
+      "size": 6188,
+      "sha256": "df733be45a3e000239495aa072331324ffb3c2c50ee19c12d56e58ff2eaf1214"
     },
     {
       "path": "src/lib/i18n/aya-catalog.ts",
       "size": 1491,
       "sha256": "c473dcd1998a66bc89d05b8f83bc2189290785d8b1f10d772c6f52e93dfae47e"
+    },
+    {
+      "path": "src/lib/i18n/aya-experience.ts",
+      "size": 6662,
+      "sha256": "a9a0c923d4b36e34c065ac88d244bc133de381f6a641f2c28ef7634b78ea7e9d"
+    },
+    {
+      "path": "src/lib/i18n/brand.ts",
+      "size": 3619,
+      "sha256": "adb40ef8ed3c5945f18c8f2d517ec52adfdb1170028f1bb8164e4b6d42a69b10"
     },
     {
       "path": "src/lib/i18n/bundled.ts",
@@ -4032,8 +3793,8 @@
     },
     {
       "path": "src/lib/i18n/dental-facts.json",
-      "size": 46773,
-      "sha256": "3318d429daf6b7138ba01604dfce3612bc5d3779a9f87446e224a4b1f0aa3222"
+      "size": 58525,
+      "sha256": "bc031d1c294477301802658d91466c6070b8218c2c11963668caa0883ba55c39"
     },
     {
       "path": "src/lib/i18n/dental-glossary.tsv",
@@ -4052,8 +3813,8 @@
     },
     {
       "path": "src/lib/i18n/loading-play.ts",
-      "size": 2256,
-      "sha256": "afbe3c1a52390527bc8a5094d174c13943a59dd8d9f5c3db0a3c9fe0ca102b72"
+      "size": 2540,
+      "sha256": "2a4d6bdbbd977d62e15be978ba3edf7ef5f1c4e5644f11e3f69415aade25301b"
     },
     {
       "path": "src/lib/i18n/locales.ts",
@@ -4311,6 +4072,11 @@
       "sha256": "e598d82d1929386bb273a3a398abf05e720fe3582ca0c1930db18d4383c28aa7"
     },
     {
+      "path": "src/lib/i18n/professional-shell.ts",
+      "size": 2567,
+      "sha256": "72fc3d4b7deeaa960a28100f6f6b23732eaf1e84173c1e2aebe523670b7a34b9"
+    },
+    {
       "path": "src/lib/i18n/reviewed/ar.json",
       "size": 3759,
       "sha256": "f19f92ff778eef215bebb426104a193e5c22a251b912f2bc4c998b3ebd8add19"
@@ -4476,9 +4242,19 @@
       "sha256": "c1058e7f3362c562393c7f36a79623905645ae8a02f43ce597da87ff9c2b2b2d"
     },
     {
+      "path": "src/lib/i18n/workflow-safety.ts",
+      "size": 7730,
+      "sha256": "36aefa65d741b5087dc0eb515be80d383b4c9812019e77876ae01550a16ba624"
+    },
+    {
       "path": "src/lib/kusp-game.ts",
       "size": 2135,
       "sha256": "f4b8f5863f862dc29699dfa4d5db9d760bbc978ad91eca219a47c80d5c61bfec"
+    },
+    {
+      "path": "src/lib/launcher-ownership.ts",
+      "size": 636,
+      "sha256": "727c8799ad137a621d9d2601974b01a536e77b189e1498a88c944d928d3919b5"
     },
     {
       "path": "src/lib/load-home-dashboard.ts",
@@ -4487,8 +4263,8 @@
     },
     {
       "path": "src/lib/loading-activity.ts",
-      "size": 1769,
-      "sha256": "c7ec4095af217697aaa3e85e9b7e30d6cc93d9bb85af4a0e59d0bc1a0ebf2567"
+      "size": 2298,
+      "sha256": "f3fa46a50e2948f250aceb0ac32cffe62c5ca1bee10463b27981079c981c8631"
     },
     {
       "path": "src/lib/mesh-quality.ts",
@@ -4516,9 +4292,14 @@
       "sha256": "f465f87c79efe392ab6c6e33f02437d1cc49b163c6dd8e7279444d41634b236c"
     },
     {
+      "path": "src/lib/public-connection.ts",
+      "size": 1205,
+      "sha256": "14cf5b65f9f0b8b7f3279de39473ba126cc818b224013b2a7538396f84639ed2"
+    },
+    {
       "path": "src/lib/release.ts",
       "size": 418,
-      "sha256": "0cab39ae0fe84136fde1527dfa2e004e68dfb65c6c8a22a1d8c6889291548a9e"
+      "sha256": "91536eea54e9a92d04e9ddabf3640066f2a141a043467de3658f84fd50daf647"
     },
     {
       "path": "src/lib/retry.ts",
@@ -4552,13 +4333,18 @@
     },
     {
       "path": "src/lib/supabase.ts",
-      "size": 1201,
-      "sha256": "02d280fd6ca1da1fb4cd785386c1c22ca71f26ea443ba415eae9d4588277796e"
+      "size": 1108,
+      "sha256": "f6d3b3d4617acce4672a69e66b9a4bbc302fd0403c8a8064fd2d470eb689ac3f"
     },
     {
       "path": "src/lib/system-messages.ts",
       "size": 3750,
       "sha256": "fac7d170412467ac54080942af17198470c11351b4168497fecd14d21979b37a"
+    },
+    {
+      "path": "src/lib/team-invite.ts",
+      "size": 390,
+      "sha256": "1fc1272612d78019a31a34df396b4e393db1f01bd2dc9e2ed23451c0c2d9bd08"
     },
     {
       "path": "src/lib/tooth-anatomy.ts",
@@ -4591,9 +4377,19 @@
       "sha256": "63273a6f1c4723a54dec02b1978e283729f09a79452328b0810abe6c8ec80c05"
     },
     {
+      "path": "src/lib/use-unsaved-changes.ts",
+      "size": 1876,
+      "sha256": "29ce4f7e7e1a3caa9c4dcb4868cdb9623c3e39aa61229c230b25eca73013cfa5"
+    },
+    {
       "path": "src/lib/validation-center.ts",
       "size": 7386,
       "sha256": "ab618c5fd25230f9912e7ec2e8fbd3545acff6e08671f4c3e406f01ce5defff8"
+    },
+    {
+      "path": "src/lib/workflow-safety.ts",
+      "size": 1557,
+      "sha256": "95b252add2f8ba6d64155553f4159abd09ee37eeaa4f5c015f321b8947bfdceb"
     },
     {
       "path": "src/lib/workspace-navigation.ts",
@@ -5214,6 +5010,121 @@
       "path": "verification/RC47/verify-final.txt",
       "size": 36258,
       "sha256": "d5c410f468b4ebf4ec666f65318c742482b37ecc8c5391b254e14c01d9d3fb22"
+    },
+    {
+      "path": "verification/RC48/AYA.png",
+      "size": 68935,
+      "sha256": "72f89b5d9ae212f86f1eb77be31bedbb53d4d45b9b5e70e4f44c2a20fb4f933a"
+    },
+    {
+      "path": "verification/RC48/CAD.png",
+      "size": 132708,
+      "sha256": "89ee20617cd4099aac8fdf94bc7fc34ee22d6e376ace978621f23163b9b017e3"
+    },
+    {
+      "path": "verification/RC48/Loading.png",
+      "size": 27664,
+      "sha256": "7242df3502cca7fae3503cb02cd51918e07746af4634e594788f0707187d7a07"
+    },
+    {
+      "path": "verification/RC48/Messages.png",
+      "size": 146151,
+      "sha256": "afb2edcfaa8987208af512587fbd4e19d0e235cf6d0ed4c18553ae6839917d5a"
+    },
+    {
+      "path": "verification/RC48/aya-conversation-browser.txt",
+      "size": 1094,
+      "sha256": "063d4245bd3278cd1d1350c3882f931b92607957b9eb261789e0b30afd767a6c"
+    },
+    {
+      "path": "verification/RC48/cad-daily-browser.txt",
+      "size": 2241,
+      "sha256": "3059a5ca9861950c072e43369b727202752cc31f4fc3bd4f05db026c9b71b00e"
+    },
+    {
+      "path": "verification/RC48/cad-quality-browser.txt",
+      "size": 10724,
+      "sha256": "f975ce52cb0f3dc1c55b401694d67ad87be5be076af040b5eec7322944078309"
+    },
+    {
+      "path": "verification/RC48/loading-browser.txt",
+      "size": 1258,
+      "sha256": "cffa91a10df829c416c8d90ad9699d9cf5226c9c4987aa09c2fb255711ca76c9"
+    },
+    {
+      "path": "verification/RC48/modules-browser.txt",
+      "size": 888,
+      "sha256": "447d75f56325e4496603e1d7352196b51fcd0c32899ab5b41474dcc87cc83f6a"
+    },
+    {
+      "path": "verification/RC48/results.json",
+      "size": 1618,
+      "sha256": "0e6285b7e106eb617e46be9c729c250df9a760a76491a26a349a6d12d0a8dbe3"
+    },
+    {
+      "path": "verification/RC48/shell-browser.txt",
+      "size": 956,
+      "sha256": "4ddaf24c0a62e71df9594ad9ca14fd450b2ba1a2e0e38615ccbfc55ae28b1138"
+    },
+    {
+      "path": "verification/RC48/ui-browser.txt",
+      "size": 1450,
+      "sha256": "ed1199db5a5f8108512ff4dad1a9faab1366caee26165e65a4757483c8032ff6"
+    },
+    {
+      "path": "verification/RC48/verify-final.txt",
+      "size": 31924,
+      "sha256": "bffd3b7d57ea5d4abfb4db54c795540532f933389b1e06157abf1b87cdd4a20e"
+    },
+    {
+      "path": "verification/professional/aya.json",
+      "size": 2130,
+      "sha256": "9739e1821108c886cccc5f26b9001b5bd857e3236482626e395d3f4692cecb05"
+    },
+    {
+      "path": "verification/professional/brand.json",
+      "size": 1777,
+      "sha256": "9ca3cac0e6468ced50ce12ee34fc859c6a7629c1b909dc2989859f8f70176f6a"
+    },
+    {
+      "path": "verification/professional/cad-quality.json",
+      "size": 10322,
+      "sha256": "575813848acdb32b3c83e9bdd88882537a2c8e5760499d25a7029618a7a8c6a4"
+    },
+    {
+      "path": "verification/professional/cad.json",
+      "size": 946,
+      "sha256": "96f95521b8f0a881310066cac9b455f23b3f43d589e51086b9c500229b0973f0"
+    },
+    {
+      "path": "verification/professional/dental-facts.json",
+      "size": 272,
+      "sha256": "050b7f87134aa09cd9585a7e06bdef9c5c2ef171c704296314642c1c420e2995"
+    },
+    {
+      "path": "verification/professional/dental-source-audit.json",
+      "size": 16198,
+      "sha256": "61b50294f3d498f7d822561e6f5d10dddfafdf69188803d05f22a2fcf3e522fb"
+    },
+    {
+      "path": "verification/professional/loading.json",
+      "size": 1037,
+      "sha256": "b86626d94ead8ee58ab4ebeea499c2ae1a3668f00112d3125c6e40da31676c0d"
+    },
+    {
+      "path": "verification/professional/modules.json",
+      "size": 4004,
+      "sha256": "44012f40096daf923c5207b90c533e0b83130d7870172ca972ae902948269805"
+    },
+    {
+      "path": "verification/professional/shell.json",
+      "size": 901,
+      "sha256": "128aff4bb1f03afabc13506e142df63d47c702869113eae2d6b972944f743192"
+    },
+    {
+      "path": "verification/professional/ui.json",
+      "size": 1337,
+      "sha256": "25635aa24f56c73019c9cc79e295f4b57043342c7f1a3953d38480464fb31d78"
     }
   ]
 }

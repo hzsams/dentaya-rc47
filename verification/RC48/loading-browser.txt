@@ -1,0 +1,48 @@
+
+> dentaya-production-rc@1.0.0-rc.48 verify:loading-reading-browser
+> node scripts/verify-loading-reading-browser.mjs
+
+{
+  "pass": true,
+  "productionStandalone": true,
+  "readingSeconds": 5,
+  "timing": "real wall clock; 1200ms scheduling tolerance",
+  "timings": [
+    {
+      "scenario": "fast",
+      "elapsedMs": 5346
+    },
+    {
+      "scenario": "slow",
+      "elapsedMs": 5475
+    },
+    {
+      "scenario": "consecutive",
+      "elapsedMs": 5279
+    },
+    {
+      "scenario": "navigation",
+      "elapsedMs": 5369
+    }
+  ],
+  "sameSentence": true,
+  "automaticCloseAtFiveSeconds": true,
+  "readyPageInBackground": true,
+  "earlyContinue": true,
+  "focusRestored": true,
+  "pendingDataGuardPreserved": true,
+  "consecutiveLoadersShareDeadline": true,
+  "noExtraDelayAfterLongLoad": true,
+  "navigationFallbackSharesDeadline": true,
+  "cancelledNavigationLeavesNoOverlay": true,
+  "reducedMotion": true,
+  "gameSurvivesReading": true,
+  "mobileBounds": true,
+  "pageErrors": 0,
+  "backend": "intercepted test fixture, no production data"
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

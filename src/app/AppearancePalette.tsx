@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import UiNode from "@/lib/i18n/UiNode";
-import {dentalFactLanguage} from '@/lib/dental-facts';
+import {dentalFactLanguage} from '@/lib/dental-language';
 import {WORK_TOOLS_TEXT} from '@/lib/i18n/work-tools';
 import { useTranslation } from "@/lib/i18n";
 import { useCustomization, customizationNotice } from "./customization";

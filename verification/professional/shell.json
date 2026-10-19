@@ -1,0 +1,28 @@
+{
+  "pass": true,
+  "launcherSingleOwner": true,
+  "unmountedOwnerTakeover": true,
+  "newMountDoesNotStealOwner": true,
+  "nativeModal": true,
+  "keyboardWrapAndEnter": true,
+  "activeDescendant": true,
+  "escapeRestoresFocus": true,
+  "routeClosesPersistentPalette": true,
+  "realModules": [
+    "patients",
+    "appointments"
+  ],
+  "oneH1PerModule": true,
+  "moduleBeforePersonalChecklist": true,
+  "systemToolsCollapsedAndSearchable": true,
+  "personalChecklistScopedAndLocal": true,
+  "sevenDayPlanner": true,
+  "mobileFits": true,
+  "backend": "intercepted synthetic fixture; no production data",
+  "pageErrors": 0,
+  "sourceVersion": "1.0.0-rc.48",
+  "command": "npm run verify:professional-shell-browser",
+  "exitCode": 0,
+  "scope": "Development renderer, intercepted synthetic backend",
+  "focusFix": "Explicit boundary Tab cycling keeps keyboard focus inside the native launcher dialog."
+}

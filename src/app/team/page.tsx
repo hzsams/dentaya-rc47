@@ -1,15 +1,16 @@
 "use client";
+import { workflowText, type WorkflowMessage } from "@/lib/i18n/workflow-safety";
 import LoadingExperience from '@/app/loading-play/LoadingExperience';
 import UserText from "@/lib/i18n/UserText";
 import UiNode from "@/lib/i18n/UiNode";
 import { useTranslation } from '@/lib/i18n';
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import Link from "@/lib/i18n/UiLink";
 import { useRouter } from "next/navigation";
 import ConnectionStatus from "@/app/ConnectionStatus";
 import NotificationCenter from "@/app/NotificationCenter";
 import { dy, useDentayaThemeRuntime } from "@/app/dentaya-theme";
-import { dentayaError } from "@/lib/dentaya-errors";
+import { dentayaError, isValidEmail } from "@/lib/dentaya-errors";
 import { supabase } from "@/lib/supabase";
 type OrgType = "clinic" | "laboratory" | "courier";
 type Organization = {
@@ -50,11 +51,15 @@ type CreatedInvite = {
     expires_at: string;
 };
 export default function TeamPage() {
-    const { t: uiText, intlLocale } = useTranslation();
+    const { t: uiText, intlLocale, locale } = useTranslation();
     useDentayaThemeRuntime();
+    const copy = (source: WorkflowMessage, values?: readonly string[]) => workflowText(locale, source, values);
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [busy, setBusy] = useState(false);
+    const mutationLock = useRef(false);
+    const [currentUserId, setCurrentUserId] = useState("");
+    const [freshToken, setFreshToken] = useState("");
     const [message, setMessage] = useState("");
     const [organization, setOrganization] = useState<Organization | null>(null);
     const [membership, setMembership] = useState<Membership | null>(null);
@@ -86,6 +91,7 @@ export default function TeamPage() {
                 setLoading(false);
                 return;
             }
+            setCurrentUserId(user.id);
             const currentMembership = membershipData as Membership;
             const { data: orgData, error: orgError } = await supabase
                 .from("organizations").select("id,name,org_type")
@@ -129,26 +135,32 @@ export default function TeamPage() {
             setMessage(dentayaError(membersResult.error, "Ekip üyeleri yüklenemedi."));
         if (invitesResult.error)
             setMessage(dentayaError(invitesResult.error, "Ekip davetleri yüklenemedi."));
-        setMembers((membersResult.data ?? []) as TeamMember[]);
-        setInvites((invitesResult.data ?? []) as InviteRow[]);
+        if (!membersResult.error) setMembers((membersResult.data ?? []) as TeamMember[]);
+        if (!invitesResult.error) setInvites((invitesResult.data ?? []) as InviteRow[]);
     }
     async function createInvite(emailOverride?: string, roleOverride?: string) {
-        if (!organization || !isAdmin || busy)
+        if (!organization || !isAdmin || mutationLock.current)
             return;
         const email = (emailOverride ?? inviteEmail).trim().toLowerCase();
         const role = roleOverride ?? inviteRole;
-        if (!email) {
-            setMessage("Davet edilecek e-posta adresini yaz.");
+        if (!email || !isValidEmail(email) || email.length > 254) {
+            setMessage(copy("Geçerli bir davet e-posta adresi yazın."));
             return;
         }
+        if (!roleOptions.some(option => option.value === role)) { setMessage(copy("Bu kurum için geçerli bir ekip rolü seçin.")); return; }
+        const expiry = Number(expiresDays);
+        if (!Number.isInteger(expiry) || expiry < 1 || expiry > 30) { setMessage(copy("Davet süresi 1 ile 30 gün arasında olmalı.")); return; }
+        mutationLock.current = true;
         setBusy(true);
         setMessage("");
         setFreshLink("");
         setCopied(false);
+        setFreshToken("");
+        try {
         const { data, error } = await supabase.rpc("dentaya_create_team_invite", {
             p_email: email,
             p_role: role,
-            p_expires_days: Math.max(1, Math.min(Number(expiresDays) || 7, 30)),
+            p_expires_days: expiry,
         });
         setBusy(false);
         if (error || !data) {
@@ -158,15 +170,18 @@ export default function TeamPage() {
         const created = data as CreatedInvite;
         const link = `${window.location.origin}/invite?token=${encodeURIComponent(created.token)}`;
         setFreshLink(link);
+        setFreshToken(created.token);
         setFreshInviteEmail(created.email);
         setInviteEmail("");
         await loadTeam(organization.id);
+        } catch (error) { setMessage(dentayaError(error, "Ekip daveti oluşturulamadı.")); }
+        finally { mutationLock.current = false; setBusy(false); }
     }
-    async function copyInvite() {
+    async function copyInvite(code = false) {
         if (!freshLink)
             return;
         try {
-            await navigator.clipboard.writeText(freshLink);
+            await navigator.clipboard.writeText(code ? freshToken : freshLink);
             setCopied(true);
             setTimeout(() => setCopied(false), 1800);
         }
@@ -175,10 +190,13 @@ export default function TeamPage() {
         }
     }
     async function revokeInvite(id: string) {
-        if (!organization || busy)
+        if (!organization || !isAdmin || mutationLock.current)
             return;
+        if (!window.confirm(uiText(copy("Bu ekip davetini iptal etmek istiyor musunuz?")))) return;
+        mutationLock.current = true;
         setBusy(true);
         setMessage("");
+        try {
         const { error } = await supabase.rpc("dentaya_revoke_team_invite", { p_invite_id: id });
         setBusy(false);
         if (error) {
@@ -186,13 +204,19 @@ export default function TeamPage() {
             return;
         }
         await loadTeam(organization.id);
+        } catch (error) { setMessage(dentayaError(error)); }
+        finally { mutationLock.current = false; setBusy(false); }
     }
     async function setMemberStatus(member: TeamMember) {
-        if (!organization || busy)
+        if (!organization || !isAdmin || mutationLock.current)
             return;
+        if (member.user_id === currentUserId || member.role === "owner" || (!isOwner && member.role === "admin")) return;
         const next = member.status === "active" ? "suspended" : "active";
+        if (next === "suspended" && !window.confirm(uiText(copy("Bu üyenin kurum erişimini kapatmak istiyor musunuz?")))) return;
+        mutationLock.current = true;
         setBusy(true);
         setMessage("");
+        try {
         const { error } = await supabase.rpc("dentaya_set_team_member_status", {
             p_membership_id: member.membership_id, p_status: next,
         });
@@ -202,12 +226,18 @@ export default function TeamPage() {
             return;
         }
         await loadTeam(organization.id);
+        } catch (error) { setMessage(dentayaError(error)); }
+        finally { mutationLock.current = false; setBusy(false); }
     }
     async function changeRole(member: TeamMember, role: string) {
-        if (!organization || !isOwner || busy || member.role === "owner")
+        if (!organization || !isOwner || mutationLock.current || member.role === "owner")
             return;
+        if (role === member.role || !roleOptions.some(option => option.value === role)) return;
+        if (!window.confirm(uiText(copy("Bu üyenin kurum rolünü değiştirmek istiyor musunuz?")))) return;
+        mutationLock.current = true;
         setBusy(true);
         setMessage("");
+        try {
         const { error } = await supabase.rpc("dentaya_set_team_member_role", {
             p_membership_id: member.membership_id, p_role: role,
         });
@@ -217,11 +247,13 @@ export default function TeamPage() {
             return;
         }
         await loadTeam(organization.id);
+        } catch (error) { setMessage(dentayaError(error)); }
+        finally { mutationLock.current = false; setBusy(false); }
     }
     const pendingInvites = invites.filter(i => !i.accepted_at && !i.revoked_at && new Date(i.expires_at).getTime() > Date.now());
     if (loading) return <LoadingExperience title="Ekip yönetimi hazırlanıyor…"/>;
     if (!organization || !membership)
-        return <UiNode as="main" style={ui.center}>{message || "Çalışma alanı bulunamadı."}</UiNode>;
+        return <UiNode as="main" style={ui.center}><UiNode as="p">{message || "Çalışma alanı bulunamadı."}</UiNode><Link href="/invite" style={ui.primaryLink}>{copy("Davet koduyla katıl")}</Link></UiNode>;
     if (!isAdmin) {
         return <UiNode as="main" style={ui.page}>
       <ConnectionStatus />
@@ -230,6 +262,7 @@ export default function TeamPage() {
         <UiNode as="h1" style={ui.title}>Yönetici yetkisi gerekiyor</UiNode>
         <UiNode as="p" style={ui.subtitle}>Ekip üyeleri ve davetler yalnız kurum sahibi veya yönetici tarafından yönetilebilir.</UiNode>
         <Link href="/settings" style={ui.primaryLink}>Ayarlara Dön</Link>
+        <Link href="/invite" style={ui.secondaryLink}>{copy("Davet koduyla katıl")}</Link>
       </UiNode>
     </UiNode>;
     }
@@ -292,6 +325,9 @@ export default function TeamPage() {
           {freshLink && <UiNode as="div" style={ui.inviteResult}>
             <UiNode data-dy-copy-stack as="div" className="dy-title-detail"><UiNode as="strong">Davet hazır</UiNode><UiNode as="span">{freshInviteEmail} için bağlantıyı güvenli şekilde paylaş.</UiNode></UiNode>
             <UiNode as="div" style={ui.linkBox}><UiNode as="code">{freshLink}</UiNode></UiNode>
+            <UiNode as="p">{copy("Masaüstü uygulamasında alıcı Ekip Daveti ekranını açıp davet kodunu girebilir. Yerel uygulama bağlantısı başka bir cihazda uygulama açıkken çalışır.")}</UiNode>
+            <UiNode as="button" type="button" onClick={() => void copyInvite(true)} style={ui.secondaryButton}>{copy("Davet Kodunu Kopyala")}</UiNode>
+            <Link href="/invite" style={ui.secondaryLink}>{copy("Davet koduyla katıl")}</Link>
             <UiNode as="button" type="button" onClick={() => void copyInvite()} style={ui.secondaryButton}>
               {copied ? "Kopyalandı" : "Bağlantıyı Kopyala"}
             </UiNode>
@@ -323,7 +359,7 @@ export default function TeamPage() {
                 <UiNode as="span" style={{ ...ui.statusBadge, color: member.status === "active" ? "#63cc98" : "#e8bd73" }}>
                   {member.status === "active" ? uiText("AKTİF") : "PASİF"}
                 </UiNode>
-                {member.role !== "owner" && <UiNode as="button" type="button" disabled={busy} onClick={() => void setMemberStatus(member)} style={ui.ghostButton}>
+                {member.role !== "owner" && member.user_id !== currentUserId && (isOwner || member.role !== "admin") && <UiNode as="button" type="button" disabled={busy} onClick={() => void setMemberStatus(member)} style={ui.ghostButton}>
                   {member.status === "active" ? "Pasifleştir" : "Aktifleştir"}
                 </UiNode>}
               </UiNode>

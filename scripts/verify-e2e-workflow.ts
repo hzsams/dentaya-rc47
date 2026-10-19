@@ -520,6 +520,50 @@ await asUser(ids.clinicUser);
 await expectFailure("assistant has no write permission",()=>recordValidation(validationArgs),/permission denied/i);
 await database.query("update public.memberships set role='dentist' where organization_id=$1 and user_id=$2",[ids.clinicOrg,ids.clinicUser]);
 
+// Exercise the optimistic writes used by the operational screens against real
+// triggers and RLS. An inaccessible/stale update returns no rows, not success.
+await database.exec("set role authenticated");
+await asUser(ids.clinicUser);
+const finance = (await database.query<{ id: string; version: string }>(`
+  insert into public.clinic_case_finance(case_id,clinic_org_id,patient_price,discount_amount,paid_amount,currency,payment_status,created_by)
+  values ($1,$2,1234.56,34.56,200.25,'EUR','partial',$3) returning id,updated_at::text as version
+`, [ids.caseId, ids.clinicOrg, ids.clinicUser])).rows[0];
+const firstFinanceWrite = await database.query(`
+  update public.clinic_case_finance set paid_amount=300.25,updated_by=$1
+  where id=$2 and clinic_org_id=$3 and updated_at=$4::timestamptz returning id
+`, [ids.clinicUser, finance.id, ids.clinicOrg, finance.version]);
+assert.equal(firstFinanceWrite.rows.length, 1);
+assert.equal((await database.query(`
+  update public.clinic_case_finance set paid_amount=400.25
+  where id=$1 and clinic_org_id=$2 and updated_at=$3::timestamptz returning id
+`, [finance.id, ids.clinicOrg, finance.version])).rows.length, 0, "A stale financial editor cannot overwrite another session's receipt");
+const persistedFinance = (await database.query<{ currency: string; paid_amount: string; created_by: string }>("select currency,paid_amount,created_by from public.clinic_case_finance where id=$1", [finance.id])).rows[0];
+assert.equal(persistedFinance.currency, "EUR", "Editing does not relabel existing currency as TRY");
+assert.equal(Number(persistedFinance.paid_amount), 300.25, "Receipt cents survive PostgreSQL numeric storage");
+assert.equal(persistedFinance.created_by, ids.clinicUser, "The original creator remains immutable");
+await expectFailure("financial receipts cannot exceed the net price", () => database.query("update public.clinic_case_finance set paid_amount=1200.01 where id=$1", [finance.id]), /check constraint/i);
+await asUser(ids.labUser);
+assert.equal((await database.query("select id from public.clinic_case_finance where id=$1", [finance.id])).rows.length, 0, "Laboratory users cannot read patient receipts");
+assert.equal((await database.query("update public.clinic_case_finance set paid_amount=0 where id=$1 returning id", [finance.id])).rows.length, 0, "A zero-row financial update is an authorization failure for the UI");
+const quote = (await database.query<{ id: string; version: string }>(`
+  insert into public.lab_case_quotes(case_id,clinic_org_id,lab_org_id,amount,currency,status,created_by)
+  values ($1,$2,$3,432.10,'USD','sent',$4) returning id,updated_at::text as version
+`, [ids.caseId, ids.clinicOrg, ids.labOrg, ids.labUser])).rows[0];
+assert.equal((await database.query("update public.lab_case_quotes set amount=500.55 where id=$1 and updated_at=$2::timestamptz returning id", [quote.id, quote.version])).rows.length, 1);
+assert.equal((await database.query("update public.lab_case_quotes set amount=600 where id=$1 and updated_at=$2::timestamptz returning id", [quote.id, quote.version])).rows.length, 0, "Stale quotes cannot overwrite newer laboratory prices");
+await asUser(ids.clinicUser);
+assert.equal((await database.query("update public.lab_case_quotes set amount=0 where id=$1 returning id", [quote.id])).rows.length, 0, "The clinic can read a laboratory quote but cannot rewrite it");
+
+const appointment = (await database.query<{ id: string; version: string }>(`
+  insert into public.appointments(organization_id,patient_id,scheduled_at,status,created_by)
+  values ($1,$2,now()+interval '1 day','scheduled',$3) returning id,updated_at::text as version
+`, [ids.clinicOrg, ids.patient, ids.clinicUser])).rows[0];
+assert.equal((await database.query("update public.appointments set status='confirmed' where id=$1 and organization_id=$2 and updated_at=$3::timestamptz returning id", [appointment.id, ids.clinicOrg, appointment.version])).rows.length, 1);
+assert.equal((await database.query("update public.appointments set status='cancelled' where id=$1 and organization_id=$2 and updated_at=$3::timestamptz returning id", [appointment.id, ids.clinicOrg, appointment.version])).rows.length, 0, "A stale appointment action cannot silently cancel a changed record");
+await asUser(ids.labUser);
+assert.equal((await database.query("update public.appointments set status='cancelled' where id=$1 returning id", [appointment.id])).rows.length, 0, "Laboratory role cannot modify the clinic calendar");
+await database.exec("reset role");
+
 console.log(
   JSON.stringify(
     {
@@ -532,6 +576,7 @@ console.log(
       designReviews: summary.rows[0]?.reviews,
       caseEvents: summary.rows[0]?.events,
       validationEvidence: { records:2, immutable:true, organizationIsolation:true, actorFromSession:true, crossVersionCorrectionsRejected:true, criticalCannotPass:true, clinicalReferencesRequired:true },
+      operationalRecords: { financialConflictRejection: true, exactCurrencyAndCents: true, patientReceiptPrivacy: true, appointmentConflictRejection: true, zeroRowIsNotSuccess: true },
       guardsVerified: [
         "clinic cannot accept lab case",
         "illegal case transition rejected",

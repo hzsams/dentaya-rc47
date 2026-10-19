@@ -1,0 +1,60 @@
+{
+  "release": "1.0.0-rc.48",
+  "date": "2026-10-19",
+  "commands": [
+    {
+      "command": "npm ci --no-audit --no-fund",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run verify",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run verify:brand-browser",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run verify:aya-conversation-browser",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run verify:ui-browser",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run verify:professional-shell-browser",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run verify:professional-modules-browser",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run verify:cad-daily-browser",
+      "exitCode": 0
+    },
+    {
+      "command": "DENTAYA_CAD_QUALITY_ONLY=1 npm run verify:cad-daily-browser",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run verify:loading-reading-browser",
+      "exitCode": 0
+    }
+  ],
+  "lintWarnings": 0,
+  "productionStaticPages": 38,
+  "nativeModelInferenceVerified": false,
+  "windowsInstallerProduced": false,
+  "liveOrganizationBackendVerified": false,
+  "dentalFactsActual": 220,
+  "dentalFactsTarget": 30000,
+  "dentalFactsMissing": 29780,
+  "notes": [
+    "Full verify and production build passed after the final application changes.",
+    "The reading browser uses real wall time; each route shares a 5000ms deadline with 1200ms observation tolerance.",
+    "Browser backend/model/desktop IPC fixtures are synthetic; CAD mesh and WebGL actions are real.",
+    "CAD visual-only mode checks review-row bounds after the CSS fix."
+  ]
+}

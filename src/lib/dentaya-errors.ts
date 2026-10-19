@@ -153,16 +153,26 @@ export function isReasonablePhone(value: string): boolean {
 }
 
 export function isFutureDate(value: string): boolean {
-  if (!value) return false;
-  const date = new Date(`${value}T23:59:59`);
-  return Number.isFinite(date.getTime()) && date.getTime() >= Date.now();
+  if (!isCalendarDate(value)) return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return new Date(`${value}T00:00:00`).getTime() >= today.getTime();
 }
 
 export function isNonFutureDate(value: string): boolean {
   if (!value) return true;
+  if (!isCalendarDate(value)) return false;
   const date = new Date(`${value}T12:00:00`);
   if (!Number.isFinite(date.getTime())) return false;
   const tomorrow = new Date();
   tomorrow.setHours(23, 59, 59, 999);
   return date.getTime() <= tomorrow.getTime();
+}
+
+/** Reject date rollover (for example, 31 February) before it reaches a record. */
+export function isCalendarDate(value: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const date = new Date(`${value}T12:00:00`);
+  return Number.isFinite(date.getTime()) && date.getFullYear() === Number(value.slice(0, 4))
+    && date.getMonth() + 1 === Number(value.slice(5, 7)) && date.getDate() === Number(value.slice(8, 10));
 }

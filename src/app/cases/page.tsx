@@ -3,7 +3,8 @@ import LoadingExperience from '@/app/loading-play/LoadingExperience';
 import UiMessage from "@/lib/i18n/UiMessage";
 import UserText from "@/lib/i18n/UserText";
 import UiNode from "@/lib/i18n/UiNode";
-import { useTranslation } from '@/lib/i18n';
+import { getLocale, useTranslation } from '@/lib/i18n';
+import { workflowText } from '@/lib/i18n/workflow-safety';
 import ToothChart from "@/app/ToothChart";
 import { EMPTY_TOOTH_PLAN, writeToothPlan, type ToothPlan } from "@/lib/tooth-plan";
 import { useEffect, useMemo, useRef, useState, type CSSProperties, } from "react";
@@ -14,6 +15,7 @@ import NotificationCenter from "@/app/NotificationCenter";
 import EmptyStateCard from "@/app/EmptyStateCard";
 import { dentayaError, isFutureDate } from "@/lib/dentaya-errors";
 import { supabase } from "@/lib/supabase";
+import { requestIdentity, type RequestIdentity } from "@/lib/workflow-safety";
 import { useDentayaThemeRuntime } from "@/app/dentaya-theme";
 type OrgType = "clinic" | "laboratory" | "courier";
 type Organization = {
@@ -102,7 +104,7 @@ export default function CasesPage() {
     const [caseForm, setCaseForm] = useState<CaseForm>(emptyCaseForm);
     const [caseBusy, setCaseBusy] = useState(false);
     const caseSubmitLock = useRef(false);
-    const caseRequestId = useRef<string | null>(null);
+    const caseRequestId = useRef<RequestIdentity | null>(null);
     useEffect(() => {
         let mounted = true;
         let caseChannel: RealtimeChannel | null = null;
@@ -353,10 +355,10 @@ export default function CasesPage() {
             setMessage("Seçilen hasta bulunamadı.");
             return;
         }
-        const toothCodes = caseForm.toothCodes
-            .split(",")
+        const toothCodes = [...new Set(caseForm.toothCodes
+            .split(/[,\s]+/)
             .map((value) => value.trim())
-            .filter(Boolean);
+            .filter(Boolean))];
         if (toothCodes.length ===
             0) {
             setMessage("En az bir diş numarası yaz. Örnek: 16");
@@ -384,10 +386,9 @@ export default function CasesPage() {
         }
         caseSubmitLock.current =
             true;
-        const requestId = caseRequestId.current ??
-            crypto.randomUUID();
-        caseRequestId.current =
-            requestId;
+        const identity = requestIdentity(caseRequestId.current, { patient: patient.id, caseForm });
+        caseRequestId.current = identity;
+        const requestId = identity.id;
         setCaseBusy(true);
         setMessage("");
         const { data, error, } = await supabase.rpc("create_case_from_patient", {
@@ -420,8 +421,11 @@ export default function CasesPage() {
         setCaseBusy(false);
         caseSubmitLock.current =
             false;
-        caseRequestId.current =
-            null;
+        if (!caseId) {
+            setMessage(workflowText(getLocale(), "Vaka kaydı doğrulanamadı. Bilgileriniz korundu; tekrar deneyin."));
+            return;
+        }
+        caseRequestId.current = null;
         setShowCreate(false);
         if (caseId) {
             router.push(`/cases/${caseId}`);

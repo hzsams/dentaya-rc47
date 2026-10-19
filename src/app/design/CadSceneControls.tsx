@@ -4,7 +4,7 @@ import UserText from '@/lib/i18n/UserText';
 import UiNode from '@/lib/i18n/UiNode';
 import CadIcon from './CadIcon';
 import {useTranslation} from '@/lib/i18n';
-import {dentalFactLanguage} from '@/lib/dental-facts';
+import {dentalFactLanguage} from '@/lib/dental-language';
 import {WORK_TOOLS_TEXT} from '@/lib/i18n/work-tools';
 import {CAD_COLOR_GROUPS,cadRoleColor,type CadColorPreset,type CadColorRole} from '@/lib/cad-color-groups';
 import type {CadSettings,ModelSource} from './DesignViewport';

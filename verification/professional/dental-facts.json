@@ -1,0 +1,11 @@
+{
+  "pass": true,
+  "shippedDistinctFacts": 220,
+  "shippedSources": 28,
+  "newSourceBackedFacts": 20,
+  "clinicallyReviewed": false,
+  "syntheticCapacityOnly": 30000,
+  "capacityValidationMs": 388,
+  "indexDeckBytesAtCapacity": 120000,
+  "requestedCountReached": false
+}

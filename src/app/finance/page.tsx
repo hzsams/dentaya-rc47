@@ -1,15 +1,19 @@
 "use client";
+import { workflowText, type WorkflowMessage } from "@/lib/i18n/workflow-safety";
 import LoadingExperience from '@/app/loading-play/LoadingExperience';
 import UserText from "@/lib/i18n/UserText";
 import UiNode from "@/lib/i18n/UiNode";
-import { useTranslation } from '@/lib/i18n';
-import { useEffect, useMemo, useState, type CSSProperties, } from "react";
+import { getLocale, useTranslation } from '@/lib/i18n';
+import { useEffect, useMemo, useRef, useState, type CSSProperties, } from "react";
 import Link from "@/lib/i18n/UiLink";
 import { useRouter } from "next/navigation";
 import NotificationCenter from "@/app/NotificationCenter";
 import EmptyStateCard from "@/app/EmptyStateCard";
 import { dentayaError } from "@/lib/dentaya-errors";
 import { supabase } from "@/lib/supabase";
+import ConnectionStatus from "@/app/ConnectionStatus";
+import { cents, moneyInput, paymentStateError } from "@/lib/workflow-safety";
+import { useUnsavedChanges } from "@/lib/use-unsaved-changes";
 import { dy, useDentayaThemeRuntime, } from "@/app/dentaya-theme";
 type Org = {
     id: string;
@@ -38,6 +42,7 @@ type LabQuote = {
     status: "draft" | "sent" | "accepted" | "rejected";
     notes: string | null;
     basis: Record<string, unknown>;
+    updated_at: string;
 };
 type ClinicFinance = {
     id: string;
@@ -49,6 +54,7 @@ type ClinicFinance = {
     payment_status: "quote" | "pending" | "partial" | "paid" | "cancelled";
     overhead_pct: number;
     target_margin_pct: number;
+    updated_at: string;
     notes: string | null;
 };
 const CASE_BASE: Record<string, number> = {
@@ -61,8 +67,9 @@ const CASE_BASE: Record<string, number> = {
     "night guard": 1500,
 };
 export default function FinancePage() {
-    const { t: uiText, intlLocale } = useTranslation();
+    const { t: uiText, intlLocale, locale } = useTranslation();
     useDentayaThemeRuntime();
+    const copy = (source: WorkflowMessage, values?: readonly string[]) => workflowText(locale, source, values);
     const router = useRouter();
     const [org, setOrg] = useState<Org | null>(null);
     const [userId, setUserId] = useState("");
@@ -72,6 +79,13 @@ export default function FinancePage() {
     const [selectedId, setSelectedId] = useState("");
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [dataReady, setDataReady] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
+    const readLock = useRef(false);
+    const [role, setRole] = useState("");
+    const saveLock = useRef(false);
+    const loadSequence = useRef(0);
+    const [baseline, setBaseline] = useState("");
     const [message, setMessage] = useState("");
     const [quoteAmount, setQuoteAmount] = useState("");
     const [quoteStatus, setQuoteStatus] = useState<LabQuote["status"]>("draft");
@@ -96,7 +110,7 @@ export default function FinancePage() {
             setUserId(user.id);
             const { data: membership } = await supabase
                 .from("memberships")
-                .select("organization_id")
+                .select("organization_id,role")
                 .eq("user_id", user.id)
                 .eq("status", "active")
                 .limit(1)
@@ -116,6 +130,7 @@ export default function FinancePage() {
                 setLoading(false);
                 return;
             }
+            setRole(membership.role);
             const current = orgData as Org;
             if (current.org_type ===
                 "courier") {
@@ -133,52 +148,41 @@ export default function FinancePage() {
             active = false;
         };
     }, [router]);
-    async function loadAll(current: Org) {
-        let query = supabase
-            .from("cases")
-            .select("id,case_number,clinic_org_id,lab_org_id,patient_reference,title,case_type,priority,status,tooth_codes,material,shade")
-            .neq("status", "cancelled")
-            .order("updated_at", {
-            ascending: false,
-        })
-            .limit(250);
-        query =
-            current.org_type ===
-                "clinic"
-                ? query.eq("clinic_org_id", current.id)
-                : query.eq("lab_org_id", current.id);
-        const { data: caseData } = await query;
-        const rows = (caseData ??
-            []) as CaseRow[];
-        setCases(rows);
-        setSelectedId((currentId) => rows.some((item) => item.id ===
-            currentId)
-            ? currentId
-            : rows[0]?.id ??
-                "");
-        const caseIds = rows.map((item) => item.id);
-        if (!caseIds.length) {
-            setQuotes([]);
-            setFinances([]);
-            return;
-        }
-        const { data: quoteData, } = await supabase
-            .from("lab_case_quotes")
-            .select("id,case_id,amount,currency,status,notes,basis")
-            .in("case_id", caseIds);
-        setQuotes((quoteData ??
-            []) as LabQuote[]);
-        if (current.org_type ===
-            "clinic") {
-            const { data: financeData, } = await supabase
-                .from("clinic_case_finance")
-                .select("id,case_id,patient_price,discount_amount,paid_amount,currency,payment_status,overhead_pct,target_margin_pct,notes")
-                .in("case_id", caseIds);
-            setFinances((financeData ??
-                []) as ClinicFinance[]);
-        }
-        else {
-            setFinances([]);
+    async function loadAll(current: Org): Promise<boolean> {
+        if (readLock.current) return false;
+        readLock.current = true;
+        setRefreshing(true);
+        const sequence = ++loadSequence.current;
+        try {
+            let query = supabase.from("cases")
+                .select("id,case_number,clinic_org_id,lab_org_id,patient_reference,title,case_type,priority,status,tooth_codes,material,shade")
+                .neq("status", "cancelled").order("updated_at", { ascending: false }).limit(250);
+            query = current.org_type === "clinic" ? query.eq("clinic_org_id", current.id) : query.eq("lab_org_id", current.id);
+            const { data: caseData, error: caseError } = await query;
+            if (caseError) throw caseError;
+            const rows = (caseData ?? []) as CaseRow[];
+            const ids = rows.map(item => item.id);
+            const [quoteResult, financeResult] = ids.length ? await Promise.all([
+                supabase.from("lab_case_quotes").select("id,case_id,amount,currency,status,notes,basis,updated_at").in("case_id", ids),
+                current.org_type === "clinic" ? supabase.from("clinic_case_finance")
+                    .select("id,case_id,patient_price,discount_amount,paid_amount,currency,payment_status,overhead_pct,target_margin_pct,notes,updated_at").in("case_id", ids) : Promise.resolve({ data: [], error: null }),
+            ]) : [{ data: [], error: null }, { data: [], error: null }];
+            if (quoteResult.error || financeResult.error) throw quoteResult.error ?? financeResult.error;
+            if (sequence !== loadSequence.current) return false;
+            setCases(rows);
+            setQuotes((quoteResult.data ?? []) as LabQuote[]);
+            setFinances((financeResult.data ?? []) as ClinicFinance[]);
+            setSelectedId(currentId => rows.some(item => item.id === currentId) ? currentId : rows[0]?.id ?? "");
+            setDataReady(true);
+            return true;
+        } catch (error) {
+            if (sequence === loadSequence.current) {
+                setDataReady(false);
+                setMessage(dentayaError(error, workflowText(getLocale(), "Muhasebe verileri alınamadı. Kayıtlar yeniden yüklenene kadar düzenleme kapalı.")));
+            }
+            return false;
+        } finally {
+            if (sequence === loadSequence.current) { readLock.current = false; setRefreshing(false); }
         }
     }
     const selected = useMemo(() => cases.find((item) => item.id ===
@@ -197,8 +201,8 @@ export default function FinancePage() {
                 : String(suggestedLabQuote(selected)));
             setQuoteStatus(currentQuote?.status ??
                 "draft");
-            setQuoteNotes(currentQuote?.notes ??
-                "");
+            setQuoteNotes(currentQuote?.notes ?? "");
+            setBaseline(JSON.stringify([currentQuote ? String(currentQuote.amount) : String(suggestedLabQuote(selected)), currentQuote?.status ?? "draft", currentQuote?.notes ?? ""]));
             return;
         }
         const nextOverhead = currentFinance
@@ -219,11 +223,11 @@ export default function FinancePage() {
             "quote");
         setFinanceNotes(currentFinance?.notes ??
             "");
-        const recommendation = suggestedPatientPrice(currentQuote?.amount ??
-            suggestedLabQuote(selected), Number(nextOverhead), Number(nextMargin));
-        setPatientPrice(currentFinance
-            ? String(currentFinance.patient_price)
-            : String(recommendation));
+        const recommendation = currentQuote && currentQuote.currency !== (currentFinance?.currency ?? currentQuote.currency)
+            ? 0 : suggestedPatientPrice(currentQuote?.amount ?? suggestedLabQuote(selected), Number(nextOverhead), Number(nextMargin));
+        const nextPrice = currentFinance ? String(currentFinance.patient_price) : String(recommendation);
+        setPatientPrice(nextPrice);
+        setBaseline(JSON.stringify([nextPrice, String(currentFinance?.discount_amount ?? 0), String(currentFinance?.paid_amount ?? 0), currentFinance?.payment_status ?? "quote", nextOverhead, nextMargin, currentFinance?.notes ?? ""]));
     }, [
         selectedId,
         currentQuote,
@@ -231,153 +235,78 @@ export default function FinancePage() {
         org?.org_type,
         selected,
     ]);
+    const financeCurrency = currentFinance?.currency ?? currentQuote?.currency ?? "TRY";
+    const quoteCurrency = currentQuote?.currency ?? "TRY";
+    const canEdit = !!org && (org.org_type === "clinic" ? ["owner", "admin", "dentist", "assistant"] : ["owner", "admin", "technician"]).includes(role);
+    const snapshot = org?.org_type === "laboratory" ? JSON.stringify([quoteAmount, quoteStatus, quoteNotes])
+        : JSON.stringify([patientPrice, discount, paid, paymentStatus, overhead, targetMargin, financeNotes]);
+    const dirty = !!selected && !!baseline && snapshot !== baseline;
+    useUnsavedChanges(dirty, locale);
+    function chooseCase(id: string) {
+        if (saving || readLock.current || id === selectedId) return;
+        if (dirty && !window.confirm(uiText(copy("Kaydedilmemiş fiyat değişiklikleri var. Değişikliklerden vazgeçip başka vakayı açmak istiyor musunuz?")))) return;
+        setSelectedId(id);
+        setMessage("");
+    }
     async function saveLabQuote() {
-        if (!org ||
-            org.org_type !==
-                "laboratory" ||
-            !selected ||
-            !selected.lab_org_id) {
-            return;
-        }
-        const amount = Number(quoteAmount);
-        if (!Number.isFinite(amount) ||
-            amount < 0) {
-            setMessage("Geçerli bir laboratuvar fiyatı yaz.");
-            return;
-        }
-        if (quoteStatus === "sent" &&
-            amount <= 0) {
-            setMessage("Kliniğe gönderilen laboratuvar fiyatı 0 TL olamaz.");
-            return;
-        }
-        if (quoteNotes.trim().length >
-            2000) {
-            setMessage("Fiyat notu 2000 karakterden uzun olamaz.");
-            return;
-        }
-        if (typeof navigator !== "undefined" &&
-            !navigator.onLine) {
-            setMessage("İnternet bağlantısı yok. Fiyatı kaydetmeden önce bağlantının gelmesini bekle.");
-            return;
-        }
+        if (!org || org.org_type !== "laboratory" || !selected?.lab_org_id || !canEdit || !dataReady || readLock.current || saveLock.current) return;
+        const amount = moneyInput(quoteAmount);
+        if (amount === null) { setMessage(copy("Fiyatı en fazla 2 ondalık basamakla ve geçerli tutar sınırında yazın.")); return; }
+        if (quoteStatus === "sent" && amount <= 0) { setMessage(copy("Kliniğe gönderilen laboratuvar fiyatı 0 olamaz.")); return; }
+        if (quoteNotes.trim().length > 2000) { setMessage("Fiyat notu 2000 karakterden uzun olamaz."); return; }
+        if (!navigator.onLine) { setMessage(copy("İnternet bağlantısı yok. Fiyat taslağınız bu ekranda korunuyor.")); return; }
+        saveLock.current = true;
         setSaving(true);
         setMessage("");
-        const payload = {
-            case_id: selected.id,
-            lab_org_id: org.id,
-            clinic_org_id: selected.clinic_org_id,
-            amount,
-            currency: "TRY",
-            status: quoteStatus,
-            notes: quoteNotes.trim() ||
-                null,
-            basis: {
-                suggested_amount: suggestedLabQuote(selected),
-                case_type: selected.case_type,
-                material: selected.material,
-                tooth_count: selected.tooth_codes
-                    .length,
-                priority: selected.priority,
-                engine: "rules_mvp_v1",
-            },
-            updated_by: userId || null,
-            created_by: userId || null,
-            updated_at: new Date().toISOString(),
-        };
-        const { error } = await supabase
-            .from("lab_case_quotes")
-            .upsert(payload, {
-            onConflict: "case_id",
-        });
-        setSaving(false);
-        if (error) {
-            setMessage(dentayaError(error));
-            return;
-        }
-        setMessage("Laboratuvar fiyatı kaydedildi.");
-        await loadAll(org);
+        try {
+            const fields = { amount, currency: quoteCurrency, status: quoteStatus, notes: quoteNotes.trim() || null,
+                basis: { suggested_amount: suggestedLabQuote(selected), suggested_currency: "TRY", case_type: selected.case_type, material: selected.material, tooth_count: selected.tooth_codes.length, priority: selected.priority, engine: "rules_v1" },
+                updated_by: userId || null, updated_at: new Date().toISOString() };
+            const result = currentQuote ? await supabase.from("lab_case_quotes").update(fields)
+                .eq("id", currentQuote.id).eq("lab_org_id", org.id).eq("updated_at", currentQuote.updated_at).select("id")
+                : await supabase.from("lab_case_quotes").insert({ ...fields, case_id: selected.id, lab_org_id: org.id, clinic_org_id: selected.clinic_org_id, created_by: userId || null }).select("id");
+            if (result.error?.code === "23505" || (!result.error && !result.data?.length)) {
+                setMessage(copy("Fiyat başka bir oturumda değiştirildi veya işlem yetkiniz yok. Taslağınız korundu; güncel veriyi yeniden yükleyin.")); return;
+            }
+            if (result.error) throw result.error;
+            setBaseline(snapshot);
+            const refreshed = await loadAll(org);
+            if (refreshed) setMessage("Laboratuvar fiyatı kaydedildi.");
+        } catch (error) { setMessage(dentayaError(error)); }
+        finally { saveLock.current = false; setSaving(false); }
     }
     async function saveClinicFinance() {
-        if (!org ||
-            org.org_type !==
-                "clinic" ||
-            !selected) {
-            return;
-        }
-        const price = Number(patientPrice);
-        const discountValue = Number(discount || 0);
-        const paidValue = Number(paid || 0);
-        if (!Number.isFinite(price) ||
-            price < 0) {
-            setMessage("Geçerli bir hasta fiyatı yaz.");
-            return;
-        }
-        if (!Number.isFinite(discountValue) ||
-            discountValue < 0 ||
-            discountValue > price) {
-            setMessage("İndirim 0 TL ile hasta fiyatı arasında olmalı.");
-            return;
-        }
-        const netPrice = price - discountValue;
-        if (!Number.isFinite(paidValue) ||
-            paidValue < 0 ||
-            paidValue > netPrice) {
-            setMessage("Tahsilat, indirim sonrası net hasta fiyatını aşamaz.");
-            return;
-        }
-        const overheadValue = Number(overhead || 0);
-        const marginValue = Number(targetMargin || 0);
-        if (!Number.isFinite(overheadValue) ||
-            overheadValue < 0 ||
-            overheadValue > 500) {
-            setMessage("Genel gider yüzdesi 0 ile 500 arasında olmalı.");
-            return;
-        }
-        if (!Number.isFinite(marginValue) ||
-            marginValue < 0 ||
-            marginValue >= 100) {
-            setMessage("Hedef marj yüzdesi 0 ile 100 arasında olmalı.");
-            return;
-        }
-        if (financeNotes.trim().length >
-            2000) {
-            setMessage("Muhasebe notu 2000 karakterden uzun olamaz.");
-            return;
-        }
-        if (typeof navigator !== "undefined" &&
-            !navigator.onLine) {
-            setMessage("İnternet bağlantısı yok. Muhasebe kaydını göndermeden önce bağlantının gelmesini bekle.");
-            return;
-        }
+        if (!org || org.org_type !== "clinic" || !selected || !canEdit || !dataReady || readLock.current || saveLock.current) return;
+        const price = moneyInput(patientPrice), discountValue = moneyInput(discount, true), paidValue = moneyInput(paid, true);
+        if (price === null || discountValue === null || paidValue === null) { setMessage(copy("Fiyat, indirim ve tahsilatı en fazla 2 ondalık basamakla ve geçerli tutar sınırında yazın.")); return; }
+        if (cents(discountValue) > cents(price)) { setMessage(copy("İndirim hasta fiyatını aşamaz.")); return; }
+        if (cents(paidValue) > cents(price) - cents(discountValue)) { setMessage("Tahsilat, indirim sonrası net hasta fiyatını aşamaz."); return; }
+        const statusError = paymentStateError(paymentStatus, price, discountValue, paidValue);
+        if (statusError) { setMessage(copy(statusError)); return; }
+        const overheadValue = Number(overhead || 0), marginValue = Number(targetMargin || 0);
+        if (!Number.isFinite(overheadValue) || overheadValue < 0 || overheadValue > 500) { setMessage("Genel gider yüzdesi 0 ile 500 arasında olmalı."); return; }
+        if (!Number.isFinite(marginValue) || marginValue < 0 || marginValue >= 100) { setMessage("Hedef marj yüzdesi 0 ile 100 arasında olmalı."); return; }
+        if (financeNotes.trim().length > 2000) { setMessage("Muhasebe notu 2000 karakterden uzun olamaz."); return; }
+        if (!navigator.onLine) { setMessage(copy("İnternet bağlantısı yok. Muhasebe taslağınız bu ekranda korunuyor.")); return; }
+        saveLock.current = true;
         setSaving(true);
         setMessage("");
-        const { error } = await supabase
-            .from("clinic_case_finance")
-            .upsert({
-            case_id: selected.id,
-            clinic_org_id: org.id,
-            patient_price: price,
-            discount_amount: Math.max(0, discountValue),
-            paid_amount: Math.max(0, paidValue),
-            currency: "TRY",
-            payment_status: paymentStatus,
-            overhead_pct: overheadValue,
-            target_margin_pct: marginValue,
-            notes: financeNotes.trim() ||
-                null,
-            updated_by: userId || null,
-            created_by: userId || null,
-            updated_at: new Date().toISOString(),
-        }, {
-            onConflict: "case_id",
-        });
-        setSaving(false);
-        if (error) {
-            setMessage(dentayaError(error));
-            return;
-        }
-        setMessage("Hasta fiyatı ve ödeme kaydı güncellendi.");
-        await loadAll(org);
+        try {
+            const fields = { patient_price: price, discount_amount: discountValue, paid_amount: paidValue, currency: financeCurrency,
+                payment_status: paymentStatus, overhead_pct: overheadValue, target_margin_pct: marginValue, notes: financeNotes.trim() || null,
+                updated_by: userId || null, updated_at: new Date().toISOString() };
+            const result = currentFinance ? await supabase.from("clinic_case_finance").update(fields)
+                .eq("id", currentFinance.id).eq("clinic_org_id", org.id).eq("updated_at", currentFinance.updated_at).select("id")
+                : await supabase.from("clinic_case_finance").insert({ ...fields, case_id: selected.id, clinic_org_id: org.id, created_by: userId || null }).select("id");
+            if (result.error?.code === "23505" || (!result.error && !result.data?.length)) {
+                setMessage(copy("Muhasebe kaydı başka bir oturumda değiştirildi veya işlem yetkiniz yok. Taslağınız korundu; güncel veriyi yeniden yükleyin.")); return;
+            }
+            if (result.error) throw result.error;
+            setBaseline(snapshot);
+            const refreshed = await loadAll(org);
+            if (refreshed) setMessage("Hasta fiyatı ve ödeme kaydı güncellendi.");
+        } catch (error) { setMessage(dentayaError(error)); }
+        finally { saveLock.current = false; setSaving(false); }
     }
     if (loading) return <LoadingExperience title="Fiyatlandırma verileri yükleniyor…"/>;
     if (!org) {
@@ -388,10 +317,8 @@ export default function FinancePage() {
     }
     const isClinic = org.org_type ===
         "clinic";
-    const labCost = currentQuote?.amount ??
-        (selected
-            ? suggestedLabQuote(selected)
-            : 0);
+    const comparableCost = currentQuote ? currentQuote.currency === financeCurrency : financeCurrency === "TRY";
+    const labCost = comparableCost ? currentQuote?.amount ?? (selected ? suggestedLabQuote(selected) : 0) : 0;
     const clinicPrice = Number(patientPrice || 0);
     const clinicDiscount = Number(discount || 0);
     const netPatient = Math.max(0, clinicPrice -
@@ -404,6 +331,7 @@ export default function FinancePage() {
             100
         : 0;
     return (<UiNode as="main" style={ui.page}>
+      <ConnectionStatus />
       <style>{`
         * { box-sizing: border-box; }
 
@@ -484,12 +412,14 @@ export default function FinancePage() {
           {message}
         </UiNode>)}
 
+      {(!dataReady || !canEdit) && <UiNode as="div" style={ui.notice} role="status">{!canEdit ? copy("Bu rol muhasebe kayıtlarını görüntüleyebilir; düzenleme için yetkili ekip üyesine başvurun.") : copy("Kayıtlar tam yüklenmedi. Güncel veri alınana kadar kayıt işlemleri kapalı.")}</UiNode>}
+      <UiNode as="button" type="button" disabled={saving || refreshing} onClick={() => { if (!dirty || window.confirm(uiText(copy("Kaydedilmemiş değişikliklerden vazgeçip güncel kayıtları yüklemek istiyor musunuz?")))) { setMessage(""); void loadAll(org); } }} style={ui.secondary}>{copy("Güncel kayıtları yükle")}</UiNode>
       <UiNode as="section" className="finance-stats" style={ui.stats}>
         {isClinic ? (<>
-            <Stat label="Lab maliyeti" value={money(labCost, intlLocale())} detail="Labın kliniğe verdiği fiyat"/>
-            <Stat label="Hasta fiyatı" value={money(netPatient, intlLocale())} detail="İndirim sonrası"/>
-            <Stat label="Brüt fark" value={money(grossProfit, intlLocale())} detail="Vergi ve diğer giderler hariç"/>
-            <Stat label="Brüt marj" value={`${grossMargin.toFixed(1)}%`} detail="Kural tabanlı iş hesabı"/>
+            <Stat label="Lab maliyeti" value={comparableCost ? money(labCost, intlLocale(), financeCurrency) : copy("Para birimi farklı")} detail="Labın kliniğe verdiği fiyat"/>
+            <Stat label="Hasta fiyatı" value={money(netPatient, intlLocale(), financeCurrency)} detail="İndirim sonrası"/>
+            <Stat label="Brüt fark" value={comparableCost ? money(grossProfit, intlLocale(), financeCurrency) : "—"} detail="Vergi ve diğer giderler hariç"/>
+            <Stat label="Brüt marj" value={comparableCost ? `${grossMargin.toFixed(1)}%` : "—"} detail="Kural tabanlı iş hesabı"/>
           </>) : (<>
             <Stat label={uiText("Aktif vaka")} value={String(cases.length)} detail="Fiyatlandırılabilir işler"/>
             <Stat label="Teklifli" value={String(quotes.length)} detail="Kaydedilmiş lab fiyatı"/>
@@ -510,7 +440,7 @@ export default function FinancePage() {
                 item.id);
             const finance = finances.find((financeItem) => financeItem.case_id ===
                 item.id);
-            return (<UiNode as="button" key={item.id} type="button" className="finance-case" onClick={() => setSelectedId(item.id)} style={{
+            return (<UiNode as="button" key={item.id} type="button" className="finance-case" disabled={saving || refreshing} onClick={() => chooseCase(item.id)} style={{
                     ...ui.caseButton,
                     borderColor: selectedId ===
                         item.id
@@ -540,10 +470,10 @@ export default function FinancePage() {
                       {isClinic
                     ? finance
                         ? money(finance.patient_price -
-                            finance.discount_amount, intlLocale())
+                            finance.discount_amount, intlLocale(), finance.currency)
                         : "Hasta fiyatı yok"
                     : quote
-                        ? money(quote.amount, intlLocale())
+                        ? money(quote.amount, intlLocale(), quote.currency)
                         : "Teklif yok"}
                     </UiNode>
                   </UiNode>);
@@ -556,7 +486,7 @@ export default function FinancePage() {
         </UiNode>
 
         <UiNode as="section" style={ui.detail}>
-          {selected ? (<>
+          {selected ? (<UiNode as="fieldset" disabled={saving || refreshing || !canEdit || !dataReady} style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}>
               <UiNode as="div" style={ui.detailHead}>
                 <UiNode as="div">
                   <UiNode as="span" style={ui.caseNumber}>
@@ -593,12 +523,10 @@ export default function FinancePage() {
 
                   <UiNode as="div" className="finance-two" style={ui.two}>
                     <ReadOnly label="Lab maliyeti" value={currentQuote
-                    ? money(currentQuote.amount, intlLocale())
+                    ? money(currentQuote.amount, intlLocale(), currentQuote.currency)
                     : `${money(suggestedLabQuote(selected), intlLocale())} tahmini`}/>
 
-                    <ReadOnly label="Önerilen hasta fiyatı" value={money(suggestedPatientPrice(labCost, Number(overhead ||
-                    0), Number(targetMargin ||
-                    0)), intlLocale())}/>
+                    <ReadOnly label="Önerilen hasta fiyatı" value={comparableCost ? money(suggestedPatientPrice(labCost, Number(overhead || 0), Number(targetMargin || 0)), intlLocale(), financeCurrency) : copy("Para birimleri farklı; öneri hesaplanmadı")}/>
                   </UiNode>
 
                   <UiNode as="div" className="finance-two" style={ui.two}>
@@ -614,20 +542,20 @@ export default function FinancePage() {
                   </UiNode>
 
                   <UiNode as="div" className="finance-two" style={ui.two}>
-                    <Field label="Hastaya verilen fiyat (₺)">
-                      <UiNode as="input" type="number" min={0} value={patientPrice} onChange={(event) => setPatientPrice(event.target
+                    <Field label={copy("Hastaya verilen fiyat ({0})", [financeCurrency])}>
+                      <UiNode as="input" type="number" min={0} step="0.01" value={patientPrice} onChange={(event) => setPatientPrice(event.target
                     .value)} style={ui.input}/>
                     </Field>
 
-                    <Field label="İndirim (₺)">
-                      <UiNode as="input" type="number" min={0} value={discount} onChange={(event) => setDiscount(event.target
+                    <Field label={copy("İndirim ({0})", [financeCurrency])}>
+                      <UiNode as="input" type="number" min={0} step="0.01" value={discount} onChange={(event) => setDiscount(event.target
                     .value)} style={ui.input}/>
                     </Field>
                   </UiNode>
 
                   <UiNode as="div" className="finance-two" style={ui.two}>
-                    <Field label="Tahsil edilen (₺)">
-                      <UiNode as="input" type="number" min={0} value={paid} onChange={(event) => setPaid(event.target
+                    <Field label={copy("Tahsil edilen ({0})", [financeCurrency])}>
+                      <UiNode as="input" type="number" min={0} step="0.01" value={paid} onChange={(event) => setPaid(event.target
                     .value)} style={ui.input}/>
                     </Field>
 
@@ -657,7 +585,7 @@ export default function FinancePage() {
                     .value)} style={ui.textarea} placeholder="Ödeme, indirim veya özel fiyat notu…"/>
                   </Field>
 
-                  <UiNode as="button" type="button" onClick={() => void saveClinicFinance()} disabled={saving} style={ui.primaryButton}>
+                  <UiNode as="button" type="button" onClick={() => void saveClinicFinance()} disabled={saving || refreshing || !canEdit || !dataReady} style={ui.primaryButton}>
                     {saving
                     ? uiText("Kaydediliyor…")
                     : "Klinik Fiyatını Kaydet"}
@@ -682,8 +610,8 @@ export default function FinancePage() {
                   </UiNode>
 
                   <UiNode as="div" className="finance-two" style={ui.two}>
-                    <Field label="Kliniğe verilecek fiyat (₺)">
-                      <UiNode as="input" type="number" min={0} value={quoteAmount} onChange={(event) => setQuoteAmount(event.target
+                    <Field label={copy("Laboratuvar fiyatı ({0})", [quoteCurrency])}>
+                      <UiNode as="input" type="number" min={0} step="0.01" value={quoteAmount} onChange={(event) => setQuoteAmount(event.target
                     .value)} style={ui.input}/>
                     </Field>
 
@@ -708,13 +636,13 @@ export default function FinancePage() {
                     .value)} style={ui.textarea} placeholder="Materyal, özel komponent, express üretim veya ek iş notu…"/>
                   </Field>
 
-                  <UiNode as="button" type="button" onClick={() => void saveLabQuote()} disabled={saving} style={ui.primaryButton}>
+                  <UiNode as="button" type="button" onClick={() => void saveLabQuote()} disabled={saving || refreshing || !canEdit || !dataReady} style={ui.primaryButton}>
                     {saving
                     ? uiText("Kaydediliyor…")
                     : "Lab Fiyatını Kaydet"}
                   </UiNode>
                 </>)}
-            </>) : (<UiNode as="div" style={ui.empty}>
+            </UiNode>) : (<UiNode as="div" style={ui.empty}>
               Bir vaka seç.
             </UiNode>)}
         </UiNode>
@@ -771,11 +699,12 @@ function clamp(value: number, min: number, max: number) {
         ? value
         : min));
 }
-function money(value: number, localeTag: string = "tr-TR") {
+function money(value: number, localeTag: string = "tr-TR", currency: string = "TRY") {
     return new Intl.NumberFormat(localeTag, {
         style: "currency",
-        currency: "TRY",
-        maximumFractionDigits: 0,
+        currency,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
     }).format(Number.isFinite(value)
         ? value
         : 0);

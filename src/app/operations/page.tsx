@@ -1,11 +1,12 @@
 "use client";
+import { workflowText, type WorkflowMessage } from "@/lib/i18n/workflow-safety";
 import LoadingExperience from '@/app/loading-play/LoadingExperience';
 import UserText from "@/lib/i18n/UserText";
 import UiNode from "@/lib/i18n/UiNode";
 import { useTranslation } from '@/lib/i18n';
 import QuickLink from "@/app/ModuleQuickLink";
 import Link from "@/lib/i18n/UiLink";
-import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { useRouter } from "next/navigation";
 import AyaRobot from "@/app/ai/AyaRobot";
 import DentayaIcon, { type DentayaIconName } from "@/app/DentayaIcon";
@@ -27,8 +28,9 @@ const CASE_SELECT = "id,case_number,title,status,priority,due_date,created_at,up
 const REVIEW_SELECT = "case_id,version_number,status,submitted_at,reviewed_at,updated_at";
 const SHIPMENT_SELECT = "id,case_id,tracking_code,status,eta_at,remaining_duration_seconds,delivered_at,updated_at";
 export default function OperationsPage() {
-    const { t: uiText, intlLocale } = useTranslation();
+    const { t: uiText, intlLocale, locale } = useTranslation();
     useDentayaThemeRuntime();
+    const copy = (source: WorkflowMessage, values?: readonly string[]) => workflowText(locale, source, values);
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
@@ -45,6 +47,9 @@ export default function OperationsPage() {
     const [capacityDraft, setCapacityDraft] = useState("24");
     const [warningDraft, setWarningDraft] = useState("80");
     const [savingCapacity, setSavingCapacity] = useState(false);
+    const capacityLock = useRef(false);
+    const capacityEdited = useRef(false);
+    const [settingsVersion, setSettingsVersion] = useState<string | null>(null);
     const loadData = useCallback(async (org: Organization, showSpinner = false) => {
         if (showSpinner)
             setRefreshing(true);
@@ -78,7 +83,7 @@ export default function OperationsPage() {
                     .limit(500),
                 supabase
                     .from("organization_operations_settings")
-                    .select("daily_case_capacity,warning_load_percent,target_turnaround_hours")
+                    .select("daily_case_capacity,warning_load_percent,target_turnaround_hours,updated_at")
                     .eq("organization_id", org.id)
                     .maybeSingle(),
             ]);
@@ -95,8 +100,11 @@ export default function OperationsPage() {
             setReviews((reviewResult.data ?? []) as OperationsReview[]);
             setShipments((shipmentResult.data ?? []) as OperationsShipment[]);
             setSettings(nextSettings);
-            setCapacityDraft(String(nextSettings.daily_case_capacity));
-            setWarningDraft(String(nextSettings.warning_load_percent));
+            if (!capacityEdited.current) {
+                setSettingsVersion(settingsResult.data?.updated_at ?? null);
+                setCapacityDraft(String(nextSettings.daily_case_capacity));
+                setWarningDraft(String(nextSettings.warning_load_percent));
+            }
         }
         catch (error) {
             setMessage(dentayaError(error, "Operasyon verileri yüklenemedi."));
@@ -198,7 +206,7 @@ export default function OperationsPage() {
     const healthScore = operationsHealthScore(metrics, settings);
     const canManage = membership ? ["owner", "admin"].includes(membership.role) : false;
     async function saveCapacity() {
-        if (!organization || !userId || !canManage)
+        if (!organization || !userId || !canManage || capacityLock.current)
             return;
         const capacity = Number(capacityDraft);
         const warning = Number(warningDraft);
@@ -210,26 +218,26 @@ export default function OperationsPage() {
             setMessage("Kapasite uyarı eşiği %40 ile %100 arasında olmalı.");
             return;
         }
+        if (!navigator.onLine) { setMessage(copy("Kapasite ayarı için bağlantı gerekli. Taslağınız korundu.")); return; }
+        capacityLock.current = true;
         setSavingCapacity(true);
         setMessage("");
-        const payload = {
-            organization_id: organization.id,
-            daily_case_capacity: capacity,
-            warning_load_percent: warning,
-            target_turnaround_hours: settings.target_turnaround_hours,
-            created_by: userId,
-            updated_by: userId,
-        };
-        const { error } = await supabase
-            .from("organization_operations_settings")
-            .upsert(payload, { onConflict: "organization_id" });
-        if (error)
-            setMessage(dentayaError(error, "Kapasite ayarı kaydedilemedi."));
-        else {
-            setSettings((current) => ({ ...current, daily_case_capacity: capacity, warning_load_percent: warning }));
+        try {
+            const fields = { daily_case_capacity: capacity, warning_load_percent: warning,
+                target_turnaround_hours: settings.target_turnaround_hours, updated_by: userId };
+            const result = settingsVersion ? await supabase.from("organization_operations_settings").update(fields)
+                .eq("organization_id", organization.id).eq("updated_at", settingsVersion).select("updated_at")
+                : await supabase.from("organization_operations_settings").insert({ ...fields, organization_id: organization.id, created_by: userId }).select("updated_at");
+            if (result.error?.code === "23505" || (!result.error && !result.data?.length)) {
+                setMessage(copy("Kapasite ayarı başka bir oturumda değiştirildi veya işlem yetkiniz yok. Taslağınız korundu; güncel ayarı yeniden yükleyin.")); return;
+            }
+            if (result.error) throw result.error;
+            setSettingsVersion(result.data?.[0]?.updated_at ?? null);
+            capacityEdited.current = false;
+            setSettings(current => ({ ...current, daily_case_capacity: capacity, warning_load_percent: warning }));
             setMessage("Operasyon kapasitesi güncellendi.");
-        }
-        setSavingCapacity(false);
+        } catch (error) { setMessage(dentayaError(error, "Kapasite ayarı kaydedilemedi.")); }
+        finally { capacityLock.current = false; setSavingCapacity(false); }
     }
     if (loading) return <LoadingExperience title="Operasyon merkezi hazırlanıyor…"/>;
     return (<UiNode as="main" id="main-content" style={ui.page}>
@@ -244,7 +252,7 @@ export default function OperationsPage() {
           </UiNode>
         </UiNode>
         <UiNode as="div" style={ui.actions}>
-          <UiNode as="button" type="button" style={ui.secondaryButton} onClick={() => organization && void loadData(organization, true)} disabled={refreshing}>
+          <UiNode as="button" type="button" style={ui.secondaryButton} onClick={() => { if (organization && (!capacityEdited.current || window.confirm(uiText(copy("Kaydedilmemiş kapasite ayarından vazgeçip güncel veriyi yüklemek istiyor musunuz?"))))) { capacityEdited.current = false; void loadData(organization, true); } }} disabled={refreshing || savingCapacity}>
             {refreshing ? "Yenileniyor…" : "Veriyi Yenile"}
           </UiNode>
           <Link href="/ai?prompt=Bugün%20önce%20hangi%20operasyonlara%20müdahale%20etmeliyim%3F" style={ui.primaryLink}>
@@ -301,8 +309,8 @@ export default function OperationsPage() {
           </UiNode>
           <UiNode as="div" style={ui.capacityTrack}><UiNode as="span" style={{ ...ui.capacityFill, width: `${Math.min(100, metrics.capacityPercent)}%` }}/></UiNode>
           {canManage ? (<UiNode as="div" className="capacity-controls" style={ui.capacityControls}>
-              <UiNode as="label" style={ui.fieldLabel}>Günlük kapasite<UiNode as="input" value={capacityDraft} onChange={(event) => setCapacityDraft(event.target.value)} inputMode="numeric" style={ui.input}/></UiNode>
-              <UiNode as="label" style={ui.fieldLabel}>Uyarı eşiği %<UiNode as="input" value={warningDraft} onChange={(event) => setWarningDraft(event.target.value)} inputMode="numeric" style={ui.input}/></UiNode>
+              <UiNode as="label" style={ui.fieldLabel}>Günlük kapasite<UiNode as="input" value={capacityDraft} disabled={savingCapacity} onChange={(event) => { capacityEdited.current = true; setCapacityDraft(event.target.value); }} inputMode="numeric" style={ui.input}/></UiNode>
+              <UiNode as="label" style={ui.fieldLabel}>Uyarı eşiği %<UiNode as="input" value={warningDraft} disabled={savingCapacity} onChange={(event) => { capacityEdited.current = true; setWarningDraft(event.target.value); }} inputMode="numeric" style={ui.input}/></UiNode>
               <UiNode as="button" type="button" onClick={() => void saveCapacity()} disabled={savingCapacity} style={ui.smallPrimary}>
                 {savingCapacity ? uiText("Kaydediliyor…") : "Kapasiteyi Kaydet"}
               </UiNode>

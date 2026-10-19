@@ -19,12 +19,19 @@ try{
  const page=await browser.newPage({viewport:{width:1280,height:940}});page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(/hydration|Maximum update depth|unique "key"/.test(m.text()))errors.push(m.text());});
  await page.goto(url);await page.waitForFunction(()=>window.rc46Fixture);await page.waitForFunction(()=>!document.querySelector('#aya-local-message')?.disabled);
  const main=page.locator('#main-test'),textarea=main.locator('#aya-local-message');
+ if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await main.locator('.aya-conversation-shell').screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'AYA_conversation_desktop.png'),animations:'disabled'});}
+ await main.locator('.aya-prompts button').nth(2).click();assert.equal(await textarea.inputValue(),'12 cm kaç mm?');assert.equal(await main.locator('.aya-message').count(),0,'Welcome shortcuts prepare a question without sending');await textarea.fill('');
  async function ask(prompt,scope=main){const selector=scope===main?'.aya-message--assistant':'.cad-aya-messages article',composer=scope.locator(scope===main?'.aya-chat-composer':'.cad-aya-panel>form');const count=await scope.locator(selector).count();await composer.locator('textarea').fill(prompt);await composer.locator('button[type=submit]').click();await assert.doesNotReject(()=>scope.locator(selector).nth(count+(scope===main?0:1)).waitFor());if(scope===main)await page.waitForFunction(()=>!document.querySelector('#aya-local-message')?.disabled);return scope.locator(selector).last();}
  assert.match(await (await ask('kanka selam nasılsın')).textContent(),/Selam/);
  assert.match(await (await ask('zrikonya nedir')).textContent(),/Zirkonya/);
  assert.match(await (await ask('peki nasıl kontrol ederim')).textContent(),/ürün ailesi/);
  assert.match(await (await ask('Mavi bir gezegen hakkında masal yaz')).textContent(),/Mesajını aldım/);
- await main.locator('.aya-mode-bar input').first().uncheck();assert.equal(await textarea.isDisabled(),false);
+ assert.equal(await main.locator('#aya-conversation-settings').count(),0,'Settings are closed while the composer is ready');
+ await main.getByRole('button',{name:'Sohbet ayarları',exact:true}).click();
+ const settings=main.locator('#aya-conversation-settings');await settings.waitFor();
+ await page.waitForFunction(()=>document.activeElement?.id==='aya-conversation-settings');assert.equal(await settings.evaluate(node=>document.activeElement===node),true,'Opening settings moves keyboard focus into the panel');
+ await settings.locator('#aya-response-mode').selectOption('automatic');assert.equal(await textarea.isDisabled(),false);
+ await settings.getByRole('button',{name:'Soru kütüphanesi',exact:true}).click();
  assert.match(await (await ask('STL nedir')).textContent(),/üçgen yüzey/);
  const library=main.locator('#aya-catalog');await library.locator(':scope>summary').click();await library.locator('select').selectOption('fdi');await library.locator('input').fill('75');assert.equal(await library.locator('li').count(),4);await library.locator('li').first().locator('details').click();assert.match(await library.locator('li').first().textContent(),/alt sol/);
  const before=await main.locator('.aya-message').count();await library.locator('li button').first().click();assert.equal(await textarea.inputValue(),'75 hangi diştir?');assert.equal(await main.locator('.aya-message').count(),before,'Question selection must not send a message');await textarea.press('Enter');await page.waitForFunction(()=>document.querySelectorAll('.aya-message').length>0&&!document.querySelector('#aya-local-message').disabled);assert.match(await main.locator('.aya-message--assistant').last().textContent(),/alt sol/);
@@ -52,7 +59,7 @@ try{
    localAyaCancel:async()=>{if(!state.cancelAcknowledges)return new Promise(()=>{});state.pending?.({ok:false,error:'LOCAL_CANCELLED'});state.pending=null;return {ok:true};}
   };
  });
- await modelPage.goto(url);await modelPage.waitForFunction(()=>document.querySelector('.aya-mode-bar input')?.checked===false);
+ await modelPage.goto(url);await modelPage.waitForFunction(()=>document.querySelector('.aya-status--model'));
  const modelMain=modelPage.locator('#main-test'),modelText=modelMain.locator('#aya-local-message');
  async function askModel(prompt){const count=await modelMain.locator('.aya-message--assistant').count();await modelText.fill(prompt);await modelMain.locator('form button[type=submit]').click();await modelMain.locator('.aya-message--assistant').nth(count).waitFor();await modelPage.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);return modelMain.locator('.aya-message--assistant').last();}
  assert.match(await (await askModel('Dentin nedir')).textContent(),/Yerel model test cevabı/);
@@ -68,10 +75,10 @@ try{
  await modelPage.evaluate(()=>window.rc46Fixture.saveAyaKnowledge([{id:'synthetic',title:'Kurye',kind:'memory',content:'Kurye 16:40.'}],true));
  await askModel('Kurye bilgisini kullanarak devam et');
  assert.equal(await modelPage.evaluate(()=>window.rc46Model.calls.at(-1).knowledge[0].content),'Kurye 16:40.');
- await modelMain.getByRole('button',{name:'Yerel yanıtı test et',exact:true}).click();await modelPage.waitForFunction(()=>window.rc46Model.calls.length===5);await modelPage.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);assert.match(await modelMain.locator('.aya-status').textContent(),/Yerel model yanıtı alındı/);
+ await modelMain.getByRole('button',{name:'Sohbet ayarları',exact:true}).click();await modelMain.getByRole('button',{name:'Yerel yanıtı test et',exact:true}).click();await modelPage.waitForFunction(()=>window.rc46Model.calls.length===5);await modelPage.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);assert.match(await modelMain.locator('.aya-status').textContent(),/Yerel model · yanıt alındı/);
  await modelPage.evaluate(()=>window.rc46Fixture.saveAyaOptions({saveHistory:true}));
  await modelPage.waitForFunction(()=>window.rc46Fixture.readAyaState().sessions[0]?.workingMemory?.goal==='Cuma teslimine hazırlan');
- await modelPage.reload();await modelMain.locator('.aya-message--assistant').last().waitFor();await modelPage.waitForFunction(()=>document.querySelector('.aya-mode-bar input')?.checked===false);
+ await modelPage.reload();await modelMain.locator('.aya-message--assistant').last().waitFor();await modelPage.waitForFunction(()=>document.querySelector('.aya-status--model'));
  await askModel('Önceki kararımız neydi');assert.equal(await modelPage.evaluate(()=>window.rc46Model.calls.at(-1).workingMemory.goal),'Cuma teslimine hazırlan');
  await modelPage.evaluate(()=>window.rc46Fixture.saveAyaOptions({saveHistory:false}));assert.equal(await modelPage.evaluate(()=>window.rc46Fixture.readAyaState().sessions.length),0);
  for(const error of ['LOCAL_TIMEOUT','LOCAL_BUSY','MODEL_MISSING','LOCAL_EMPTY_RESPONSE','LOCAL_INVALID_PLAN']){
@@ -79,7 +86,7 @@ try{
   const prompt='Yeni ifadeyle sorumu koru: '+error;
   assert.match(await (await askModel(prompt)).textContent(),/soru kaybolmadı/);assert.equal(await modelText.inputValue(),prompt);
   assert.match(await modelMain.locator('.aya-chat-error').textContent(),error==='LOCAL_INVALID_PLAN'?/doğrulanamadı/:error==='LOCAL_TIMEOUT'?/zaman aşımına/:error==='LOCAL_BUSY'?/başka bir işlemde/:error==='MODEL_MISSING'?/bulunamadı/:/boş yanıt/);
-  assert.match(await modelMain.locator('.aya-status').textContent(),/henüz yanıt testi/,'An unsuccessful reply must clear the successful-model indicator');
+  assert.match(await modelMain.locator('.aya-status').textContent(),/Son istek tamamlanamadı/,'An unsuccessful reply must clear the successful-model indicator');
  }
  await modelPage.evaluate(()=>{window.rc46Model.mode='pending';window.rc46Model.cancelAcknowledges=false;});
  await modelText.fill('Kısa bir masal yaz');await modelMain.locator('form button[type=submit]').click();await modelPage.waitForFunction(()=>window.rc46Model.pending);
@@ -89,13 +96,37 @@ try{
  const afterCancel=await modelMain.locator('.aya-message--assistant').count();
  await modelPage.evaluate(()=>{window.rc46Model.pending?.({ok:true,output:'STALE ANSWER SHOULD NEVER APPEAR',workingMemory:{goal:'STALE GOAL',decisions:[],openQuestions:[]}});window.rc46Model.pending=null;});
  await modelPage.waitForTimeout(100);assert.equal(await modelMain.locator('.aya-message--assistant').count(),afterCancel);assert.doesNotMatch(await modelMain.textContent(),/STALE ANSWER|STALE GOAL/);
+ // Explicit memory editing is bounded and reaches Core without pretending to infer it.
+ await modelMain.getByRole('button',{name:'Sohbet ayarları',exact:true}).click();
+ await modelMain.getByRole('button',{name:'Bellek ve notlar',exact:true}).click();
+ await modelMain.getByRole('button',{name:'Belleği düzenle',exact:true}).click();
+ await modelMain.locator('#aya-memory-goal').fill('Manuel teslim hedefi');
+ await modelMain.locator('#aya-memory-decisions').fill('Bir\nİki\nÜç\nDört\nBeş\nAltı');
+ assert.equal(await modelMain.getByRole('button',{name:'Belleği kaydet',exact:true}).isDisabled(),true,'Excess memory entries cannot be silently truncated');
+ await modelMain.locator('#aya-memory-decisions').fill('Önce kontrol');
+ await modelMain.getByRole('button',{name:'Belleği kaydet',exact:true}).click();
+ await modelMain.getByRole('button',{name:'Genel',exact:true}).click();
+ await modelMain.locator('#aya-response-mode').selectOption('core');
+ const callsBeforeCore=await modelPage.evaluate(()=>window.rc46Model.calls.length);
+ await askModel('Hedefimiz neydi?');assert.match(await modelMain.locator('.aya-message--assistant').last().textContent(),/Manuel teslim hedefi/);
+ assert.equal(await modelPage.evaluate(()=>window.rc46Model.calls.length),callsBeforeCore);
+ await modelMain.locator('#aya-response-mode').selectOption('automatic');
+ await modelMain.locator('#aya-conversation-settings').press('Escape');assert.equal(await modelMain.locator('#aya-conversation-settings').count(),0);
+ assert.equal(await modelMain.getByRole('button',{name:'Sohbet ayarları',exact:true}).evaluate(node=>document.activeElement===node),true,'Escape returns focus to the settings button');
  // Turning history off removes both messages and model memory from persisted state.
- await modelPage.reload();await modelPage.waitForFunction(()=>window.rc46Fixture&&!document.querySelector('#aya-local-message')?.disabled&&document.querySelector('.aya-mode-bar input')?.checked===false);assert.equal(await modelMain.locator('.aya-message').count(),0);
+ await modelPage.reload();await modelPage.waitForFunction(()=>window.rc46Fixture&&!document.querySelector('#aya-local-message')?.disabled&&document.querySelector('.aya-status--model'));assert.equal(await modelMain.locator('.aya-message').count(),0);
  await askModel('Yeni ve bağımsız çalışma');assert.equal(await modelPage.evaluate(()=>window.rc46Model.calls[0].workingMemory.goal),'');
+ await modelPage.evaluate(()=>window.rc46Fixture.setLocale('en'));
+ await modelMain.getByRole('button',{name:'Conversation settings',exact:true}).click();
+ assert.equal(await modelMain.getByRole('combobox',{name:'Response engine',exact:true}).count(),1);
+ assert.equal(await modelMain.getByRole('button',{name:'Memory and notes',exact:true}).count(),1);
+ await modelPage.evaluate(()=>window.rc46Fixture.setLocale('de'));
+ assert.equal(await modelMain.getByRole('button',{name:'Conversation settings',exact:true}).count(),1,'New conversation controls use English fallback while retaining the selected language');
+ await modelPage.evaluate(()=>window.rc46Fixture.setLocale('tr'));
  assert.deepEqual(errors,[]);
  // Complete source cleanup before publishing the pass result as well as in finally.
  rmSync(route,{recursive:true,force:true});rmSync(path.join(root,'.next/dev/types'),{recursive:true,force:true});assert.equal(existsSync(route),false);
- console.log(JSON.stringify({pass:true,noBridgeChat:true,modelMissingDoesNotLockComposer:true,freeText:true,followup:true,catalogueFilterAndPrepare:true,historyOptIn:true,cadContext:true,noAutomaticCadActions:true,mobile:true,coreDoesNotPretendModel:true,modelFirstDefinitionsAndNewPhrasings:true,memoryAcrossTurnsAndOptInReload:true,notebookToggle:true,realModelTestButton:true,modelErrorAndCancelKeepQuestion:true,hungCancellationAndStaleResult:true,modelCallsAreMock:true},null,2));
+ console.log(JSON.stringify({pass:true,noBridgeChat:true,modelMissingDoesNotLockComposer:true,freeText:true,followup:true,catalogueFilterAndPrepare:true,historyOptIn:true,cadContext:true,noAutomaticCadActions:true,mobile:true,coreDoesNotPretendModel:true,modelFirstDefinitionsAndNewPhrasings:true,memoryAcrossTurnsAndOptInReload:true,notebookToggle:true,realModelTestButton:true,modelErrorAndCancelKeepQuestion:true,hungCancellationAndStaleResult:true,prepareOnlyWelcomeTools:true,explicitEnglishFallback:true,collapsedConversationSettings:true,keyboardSettingsFocus:true,boundedExplicitMemory:true,offlineMemoryRecall:true,modelCallsAreMock:true},null,2));
 }catch(error){console.error(logs.slice(-14000));throw error;}finally{
  // These are generated by this test server and reference its now-removed fixture.
  // Source code and production output are not removed.

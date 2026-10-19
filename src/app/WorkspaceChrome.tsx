@@ -13,6 +13,7 @@ import ExperienceSettings from "./ExperienceSettings";
 import AyaPreferencesPanel from "./ai/AyaPreferencesPanel";
 import LogoPicker from "./LogoPicker";
 import CustomizationPanel from "./CustomizationPanel";
+import { professionalShellText } from '@/lib/i18n/professional-shell';
 const MODULES: Record<string, [
     string,
     string
@@ -51,7 +52,8 @@ function readPreferences(): Preferences {
 export default function WorkspaceChrome({ children }: {
     children: ReactNode;
 }) {
-    const { t: uiText, intlLocale } = useTranslation();
+    const { t: uiText, intlLocale, locale } = useTranslation();
+    const copy = professionalShellText(locale);
     const pathname = usePathname();
     const currentModule = MODULES[pathname.split("/")[1]];
     const available = Boolean(currentModule) || ["/", "/workspace", "/design", "/cad", "/ai"].includes(pathname);
@@ -59,6 +61,11 @@ export default function WorkspaceChrome({ children }: {
     const [tab, setTab] = useState("appearance");
     const [message, setMessage] = useState("");
     const dialog = useRef<HTMLDialogElement>(null);
+    useEffect(() => { dialog.current?.close(); }, [pathname]);
+    function openPreferences() {
+        if (document.querySelector('dialog[open]')) return;
+        dialog.current?.showModal();
+    }
     useEffect(() => {
         const sync = () => setPreferences(readPreferences());
         sync();
@@ -70,7 +77,7 @@ export default function WorkspaceChrome({ children }: {
         document.documentElement.dataset.workspaceReducedMotion = String(preferences.reducedMotion);
     }, [preferences]);
     useEffect(() => {
-        const open = () => { if (available && !dialog.current?.open)
+        const open = () => { if (available && !document.querySelector('dialog[open]'))
             dialog.current?.showModal(); };
         const keyboard = (event: KeyboardEvent) => { if ((event.ctrlKey || event.metaKey) && event.key === ",") {
             event.preventDefault();
@@ -93,14 +100,14 @@ export default function WorkspaceChrome({ children }: {
         }
     }
     return <>
-    {currentModule ? <UiNode as="div" className={`module-workspace ${preferences.navigation ? "" : "module-workspace--wide"}`}>
+    {currentModule ? <UiNode as="div" className={`module-workspace professional-chrome ${preferences.navigation ? "" : "module-workspace--wide"}`}>
       {preferences.navigation && <UiNode as="aside" className="module-navigation"><UiNode as="div" className="module-brand"><BrandLogo width={164} height={36}/></UiNode><UiNode as="small">{uiText("ÇALIŞMA ALANI")}</UiNode>
         <ModuleNavigation pathname={pathname}/>
         <UiNode as="div" className="module-nav-foot"><Link href="/ai">{uiText("İsteğe bağlı AYA yardımcısı →")}</Link></UiNode>
       </UiNode>}
-      <UiNode as="div" className="module-body"><UiNode as="header" className="module-header">{!preferences.navigation && <UiNode as="details" className="module-navigation-inline"><UiNode as="summary">{uiText("Çalışma alanı menüsü")}</UiNode><UiNode as="div"><ModuleNavigation pathname={pathname}/></UiNode></UiNode>}<UiNode as="div"><UiNode as="small">DENTAYA / {uiText(currentModule[0]).toLocaleUpperCase(intlLocale())}</UiNode><UiNode as="h1">{uiText(currentModule[0])}</UiNode><UiNode as="p">{uiText(currentModule[1])}</UiNode></UiNode><UiNode as="button" onClick={() => dialog.current?.showModal()}><DentayaIcon name="settings" size={16}/> {uiText(" Görünüm")}</UiNode></UiNode><UiNode as="div" className="module-content"><ModuleWorkcard key={pathname.split("/")[1]} module={pathname.split("/")[1]}/>{children}</UiNode></UiNode>
+      <UiNode as="div" className="module-body"><UiNode as="header" className="module-header">{!preferences.navigation && <UiNode as="details" className="module-navigation-inline"><UiNode as="summary" translateChildren={false}>{copy.menu}</UiNode><UiNode as="div"><ModuleNavigation pathname={pathname}/></UiNode></UiNode>}<UiNode as="div"><UiNode as="small">DENTAYA / {uiText(currentModule[0]).toLocaleUpperCase(intlLocale())}</UiNode><UiNode as="p" className="module-header-context">{uiText(currentModule[1])}</UiNode></UiNode><UiNode as="button" onClick={openPreferences} translateChildren={false}><DentayaIcon name="settings" size={16}/> {copy.appearance}</UiNode></UiNode><UiNode as="div" className="module-content">{children}<ModuleWorkcard key={pathname.split("/")[1]} module={pathname.split("/")[1]}/></UiNode></UiNode>
     </UiNode> : children}
-    {available && !currentModule && <UiNode as="button" className="workspace-settings-trigger" title="Hızlı ayarlar · Ctrl+," onClick={() => dialog.current?.showModal()}><DentayaIcon name="settings" size={16}/> {uiText(" Görünüm")}</UiNode>}
+    {available && !currentModule && <UiNode as="button" className="workspace-settings-trigger" title="Hızlı ayarlar · Ctrl+," onClick={openPreferences}><DentayaIcon name="settings" size={16}/> {uiText(" Görünüm")}</UiNode>}
     {available && <UiNode as="dialog" ref={dialog} className="workspace-settings" aria-labelledby="workspace-settings-title" onClick={event => { if (event.target === dialog.current)
             dialog.current?.close(); }}>
       <UiNode as="div" className="workspace-settings-inner"><UiNode as="header"><UiNode as="div"><UiNode as="small">ÇALIŞMA ALANIN</UiNode><UiNode as="h2" id="workspace-settings-title">{uiText("Sana göre DentAYA")}</UiNode><UiNode as="p">{uiText("Ekrandan ayrılmadan düzenle.")}</UiNode></UiNode><UiNode as="button" autoFocus aria-label={uiText("Ayarları kapat")} onClick={() => dialog.current?.close()}>✕</UiNode></UiNode>

@@ -1,0 +1,454 @@
+
+> dentaya-production-rc@1.0.0-rc.48 verify:cad-daily-browser
+> node --import tsx scripts/verify-cad-daily-browser.mjs
+
+PASS: implant-abutment crown appears on its offset margin, sized locally.
+{
+  "pass": true,
+  "visualOnly": true,
+  "realEditor": true,
+  "realWebGL": true,
+  "placedImplantCrown": true,
+  "qualityRowsContained": true,
+  "qualityRowsDoNotOverlap": true,
+  "measurements": [
+    {
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "rows": [
+        {
+          "row": {
+            "left": 1013,
+            "top": 357.5,
+            "right": 1339,
+            "bottom": 411.5,
+            "width": 326,
+            "height": 54
+          },
+          "icon": {
+            "left": 1013,
+            "top": 374,
+            "right": 1033,
+            "bottom": 394,
+            "width": 20,
+            "height": 20
+          },
+          "text": {
+            "left": 1052,
+            "top": 367,
+            "right": 1339,
+            "bottom": 401,
+            "width": 287,
+            "height": 34
+          },
+          "parts": [
+            {
+              "tag": "STRONG",
+              "text": "Çalışma taraması",
+              "lines": [
+                {
+                  "left": 1052,
+                  "top": 367,
+                  "right": 1138.59375,
+                  "bottom": 381
+                }
+              ]
+            },
+            {
+              "tag": "SMALL",
+              "text": "Lab taraması · Ana model",
+              "lines": [
+                {
+                  "left": 1052,
+                  "top": 386,
+                  "right": 1171.125,
+                  "bottom": 400
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "row": {
+            "left": 1013,
+            "top": 417.5,
+            "right": 1339,
+            "bottom": 471.5,
+            "width": 326,
+            "height": 54
+          },
+          "icon": {
+            "left": 1013,
+            "top": 434,
+            "right": 1033,
+            "bottom": 454,
+            "width": 20,
+            "height": 20
+          },
+          "text": {
+            "left": 1052,
+            "top": 427,
+            "right": 1339,
+            "bottom": 461,
+            "width": 287,
+            "height": 34
+          },
+          "parts": [
+            {
+              "tag": "STRONG",
+              "text": "Marjin",
+              "lines": [
+                {
+                  "left": 1052,
+                  "top": 427,
+                  "right": 1084.6875,
+                  "bottom": 441
+                }
+              ]
+            },
+            {
+              "tag": "SMALL",
+              "text": "32 nokta",
+              "lines": [
+                {
+                  "left": 1052,
+                  "top": 446,
+                  "right": 1092.84375,
+                  "bottom": 460
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "row": {
+            "left": 1013,
+            "top": 477.5,
+            "right": 1339,
+            "bottom": 531.5,
+            "width": 326,
+            "height": 54
+          },
+          "icon": {
+            "left": 1013,
+            "top": 494,
+            "right": 1033,
+            "bottom": 514,
+            "width": 20,
+            "height": 20
+          },
+          "text": {
+            "left": 1052,
+            "top": 487,
+            "right": 1339,
+            "bottom": 521,
+            "width": 287,
+            "height": 34
+          },
+          "parts": [
+            {
+              "tag": "STRONG",
+              "text": "Materyal",
+              "lines": [
+                {
+                  "left": 1052,
+                  "top": 487,
+                  "right": 1097.046875,
+                  "bottom": 501
+                }
+              ]
+            },
+            {
+              "tag": "SMALL",
+              "text": "Zirkonya",
+              "lines": [
+                {
+                  "left": 1052,
+                  "top": 506,
+                  "right": 1092.71875,
+                  "bottom": 520
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "row": {
+            "left": 1013,
+            "top": 537.5,
+            "right": 1339,
+            "bottom": 591.5,
+            "width": 326,
+            "height": 54
+          },
+          "icon": {
+            "left": 1013,
+            "top": 554,
+            "right": 1033,
+            "bottom": 574,
+            "width": 20,
+            "height": 20
+          },
+          "text": {
+            "left": 1052,
+            "top": 547,
+            "right": 1339,
+            "bottom": 581,
+            "width": 287,
+            "height": 34
+          },
+          "parts": [
+            {
+              "tag": "STRONG",
+              "text": "Renk",
+              "lines": [
+                {
+                  "left": 1052,
+                  "top": 547,
+                  "right": 1077.28125,
+                  "bottom": 561
+                }
+              ]
+            },
+            {
+              "tag": "SMALL",
+              "text": "A2",
+              "lines": [
+                {
+                  "left": 1052,
+                  "top": 566,
+                  "right": 1064.125,
+                  "bottom": 580
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 1600,
+        "height": 1000
+      },
+      "rows": [
+        {
+          "row": {
+            "left": 1013,
+            "top": 357.5,
+            "right": 1339,
+            "bottom": 411.5,
+            "width": 326,
+            "height": 54
+          },
+          "icon": {
+            "left": 1013,
+            "top": 374,
+            "right": 1033,
+            "bottom": 394,
+            "width": 20,
+            "height": 20
+          },
+          "text": {
+            "left": 1052,
+            "top": 367,
+            "right": 1339,
+            "bottom": 401,
+            "width": 287,
+            "height": 34
+          },
+          "parts": [
+            {
+              "tag": "STRONG",
+              "text": "Çalışma taraması",
+              "lines": [
+                {
+                  "left": 1052,
+                  "top": 367,
+                  "right": 1138.59375,
+                  "bottom": 381
+                }
+              ]
+            },
+            {
+              "tag": "SMALL",
+              "text": "Lab taraması · Ana model",
+              "lines": [
+                {
+                  "left": 1052,
+                  "top": 386,
+                  "right": 1171.125,
+                  "bottom": 400
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "row": {
+            "left": 1013,
+            "top": 417.5,
+            "right": 1339,
+            "bottom": 471.5,
+            "width": 326,
+            "height": 54
+          },
+          "icon": {
+            "left": 1013,
+            "top": 434,
+            "right": 1033,
+            "bottom": 454,
+            "width": 20,
+            "height": 20
+          },
+          "text": {
+            "left": 1052,
+            "top": 427,
+            "right": 1339,
+            "bottom": 461,
+            "width": 287,
+            "height": 34
+          },
+          "parts": [
+            {
+              "tag": "STRONG",
+              "text": "Marjin",
+              "lines": [
+                {
+                  "left": 1052,
+                  "top": 427,
+                  "right": 1084.6875,
+                  "bottom": 441
+                }
+              ]
+            },
+            {
+              "tag": "SMALL",
+              "text": "32 nokta",
+              "lines": [
+                {
+                  "left": 1052,
+                  "top": 446,
+                  "right": 1092.84375,
+                  "bottom": 460
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "row": {
+            "left": 1013,
+            "top": 477.5,
+            "right": 1339,
+            "bottom": 531.5,
+            "width": 326,
+            "height": 54
+          },
+          "icon": {
+            "left": 1013,
+            "top": 494,
+            "right": 1033,
+            "bottom": 514,
+            "width": 20,
+            "height": 20
+          },
+          "text": {
+            "left": 1052,
+            "top": 487,
+            "right": 1339,
+            "bottom": 521,
+            "width": 287,
+            "height": 34
+          },
+          "parts": [
+            {
+              "tag": "STRONG",
+              "text": "Materyal",
+              "lines": [
+                {
+                  "left": 1052,
+                  "top": 487,
+                  "right": 1097.046875,
+                  "bottom": 501
+                }
+              ]
+            },
+            {
+              "tag": "SMALL",
+              "text": "Zirkonya",
+              "lines": [
+                {
+                  "left": 1052,
+                  "top": 506,
+                  "right": 1092.71875,
+                  "bottom": 520
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "row": {
+            "left": 1013,
+            "top": 537.5,
+            "right": 1339,
+            "bottom": 591.5,
+            "width": 326,
+            "height": 54
+          },
+          "icon": {
+            "left": 1013,
+            "top": 554,
+            "right": 1033,
+            "bottom": 574,
+            "width": 20,
+            "height": 20
+          },
+          "text": {
+            "left": 1052,
+            "top": 547,
+            "right": 1339,
+            "bottom": 581,
+            "width": 287,
+            "height": 34
+          },
+          "parts": [
+            {
+              "tag": "STRONG",
+              "text": "Renk",
+              "lines": [
+                {
+                  "left": 1052,
+                  "top": 547,
+                  "right": 1077.28125,
+                  "bottom": 561
+                }
+              ]
+            },
+            {
+              "tag": "SMALL",
+              "text": "A2",
+              "lines": [
+                {
+                  "left": 1052,
+                  "top": 566,
+                  "right": 1064.125,
+                  "bottom": 580
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "backend": "intercepted API fixture; no production data"
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

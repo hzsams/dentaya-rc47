@@ -109,3 +109,8 @@ export function uniqueCadCommands(items: CadToolMatrixItem[]): CadToolMatrixItem
     }
     return [...commands.values()];
 }
+
+/** Contact views require an actual opposing surface, independently of task permissions. */
+export function cadViewsForScene(views:readonly CadViewMode[],antagonistReady:boolean):CadViewMode[]{
+    return views.filter(view=>view!=='contact'||antagonistReady);
+}

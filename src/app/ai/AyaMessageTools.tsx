@@ -2,7 +2,7 @@
 import {useState} from 'react';
 import UiNode from '@/lib/i18n/UiNode';
 import {useTranslation} from '@/lib/i18n';
-import {dentalFactLanguage} from '@/lib/dental-facts';
+import {dentalFactLanguage} from '@/lib/dental-language';
 import {WORK_TOOLS_TEXT} from '@/lib/i18n/work-tools';
 import type {AyaMessage} from '@/lib/aya-local-state';
 import {DENTAYA_RELEASE} from '@/lib/release';

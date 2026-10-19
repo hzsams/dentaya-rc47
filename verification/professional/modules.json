@@ -1,0 +1,93 @@
+{
+  "date": "2026-10-19",
+  "status": "pass",
+  "scope": "Operational module hardening; source and renderer validation",
+  "checks": [
+    {
+      "command": "node --import tsx scripts/verify-workflow-safety.ts",
+      "status": "pass",
+      "coverage": [
+        "payload-scoped idempotency keys",
+        "numeric(12,2) input bounds and cents",
+        "payment state consistency",
+        "desktop invitation token parsing",
+        "TR/EN copy fallback",
+        "strict calendar dates",
+        "locale-independent appointment edit time",
+        "appointment overlap boundaries"
+      ]
+    },
+    {
+      "command": "node --import tsx scripts/verify-e2e-workflow.ts",
+      "status": "pass",
+      "backend": "PGlite with all 27 repository migrations",
+      "coverage": [
+        "existing clinic/lab/CAD/shipment/delivery workflow",
+        "financial record version conflicts",
+        "quote version conflicts",
+        "currency and decimal receipt preservation",
+        "patient receipt privacy under RLS",
+        "appointment version conflicts",
+        "zero-row writes from stale or unauthorized actors"
+      ]
+    },
+    {
+      "command": "node scripts/verify-professional-modules-browser.mjs",
+      "status": "pass",
+      "exit_code": 0,
+      "runtime": "Chromium / Next development server; real /finance and /messages route components",
+      "backend": "Synthetic intercepted Supabase HTTP",
+      "coverage": [
+        "failed finance refresh preserves loaded records",
+        "financial stale/zero-row writes preserve drafts",
+        "EUR and cents survive editing",
+        "financial synchronous double-click dispatches once",
+        "case switch and cancelable programmatic navigation respect unsaved drafts",
+        "newest 100 messages plus earlier history pagination",
+        "late conversation fetch cannot replace selected thread",
+        "per-recipient message drafts",
+        "unrelated duplicate-key failure cannot clear a message",
+        "text entered during sending survives completion",
+        "composer and Send visible at the top of 1366x768 and 1440x1000 desktop viewports",
+        "100 to 120 history messages increase only the inner scroll extent",
+        "mobile 390x844 thread/chat single-column access without horizontal overflow"
+      ],
+      "page_errors": [],
+      "log": "/workspace/dentaya-professional-validation/modules-browser.log",
+      "screenshots": [
+        "/workspace/dentaya-professional-validation/modules/finance-records.png",
+        "/workspace/dentaya-professional-validation/modules/message-records.png",
+        "/workspace/dentaya-professional-validation/modules/message-records-mobile.png"
+      ],
+      "ergonomics_verified": true
+    },
+    {
+      "command": "Targeted ESLint --max-warnings=0",
+      "status": "pass"
+    },
+    {
+      "command": "tsc --noEmit --pretty false",
+      "status": "pass"
+    },
+    {
+      "command": "node scripts/verify-visible-translations.mjs",
+      "status": "pass",
+      "existing_pack_captions": 2544,
+      "existing_translated_packs": 45,
+      "new_copy": "Explicit Turkish / English fallback"
+    }
+  ],
+  "limits": [
+    "Live Supabase, real patient records and clinical or regulatory approval were not verified.",
+    "Appointment overlap detection remains a client preflight; simultaneous creation from different clients is not guaranteed collision-free by a database constraint.",
+    "Financial and message drafts are session-memory data with navigation protection, not persistent crash-recovery storage.",
+    "Community was inspected but not modified or browser-tested in this operational hardening task.",
+    "Browser evidence covers development routes and synthetic HTTP responses; it does not establish live-service or Windows installer readiness."
+  ],
+  "finalReviewFixes": {
+    "refreshLocksEditingAndSaving": true,
+    "pendingThreadBlocksSendAndKeepsDraft": true,
+    "labCurrencyLabelMatchesRecord": true,
+    "retestedBrowserExitCode": 0
+  }
+}

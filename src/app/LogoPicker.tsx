@@ -2,13 +2,23 @@
 import UiNode from "@/lib/i18n/UiNode";
 import Image from "next/image";
 import { useState } from "react";
-import { BrandLogo, LOGO_OPTIONS, chooseBrandLogo, logoFiles, useBrandLogo } from "./BrandLogo";
+import { useLocale } from "@/lib/i18n";
+import { premiumBrandCopy } from "@/lib/i18n/brand";
+import { BRAND_ASSET_VERSION, BrandLogo, LOGO_OPTIONS, chooseBrandLogo, logoFiles, useBrandLogo } from "./BrandLogo";
 export default function LogoPicker() {
+    const copy = premiumBrandCopy(useLocale());
     const selected = useBrandLogo();
     const [query, setQuery] = useState("");
     const [message, setMessage] = useState("");
     const [desktopBusy, setDesktopBusy] = useState(false);
+    const options = LOGO_OPTIONS.map(option => ({...option, name:copy.names[option.id], description:copy.descriptions[option.id], material:copy.materials[option.material]}));
+    const filtered = options.filter(option => `${option.name} ${option.description} ${option.material}`.toLocaleLowerCase("tr").includes(query.trim().toLocaleLowerCase("tr")));
     return <>
+    <UiNode as="div" className="brand-premium-collection">
+      <UiNode as="div" className="brand-premium-heading"><UiNode as="span" translateChildren={false}>{copy.atelier}</UiNode><UiNode as="span" translateChildren={false}>{copy.collection}</UiNode></UiNode>
+      <Image className="brand-premium-artwork" src="/brand/DentAYA_Premium_Atelier.webp" alt={copy.artworkAlt} width={1672} height={941}/>
+      <UiNode as="p" translateChildren={false}>{copy.intro}</UiNode>
+    </UiNode>
     <UiNode as="div" className="logo-live-preview" aria-label="Seçili logo önizlemesi"><BrandLogo width={250} height={60}/></UiNode>
     <UiNode as="button" type="button" disabled={desktopBusy} className="desktop-logo-button" onClick={async () => {
             if (!window.dentayaDesktop) {
@@ -27,17 +37,19 @@ export default function LogoPicker() {
                 setDesktopBusy(false);
             }
         }}>{desktopBusy ? "Simge güncelleniyor…" : "Masaüstü simgesine uygula"}</UiNode>
-    <UiNode as="p" role="status" aria-live="polite">{message || `Seçili logo: ${LOGO_OPTIONS.find(option => option.id === selected)?.name}`}</UiNode>
+    <UiNode as="p" className="brand-premium-status" role="status" aria-live="polite">{message || `Seçili logo: ${options.find(option => option.id === selected)?.name}`}</UiNode>
     <UiNode as="label" className="logo-search">DentAYA logo seçenekleri<UiNode as="input" type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Diş, tarama, geometri…"/></UiNode>
+    <UiNode as="p" className="brand-premium-result-count" role="status" aria-live="polite">{filtered.length} / {LOGO_OPTIONS.length}</UiNode>
     <UiNode as="div" className="logo-choice-grid" role="group" aria-label="DentAYA logo seçenekleri">
-      {LOGO_OPTIONS.filter(option => `${option.name} ${option.description}`.toLocaleLowerCase("tr").includes(query.toLocaleLowerCase("tr"))).map(option => <UiNode as="button" key={option.id} type="button" className="logo-choice" aria-pressed={selected === option.id} onClick={() => {
+      {filtered.map(option => <UiNode as="button" key={option.id} type="button" className="logo-choice brand-premium-choice" aria-pressed={selected === option.id} onClick={() => {
                 const saved = chooseBrandLogo(option.id);
                 setMessage(saved ? `${option.name} uygulandı ve kaydedildi.` : `${option.name} uygulandı. Cihaz kaydı kullanılamıyor; yeniden açılışta tekrar seçmeniz gerekebilir.`);
             }}>
-        <UiNode as="span" className="logo-choice-preview"><Image src={`/logos/${logoFiles[option.id]}_light.svg?brand=38`} alt="" width={512} height={112} style={{ width: "100%", height: "auto" }}/></UiNode>
-        <UiNode as="strong">{String(LOGO_OPTIONS.indexOf(option) + 1).padStart(2, "0")} · {option.name}{selected === option.id ? " ✓" : ""}</UiNode>
-        <UiNode as="span">{option.description}</UiNode>
+        <UiNode as="span" className="logo-choice-preview"><Image src={`/logos/${logoFiles[option.id]}_light.svg?brand=${BRAND_ASSET_VERSION}`} alt="" width={512} height={112} style={{ width: "100%", height: "auto" }}/></UiNode>
+        <UiNode as="span" className="brand-premium-choice-heading"><UiNode as="strong" translateChildren={false}>{option.id} · {option.name}{selected === option.id ? " ✓" : ""}</UiNode><UiNode as="span" className="brand-premium-material" translateChildren={false}>{option.material}</UiNode></UiNode>
+        <UiNode as="span" translateChildren={false}>{option.description}</UiNode>
       </UiNode>)}
     </UiNode>
+    {!filtered.length && <UiNode as="p" className="brand-premium-empty" role="status" translateChildren={false}>{copy.empty}</UiNode>}
   </>;
 }

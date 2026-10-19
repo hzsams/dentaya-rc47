@@ -1,0 +1,29 @@
+{
+  "scope": "AYA conversation experience and deterministic Core context",
+  "sourceVersion": "1.0.0-rc.48",
+  "implemented": [
+    "Conversation-first main view; one optional settings side panel for model setup, memory/notebook, catalog, history and preferences.",
+    "Explicit Automatic/Core response mode; local model retains normal-language priority whenever ready.",
+    "Prepare-only starter tools, visible errors with retry/edit, keyboard focus and Escape return.",
+    "Manual bounded working-memory editing; explicit offline goal/decision recall; history opt-in preserves memory with conversation.",
+    "Offline catalog topic survives acknowledgements and stops at new work-tool, document or model context.",
+    "New shell copy provides Turkish/English and English fallback while preserving the existing language packs.",
+    "Decorative diagonal arrows use inline SVG after screenshot review found missing font glyphs."
+  ],
+  "validation": {
+    "targetedEslint": "passed, zero warnings",
+    "typecheck": "passed",
+    "ayaCoreAndCatalog": "passed, 1008 canonical records, 77 wording regressions, export consistency and context boundaries",
+    "localAya": "passed; runtime/inference mocked",
+    "ayaAgent": "passed; no inference",
+    "ayaCadAgent": "passed; typed callbacks and state rejection",
+    "conversationBrowser": "passed; model-first, fallback, memory, history, question preservation, cancellation/stale response, no automatic CAD actions, mobile, settings keyboard, English fallback",
+    "afterDecorativeSvgChange": "targeted ESLint and conversation unit checks passed; no behavior change; root will refresh the production screenshot"
+  },
+  "evidence": "/workspace/dentaya-professional-validation/aya-browser.log",
+  "limits": [
+    "Browser local model bridge and CAD backend context are fixtures; this is not native local inference or clinical validation.",
+    "Windows packaging, live backend validation and general production readiness are outside these AYA checks.",
+    "Unknown arbitrary requests still require an installed working local model; offline Core is a deterministic guide."
+  ]
+}

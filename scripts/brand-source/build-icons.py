@@ -9,4 +9,4 @@ for file in sorted((root / 'public/logos').glob('*_icon.png')):
     target = root / 'electron/logos' / (file.stem + '.ico')
     image.save(target, format='ICO', sizes=sizes)
 Image.open(root / 'public/icon-512.png').save(root / 'electron/dentaya.ico', format='ICO', sizes=sizes)
-print('RC38: 18 compatible ICO files and the installer icon; 16–256 px sizes.')
+print('DentAYA Premium: 18 ICO choices and the installer icon; 16–256 px sizes.')

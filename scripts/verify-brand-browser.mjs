@@ -7,8 +7,9 @@ import {fileURLToPath,pathToFileURL} from 'node:url';
 const project=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const {chromium}=await import(process.env.DENTAYA_PLAYWRIGHT_MODULE?pathToFileURL(process.env.DENTAYA_PLAYWRIGHT_MODULE).href:'playwright');
 const userId='11111111-1111-4111-8111-111111111111',orgId='22222222-2222-4222-8222-222222222222';
-const ids=['01','02','03','06','09','12','13','18'];
-const legacy={'04':'03','05':'09','07':'03','08':'02','10':'01','11':'18','14':'03','15':'12','16':'09','17':'02'};
+const ids=Array.from({length:18},(_,index)=>String(index+1).padStart(2,'0'));
+// Previously aliased IDs now retain their own restored, distinct marks.
+const compatibleIds=['04','05','07','08','10','11','14','15','16','17'];
 const errors=[];
 let server,browser,logs='',serverExit=null;
 try {
@@ -51,11 +52,12 @@ try {
       return imgs.length===1&&imgs[0].complete&&imgs[0].naturalWidth>0&&imgs[0].getAttribute('src').includes('/'+id+'_')&&document.querySelector('.logo-live-preview .brand-lockup').dataset.logoMode===display;
     },{id,display});
     assert.equal(await preview().getAttribute('alt'),'DENTAYA');
-    const src=await preview().getAttribute('src');assert.ok(src.includes('brand=38'));
-    const favicon=await page.locator('link[rel="icon"]').first().getAttribute('href');assert.ok(favicon.includes('/'+id+'_')&&favicon.includes('_icon.svg?brand=38'));
+    const src=await preview().getAttribute('src');assert.ok(src.includes('brand=premium-2'));
+    const favicon=await page.locator('link[rel="icon"]').first().getAttribute('href');assert.ok(favicon.includes('/'+id+'_')&&favicon.includes('_icon.svg?brand=premium-2'));
     assert.ok(display==='icon'?src.includes('_icon.svg'):display==='word'?src.includes('_word'):!src.includes('_word')&&!src.includes('_icon'));
   }
-  await openSettings();assert.equal(await choices().count(),8);assert.equal(await stored(),'09');await expectFile('09');
+  await openSettings();assert.equal(await choices().count(),18);assert.equal(await stored(),'16');await expectFile('16');
+  await page.waitForFunction(()=>{const artwork=document.querySelector('.brand-premium-artwork');return artwork?.complete&&artwork.naturalWidth>0;});
   for(const theme of ['theme:midnight','theme:light']){
     await preset().selectOption(theme);
     await page.waitForFunction(theme=>document.documentElement.dataset.dyColorFamily===(theme==='theme:light'?'light':'dark'),theme);
@@ -74,16 +76,19 @@ try {
     await page.waitForFunction(value=>document.querySelector('.logo-live-preview img').getAttribute('width')===String(Math.round(250*value/100)),value);
   }
   await page.reload();await page.locator('.settings-nav button').filter({hasText:'Görünüm'}).click();await expectFile('01');assert.equal(await scale.inputValue(),'125');
-  for(const [old,id] of Object.entries(legacy)){
-    await page.evaluate(old=>{localStorage.setItem('dentaya-logo-choice',old);window.dispatchEvent(new StorageEvent('storage',{key:'dentaya-logo-choice',newValue:old}));},old);await expectFile(id);
+  for(const id of compatibleIds){
+    await page.evaluate(id=>{localStorage.setItem('dentaya-logo-choice',id);window.dispatchEvent(new StorageEvent('storage',{key:'dentaya-logo-choice',newValue:id}));},id);await expectFile(id);
   }
   await choices().first().click();
-  await page.locator('.logo-search input').fill('CAD');assert.equal(await choices().count(),1);await page.locator('.logo-search input').fill('');assert.equal(await choices().count(),8);
+  await page.locator('.logo-search input').fill('CAD');assert.equal(await choices().count(),1);
+  await page.locator('.logo-search input').fill('Titanyum');assert.equal(await choices().count(),4);
+  await page.locator('.logo-search input').fill('no-matching-brand');assert.equal(await choices().count(),0);assert.equal(await page.locator('.brand-premium-empty').count(),1);
+  await page.locator('.logo-search input').fill('');assert.equal(await choices().count(),18);
   const download=page.waitForEvent('download');await page.locator('.customize-panel:visible').getByRole('button',{name:'Ek ayarları dışa aktar',exact:true}).click();
   const exported=JSON.parse(await fs.readFile(await (await download).path(),'utf8'));assert.equal(exported.logo,'01');assert.equal(exported.version,2);
   const importFile=page.locator('.customize-panel:visible input[type="file"]');
-  await importFile.setInputFiles({name:'legacy.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify({version:1,logo:'17',customization:exported.customization}))});await expectFile('02');assert.equal(await stored(),'02');
-  await importFile.setInputFiles({name:'invalid.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify({...exported,logo:'../../escape'}))});assert.equal(await stored(),'02');
+  await importFile.setInputFiles({name:'legacy.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify({version:1,logo:'17',customization:exported.customization}))});await expectFile('17');assert.equal(await stored(),'17');
+  await importFile.setInputFiles({name:'invalid.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify({...exported,logo:'../../escape'}))});assert.equal(await stored(),'17');
   await importFile.setInputFiles({name:'current.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(exported))});await expectFile('01');
   await page.evaluate(()=>{window.rc38SetItem=Storage.prototype.setItem;Storage.prototype.setItem=function(key,value){if(key==='dentaya-logo-choice')throw Error('blocked');return window.rc38SetItem.call(this,key,value);};});
   await choices().nth(2).click();await expectFile('03');assert.match(await page.locator('p[role="status"]').filter({hasText:'CAD Geometry uygulandı.'}).textContent(),/Cihaz kaydı kullanılamıyor/);
@@ -95,7 +100,15 @@ try {
   await page.locator('.language-select--compact select').selectOption('tr');
   await page.setViewportSize({width:390,height:844});await page.locator('.logo-choice-grid').scrollIntoViewIfNeeded();
   assert.ok(await page.locator('.logo-choice-grid').evaluate(node=>node.getBoundingClientRect().right<=innerWidth+1));assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
-  if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.locator('.logo-choice-grid').screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC38_logos_mobile.png')});await page.setViewportSize({width:1440,height:1040});await page.locator('.logo-choice-grid').screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC38_logos_desktop.png')});await page.locator('.logo-live-preview').screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC38_main_logo.png')});}
+  if(process.env.DENTAYA_SCREENSHOT_DIR){
+    await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});
+    // Settings has its own scrolling surface. A full-height locator screenshot
+    // would include clipped blank regions below the viewport, so capture the UI.
+    await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'DentAYA_Premium_logos_mobile.png')});
+    await page.setViewportSize({width:1440,height:1040});await page.locator('.logo-choice-grid').scrollIntoViewIfNeeded();
+    await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'DentAYA_Premium_logos_desktop.png')});
+    await page.locator('.logo-live-preview').screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'DentAYA_Premium_main_logo.png')});
+  }
   assert.deepEqual(errors,[]);
-  console.log(JSON.stringify({pass:true,logos:8,themes:2,displayModes:3,logoThemeModeCombinations:48,legacyIds:10,startupMigration:true,reloadAndScale:true,legacyAndCurrentImports:true,invalidImportBlocked:true,storageFailureReported:true,desktopIpc:'mocked',locales:locales.length,brandSpelling:'DENTAYA',mobileFits:true,backend:'mocked; no production data'},null,2));
+  console.log(JSON.stringify({pass:true,logos:18,themes:2,displayModes:3,logoThemeModeCombinations:108,compatibleIds:10,restoredIdPreserved:true,artworkLoaded:true,searchAndEmptyState:true,reloadAndScale:true,legacyAndCurrentImports:true,invalidImportBlocked:true,storageFailureReported:true,desktopIpc:'mocked',locales:locales.length,brandSpelling:'DENTAYA',mobileFits:true,backend:'mocked; no production data'},null,2));
 }catch(error){console.error(logs);throw error;}finally{await browser?.close();if(server){server.kill('SIGTERM');await new Promise(resolve=>{if(server.exitCode!==null)return resolve();server.once('exit',resolve);setTimeout(resolve,3000);});}await fs.rm(path.join(project,'.next/dev/types'),{recursive:true,force:true});}

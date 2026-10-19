@@ -3,7 +3,7 @@ import UiNode from '@/lib/i18n/UiNode';
 import {useEffect,useRef,useState,useSyncExternalStore} from 'react';
 import {useTranslation} from '@/lib/i18n';
 import {LOADING_PLAY_TEXT} from '@/lib/i18n/loading-play';
-import {dentalFactLanguage} from '@/lib/dental-facts';
+import {dentalFactLanguage} from '@/lib/dental-language';
 import {loadingCount,subscribeLoading} from '@/lib/loading-activity';
 import MiniGameHub from './MiniGameHub';
 import {MINI_GAME_TEXT} from '@/lib/i18n/mini-games';

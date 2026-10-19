@@ -225,8 +225,8 @@ body:has(.cad-professional) .workspace-settings-trigger{display:none}
 .cad-professional[data-workspace-mode=wizard] .cad-inspector-section[data-primary=true]>.cad-section-body{padding-top:12px}
 .cad-professional .cad-section-body{gap:11px}
 .cad-professional .cad-section-body .cad-quality-row{padding:8px 0!important;gap:9px!important;border:0!important;border-bottom:1px solid var(--cad-line)!important;border-radius:0!important;background:transparent!important}
-.cad-quality-row>span{width:20px!important;height:20px!important;font-size:11px!important}
-.cad-quality-row>div{min-width:0}
+.cad-quality-row>span:first-child{width:20px!important;height:20px!important;font-size:11px!important}
+.cad-quality-row>span+span{min-width:0;overflow-wrap:anywhere}
 .cad-quality-row strong{font-size:10px!important}
 .cad-quality-row small{font-size:10px!important;line-height:1.5!important}
 .cad-professional .cad-section-body>div:has(>.cad-anatomy-preset){grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important}
@@ -296,3 +296,30 @@ button.cad-hub-link{border:0;background:transparent;color:inherit;cursor:pointer
 
 .cad-color-groups{border-top:1px solid var(--cad-line);padding:9px 0;font-size:10px}.cad-color-groups>summary{cursor:pointer}.cad-color-inputs{display:grid;gap:8px;padding:10px 0}.cad-color-inputs>label{display:flex;align-items:center;justify-content:space-between;gap:8px}.cad-color-inputs input{width:34px;height:25px;padding:1px;border:1px solid var(--cad-line);background:transparent}.cad-color-groups>button{font:inherit;color:var(--cad-ink);background:transparent;border:1px solid var(--cad-line);padding:6px 8px;border-radius:3px}
 .cad-aya-checklist{border:1px solid var(--dy-border);border-radius:6px;padding:9px;flex-shrink:0}.cad-aya-checklist summary{display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-weight:600;min-height:28px}.cad-aya-checklist p{font-size:10px;color:var(--dy-muted);line-height:1.5;margin:6px 0}.cad-aya-checklist ul{display:grid;gap:4px;margin:8px 0 0;padding:0;list-style:none}.cad-aya-checklist li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:5px 8px;border-inline-start:3px solid var(--dy-muted);background:var(--dy-surface2)}.cad-aya-checklist li[data-check-state=ready]{border-color:#59af8a}.cad-aya-checklist li[data-check-state=attention]{border-color:#c29a50}.cad-aya-checklist li strong{font-size:10px;font-weight:500}.cad-aya-next{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-shrink:0}.cad-aya-next button{border-color:var(--dy-accent)}.cad-aya-panel .aya-response-tools{margin-top:7px}
+
+/* Keep the conversation and composer usable while CAD context stays one disclosure away. */
+.cad-save-state{display:inline-flex;align-items:center;gap:5px;max-width:168px;min-width:0;color:var(--cad-muted);font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.cad-save-state svg{flex:none}.cad-save-state[data-save-state=dirty]{color:var(--cad-accent)}
+.cad-professional .cad-aya-panel{overflow:hidden;gap:10px;padding:14px;border-radius:8px;box-shadow:0 12px 34px #0004}
+.cad-aya-panel>header{padding-bottom:8px;border-bottom:1px solid var(--cad-line)}
+.cad-aya-context{border:1px solid var(--cad-line);border-radius:5px;font-size:11px}
+.cad-aya-context>summary{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:36px;padding:7px 10px;cursor:pointer;font-weight:600;list-style:none}
+.cad-aya-context>summary::before{content:'▸';color:var(--dy-muted)}.cad-aya-context[open]>summary::before{content:'▾'}
+.cad-aya-context>summary>small{margin-inline-start:auto;font-variant-numeric:tabular-nums}
+.cad-aya-context-body{display:grid;gap:8px;max-height:min(30dvh,260px);padding:0 8px 8px;overflow:auto;overscroll-behavior:contain}
+.cad-aya-panel .cad-aya-messages{min-height:90px;flex:1 1 0;overscroll-behavior:contain;scrollbar-width:thin;padding-inline-end:3px}
+.cad-aya-panel>label{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--dy-muted)}
+.cad-aya-panel>label select{flex:1;min-width:0;max-width:100%;font-size:11px;min-height:32px}
+.cad-aya-panel>form{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:8px;padding-top:8px;border-top:1px solid var(--cad-line)}
+.cad-aya-panel>form textarea{resize:none;max-height:126px;min-height:76px}.cad-aya-panel>form>button{min-width:66px}
+.cad-aya-panel>small{font-size:10px}.cad-aya-panel>[role=alert]{max-height:64px;overflow:auto;font-size:11px;line-height:1.45}
+.cad-aya-actions{gap:5px}.cad-aya-actions>button{font-size:11px;min-height:32px}
+@media(max-width:1100px){.cad-save-state{max-width:20px}.cad-save-state[data-save-state=dirty]{max-width:20px}}
+@media(max-height:700px){.cad-aya-context-body{max-height:22dvh}.cad-aya-panel{gap:7px!important}.cad-aya-panel>small{display:none}.cad-aya-panel>form textarea{min-height:62px}.cad-aya-panel .cad-aya-actions>button{padding:5px 7px}}
+
+.cad-context-error{display:flex;align-items:center;gap:10px;padding:9px 14px;flex:none;border-bottom:1px solid var(--dy-danger);background:color-mix(in srgb,var(--dy-danger) 8%,var(--cad-surface));font-size:12px}
+.cad-context-error>[data-user-content]{flex:1;min-width:0}.cad-context-error>button{min-height:32px;flex:none;border:1px solid var(--cad-line);border-radius:4px;background:var(--cad-surface);padding:5px 9px}
+.cad-aya-panel>.cad-aya-context{flex:0 1 auto;min-height:36px;max-height:36%;overflow:auto;scrollbar-width:thin}
+.cad-aya-context>summary{position:sticky;top:0;z-index:1;background:var(--dy-surface)}
+.cad-aya-context-body{max-height:none;overflow:visible}
+@media(max-height:820px){.cad-professional .cad-aya-panel{gap:7px}.cad-aya-panel>small{display:none}.cad-aya-panel .cad-aya-messages{min-height:60px}}

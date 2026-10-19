@@ -76,7 +76,7 @@ try {
   await page.waitForFunction(()=>document.querySelector('.dental-break-status')?.textContent?.includes('Yükleme tamamlandı'));
   await breakDialog.getByRole('button',{name:'Oyunları kapat',exact:true}).click();assert.equal(await page.locator('.cad-scene-viewport .dental-facts').count(),0);assert.equal(await page.locator('.cad-save-dialog[open]').count(),0);
   if(await page.locator('[data-loading-reading]').isVisible())await page.getByRole('button',{name:'Çalışmaya geç',exact:false}).click();
-  console.log('PASS: real CAD loading fact and nonmodal game; data readiness is not delayed; optional ten-second reading can be skipped.');
+  console.log('PASS: real CAD loading fact and nonmodal game; data readiness is not delayed; optional five-second reading can be skipped.');
   const task = () => page.locator('.cad-professional').getAttribute('data-cad-task');
   const tools = () => page.locator('.cad-tool-palette [data-cad-tool]').evaluateAll(nodes=>nodes.map(n=>n.dataset.cadTool));
   const canvasStable = () => page.evaluate(()=>document.querySelector('canvas')===window.__guidedCanvas);

@@ -8,7 +8,7 @@ import type {AyaMessage,AyaOptions} from './aya-local-state';
 
 type ModelResult={ok:boolean;output?:string;error?:string;references?:AyaMessage['references'];workingMemory?:AyaWorkingMemory;proposals?:AyaProposal[]};
 export type AyaReply={ok:true;output:string;engine:'model'|'guide'|'core';references:NonNullable<AyaMessage['references']>;warning?:string;cancelled?:boolean;workingMemory?:AyaWorkingMemory;proposals?:AyaProposal[]};
-type Input={prompt:string;history?:AyaMessage[];knowledge?:unknown;cadContext?:AyaCadContext|null;options?:Partial<AyaOptions>;locale?:string;forceModel?:boolean};
+type Input={prompt:string;history?:AyaMessage[];workingMemory?:AyaWorkingMemory;knowledge?:unknown;cadContext?:AyaCadContext|null;options?:Partial<AyaOptions>;locale?:string;forceModel?:boolean};
 export async function resolveAyaReply(input:Input,{t=s=>s,callModel}:{t?:(s:string)=>string;callModel?:()=>Promise<ModelResult>}={}):Promise<AyaReply>{
  const {prompt,knowledge=[],cadContext=null,history=[],options={},locale='tr',forceModel=false}=input;
  if(!prompt.trim()||prompt.length>8000)throw Error('INVALID_PROMPT');
@@ -25,6 +25,15 @@ export async function resolveAyaReply(input:Input,{t=s=>s,callModel}:{t?:(s:stri
  }
 
  if(!forceModel){
+  // Explicit session notes remain inspectable even while no model is available.
+  const memoryQuestion=prompt.toLocaleLowerCase('tr').normalize('NFKD').replace(/\p{M}/gu,'').replace(/ı/g,'i');
+  if(/(?:calisma|sohbet|konusma).*(?:hedef|karar|acik soru)|^(?:hedefimiz|aldigimiz kararlar|onceki kararimiz|neye karar vermistik|planimiz ne|what.*(?:our goal|we decide)|our goal|our decisions)/.test(memoryQuestion)){
+   const memory=normalizeMemory(input.workingMemory),tr=locale==='tr';
+   const output=memory.goal||memory.decisions.length||memory.openQuestions.length?
+    [(tr?'Çalışma hedefi':'Work goal')+': '+(memory.goal||'—'),(tr?'Kararlar':'Decisions')+':',...memory.decisions.map(x=>'• '+x),(tr?'Açık sorular':'Open questions')+':',...memory.openQuestions.map(x=>'• '+x)].join('\n'):
+    tr?'Bu sohbet için kayıtlı hedef veya karar yok. Sohbet ayarları → Bellek ve notlar bölümünde bir hedef ekleyebilirsiniz.':'No goal or decision is recorded for this conversation. Add a goal in Conversation settings → Memory and notes.';
+   return {ok:true,engine:'core',output,references:[]};
+  }
   if(options.useKnowledge!==false&&/\bcmd\b/i.test(prompt)&&/kurulum|güncelle|guncelle|windows|derle/i.test(prompt)){
    const install=ayaDocumentGuide(prompt,t,history);if(install.output&&install.references?.some(r=>r.id==='desktop-install'))return {ok:true,engine:'guide',output:install.output,references:install.references};
   }

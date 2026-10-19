@@ -1,7 +1,8 @@
 "use client";
+import { workflowText, type WorkflowMessage } from "@/lib/i18n/workflow-safety";
 import UiNode from "@/lib/i18n/UiNode";
-import { useTranslation } from '@/lib/i18n';
-import { useEffect, useState, type CSSProperties } from "react";
+import { getLocale, useTranslation } from '@/lib/i18n';
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Link from "@/lib/i18n/UiLink";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
@@ -9,6 +10,7 @@ import ConnectionStatus from "@/app/ConnectionStatus";
 import { dy, useDentayaThemeRuntime } from "@/app/dentaya-theme";
 import { dentayaError } from "@/lib/dentaya-errors";
 import { supabase } from "@/lib/supabase";
+import { teamInviteToken } from "@/lib/team-invite";
 type AcceptResult = {
     organization_id: string;
     organization_name: string;
@@ -16,8 +18,9 @@ type AcceptResult = {
     already_accepted: boolean;
 };
 export default function InvitePage() {
-    const { t: uiText } = useTranslation();
+    const { t: uiText, locale } = useTranslation();
     useDentayaThemeRuntime();
+    const copy = (source: WorkflowMessage, values?: readonly string[]) => workflowText(locale, source, values);
     const router = useRouter();
     const [booting, setBooting] = useState(true);
     const [user, setUser] = useState<User | null>(null);
@@ -25,25 +28,26 @@ export default function InvitePage() {
     const [busy, setBusy] = useState(false);
     const [message, setMessage] = useState("");
     const [accepted, setAccepted] = useState<AcceptResult | null>(null);
+    const [tokenInput, setTokenInput] = useState("");
+    const acceptLock = useRef(false);
     useEffect(() => {
         let active = true;
         async function boot() {
-            const value = new URLSearchParams(window.location.search).get("token")?.trim() ?? "";
-            if (!value) {
-                setMessage("Davet bağlantısı eksik veya bozuk.");
-                setBooting(false);
-                return;
-            }
+            const raw = new URLSearchParams(window.location.search).get("token")?.trim() ?? "";
+            const value = teamInviteToken(raw) ?? "";
+            if (raw && !value) setMessage(workflowText(getLocale(), "Davet bağlantısı geçersiz. Yöneticinizden yeni bir davet kodu isteyin."));
             setToken(value);
-            try {
+            try { if (value) {
                 window.localStorage.setItem("dentaya_pending_invite", value);
-            }
+            } }
             catch { }
-            const { data } = await supabase.auth.getSession();
-            if (!active)
-                return;
-            setUser(data.session?.user ?? null);
-            setBooting(false);
+            try {
+                const { data, error } = await supabase.auth.getSession();
+                if (!active) return;
+                if (error) setMessage(dentayaError(error));
+                setUser(data.session?.user ?? null);
+            } catch (error) { if (active) setMessage(dentayaError(error)); }
+            finally { if (active) setBooting(false); }
         }
         void boot();
         const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -55,13 +59,21 @@ export default function InvitePage() {
             listener.subscription.unsubscribe();
         };
     }, []);
+    function openToken() {
+        const value = teamInviteToken(tokenInput);
+        if (!value) { setMessage(copy("48 karakterlik davet kodunu veya tam davet bağlantısını yapıştırın.")); return; }
+        setToken(value);
+        setMessage("");
+        try { window.localStorage.setItem("dentaya_pending_invite", value); } catch { }
+    }
     async function acceptInvite() {
-        if (!user || !token || busy)
+        if (!user || !token || acceptLock.current)
             return;
+        acceptLock.current = true;
         setBusy(true);
         setMessage("");
+        try {
         const { data, error } = await supabase.rpc("dentaya_accept_team_invite", { p_token: token });
-        setBusy(false);
         if (error || !data) {
             setMessage(dentayaError(error, "Ekip daveti kabul edilemedi."));
             return;
@@ -71,6 +83,8 @@ export default function InvitePage() {
             window.localStorage.removeItem("dentaya_pending_invite");
         }
         catch { }
+        } catch (error) { setMessage(dentayaError(error, "Ekip daveti kabul edilemedi.")); }
+        finally { acceptLock.current = false; setBusy(false); }
     }
     if (booting)
         return <UiNode as="main" style={ui.center}>Davet kontrol ediliyor…</UiNode>;
@@ -89,8 +103,11 @@ export default function InvitePage() {
           Çalışma Alanını Aç
         </UiNode>
       </> : !token ? <>
-        <UiNode as="h1" style={ui.title}>Davet bağlantısı geçersiz</UiNode>
-        <UiNode as="p" style={ui.text}>Kurum yöneticisinden yeni bir davet bağlantısı iste.</UiNode>
+        <UiNode as="h1" style={ui.title}>{copy("Davet koduyla ekibe katıl")}</UiNode>
+        <UiNode as="p" style={ui.text}>{copy("Kurum yöneticinizin paylaştığı davet kodunu veya bağlantısını bu cihazdaki DentAYA’ya yapıştırın.")}</UiNode>
+        <UiNode as="label" style={ui.text}>{copy("Davet kodu veya bağlantısı")}<UiNode as="input" autoComplete="off" maxLength={2048} value={tokenInput} onChange={event => setTokenInput(event.target.value)} style={{ width: "100%", minHeight: 44, padding: 10, background: dy.input, color: dy.text, border: `1px solid ${dy.border}`, borderRadius: 10 }}/></UiNode>
+        {message && <UiNode as="div" role="alert" style={ui.notice}>{message}</UiNode>}
+        <UiNode as="button" type="button" disabled={!tokenInput.trim()} onClick={openToken} style={ui.primaryButton}>Daveti Aç</UiNode>
         <Link href="/" style={ui.secondaryLink}>{uiText("Ana Sayfa")}</Link>
       </> : !user ? <>
         <UiNode as="h1" style={ui.title}>Önce giriş yap</UiNode>

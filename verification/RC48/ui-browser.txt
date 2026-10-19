@@ -1,0 +1,47 @@
+
+> dentaya-production-rc@1.0.0-rc.48 verify:ui-browser
+> node scripts/verify-ui-browser.mjs
+
+{
+  "pass": true,
+  "locales": 46,
+  "completePacksTested": 46,
+  "systemNotificationsAndEngineStatus": true,
+  "filePickerAndReset": true,
+  "latePackUpdates": true,
+  "menuLocaleRoundTrip": true,
+  "userTextPreserved": true,
+  "formAndToothStatePreserved": true,
+  "hostRefsPreserved": true,
+  "cancelDoesNotSubmit": true,
+  "guideHistoryLabelPreserved": true,
+  "portableGuideWithoutDesktop": true,
+  "knowledgeNotebookPersistence": true,
+  "ownedMemoryRecall": true,
+  "managedInstallUi": true,
+  "structuredReplyHidesRawTransportTokens": true,
+  "validatedCompletedReply": true,
+  "collapsedAyaSettings": true,
+  "loadingFactsAutoAndPause": true,
+  "facts": 220,
+  "miniGames": 3,
+  "memoryMismatchGate": true,
+  "memoryActualPlayAndRecord": true,
+  "grooveHintSolutionAndOfflineRecord": true,
+  "tabStateAndKeyboard": true,
+  "ayaUnitConversion": true,
+  "ayaPercentages": true,
+  "ayaCopyAndExport": true,
+  "gameKeyboardAndHint": true,
+  "factLanguageFallback": true,
+  "historyOptOutClears": true,
+  "audioCues": 56,
+  "maxAudioPeak": 0.285745769739151,
+  "mobileComposerVisible": true,
+  "inference": "mocked; no language quality claim"
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
