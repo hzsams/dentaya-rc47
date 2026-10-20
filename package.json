@@ -1,6 +1,6 @@
 {
   "name": "dentaya-production-rc",
-  "version": "1.0.0-rc.49",
+  "version": "1.0.0-rc.50",
   "private": true,
   "type": "module",
   "description": "DentAYA klinik, laboratuvar ve dental CAD çalışma platformu",
@@ -42,7 +42,7 @@
     "verify:localization": "node --import tsx scripts/verify-localization.ts",
     "verify:aya": "node --import tsx scripts/verify-aya-request.ts",
     "verify:local-aya": "node scripts/verify-local-aya.cjs",
-    "verify:aya-core": "node scripts/verify-aya-core.cjs && npm run verify:aya-catalog",
+    "verify:aya-core": "node scripts/verify-aya-core.cjs && npm run verify:aya-catalog && npm run verify:aya-work",
     "verify:aya-catalog": "node scripts/verify-aya-catalog.cjs && npm run verify:aya-dialogue && node --import tsx scripts/verify-aya-conversation.ts && node scripts/export-aya-catalog.mjs --check",
     "verify:source-integrity": "node scripts/verify-source-integrity.mjs",
     "verify:aya-conversation-browser": "node scripts/verify-aya-conversation-browser.mjs",
@@ -91,7 +91,9 @@
     "verify:workflow-safety": "node --import tsx scripts/verify-workflow-safety.ts",
     "verify:professional-shell-browser": "node scripts/verify-professional-shell-browser.mjs",
     "verify:professional-modules-browser": "node scripts/verify-professional-modules-browser.mjs",
-    "verify:aya-dialogue": "node scripts/verify-aya-dialogue.cjs"
+    "verify:aya-dialogue": "node scripts/verify-aya-dialogue.cjs",
+    "verify:aya-work": "node scripts/verify-aya-memory.cjs && node scripts/verify-aya-tasks.cjs && node scripts/verify-aya-cad-dialogue.cjs && node --import tsx scripts/verify-aya-work.ts",
+    "verify:aya-work-browser": "node scripts/verify-aya-work-browser.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.116.0",

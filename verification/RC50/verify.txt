@@ -1,0 +1,1310 @@
+
+> dentaya-production-rc@1.0.0-rc.50 verify
+> npm run verify:runtime && npm run verify:professional-shell && npm run verify:workflow-safety && npm run verify:brand-assets && npm run verify:desktop-brand && npm run verify:release && npm run verify:windows-package && npm run verify:release-env && npm run verify:security && npm run verify:localization && npm run verify:system-translations && npm run verify:aya && npm run verify:local-aya && npm run verify:aya-agent && npm run verify:aya-cad-agent && npm run verify:aya-core && npm run verify:aya-managed && npm run verify:language-packs && npm run verify:desktop-language && npm run verify:experience && npm run verify:loading-play && npm run verify:rc44 && npm run verify:tooth-appearance && npm run verify:tooth-forms && npm run verify:cad-library && npm run verify:sculpt-integrity && npm run verify:morphology-sculpt && npm run verify:tooth-layout && npm run verify:cad-display && npm run verify:cad-view && npm run verify:performance && npm run verify:pilot && npm run lint -- --max-warnings=0 && npm run typecheck && npm run verify:cad && npm run verify:cad-setup && npm run verify:cad-daily && npm run verify:cad-interaction && npm run verify:cad-workflow && npm run verify:cad-panel && npm run verify:cad-guided && npm run verify:migrations && npm run verify:e2e && npm run verify:community && npm run verify:operations && npm run verify:validation && npm run build
+
+
+> dentaya-production-rc@1.0.0-rc.50 verify:runtime
+> node scripts/verify-runtime.mjs
+
+PASS · Node.js 22.12+ · v24.19.0
+PASS · npm 11+ · 11.9.0
+Runtime verification PASS (2/2)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:professional-shell
+> node --import tsx scripts/verify-professional-shell.ts
+
+PASS: empty/invalid public connection, anon fallback, no wrong-destination key, local tools, and launcher ownership handover.
+
+> dentaya-production-rc@1.0.0-rc.50 verify:workflow-safety
+> node --import tsx scripts/verify-workflow-safety.ts
+
+{"status":"pass","idempotentRetries":true,"exactMoney":true,"honestPaymentStates":true,"desktopInvitationCodes":true,"calendarDateValidation":true,"localeSafeAppointmentEditing":true}
+
+> dentaya-production-rc@1.0.0-rc.50 verify:brand-assets
+> node scripts/verify-brand-assets.mjs
+
+{"pass":true,"uniqueMarks":18,"svgVariants":126,"smallIconRenders":54,"windowsIcoSizes":7,"outlinedWordmark":"DENTAYA","uiAndDesktopAllowlistMatch":true,"shippedAtelierArtwork":true}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:desktop-brand
+> node scripts/verify-desktop-brand.cjs
+
+PASS: allowlist, platform, icon persistence, shortcut create/update, foreign shortcut protection, failure result. Windows shell is mocked.
+
+> dentaya-production-rc@1.0.0-rc.50 verify:release
+> node scripts/verify-release.mjs
+
+PASS: package, lockfile, runtime release, client identifier and installer agree; one CMD entry point.
+
+> dentaya-production-rc@1.0.0-rc.50 verify:windows-package
+> node --test scripts/verify-windows-packaging.mjs
+
+✔ installed matching Windows runtime, original config and prepared Next are reused (49.301372ms)
+✔ DLL locks get a fresh directory and bounded backoff; old output is retained (23.595435ms)
+✔ persistent lock fails after three attempts and writes no success receipt (19.481383ms)
+✔ unrelated packaging errors stop on the first attempt (11.028599ms)
+✔ exit zero without a usable installer is rejected (11.313369ms)
+✔ an empty or non-Windows installer is never reported as success (12.914742ms)
+✔ different or missing Next build data prevents packaging (8.145104ms)
+✔ different Electron version and wrong architecture are rejected (14.913229ms)
+✔ a missing runtime without its own package installer stops before packaging (11.302078ms)
+fake builder process completed
+✔ real child-process invocation preserves spaced paths and disables publishing (73.733548ms)
+✔ a success receipt cannot reveal an installer outside its output folder (9.194625ms)
+✔ non-Windows packaging fails explicitly (0.30197ms)
+fixture installer completed
+✔ missing electron/dist is installed through the declared installer before packaging (65.828649ms)
+✔ a valid runtime with no version marker is queried without fabricating a marker (18.996081ms)
+fixture installer completed
+✔ the on-demand install-electron entry and package-resolved runtime path are supported (59.465848ms)
+fixture installer completed
+✔ a partial legacy runtime is preserved so the installer cannot skip a missing DLL (56.104343ms)
+fixture download failure
+✔ installer errors preserve a diagnostic log and prevent packaging (52.028609ms)
+fixture no-op
+✔ installer exit zero is insufficient unless the binary and data files exist (57.036874ms)
+✔ an installer that creates only a version marker is rejected (47.518796ms)
+fixture installer completed
+✔ a wrong installed runtime version is rejected after the installer finishes (52.934045ms)
+✔ a mismatched npm package version is rejected without running an installer (11.862209ms)
+✔ an installer declared outside the Electron package is never executed (16.06249ms)
+✔ installer environment is scoped, pins x64/win32 and removes download-skip overrides (0.633562ms)
+✔ the version probe handles the real --version child-process protocol (8.908979ms)
+✔ the pinned Electron dependency requires Node 22.12 or later (0.242071ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 780.089647
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:release-env
+> node scripts/verify-release-env.mjs
+
+PASS: old release label migration, preserved connection settings, LF/CRLF, repeat execution and environment validation.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:security
+> node scripts/verify-security.mjs
+
+PASS · nosniff header
+PASS · frame deny
+PASS · HSTS
+PASS · courier geolocation allowed only to self
+PASS · camera remains disabled
+PASS · request guard has rate budget
+PASS · request guard checks JSON
+PASS · request guard checks content length
+PASS · AYA authenticated
+PASS · AYA rate limited
+PASS · AYA body capped
+PASS · geocode authenticated
+PASS · geocode admin restricted
+PASS · geocode rate limited
+PASS · routes authenticated
+PASS · routes rate limited
+PASS · health details auth-gated
+PASS · health no-store
+PASS · release env has no public service role assignment
+PASS · release env has no public OpenAI key
+PASS · server maps keys are not public
+Security verification PASS (21/21)
+
+> dentaya-production-rc@1.0.0-rc.50 verify:localization
+> node --import tsx scripts/verify-localization.ts
+
+PASS: 46 complete locales / all 24 EU official locales; 220 existing strings×19 translations, 37 bootstrap strings×11 new EU locales; 4849 full-pack source keys; all 95 UI renderers connected (96 files total, including runtimes). Templates/entities/unknown user text safe. All 45 translated catalogs are bundled; source Turkish included. Coverage does not claim native-language editorial approval.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:system-translations
+> node scripts/verify-visible-translations.mjs && node --import tsx scripts/verify-system-translations.ts
+
+PASS: 2543 displayed captions, conditional values, messages and error sources are present in all 45 translated packs.
+PASS: system notifications, case history, status labels and dental terminology in 46 languages; embedded patient names, notes, case titles and FDI identifiers preserved.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:aya
+> node --import tsx scripts/verify-aya-request.ts
+
+PASS AYA request: declared and streamed body limits, malformed JSON, allowlisted language, unchanged diagnostic. Provider/auth mocked.
+
+> dentaya-production-rc@1.0.0-rc.50 verify:local-aya
+> node scripts/verify-local-aya.cjs
+
+PASS local AYA: fixed loopback, no credentials, local-only filtering, remote rejection, language, original-goal and recent-turn budget, validated structured replies and session memory, invalid-plan rejection, empty response, owner cancellation including uncooperative transport, concurrency, download progress, missing runtime. Inference mocked.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:aya-agent
+> node scripts/verify-aya-agent.cjs
+
+PASS AYA agent: strict typed and bounded JSON, closed action allowlist, no-CAD empty actions, scoped proposals, stale-report rejection, antagonist evidence, untrusted data separation, original-goal and recent-turn context budget. No inference performed.
+
+> dentaya-production-rc@1.0.0-rc.50 verify:aya-cad-agent
+> node --import tsx scripts/verify-aya-cad-agent.ts
+
+{
+  "pass": true,
+  "typedCallbacks": true,
+  "staleScopeSourceUnitGeometryRejected": true,
+  "doubleClickGuard": true,
+  "asyncCallbackTruth": true,
+  "replayGuard": true,
+  "failedCallbackRetry": true,
+  "antagonistEvidenceRequired": true,
+  "noInventedWallMeasurement": true
+}
+
+> dentaya-production-rc@1.0.0-rc.50 verify:aya-core
+> node scripts/verify-aya-core.cjs && npm run verify:aya-catalog && npm run verify:aya-work
+
+PASS AYA Core: trusted shared identity and purpose with knowledge on/off and agent/legacy contexts, bounded role/style/options, relevant document retrieval, unknown-topic fallback, Unicode/CJK tokens, translated document search, explicit note opt-in and memory isolation, guide labelled separately. No inference performed.
+
+> dentaya-production-rc@1.0.0-rc.50 verify:aya-catalog
+> node scripts/verify-aya-catalog.cjs && npm run verify:aya-dialogue && node --import tsx scripts/verify-aya-conversation.ts && node scripts/export-aya-catalog.mjs --check
+
+{
+  "pass": true,
+  "catalogue": {
+    "version": "1.0.0",
+    "questions": 1008,
+    "topics": 252,
+    "language": "tr",
+    "categories": [
+      {
+        "id": "aya",
+        "title": "AYA ve sohbet",
+        "questions": 100
+      },
+      {
+        "id": "workflow",
+        "title": "CAD günlük iş akışı",
+        "questions": 100
+      },
+      {
+        "id": "geometry",
+        "title": "Geometri ve anatomi",
+        "questions": 100
+      },
+      {
+        "id": "display",
+        "title": "Görünüm ve renkler",
+        "questions": 100
+      },
+      {
+        "id": "files",
+        "title": "Tarama ve dosyalar",
+        "questions": 100
+      },
+      {
+        "id": "desktop",
+        "title": "Masaüstü ve veri",
+        "questions": 100
+      },
+      {
+        "id": "dental",
+        "title": "Temel diş bilgisi",
+        "questions": 100
+      },
+      {
+        "id": "production",
+        "title": "Üretim kontrol notları",
+        "questions": 100
+      },
+      {
+        "id": "fdi",
+        "title": "FDI diş numaraları",
+        "questions": 208
+      }
+    ]
+  },
+  "canonicalQuestionsVerified": 1008,
+  "regressionQueries": 77,
+  "unknownsRejected": 11,
+  "followup": true,
+  "safety": true,
+  "exactPassMs": 115
+}
+
+> dentaya-production-rc@1.0.0-rc.50 verify:aya-dialogue
+> node scripts/verify-aya-dialogue.cjs
+
+{
+  "pass": true,
+  "cases": 214,
+  "groups": {
+    "direct basics": 51,
+    "public integration": 51,
+    "knowledge disabled": 4,
+    "declared names": 6,
+    "name corrections": 2,
+    "missing names": 5,
+    "name evidence boundaries": 6,
+    "negative name evidence": 3,
+    "name revocation": 2,
+    "explicit name clearing": 4,
+    "name after clearing": 2,
+    "quoted clearing task": 2,
+    "identity followups": 13,
+    "shorter means shorter": 8,
+    "examples retain topic": 4,
+    "missing dialogue topic": 3,
+    "substantive clause boundaries": 14,
+    "catalog followups": 5,
+    "acknowledgements preserve catalog": 4,
+    "catalog false followups": 10,
+    "catalog topic boundaries": 9,
+    "deterministic work preservation": 2,
+    "acknowledgement meaning": 4
+  },
+  "nativeInference": false,
+  "coverage": "TR/EN direct and polite dialogue, compounds, public offline routing, session name evidence and corrections, short followups, quoted task rejection, catalog topic boundaries and deterministic tool preservation"
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+PASS: model-first definitions/new phrasings/followups, working-memory transfer, honest Core/model labels, offline guide, forced model path, cancellation/timeout/busy/invalid plan, preferences, notebook, clinical safety and actual CAD metadata (mock model calls only).
+PASS: exported question catalogue matches the running source.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:aya-work
+> node scripts/verify-aya-memory.cjs && node scripts/verify-aya-tasks.cjs && node scripts/verify-aya-cad-dialogue.cjs && node --import tsx scripts/verify-aya-work.ts
+
+PASS: 141 pure TR/EN session-memory cases: explicit controls, bounded atomic updates, correction/removal, dedupe, recall, unchanged inputs and quoted/mixed-request fallthrough. No model inference.
+PASS 12 cm kaç mm? Ardından teslim notu taslağı hazırla
+PASS Önce 12 cm kaç mm; sonra teslim notu yaz
+PASS 1. 12 cm kaç mm?
+2. Teslim notu taslağı
+PASS identity plus concrete conversion
+PASS two independent calculations and decimal comma
+PASS canonical evidence preserved in compound
+PASS disabled catalogue is respected
+PASS no partial or quoted task: Adın ne ve bir şiir yaz
+PASS no partial or quoted task: Teslim notu yaz cümlesini İngilizceye çevir
+PASS no partial or quoted task: Kontrol listesi adlı bir hikaye yaz
+PASS no partial or quoted task: 12 cm kaç mm? Sonra shell komutu çalıştır
+PASS no partial or quoted task: Adım Deniz ve 12 cm kaç mm?
+PASS no partial or quoted task: Adımı unut ve 12 cm kaç mm?
+PASS no partial or quoted task: Bana bu isimle hitap etme ve 12 cm kaç mm?
+PASS no partial or quoted task: Adım Ahmet değil ve 12 cm kaç mm?
+PASS no partial or quoted task: My name is not Alex and 12 cm to mm?
+PASS no partial or quoted task: hesapla process.exit()
+PASS six-task limit
+PASS invalid arithmetic has a concrete error
+PASS read-only memory evidence stays unmodified
+PASS shorter task followup retains goal
+PASS model answer is not replaced with a generic task followup
+PASS new substantive topic clears prior work task
+PASS English memory-aware handoff
+PASS provided CAD metadata is used without claiming inspection
+{"pass":true,"cases":25,"nativeInference":false,"readOnly":true}
+(node:221495) [THREE_CJS_DEPRECATED] DeprecationWarning: `require("three")` is deprecated and will be removed.
+Replace `const THREE = require("three")` with `import * as THREE from "three"`.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+{
+  "pass": true,
+  "groupsPassed": 28,
+  "groupsFailed": 0,
+  "realKernelEvidence": true,
+  "modelInference": false,
+  "failures": []
+}
+{"pass":true,"explicitMemoryIsDeterministic":true,"ordinaryReadsAndTasksAreModelFirst":true,"atomicMemoryErrors":true,"failedForceModelCannotMutateMemory":true,"compoundTaskFallback":true,"cancellationFinal":true,"scopedCadProposals":true,"staleHostCallbackBlocked":true,"clinicalSafetyFirst":true,"mockedModel":true}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:aya-managed
+> node scripts/verify-aya-managed.cjs
+
+{
+  "pass": true,
+  "checksumAndResume": true,
+  "redirectRejection": true,
+  "archiveTraversalRejection": true,
+  "ggufImport": true,
+  "tokenBudget": true,
+  "loopbackStreaming": true,
+  "explicitMemory": true,
+  "cadMetadataWhitelist": true,
+  "foundationTrainingClaim": false,
+  "nativeInference": "mocked in this check; separate native log"
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:language-packs
+> node scripts/verify-language-packs.cjs
+
+PASS: 4849 complete source keys, resume/cancel/reload, model verification, fixed loopback, no live user data, JSON/placeholders/FDI-number validation, import integrity and corrections. Inference mocked; no translation quality claim.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:desktop-language
+> node scripts/verify-desktop-language.cjs
+
+PASS desktop language IPC: owner/top-frame/origin checks, cancel ownership, CAD window access, localized menu roles/accelerators and persistence, stale activation guard, chat/translation busy race. Electron windows and model inference mocked.
+
+> dentaya-production-rc@1.0.0-rc.50 verify:experience
+> node --import tsx scripts/verify-experience.ts
+
+PASS: camera presets orbit outside model, exact endpoints, instant mode; 8 textures / 7 events, bounded levels/pitch, valid clock fallback, overnight/daytime/all-day quiet-hour boundaries.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:loading-play
+> node --import tsx scripts/verify-loading-play.ts
+
+{
+  "pass": true,
+  "shippedDistinctFacts": 220,
+  "shippedSources": 28,
+  "newSourceBackedFacts": 20,
+  "clinicallyReviewed": false,
+  "syntheticCapacityOnly": 30000,
+  "capacityValidationMs": 327,
+  "indexDeckBytesAtCapacity": 120000,
+  "requestedCountReached": false
+}
+{
+  "pass": true,
+  "uniqueFacts": 220,
+  "languages": [
+    "tr",
+    "en"
+  ],
+  "factSources": 28,
+  "noRepeatWithinThreeCycles": true,
+  "noBoundaryRepeat": true,
+  "solvedPuzzles": 768,
+  "coupledTurnReversible": true,
+  "stateNotMutated": true,
+  "hintsAlwaysSolve": true
+}
+{"readingSeconds":5,"sameSentenceRetained":true,"sharedStageDeadline":true,"overlappingStages":true,"idempotentRelease":true,"noExtraWaitAfterSlowChain":true,"staleTimerSafe":true,"earlyContinueKeepsActualLoading":true,"cancelledOperationLeavesNoOverlay":true}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:rc44
+> node --import tsx scripts/verify-rc44-tools.ts
+
+{
+  "pass": true,
+  "memoryDecks": 1024,
+  "solvableRoutes": 1024,
+  "recordPersistenceAndBlockedStorage": true,
+  "cadColourGroups": 6,
+  "colourValidation": true,
+  "unitConversion": true,
+  "percentages": true,
+  "cadLiveChecklist": true,
+  "saveInProgressGuard": true,
+  "followupKnowledge": true
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:tooth-appearance
+> node --import tsx scripts/verify-tooth-appearance.ts
+
+{
+  "pass": true,
+  "presets": 16,
+  "forms": 9,
+  "controls": 6,
+  "checkedMeshes": 736,
+  "finiteGeometry": true,
+  "topologyPreserved": true,
+  "referenceModelsUnchanged": true,
+  "legacyPreferencesPreserved": true,
+  "invalidPreferencesBounded": true,
+  "crownAndRootControlsChangeGeometry": true
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:tooth-forms
+> node --import tsx scripts/verify-legacy-forms.ts
+
+{
+  "pass": true,
+  "exactRc37Appearance": true,
+  "exactRc37CadConstructor": true,
+  "cancelledGeneratorAndAssetsAbsent": true,
+  "legacyCadChoices": 6,
+  "legacyAppearanceChoices": 9,
+  "checkedMeshes": 144,
+  "removedFamiliesMigrateToNatural": true,
+  "closedSingleBodies": true
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:cad-library
+> node --import tsx scripts/verify-cad-form-library.ts
+
+{
+  "pass": true,
+  "asciiAndBinaryStl": true,
+  "obj": true,
+  "exactGeometryRoundTrip": true,
+  "marginPlacementUsesImportedMesh": true,
+  "closedSingleBodies": true,
+  "committedLocalPersistence": true,
+  "ownerIsolation": true,
+  "libraryExportImport": true,
+  "projectCopySurvivesLibraryDeletion": true,
+  "corruptRecordsAndOpenMeshesRejected": true
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:sculpt-integrity
+> node --import tsx scripts/verify-sculpt-integrity.ts
+
+PASS: UV seam regression, 100 closed-surface edits, NaN/collapse rollback, coincident corners, isolated smoothing.
+PASS: actual Add/Reduce/Smooth/Flatten brush preserves closed test mesh.
+PASS: opposing wall unchanged; inverted triangle rolled back.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:morphology-sculpt
+> node --import tsx scripts/verify-morphology-sculpt.ts
+
+{
+  "pass": true,
+  "families": 6,
+  "toothClasses": 4,
+  "tools": [
+    "add",
+    "reduce",
+    "smooth",
+    "flatten"
+  ],
+  "editedMeshes": 96,
+  "strokes": 768,
+  "viewportResolution": true,
+  "defaultBrushSettings": true,
+  "everyBrushChangesGeometry": true,
+  "closedSingleBodies": true,
+  "degenerateTriangles": 0,
+  "positiveVolumes": true
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:tooth-layout
+> node --import tsx scripts/verify-tooth-layout.ts
+
+PASS: 9 forms; 32 anatomical meshes; all adjacent teeth have >=1.8 mm schematic projected clearance, front and occlusal; invalid preferences fall back.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:cad-display
+> node --import tsx scripts/verify-cad-display.ts
+
+PASS: per-layer visibility, opacity bounds/depth, geometry unchanged, shared jaw coordinates, context click threshold.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:cad-view
+> node --import tsx scripts/verify-cad-view-state.ts
+
+PASS: technical jaw roles, zero-opacity restore, isolate/all-hide/all-show, per-unit visibility, transient auto-hide, opening bounds, real antagonist distance translation and unchanged source geometry.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:performance
+> node scripts/verify-performance.mjs
+
+PASS · Next compression enabled
+PASS · route cache avoids Google call storms
+PASS · live GPS throttled to 15 seconds
+PASS · stationary GPS writes suppressed
+PASS · stationary GPS keeps heartbeat
+PASS · network recovery refreshes logistics
+PASS · CAD recovery remains enabled
+PASS · CAD large mesh adaptation remains present
+Performance verification PASS (8/8)
+
+> dentaya-production-rc@1.0.0-rc.50 verify:pilot
+> node scripts/verify-pilot-candidate.mjs
+
+PASS · package and lock release agree
+PASS · feature freeze retained
+PASS · RC19 QA retained
+PASS · RC20 setup guide
+PASS · RC20 final checklist
+PASS · Windows one-click setup
+PASS · 23+ migrations packaged
+PASS · Operations Center route
+PASS · Ops Health route
+PASS · Pilot Check route
+PASS · Release Check route
+PASS · Health API
+PASS · Maps Geocode API
+PASS · Maps Routes API
+PASS · AYA API
+PASS · verify:env script wired
+PASS · verify:runtime script wired
+PASS · verify chain includes pilot candidate
+PASS · final verification command wired
+Pilot candidate verification PASS (19/19)
+
+> dentaya-production-rc@1.0.0-rc.50 lint
+> eslint . --max-warnings=0
+
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 typecheck
+> tsc --noEmit
+
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:cad
+> node --import tsx scripts/verify-cad-kernel.ts
+
+{
+  "status": "pass",
+  "mesh": {
+    "vertices": 34,
+    "triangles": 64,
+    "watertight": true
+  },
+  "bvh": {
+    "nodes": 31,
+    "testedTriangles": 32
+  },
+  "crownShell": {
+    "triangles": 2104,
+    "minimumWallMm": 0.8
+  },
+  "registration": {
+    "pairs": 1053,
+    "rms": 0
+  }
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:cad-setup
+> node --import tsx scripts/verify-cad-job-setup.ts
+
+CAD job setup verification: PASS
+
+> dentaya-production-rc@1.0.0-rc.50 verify:cad-daily
+> node --import tsx scripts/verify-cad-daily.ts && node --import tsx scripts/verify-aya-guide.ts
+
+{
+  "pass": true,
+  "placedCrowns": 144,
+  "translatedTiltedAndOppositeAxes": true,
+  "cervicalCentersMatchMargins": true,
+  "closedSingleBodies": true,
+  "invalidMarginsDoNotModifyGeometry": true,
+  "fullTopologyAndEditsRoundTrip": true,
+  "shellReportAndSourceFramesRoundTrip": true,
+  "compressedGeometry": true,
+  "corruptRecordsRejected": true
+}
+{
+  "pass": true,
+  "browserAndDesktopGuide": true,
+  "contextualMarginHelp": true,
+  "loadingAndVisibilityHelp": true,
+  "truthfulSaveStatus": true,
+  "clinicalQuestionsNotAnsweredFromUiState": true,
+  "documentReferences": true,
+  "followupContext": true,
+  "currentInstallInstructions": true,
+  "invalidPromptsRejected": true
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:cad-interaction
+> node scripts/verify-cad-interaction.mjs
+
+✓ pointerdown sculpt başlangıcı
+✓ pointermove sürekli sculpt
+✓ pointerup sculpt bitişi
+✓ pointer cancel güvenliği
+✓ pointer capture
+✓ basılı tutma tekrar motoru
+✓ tek stroke undo snapshot
+✓ kalem basınç desteği
+✓ Ekle kısayolu
+✓ Çıkar kısayolu
+✓ Yumuşat kısayolu
+✓ Düzleştir kısayolu
+✓ Space geçici orbit
+✓ fırça yarıçap kısayolları
+✓ undo redo kısayolları
+✓ kısayol yardım paneli
+✓ 3D dairesel fırça imleci
+✓ fırça imleci gerçek radius ölçeği
+✓ mouse wheel radius
+✓ shift wheel strength
+✓ shift alt geçici ters sculpt
+✓ ekle çıkar yön takası
+✓ sculpt OS cursor gizleme
+✓ wheel yardım metni
+✓ sağ mouse orbit
+✓ orta mouse pan
+✓ sculpt hızlı zoom
+✓ context menu engeli
+✓ brush hardness
+✓ brush falloff
+✓ fırça presetleri
+✓ X Y sculpt symmetry
+✓ mirror brush cursor
+✓ simetri kısayolu
+✓ kullanıcı özel kısayollar
+✓ kısayol çakışma kontrolü
+
+CAD interaction verify PASS (36/36).
+
+> dentaya-production-rc@1.0.0-rc.50 verify:cad-workflow
+> node scripts/verify-cad-workflow.mjs
+
+✓ IndexedDB recovery store
+✓ Recovery draft geometry
+✓ Recovery capture API
+✓ Recovery restore API
+✓ Recovery banner
+✓ Recovery discard action
+✓ Debounced recovery autosave
+✓ Undo history state
+✓ Undo/redo counters UI
+✓ Continuous margin drawing
+✓ Margin surface projection
+✓ Delete last margin point
+✓ Delete last measurement
+✓ Delete last connector
+✓ Cancel pending CAD action
+✓ Large scan adaptive mode
+✓ Performance telemetry badge
+✓ Geometry commit tracking
+CAD workflow verify PASS (18/18)
+
+> dentaya-production-rc@1.0.0-rc.50 verify:cad-panel
+> node scripts/verify-cad-panel.mjs
+
+PASS: professional scene, object tree, manual tool bindings, vector glyphs, accessible state, real panel bounds, shortcuts and responsive layout.
+
+> dentaya-production-rc@1.0.0-rc.50 verify:cad-guided
+> node --import tsx scripts/verify-cad-guided.ts
+
+{
+  "pass": true,
+  "storedStages": 6,
+  "guidedTasks": 8,
+  "oneParameterGroup": true,
+  "explicitExpertOnly": true,
+  "taskPrerequisites": true,
+  "backNavigation": true,
+  "bridgeContext": true,
+  "savedTaskResume": true,
+  "distinctCommands": 35,
+  "moduleAliasesMerged": true
+}
+
+> dentaya-production-rc@1.0.0-rc.50 verify:migrations
+> node --import tsx scripts/verify-migrations.ts
+
+{
+  "status": "pass",
+  "migrations": 27,
+  "publicTables": 43,
+  "tablesWithoutRls": [],
+  "insecureSecurityDefiners": [],
+  "privateStorageBucket": true,
+  "workflowFunctions": [
+    "dentaya_assign_courier",
+    "dentaya_complete_delivery",
+    "dentaya_create_case_shipment",
+    "dentaya_log_operational_event",
+    "dentaya_record_route_snapshot",
+    "dentaya_review_design",
+    "dentaya_shipment_actual_distance_meters",
+    "dentaya_submit_design_version",
+    "dentaya_transition_case",
+    "guard_case_status_transition",
+    "guard_courier_location_insert",
+    "guard_design_review_decision",
+    "guard_shipment_transition",
+    "notify_shipment_eta_threshold",
+    "organization_route_address",
+    "require_delivery_proof_before_delivered",
+    "sync_open_shipments_from_org_address"
+  ],
+  "workflowTriggers": [
+    "case_design_reviews_guard_decision",
+    "cases_guard_status_transition",
+    "courier_locations_guard_insert",
+    "shipments_guard_transition",
+    "shipments_require_delivery_proof",
+    "trg_notify_shipment_eta_threshold",
+    "trg_sync_case_status_from_shipment",
+    "trg_sync_open_shipments_from_org_address"
+  ],
+  "activeShipmentUniqueIndex": true,
+  "routeAddressColumns": [
+    "address_city",
+    "address_formatted",
+    "address_lat",
+    "address_line1",
+    "address_lng",
+    "address_place_id",
+    "address_verified_at",
+    "dropoff_address_text",
+    "pickup_address_text"
+  ],
+  "courierOpsColumns": [
+    "actual_distance_meters",
+    "actual_duration_seconds",
+    "eta_at",
+    "planned_distance_meters",
+    "planned_duration_seconds",
+    "remaining_distance_meters",
+    "remaining_duration_seconds",
+    "route_calculated_at",
+    "route_polyline"
+  ],
+  "deliveryProofTableWithRls": true,
+  "operationalEventsTableWithRls": true,
+  "operationalEventsAdminPolicy": true,
+  "operationsSettingsTableWithRls": true,
+  "operationsSettingsPolicies": 3,
+  "operationsSettingsUpdatedAtTrigger": true
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:e2e
+> node --import tsx scripts/verify-e2e-workflow.ts
+
+{
+  "status": "pass",
+  "scenario": "clinic → lab → CAD → ready → route → live courier → ETA alert → delivery proof → delivered",
+  "migrations": 27,
+  "finalCaseStatus": "delivered",
+  "finalShipmentStatus": "delivered",
+  "designVersions": 2,
+  "designReviews": 2,
+  "caseEvents": 10,
+  "validationEvidence": {
+    "records": 2,
+    "immutable": true,
+    "organizationIsolation": true,
+    "actorFromSession": true,
+    "crossVersionCorrectionsRejected": true,
+    "criticalCannotPass": true,
+    "clinicalReferencesRequired": true
+  },
+  "operationalRecords": {
+    "financialConflictRejection": true,
+    "exactCurrencyAndCents": true,
+    "patientReceiptPrivacy": true,
+    "appointmentConflictRejection": true,
+    "zeroRowIsNotSuccess": true
+  },
+  "guardsVerified": [
+    "clinic cannot accept lab case",
+    "illegal case transition rejected",
+    "review decision is final",
+    "stale design submission rejected",
+    "organization route address snapshotted",
+    "second active shipment rejected",
+    "pickup without driver rejected",
+    "cross-organization courier location rejected",
+    "route metrics persisted",
+    "15-minute ETA notification emitted once",
+    "delivery without proof rejected",
+    "delivery proof recorded",
+    "shipment regression rejected",
+    "delivered case regression rejected"
+  ]
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:community
+> node --import tsx scripts/verify-community.ts
+
+PASS: community RLS, identity spoofing, organization control, private drafts, comments/likes/follows, moderation, revoked roles, private uploads, published media, immutable media, anonymous isolation.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 verify:operations
+> node --import tsx scripts/verify-operations-center.ts
+
+{
+  "status": "pass",
+  "metrics": {
+    "activeCases": 4,
+    "overdueCases": 1,
+    "urgentCases": 2,
+    "newCases": 0,
+    "acceptedCases": 0,
+    "designCases": 1,
+    "revisionCases": 1,
+    "approvalCases": 1,
+    "productionCases": 1,
+    "qcCases": 1,
+    "readyCases": 0,
+    "shippedCases": 0,
+    "deliveredToday": 1,
+    "activeShipments": 2,
+    "lateShipments": 1,
+    "pickupWaiting": 1,
+    "inTransit": 1,
+    "capacityLoad": 4,
+    "capacityPercent": 100
+  },
+  "attention": [
+    "overdue-c1",
+    "late-shipment-s1",
+    "revision-c2",
+    "capacity-warning",
+    "approval-c3",
+    "qc-c4",
+    "pickup-s2"
+  ]
+}
+
+> dentaya-production-rc@1.0.0-rc.50 verify:validation
+> node --import tsx scripts/verify-validation.ts
+
+{"status":"pass","requirements":12,"versionIsolation":true,"correctionHistory":true,"clinicalApprovalNotInferred":true,"formulaSafeCsv":true}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.50 build
+> npm run verify:bundled-languages && next build
+
+
+> dentaya-production-rc@1.0.0-rc.50 verify:bundled-languages
+> node scripts/verify-bundled-languages.mjs
+
+{
+  "pass": true,
+  "locales": 46,
+  "translatedLocales": 45,
+  "sourceKeys": 4849,
+  "translations": 218205,
+  "hash": "6325307b16880507e124fa8e9134c76b071eaf7f8bccb6d3f27c55446e86f446",
+  "packs": [
+    {
+      "locale": "en",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "de",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "fr",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "es",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "it",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "pt",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "nl",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "pl",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "ro",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "ru",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "uk",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "ar",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "zh",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "ja",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "sv",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "da",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "el",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "cs",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "ko",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "bg",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "hr",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "et",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "fi",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "hu",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "ga",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "lv",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "lt",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "mt",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "sk",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "sl",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "no",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "is",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "sr",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "bs",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "sq",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "mk",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "az",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "ka",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "hy",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "he",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "fa",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "hi",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "bn",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "id",
+      "completed": 4849,
+      "total": 4849
+    },
+    {
+      "locale": "vi",
+      "completed": 4849,
+      "total": 4849
+    }
+  ]
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+▲ Next.js 16.3.8 (Turbopack)
+✓ Running next.config.ts took 35ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 4.3s
+  Running TypeScript ...
+  Finished TypeScript in 21.3s ...
+  Collecting page data using 4 workers ...
+  Generating static pages using 4 workers (0/38) ...
+  Generating static pages using 4 workers (9/38)
+  Generating static pages using 4 workers (18/38)
+  Generating static pages using 4 workers (28/38)
+✓ Generating static pages using 4 workers (38/38) in 1298ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /ai
+├ ƒ /api/ai-assistant
+├ ƒ /api/health
+├ ƒ /api/maps/geocode
+├ ƒ /api/maps/route
+├ ƒ /api/pre-register
+├ ○ /appointments
+├ ○ /cad-library
+├ ○ /cases
+├ ƒ /cases/[id]
+├ ○ /clinic
+├ ƒ /community
+├ ƒ /community/post/[id]
+├ ƒ /community/profile/[handle]
+├ ○ /design
+├ ○ /finance
+├ ○ /invite
+├ ○ /lab
+├ ○ /labs
+├ ○ /logistics
+├ ○ /manifest.webmanifest
+├ ○ /messages
+├ ○ /mini-game
+├ ○ /notifications
+├ ○ /operations
+├ ○ /ops-health
+├ ○ /patients
+├ ○ /pilot-check
+├ ○ /pilot-flow
+├ ○ /release-check
+├ ○ /robots.txt
+├ ○ /scan-studio
+├ ○ /scans
+├ ○ /settings
+├ ○ /start
+├ ○ /team
+├ ○ /training
+├ ○ /twin
+└ ○ /workspace
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

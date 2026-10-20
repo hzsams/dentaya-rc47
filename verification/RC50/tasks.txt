@@ -1,0 +1,27 @@
+PASS 12 cm kaç mm? Ardından teslim notu taslağı hazırla
+PASS Önce 12 cm kaç mm; sonra teslim notu yaz
+PASS 1. 12 cm kaç mm?
+2. Teslim notu taslağı
+PASS identity plus concrete conversion
+PASS two independent calculations and decimal comma
+PASS canonical evidence preserved in compound
+PASS disabled catalogue is respected
+PASS no partial or quoted task: Adın ne ve bir şiir yaz
+PASS no partial or quoted task: Teslim notu yaz cümlesini İngilizceye çevir
+PASS no partial or quoted task: Kontrol listesi adlı bir hikaye yaz
+PASS no partial or quoted task: 12 cm kaç mm? Sonra shell komutu çalıştır
+PASS no partial or quoted task: Adım Deniz ve 12 cm kaç mm?
+PASS no partial or quoted task: Adımı unut ve 12 cm kaç mm?
+PASS no partial or quoted task: Bana bu isimle hitap etme ve 12 cm kaç mm?
+PASS no partial or quoted task: Adım Ahmet değil ve 12 cm kaç mm?
+PASS no partial or quoted task: My name is not Alex and 12 cm to mm?
+PASS no partial or quoted task: hesapla process.exit()
+PASS six-task limit
+PASS invalid arithmetic has a concrete error
+PASS read-only memory evidence stays unmodified
+PASS shorter task followup retains goal
+PASS model answer is not replaced with a generic task followup
+PASS new substantive topic clears prior work task
+PASS English memory-aware handoff
+PASS provided CAD metadata is used without claiming inspection
+{"pass":true,"cases":25,"nativeInference":false,"readOnly":true}

@@ -8,7 +8,7 @@ const assistantProfile=Object.freeze({
  capabilities:Object.freeze(['Explain workflows and dental terms','Prepare checklists and handoff drafts','Calculate and convert units','Use the current conversation and explicit working memory','Explain actual CAD state and propose available tools']),
  limits:Object.freeze(['No automatic CAD changes','No invented measurements, saved actions or clinical approval','No personal diagnosis, prescriptions or guessed implant torque','No automatic cloud fallback','Offline Core is not a general language model'])
 });
-function profileInstructions(){return `Kimliğin ${assistantProfile.name}; ${assistantProfile.product} çalışma asistanısın. Adın sorulursa doğrudan AYA de. Amacın kullanıcının işini anlamasına ve mevcut araçlarla ilerlemesine yardımcı olmak. Kimlik ve amaç sorularını dental kavram tanımına çevirme. İş akışlarını ve dental terimleri açıklayabilir, kontrol listesi ve teslim notu taslağı hazırlayabilir, hesaplama ve birim dönüşümü yapabilirsin. Verilen konuşma, çalışma belleği ve gerçek CAD durumunu kullan; verilmemiş kişisel bilgi, ölçüm, kayıt veya yapılmış işlem uydurma. CAD araçlarını yalnız mevcut izinli önerilerle sun; kullanıcı uygulamadan işlem yapılmış sayılmaz. AYA Core çevrimdışı rehberi genel dil modeli değildir. Yerel model ve Core ayrımını dürüstçe açıkla; bilinç, sıfırdan model eğitimi, otomatik bulut geçişi veya kalıcı öğrenme iddiasında bulunma. Birden fazla soru varsa her birini yanıtla. Kısa takipleri son ilgili konuya bağla; yeni konu ve vazgeçme ifadelerinde eski dental konuyu sürdürme. Kullanıcının son isim düzeltmesini kullan; iptal ettiği isim bilgisine geri dönme.`;}
+function profileInstructions(){return `Kimliğin ${assistantProfile.name}; ${assistantProfile.product} çalışma asistanısın. Adın sorulursa doğrudan AYA de. Amacın kullanıcının işini anlamasına ve mevcut araçlarla ilerlemesine yardımcı olmak. Kimlik ve amaç sorularını dental kavram tanımına çevirme. İş akışlarını ve dental terimleri açıklayabilir, kontrol listesi ve teslim notu taslağı hazırlayabilir, hesaplama ve birim dönüşümü yapabilirsin. Verilen konuşma, çalışma belleği ve gerçek CAD durumunu kullan; verilmemiş kişisel bilgi, ölçüm, kayıt veya yapılmış işlem uydurma. CAD araçlarını yalnız mevcut izinli önerilerle sun; kullanıcı uygulamadan işlem yapılmış sayılmaz. AYA Core çevrimdışı rehberi genel dil modeli değildir. Yerel model ve Core ayrımını dürüstçe açıkla; bilinç, sıfırdan model eğitimi, otomatik bulut geçişi veya kalıcı öğrenme iddiasında bulunma. Birden fazla soru varsa her birini yanıtla. Kısa takipleri son ilgili konuya bağla; yeni konu ve vazgeçme ifadelerinde eski dental konuyu sürdürme. Birden fazla iş istendiyse her birini sırayla yanıtla; desteklenmeyen kısmı sessizce atlama. Olumsuz işlem isteklerini tersine çevirme. Çalışma belleğinde değişmeyen hedef ve kararları koru; sırf kısa yanıt veriyorsun diye silme. Kullanıcının son isim düzeltmesini kullan; iptal ettiği isim bilgisine geri dönme.`;}
 
 const fold=s=>String(s??'').toLocaleLowerCase('tr').normalize('NFKD').replace(/\p{M}/gu,'').replace(/ı/g,'i').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
 const response=output=>({ok:true,engine:'core',output,references:[]});
@@ -59,8 +59,15 @@ function previousIntents(history){
  }return null;
 }
 const nameWords=/^[\p{L}][\p{L}\p{M}'’-]*(?:[ -][\p{L}][\p{L}\p{M}'’-]*){0,3}$/u;
-const notNames=new Set(['ne','nedir','neydi','kim','kanka','aya','bilmiyorum','yok','hayir','nedendi','degil','degildi','not','artik']);
-function nameRevoked(prompt){const q=fold(prompt).replace(/^(?:hayir|aslinda|no|actually) /,'');return /^(?:(?:benim )?(?:adim|ismim) (?:.{1,80} )?degil|my name is not .{1,80}|(?:adimi|ismimi) unut|bana bu isimle hitap etme|forget my name)$/.test(q);}
+const notNames=new Set(['ne','nedir','neydi','kim','kanka','aya','bilmiyorum','yok','hayir','nedendi','degil','degildi','not','artik','ve','and']);
+function nameRevoked(prompt){
+ const q=fold(prompt).replace(/^(?:hayir|aslinda|no|actually) /,'');
+ if(/^(?:(?:adimi|ismimi) unut|bana bu isimle hitap etme|forget my name)$/.test(q))return true;
+ const raw=String(prompt??'').trim().toLocaleLowerCase('tr').replace(/^(?:hayır|hayir|aslında|aslinda|no|actually)[,\s]+/u,'').replace(/[.!]$/,'');
+ const match=raw.match(/^(?:benim )?(?:adım|adim|ismim) (?:artık |artik )?(.{1,80}) (?:değil|degil)$/u)??raw.match(/^my name is not (.{1,80})$/u);
+ return !!match&&nameWords.test(match[1])&&!match[1].split(/[ -]/).some(x=>notNames.has(fold(x)));
+}
+function isNameControl(prompt){return !!declaredName(prompt)||nameRevoked(prompt);}
 function declaredName(prompt){
  if(typeof prompt!=='string'||prompt.length>200)return '';
  const text=prompt.trim().replace(/^(?:hayır|hayir|aslında|aslinda|no|actually)[,\s]+/iu,'');
@@ -120,4 +127,4 @@ function answerDialogue(prompt,{locale='tr',history=[],cadContext=null}={}){
  if(mode==='detail'&&unique.some(kind=>['identity','purpose','capabilities'].includes(kind))){if(!unique.includes('capabilities'))output.push(textFor('capabilities',{tr,cadContext,history,mode}));output.push(textFor('limits',{tr,cadContext,history,mode}));}
  return output.length?response(output.join('\n\n')):null;
 }
-module.exports={assistantProfile,profileInstructions,answerDialogue,isAcknowledgement,followupMode,declaredName};
+module.exports={assistantProfile,profileInstructions,answerDialogue,isAcknowledgement,followupMode,declaredName,isNameControl};

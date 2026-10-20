@@ -1,0 +1,29 @@
+{
+  "pass": true,
+  "explicitMemoryInRealChat": true,
+  "memoryRecallAndNewConversation": true,
+  "historyOptInReload": true,
+  "multistepConversionAndMemoryDraft": true,
+  "offlineTypedCadProposal": true,
+  "applyRequired": true,
+  "staleProposalDisabled": true,
+  "callbackFailurePreserved": true,
+  "noInventedGeometryMetrics": true,
+  "readyModelReceivesExplicitMemory": true,
+  "modelCallsAreMock": true,
+  "cadCallbacksAreSynthetic": true,
+  "realGeometryValidated": false,
+  "timings": {
+    "startupMs": 4203,
+    "offlineMemoryAndTasksMs": 8729,
+    "offlineCadMs": 2386,
+    "readyModelMs": 5651,
+    "totalMs": 21757
+  },
+  "screenshots": [
+    "/workspace/dentaya-aya-work-validation/screenshots/AYA_RC50_memory_and_multistep.png",
+    "/workspace/dentaya-aya-work-validation/screenshots/AYA_RC50_offline_place_proposal.png",
+    "/workspace/dentaya-aya-work-validation/screenshots/AYA_RC50_callback_failure_and_stale_proposal.png",
+    "/workspace/dentaya-aya-work-validation/screenshots/AYA_RC50_model_receives_explicit_memory.png"
+  ]
+}

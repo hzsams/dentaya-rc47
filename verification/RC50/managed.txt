@@ -1,0 +1,13 @@
+{
+  "pass": true,
+  "checksumAndResume": true,
+  "redirectRejection": true,
+  "archiveTraversalRejection": true,
+  "ggufImport": true,
+  "tokenBudget": true,
+  "loopbackStreaming": true,
+  "explicitMemory": true,
+  "cadMetadataWhitelist": true,
+  "foundationTrainingClaim": false,
+  "nativeInference": "mocked in this check; separate native log"
+}

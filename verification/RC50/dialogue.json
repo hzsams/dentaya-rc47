@@ -1,0 +1,31 @@
+{
+  "pass": true,
+  "cases": 214,
+  "groups": {
+    "direct basics": 51,
+    "public integration": 51,
+    "knowledge disabled": 4,
+    "declared names": 6,
+    "name corrections": 2,
+    "missing names": 5,
+    "name evidence boundaries": 6,
+    "negative name evidence": 3,
+    "name revocation": 2,
+    "explicit name clearing": 4,
+    "name after clearing": 2,
+    "quoted clearing task": 2,
+    "identity followups": 13,
+    "shorter means shorter": 8,
+    "examples retain topic": 4,
+    "missing dialogue topic": 3,
+    "substantive clause boundaries": 14,
+    "catalog followups": 5,
+    "acknowledgements preserve catalog": 4,
+    "catalog false followups": 10,
+    "catalog topic boundaries": 9,
+    "deterministic work preservation": 2,
+    "acknowledgement meaning": 4
+  },
+  "nativeInference": false,
+  "coverage": "TR/EN direct and polite dialogue, compounds, public offline routing, session name evidence and corrections, short followups, quoted task rejection, catalog topic boundaries and deterministic tool preservation"
+}

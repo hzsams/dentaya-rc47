@@ -1,9 +1,10 @@
 /* Browser/Electron shared, deterministic AYA-owned context and evidence layer. */
 'use strict';
-const CORE_VERSION='0.7.0';
+const CORE_VERSION='0.8.0';
 const workTools=require('./work-tools.cjs');
 const conversation=require('./conversation.cjs');
 const {answerDialogue}=require('./dialogue.cjs');
+const {answerTasks}=require('./task-dialogue.cjs');
 function localSetupGuide(t=s=>s){return ['AYA Core '+CORE_VERSION+' · llama.cpp · Qwen3 1.7B · GGUF',t('Yerel motoru kur'),t('Yerel sohbet API anahtarı veya DentAYA oturumu istemez. Mesajlar yalnızca bu bilgisayardaki modele iletilir; buluta otomatik geçilmez.'),t('İlk indirme internet ve boş disk alanı ister. Sonrasında yerel sohbet çevrimdışı çalışabilir. Hız bilgisayarın belleği ve işlemcisine bağlıdır; daha küçük kurulu modelleri de seçebilirsin.'),t('Yerel model ekle'),t('AYA bilgi defteri'),t('Bu bilgiler bu cihazda saklanır.')].join('\n');}
 const fold=s=>String(s||'').toLocaleLowerCase('tr').normalize('NFKD').replace(/\p{M}/gu,'').replace(/ı/g,'i');
 const segmenter=new Intl.Segmenter(undefined,{granularity:'word'});
@@ -35,20 +36,20 @@ function calculate(expression){
  try{const result=sum();return pos===clean.length&&Number.isFinite(result)&&Math.abs(result)<=1e15?{expression,result}:null;}catch{return null;}
 }
 function answerWorkTool(prompt,{cadContext=null,locale='tr'}={},t=s=>s){if(typeof prompt!=='string'||!prompt.trim()||prompt.length>8000)return null;const arithmetic=calculate(fold(prompt).replace(/^(hesapla|calculate)\s*:?\s*/,'').replace(/[?]$/,''));const output=workTools.toolAnswer(prompt,{cadContext:normalizeCad(cadContext),locale},t)??(arithmetic?arithmetic.expression+' = '+Number(arithmetic.result.toPrecision(12)).toString():null);return output?{ok:true,engine:'core',output,references:[]}:null;}
-function answerOwned(prompt,{knowledge=[],cadContext=null,history=[],options={},locale='tr',includeCatalog=true}={},t=s=>s){
+function answerOwned(prompt,{knowledge=[],cadContext=null,workingMemory=null,history=[],options={},locale='tr',includeCatalog=true}={},t=s=>s){
  if(typeof prompt!=='string'||!prompt.trim()||prompt.length>8000)return null;
  const q=fold(prompt),context=normalizeCad(cadContext),all=normalizeKnowledge(knowledge),refs=d=>d.map(v=>({id:'knowledge-'+v.id,title:v.title,href:'/ai#knowledge'}));
  const response=(output,references=[])=>({ok:true,engine:'core',output,references});
  const safety=conversation.safetyReply(prompt,{locale});if(safety)return safety;
  if(includeCatalog&&options.useKnowledge!==false&&conversation.isCatalogQuestion(prompt))return conversation.answerCatalog(prompt,{history,options,locale});
  const dialogue=answerDialogue(prompt,{history,locale,cadContext:context});if(dialogue)return dialogue;
- const tool=workTools.toolAnswer(prompt,{cadContext:context,locale},t);if(tool)return response(tool);
+ const tasks=answerTasks(prompt,{cadContext:context,workingMemory,history,options,locale,t});if(tasks)return tasks;
  if(/sifirdan.*egit|temel.*model|foundation model|trained.*scratch|kendi.*model.*egit/.test(q))return response(t('AYA Core bize ait çalışma katmanıdır. Temel dil modeli sıfırdan eğitilmedi; yerel açık ağırlıklı model kullanılır.'));
  const arithmetic=calculate(q.replace(/^(hesapla|calculate)\s*:?\s*/,'').replace(/[?]$/,''));
  if(arithmetic)return response(arithmetic.expression+' = '+Number(arithmetic.result.toPrecision(12)).toString());
  const definition=/nedir|ne demek|ne anlama|tanimi|what is|what are|define|definition/.test(q)&&!/siradaki|sonraki|ne yap|next/.test(q);
- if(context&&!definition&&/kapanis|occlusion|bite|antagonist/.test(q)){return response([t('Çalışma ünitesi')+': '+(context.unit||'—'),t(context.upperReady&&context.lowerReady?'Kayıtlı kapanış':'Antagonist ve kapanış verisini kontrol et'),t('Göster / Gizle')].join('\n'));}
- if(context&&!definition&&/siradaki|ne yap|sonraki|^devam[?.!\s]*$|next|proje.*durum|^durum[?.!\s]*$|^kontrol[?.!\s]*$|hazir mi/.test(q)){
+ if(context&&!cadContext?.scope&&!definition&&/kapanis|occlusion|bite|antagonist/.test(q)){return response([t('Çalışma ünitesi')+': '+(context.unit||'—'),t(context.upperReady&&context.lowerReady?'Kayıtlı kapanış':'Antagonist ve kapanış verisini kontrol et'),t('Göster / Gizle')].join('\n'));}
+ if(context&&!cadContext?.scope&&!definition&&/siradaki|ne yap|sonraki|^devam[?.!\s]*$|next|proje.*durum|^durum[?.!\s]*$|^kontrol[?.!\s]*$|hazir mi/.test(q)){
   const rows=[t('Çalışma ünitesi')+': '+(context.unit||'—')];
   if(context.isSaving)rows.push(t('Kaydediliyor…'));
   else if(context.saveFailed)rows.push(t('CAD projesi kaydedilemedi.'),t('Yerel kaydet ve çık'));

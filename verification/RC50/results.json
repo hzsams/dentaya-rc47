@@ -1,0 +1,36 @@
+{
+  "release": "1.0.0-rc.50",
+  "ayaCore": "0.8.0",
+  "baseCommit": "6126bc22c4dbfba26c03897b39042ec8ef4cd51e",
+  "completedAt": "2026-10-20T08:05:09.540570+03:00",
+  "checks": [
+    {
+      "command": "npm run verify",
+      "exitCode": 0,
+      "log": "verify.txt"
+    },
+    {
+      "command": "node scripts/verify-aya-work-browser.mjs",
+      "exitCode": 0,
+      "log": "work-browser.txt",
+      "modelCallsAreMock": true,
+      "cadCallbacksAreSynthetic": true
+    },
+    {
+      "command": "npm run verify:aya-conversation-browser",
+      "exitCode": 0,
+      "log": "conversation-browser.txt",
+      "modelCallsAreMock": true
+    }
+  ],
+  "basicDialogueCases": 214,
+  "memoryCases": 141,
+  "taskCases": 25,
+  "cadDialogueGroups": 28,
+  "cadDialogueUsesRealKernelEvidence": true,
+  "nativeModelInferenceVerified": false,
+  "windowsInstallerProduced": false,
+  "liveOrganizationBackendVerified": false,
+  "dentalFactsActual": 220,
+  "catalogueQuestions": 1008
+}

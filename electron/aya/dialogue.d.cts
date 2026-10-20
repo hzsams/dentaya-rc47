@@ -6,3 +6,4 @@ export function answerDialogue(prompt:string,context?:{locale?:string;history?:C
 export function isAcknowledgement(prompt:string):boolean;
 export function followupMode(prompt:string):''|'detail'|'example'|'short';
 export function declaredName(prompt:string):string;
+export function isNameControl(prompt:string):boolean;

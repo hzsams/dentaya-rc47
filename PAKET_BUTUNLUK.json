@@ -1,15 +1,15 @@
 {
-  "release": "1.0.0-rc.49",
+  "release": "1.0.0-rc.50",
   "status": "source-release-candidate",
-  "date": "2026-10-19",
-  "baseRelease": "1.0.0-rc.48",
-  "baseCommit": "6ac33cd46c89f747674c46010ee4d332ecaa2edd",
+  "date": "2026-10-20",
+  "baseRelease": "1.0.0-rc.49",
+  "baseCommit": "6126bc22c4dbfba26c03897b39042ec8ef4cd51e",
   "nativeModelInferenceVerified": false,
   "windowsInstallerProduced": false,
   "liveOrganizationBackendVerified": false,
   "dentalFactsActual": 220,
   "dentalFactsTarget": 30000,
-  "verification": "RC49_KONTROL_RAPORU.md",
+  "verification": "RC50_KONTROL_RAPORU.md",
   "files": [
     {
       "path": ".env.example",
@@ -19,7 +19,7 @@
     {
       "path": ".env.release.example",
       "size": 407,
-      "sha256": "3a91cfef334fef2f7a731b8202686766fa23aa79bf0fd92a57daf42afc648a8e"
+      "sha256": "60e916198f85f1550da6f7946068cfb67dc02d20cb11eb1fb3f9e46d472a1fcc"
     },
     {
       "path": ".gitignore",
@@ -34,7 +34,7 @@
     {
       "path": "AGENTS.md",
       "size": 1975,
-      "sha256": "ccdb7ba2379958d0121c9097789ea4c52fad5e271490b9a136cacc23c76d3d6d"
+      "sha256": "047cce3df26b5047ff5ecd0df5141a7a2f8642d36c322bf6adfeac4041c67985"
     },
     {
       "path": "AYA_ACTIONS_QA.md",
@@ -154,7 +154,7 @@
     {
       "path": "DENTAYA_GUNCELLE_DERLE.cmd",
       "size": 3129,
-      "sha256": "edfa9c0af2bf3da0c33d1ab08fbd1d42af6ae70ab14b34fece8ad59466808156"
+      "sha256": "d1934b20ea921f9a3d62425533a9a4ee0a24a3356a34dd50ca8fc9d8f3983261"
     },
     {
       "path": "DentAYA_CAD_Degisiklikler.txt",
@@ -194,7 +194,7 @@
     {
       "path": "KURULUM.txt",
       "size": 2204,
-      "sha256": "bfaeb23d77d70879283157f9041eec735483a519907603296bb7956cef59176c"
+      "sha256": "4b95f2c61bca2ae33bc73b47fcdebba21709a3e959e0352c040b3640bfc43a7d"
     },
     {
       "path": "LOGO_GUNCELLEME.txt",
@@ -572,6 +572,21 @@
       "sha256": "b7d347525238a708c67d24ad3e32af3c6fcd28e3fef449a438b915888e6e99cb"
     },
     {
+      "path": "RC50_AYA_1008_SORU_CEVAP.json",
+      "size": 365775,
+      "sha256": "7ff84c46060e4ece85657c4fb19200819c91efbd881882b7001f786e2f984e3d"
+    },
+    {
+      "path": "RC50_KONTROL_RAPORU.md",
+      "size": 4964,
+      "sha256": "f79e0bbdfd89302c9545e46acf7789708cad85ab2cb0aa60f1146e83919f5aae"
+    },
+    {
+      "path": "RC50_KULLANIM.md",
+      "size": 3560,
+      "sha256": "b29b3cef409a6638d158d34f59be7ffff5b680e9ac3c95cd8acccefc4363222a"
+    },
+    {
       "path": "RC6_CHANGELOG.md",
       "size": 805,
       "sha256": "3da664df997388f7c74588f417e0676b263ac4aa225fced31091f5f197b6a03f"
@@ -588,8 +603,8 @@
     },
     {
       "path": "README.md",
-      "size": 2347,
-      "sha256": "7604fba4c933318a1bbcccf44988d410491989929d0ecc41993274776c94c443"
+      "size": 2523,
+      "sha256": "d6385fcdb4c8156ed7b9cf0dcac54131a421b4c661984b2c26092e81f257adeb"
     },
     {
       "path": "README_BUILD_FIX_01.md",
@@ -858,13 +873,23 @@
     },
     {
       "path": "electron/aya/assistant.cjs",
-      "size": 9855,
-      "sha256": "59e378374cc21ad57f888a2a158cf487bb437a4a423aaf67519284ea8f2f8856"
+      "size": 9980,
+      "sha256": "18c8e23983ed8646a12e83129386fc8f2122950ead90bede0c93abe496724ccb"
     },
     {
       "path": "electron/aya/assistant.d.cts",
-      "size": 1891,
-      "sha256": "045ac16cfbf3b76dfc126e1d533f577a819df6ae92cdb1fb39132bc4ac587de8"
+      "size": 1950,
+      "sha256": "b06b2f3724aa11ec9c7928b9f1ab0868b3728a0a421dc3a3eb7acd4fa0b3976c"
+    },
+    {
+      "path": "electron/aya/cad-dialogue.cjs",
+      "size": 21643,
+      "sha256": "286a4dcc471fdf00291f49f85c79ec7de747212725e3b1b148040a200bd673c1"
+    },
+    {
+      "path": "electron/aya/cad-dialogue.d.cts",
+      "size": 363,
+      "sha256": "f64305ac7b24c94c551e651f68c7fb067b098e5ebe6aea23efb88154f3fe23e3"
     },
     {
       "path": "electron/aya/catalog/dental.cjs",
@@ -903,13 +928,13 @@
     },
     {
       "path": "electron/aya/dialogue.cjs",
-      "size": 21654,
-      "sha256": "75094665290e0f96ea4739e4b9923b3d577cffee3a7f17c08e66dcc9bcfb743a"
+      "size": 22354,
+      "sha256": "3e9349a5e77005e1c4a3446ea1a58d7a995c83a2ee5e151875c74ba5a3242db6"
     },
     {
       "path": "electron/aya/dialogue.d.cts",
-      "size": 639,
-      "sha256": "06a52f4118f52f026121c0c8244592acb75865b071f6860ae7cd8fe7ce72f4c0"
+      "size": 693,
+      "sha256": "5be34037e4d2ad03d262c45f721bb578be79b04384f5de2f61fe1d7dbd28b26d"
     },
     {
       "path": "electron/aya/knowledge.json",
@@ -940,6 +965,16 @@
       "path": "electron/aya/managed-runtime.cjs",
       "size": 15238,
       "sha256": "cc75a92f6a2392f0b0589a270950fc07c3054aa3f011ac9e7053d38e4fe1c662"
+    },
+    {
+      "path": "electron/aya/memory-dialogue.cjs",
+      "size": 11956,
+      "sha256": "c0b6f0f76e249ecc5955891856d8bf444835de55d2961fe65daa08d65a457f57"
+    },
+    {
+      "path": "electron/aya/memory-dialogue.d.cts",
+      "size": 349,
+      "sha256": "412c576f8c8d5b680b51fdacc0fb7dcf47e63b9455694ff19c95fb945018c7d4"
     },
     {
       "path": "electron/aya/number-words.json",
@@ -1182,6 +1217,16 @@
       "sha256": "496dfc36cc5658b8f1bc3d401b553982e0df9fd6c2fc8c8a5b50662187495685"
     },
     {
+      "path": "electron/aya/task-dialogue.cjs",
+      "size": 7124,
+      "sha256": "cbc337d037d5fe9e0b80105c56da19c3f39a4ee39a9d119ab135ae8524c7b140"
+    },
+    {
+      "path": "electron/aya/task-dialogue.d.cts",
+      "size": 407,
+      "sha256": "db03990238f1d815f147d86c2e6831e7551d18a4199851f7a46d83d952955991"
+    },
+    {
       "path": "electron/aya/ui-manifest.json",
       "size": 202112,
       "sha256": "d784c063a0283ec231498614116b6f284c6c86df32a8d4f5e92798798956d69f"
@@ -1324,12 +1369,12 @@
     {
       "path": "package-lock.json",
       "size": 354831,
-      "sha256": "f7f54006f2d193935a74863fd325a022f54ae719b0347ae0e7be073108760b80"
+      "sha256": "f779b3fdfc4d90633166801fd679daedf2fd00959264a83134fb674838c7da71"
     },
     {
       "path": "package.json",
-      "size": 8268,
-      "sha256": "cc668527894f00522966756e2ecb839d2743311b6da535bea21113eaad0a471d"
+      "size": 8560,
+      "sha256": "35092fbc3d91fb38e3ba733f4e0fb2a4ff6e9b27a0be65ad630c30de7bb08c88"
     },
     {
       "path": "public/aya/aya-alert.png",
@@ -2467,6 +2512,11 @@
       "sha256": "203926b38d331bb2e3e133755a7bab6d90f574b56427220c5ade6d9f691f98ae"
     },
     {
+      "path": "scripts/fixtures/rc50-aya-work.tsx",
+      "size": 2743,
+      "sha256": "4699b9ecaf54b3ef435d9b007ef2eb1aaafddcc82d04b2d3f836ed0a81274cf2"
+    },
+    {
       "path": "scripts/import-dental-facts.ts",
       "size": 2874,
       "sha256": "878a39f33d42b2cccfeea1cfbad3d15e1c877b06edc856f80c3f1683c85ded70"
@@ -2532,6 +2582,11 @@
       "sha256": "c47a88c7c940817e069a1475c0091d712c2afbbb4a2ee89fdd25aa3d63899c29"
     },
     {
+      "path": "scripts/verify-aya-cad-dialogue.cjs",
+      "size": 19105,
+      "sha256": "d5c842f85d7b45fefa6267a5a13f9f68fe605ee64857e984f2613e876c4ee368"
+    },
+    {
       "path": "scripts/verify-aya-catalog.cjs",
       "size": 5535,
       "sha256": "dcd7e3a17b09a90809005d973ad4e407692f9da7214195fb290a992d3028bc99"
@@ -2573,8 +2628,13 @@
     },
     {
       "path": "scripts/verify-aya-managed.cjs",
-      "size": 7861,
-      "sha256": "759df16d7e1f0042570afa8eab97b2c2e1e13401c62da82b65f8767ade70f185"
+      "size": 8180,
+      "sha256": "2502647fa88d567b5ebb609de4bbf78053acae692c5a85f9e32ad1f958dacfea"
+    },
+    {
+      "path": "scripts/verify-aya-memory.cjs",
+      "size": 11209,
+      "sha256": "5549c09a007b804eed3ecb57a1315452ea25ab2149c04a0b43a52df3b81f9da6"
     },
     {
       "path": "scripts/verify-aya-native-grammar.cjs",
@@ -2595,6 +2655,21 @@
       "path": "scripts/verify-aya-revision.ts",
       "size": 2870,
       "sha256": "55152e472218e1d544fb5400fbddb929dc6756c619fedca93fed16b8570350b1"
+    },
+    {
+      "path": "scripts/verify-aya-tasks.cjs",
+      "size": 4430,
+      "sha256": "ef9a67aded6ef735032ac9227da5975f16889ae02324048786f9c907816c1b3c"
+    },
+    {
+      "path": "scripts/verify-aya-work-browser.mjs",
+      "size": 13817,
+      "sha256": "0b8851128f47fd71555f322335e0ea0df5d039574a677561f17a15734add1daa"
+    },
+    {
+      "path": "scripts/verify-aya-work.ts",
+      "size": 5120,
+      "sha256": "b8278c5d3d76f73e8593a6d5024fabc1d2aebb2f2ee53e0fcfe99e102b6bdf7c"
     },
     {
       "path": "scripts/verify-brand-assets.mjs",
@@ -3523,8 +3598,8 @@
     },
     {
       "path": "src/lib/aya-conversation.ts",
-      "size": 5382,
-      "sha256": "2636b138e66316b0793170c60fd597060d284e2348d7d7fbe566bc3439c95b41"
+      "size": 5135,
+      "sha256": "0d449f3de193715790e6f06035385417ac715efcad9c89f52eb7cc819db54e08"
     },
     {
       "path": "src/lib/aya-download-status.ts",
@@ -3793,8 +3868,8 @@
     },
     {
       "path": "src/lib/i18n/aya-experience.ts",
-      "size": 6662,
-      "sha256": "a9a0c923d4b36e34c065ac88d244bc133de381f6a641f2c28ef7634b78ea7e9d"
+      "size": 6710,
+      "sha256": "423c8ca20fc4d91260fa58d873320b92fded6296de7845daed2a0c25fb9c62e9"
     },
     {
       "path": "src/lib/i18n/brand.ts",
@@ -4329,7 +4404,7 @@
     {
       "path": "src/lib/release.ts",
       "size": 418,
-      "sha256": "99f6af09edd568ff65ba934c20be740a315bfb345165263f394d1579a5feb996"
+      "sha256": "e93077ab313ecd4053349ce30561bed183feab47faad934a4a76ff0584870e13"
     },
     {
       "path": "src/lib/retry.ts",
@@ -4364,7 +4439,7 @@
     {
       "path": "src/lib/supabase.ts",
       "size": 1108,
-      "sha256": "33f092c292f118fdd985e2a5309ee01d96562361fff12ef1a3fa4af16a1055ad"
+      "sha256": "9d813538048f3498fc19d7338713036660ae8e17f9ea8c3ce99f81dd600a3dde"
     },
     {
       "path": "src/lib/system-messages.ts",
@@ -5160,6 +5235,76 @@
       "path": "verification/RC49/verify.txt",
       "size": 40851,
       "sha256": "1e8f09bbb13b9c9a839d14d6f7934fca37ed02c36e58ec04e08a1b43a5e29e8d"
+    },
+    {
+      "path": "verification/RC50/AYA_RC50_callback_failure_and_stale_proposal.png",
+      "size": 52835,
+      "sha256": "51f5f13736ae051d2d9686d91a678bf91b7ff19bb59dba1b971336d7ec016dc5"
+    },
+    {
+      "path": "verification/RC50/AYA_RC50_memory_and_multistep.png",
+      "size": 80693,
+      "sha256": "376fafe5c800387b3138bdfe5bb516e1d872560377ba70094c79c644b23fc563"
+    },
+    {
+      "path": "verification/RC50/AYA_RC50_model_receives_explicit_memory.png",
+      "size": 70609,
+      "sha256": "5120d65c5abc2056f5a6ad5ab1d01afa8946ffe5f5df90f615f3c13558417866"
+    },
+    {
+      "path": "verification/RC50/AYA_RC50_offline_place_proposal.png",
+      "size": 49537,
+      "sha256": "9954371b3d1c73417225dbff442d772b79dad7cc282ee44f7e9c69c12888999b"
+    },
+    {
+      "path": "verification/RC50/cad-dialogue.txt",
+      "size": 403,
+      "sha256": "75fd0592f1f64289a16caa206816467a31a4a20bc559544ca3eb56eaa3e3c894"
+    },
+    {
+      "path": "verification/RC50/conversation-browser.txt",
+      "size": 1094,
+      "sha256": "a5b5d2c058fba1a716b37ec0e6d330bcdb37194d673b0c9953939995c8f96482"
+    },
+    {
+      "path": "verification/RC50/dialogue.json",
+      "size": 1041,
+      "sha256": "df2c16c6faa0750a652ec556deaeb84a1ed135a9e8b3cf5efaccab1d29d30bb1"
+    },
+    {
+      "path": "verification/RC50/managed.txt",
+      "size": 348,
+      "sha256": "0aecde92ec7473d837ee9cb30566eb46c3a81ecd7443664ca8a1fc3100001335"
+    },
+    {
+      "path": "verification/RC50/memory.txt",
+      "size": 197,
+      "sha256": "f79495c60a0d1c433c35ac0fda41a6df642531ea2d2958774665759430679d93"
+    },
+    {
+      "path": "verification/RC50/results.json",
+      "size": 968,
+      "sha256": "a3d5e058ca5952d20e5450e2ff7bf6f70f4b324ede058cabfedf715f5979e6c6"
+    },
+    {
+      "path": "verification/RC50/tasks.txt",
+      "size": 1438,
+      "sha256": "6357434d969e247c4698d99bba3e438cf1ac1c342b9848b88e0c21e3934566d8"
+    },
+    {
+      "path": "verification/RC50/verify.txt",
+      "size": 43073,
+      "sha256": "3c981fecce25af1f4d4cbafd9a36cd2b5d9c872cd5cf36814f47d69aff3f48ec"
+    },
+    {
+      "path": "verification/RC50/work-browser.txt",
+      "size": 1052,
+      "sha256": "9bf5e73410020ab0b41cebf8856af4b1df1ae60738c3a7eece39386a4cb59103"
+    },
+    {
+      "path": "verification/RC50/work-routing.json",
+      "size": 318,
+      "sha256": "ef75eed338c2db8a57c4ca2ab1606ff08ca080109e0726f498428ca105918fdd"
     },
     {
       "path": "verification/professional/aya.json",

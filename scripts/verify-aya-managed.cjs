@@ -3,7 +3,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs/promises'),os=req
 const {zipSync}=require('fflate');
 const {createManagedAya,verifiedDownload,trustedResponse,extractEngine}=require('../electron/aya/managed-runtime.cjs');
 const {createLocalAya}=require('../electron/aya-local.cjs');
-const {answerOwned,normalizeCad,ownedContext}=require('../electron/aya/assistant.cjs');
+const {answerOwned,normalizeCad,ownedContext,calculate}=require('../electron/aya/assistant.cjs');
 (async()=>{
  const busyApi=createLocalAya({managed:{isBusy:()=>true}});assert.equal((await busyApi.chat({model:'aya-local:test',prompt:'test'},1)).error,'LOCAL_BUSY');
  const dir=await fs.mkdtemp(path.join(os.tmpdir(),'dentaya-managed-test-'));let runtime;
@@ -40,7 +40,9 @@ const {answerOwned,normalizeCad,ownedContext}=require('../electron/aya/assistant
  mode='incomplete';assert.equal((await api.chat({model:s.models[0].name,prompt:'Kontrol'},7)).error,'LOCAL_EMPTY_RESPONSE');
  runtime.stop();assert.equal(killed,1);assert.equal((await runtime.status()).running,false);
  assert.equal((await runtime.importModel(path.join(dir,'missing.gguf'))).ok,false);
- assert.equal(answerOwned('hesapla (12,5 + 2,5) * 4').output,'hesapla (12,5 + 2,5) * 4 = 60'.replace('hesapla ',''));assert.equal(answerOwned('1/0'),null);
+ assert.equal(answerOwned('hesapla (12,5 + 2,5) * 4').output,'hesapla (12,5 + 2,5) * 4 = 60'.replace('hesapla ',''));
+ assert.equal(calculate('1/0'),null,'Invalid arithmetic never produces a numeric result');
+ const invalidMath=answerOwned('1/0');assert.equal(invalidMath.engine,'core');assert.match(invalidMath.output,/sıfıra bölme/);assert.doesNotMatch(invalidMath.output,/Infinity|NaN|1\/0\s*=/,'The conversational error must not present an invalid result');
  assert.match(answerOwned('Temel model sıfırdan eğitildi mi?').output,/sıfırdan eğitilmedi/);
  const cad=normalizeCad({unit:'46',upperReady:true,lowerReady:true,openingMm:99,positions:[1],patientName:'PRIVATE'});assert.equal(cad.openingMm,12);assert.ok(!JSON.stringify(cad).includes('PRIVATE'));assert.ok(!('positions' in cad));
  const note={id:'test',kind:'document',title:'Dökümhane',content:'Başlangıç bilgisi.\n'.repeat(300)+'Kalibrasyon kodu Z8T4.'};assert.match(ownedContext({prompt:'Kalibrasyon kodu',knowledge:[note]}).personalKnowledge[0].content,/Z8T4/);assert.equal(ownedContext({prompt:'Kalibrasyon kodu',knowledge:[note],useMemory:false}).references.length,0);

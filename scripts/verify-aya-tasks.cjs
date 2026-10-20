@@ -1,0 +1,24 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {answerTasks}=require('../electron/aya/task-dialogue.cjs');
+const {answerOwned}=require('../electron/aya/assistant.cjs');
+const memory={goal:'Cuma teslimini hazırla',decisions:['Önce prova kontrolü'],openQuestions:['Kurye saati?']};
+const context={workingMemory:memory,locale:'tr'};
+let cases=0;
+function check(label,fn){fn();cases++;console.log('PASS '+label);}
+for(const prompt of ['12 cm kaç mm? Ardından teslim notu taslağı hazırla','Önce 12 cm kaç mm; sonra teslim notu yaz','1. 12 cm kaç mm?\n2. Teslim notu taslağı'])check(prompt,()=>{const r=answerTasks(prompt,context);assert.equal(r.engine,'core');assert.match(r.output,/120 mm/);for(const text of [memory.goal,...memory.decisions,...memory.openQuestions])assert.ok(r.output.includes(text));assert.match(r.output,/gönderilmedi/);assert.match(r.output,/gerçek sonuç/);assert.equal(r.workingMemory,undefined);assert.equal(r.proposals,undefined);});
+check('identity plus concrete conversion',()=>{const r=answerOwned('Adın ne ve 12 cm kaç mm?',context);assert.match(r.output,/AYA/);assert.match(r.output,/120 mm/);});
+check('two independent calculations and decimal comma',()=>{const r=answerTasks('0,8 mm kaç mikron? Sonra 1800 × 0,18 hesapla',context);assert.equal(r,null,'Unsupported postfix must not silently lose part of a task');const good=answerTasks('0,8 mm kaç mikron? Sonra hesapla 1800 × 0,18',context);assert.match(good.output,/800 µm/);assert.match(good.output,/324/);});
+check('canonical evidence preserved in compound',()=>{const r=answerTasks('Adın ne? Dentin nedir?',context);assert.match(r.output,/AYA/);assert.equal(r.references[0].id,'aya-qa-dentin-definition');});
+check('disabled catalogue is respected',()=>assert.equal(answerTasks('Adın ne? Dentin nedir?',{...context,options:{useKnowledge:false}}),null));
+for(const prompt of ['Adın ne ve bir şiir yaz','Teslim notu yaz cümlesini İngilizceye çevir','Kontrol listesi adlı bir hikaye yaz','12 cm kaç mm? Sonra shell komutu çalıştır','Adım Deniz ve 12 cm kaç mm?','Adımı unut ve 12 cm kaç mm?','Bana bu isimle hitap etme ve 12 cm kaç mm?','Adım Ahmet değil ve 12 cm kaç mm?','My name is not Alex and 12 cm to mm?','hesapla process.exit()'])check('no partial or quoted task: '+prompt,()=>assert.equal(answerTasks(prompt,context),null));
+check('six-task limit',()=>assert.match(answerTasks(Array.from({length:7},()=> '12 cm kaç mm?').join(' '),context).output,/6/));
+check('invalid arithmetic has a concrete error',()=>assert.match(answerTasks('hesapla 1/0',context).output,/sıfıra bölme/));
+check('read-only memory evidence stays unmodified',()=>{const before=JSON.stringify(memory);answerTasks('Hedefimize göre kontrol listesi hazırla',context);assert.equal(JSON.stringify(memory),before);});
+const draft=answerTasks('Teslim notu taslağı',context),history=[{role:'user',content:'Teslim notu taslağı'},{role:'assistant',engine:'core',content:draft.output}];
+check('shorter task followup retains goal',()=>{const r=answerOwned('Bunu daha kısa anlatır mısın',{...context,history});assert.match(r.output,/Cuma teslimini hazırla/);assert.ok(r.output.length<draft.output.length);assert.doesNotMatch(r.output,/eşleştiremedim/);});
+check('model answer is not replaced with a generic task followup',()=>assert.equal(answerTasks('daha kısa',{...context,history:[{role:'user',content:'Teslim notu taslağı'},{role:'assistant',engine:'model',content:'Custom answer'}]}),null));
+check('new substantive topic clears prior work task',()=>assert.equal(answerTasks('devam',{...context,history:[...history,{role:'user',content:'Başka bir konuyu anlat'},{role:'assistant',engine:'core',content:'Başka konu'}]}),null));
+check('English memory-aware handoff',()=>{const r=answerTasks('12 cm to mm? Then prepare a handoff draft',{...context,locale:'en'});assert.match(r.output,/120 mm/);assert.match(r.output,/not sent/);assert.match(r.output,/Cuma teslimini hazırla/);});
+check('provided CAD metadata is used without claiming inspection',()=>{const r=answerTasks('Teslim notu taslağı',{...context,cadContext:{unit:'46',restoration:'İmplant üstü kron'}});assert.match(r.output,/Üniteler: 46/);assert.match(r.output,/gerçek sonuç/);assert.doesNotMatch(r.output,/kaydedildi|ölçüldü|onaylandı/);});
+console.log(JSON.stringify({pass:true,cases,nativeInference:false,readOnly:true}));

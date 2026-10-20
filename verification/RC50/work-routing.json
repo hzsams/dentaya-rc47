@@ -1,0 +1,1 @@
+{"pass":true,"explicitMemoryIsDeterministic":true,"ordinaryReadsAndTasksAreModelFirst":true,"atomicMemoryErrors":true,"failedForceModelCannotMutateMemory":true,"compoundTaskFallback":true,"cancellationFinal":true,"scopedCadProposals":true,"staleHostCallbackBlocked":true,"clinicalSafetyFirst":true,"mockedModel":true}
