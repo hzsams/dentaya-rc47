@@ -1,0 +1,36 @@
+Checking desktop shell /workspace
+Checking desktop shell /patients
+Checking desktop shell /appointments
+Checking desktop shell /finance
+Checking desktop shell /messages
+Checking desktop shell /ai
+{
+  "pass": true,
+  "routes": [
+    "/workspace",
+    "/patients",
+    "/appointments",
+    "/finance",
+    "/messages",
+    "/ai"
+  ],
+  "desktopViewports": [
+    "1366×768",
+    "1440×1000"
+  ],
+  "mobileViewport": "390×844",
+  "checks": [
+    "unauthenticated workspace exposes local CAD and opens local AYA",
+    "Alt+M module menu and search; single navigation owner; Ctrl+K search and active descendant; modal Escape/focus restoration; Ctrl+, local preferences",
+    "network status follows real browser online/offline events without a connected-backend claim",
+    "real patient search/create entry, appointment planner/form, finance record controls, bounded message composer, local AYA calculation",
+    "persisted reduced motion; light and dark presets; Arabic RTL desktop and mobile"
+  ],
+  "samples": 22,
+  "screenshots": "/workspace/dentaya-studio-validation",
+  "backend": "synthetic intercepted HTTP only; no live clinic/backend verification",
+  "automaticReadReceiptsIntercepted": 1,
+  "automaticOnboardingSyncIntercepted": 0,
+  "cadGeometryLifecycle": "separate verify-cad-daily-browser test",
+  "pageErrors": 0
+}

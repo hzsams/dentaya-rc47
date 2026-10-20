@@ -13,7 +13,7 @@ const groups: {
         DentayaIconName
     ][];
 }[] = [
-    { title: 'Çalışma', items: [['/workspace', 'Genel bakış', 'home'], ['/cases', 'Vakalar', 'case'], ['/patients', 'Hastalar', 'patient'], ['/appointments', 'Randevular', 'calendar']] },
+    { title: 'Çalışma', items: [['/workspace', 'Genel bakış', 'home'], ['/cases', 'Vakalar', 'case'], ['/patients', 'Hastalar', 'patient'], ['/appointments', 'Randevular', 'calendar'], ['/ai', 'AYA çalışma asistanı', 'ai']] },
     { title: 'Tasarım ve üretim', items: [['/scans', 'Taramalar', 'scan'], ['/scan-studio', 'Tarama stüdyosu', 'scan'], ['/design', 'CAD çalışma alanı', 'design'], ['/cad-library','Form kütüphanesi','design'], ['/training', 'Demo ve eğitim', 'guide'], ['/operations', 'İş takibi', 'shield'], ['/logistics', 'Teslimatlar', 'logistics']] },
     { title: 'İletişim', items: [['/community', 'Topluluk', 'team'], ['/messages', 'Mesajlar', 'message'], ['/notifications', 'Bildirimler', 'notification']] },
     { title: 'Yönetim', items: [['/clinic', 'Klinik', 'clinic'], ['/labs', 'Laboratuvar', 'lab'], ['/finance', 'Finans', 'finance'], ['/team', 'Ekip', 'team'], ['/settings', 'Ayarlar', 'settings']] },

@@ -1,2 +1,5 @@
-import LaunchPage from "./LaunchPage";
-export default function Page() { return <LaunchPage />; }
+import { redirect } from "next/navigation";
+
+export default function Page() {
+  redirect("/workspace");
+}

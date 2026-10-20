@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
+import {DEFAULT_CAD_WORKSPACE,normalizeCadWorkspace} from '../src/lib/cad-workspace-preferences';
 import {createCameraMotion,sampleCameraMotion} from '../src/lib/cad-camera-motion';
 import {normalizeExperience,DEFAULT_EXPERIENCE,isQuietTime,SOUND_EVENTS,SOUND_TEXTURES} from '../src/lib/experience-preferences';
 const start=new THREE.Vector3(0,0,20),end=new THREE.Vector3(0,0,-20),center=new THREE.Vector3();
@@ -18,3 +19,8 @@ assert.equal(isQuietTime(quiet,at(22)),true);assert.equal(isQuietTime(quiet,at(7
 assert.equal(isQuietTime({...quiet,quietEnd:'22:00'},at(12)),true);assert.equal(isQuietTime({...quiet,quietHours:false},at(23)),false);
 const daytime={...quiet,quietStart:'09:00',quietEnd:'17:00'};assert.equal(isQuietTime(daytime,at(9)),true);assert.equal(isQuietTime(daytime,at(17)),false);
 console.log('PASS: camera presets orbit outside model, exact endpoints, instant mode; 8 textures / 7 events, bounded levels/pitch, valid clock fallback, overnight/daytime/all-day quiet-hour boundaries.');
+
+assert.equal(DEFAULT_CAD_WORKSPACE.background,'studio');assert.equal(DEFAULT_CAD_WORKSPACE.grid,false);assert.equal(DEFAULT_CAD_WORKSPACE.axes,false);
+for(const background of ['graphite','slate','paper','theme','studio'] as const)assert.equal(normalizeCadWorkspace({background}).background,background,'Existing explicit scene choices survive the new default');
+assert.equal(normalizeCadWorkspace({background:'unknown'}).background,'studio');
+console.log('PASS: plain Studio canvas by default; existing explicit CAD backgrounds remain unchanged.');

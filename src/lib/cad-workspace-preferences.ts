@@ -1,11 +1,11 @@
 'use client';
 import {useSyncExternalStore} from 'react';
-export type CadWorkspacePreferences={followToothStyle:boolean;grid:boolean;axes:boolean;background:'theme'|'graphite'|'slate'|'paper';rotateSpeed:number;zoomSpeed:number;panSpeed:number;damping:boolean};
-export const DEFAULT_CAD_WORKSPACE:CadWorkspacePreferences={followToothStyle:false,grid:false,axes:false,background:'graphite',rotateSpeed:1,zoomSpeed:1,panSpeed:1,damping:true};
+export type CadWorkspacePreferences={followToothStyle:boolean;grid:boolean;axes:boolean;background:'studio'|'theme'|'graphite'|'slate'|'paper';rotateSpeed:number;zoomSpeed:number;panSpeed:number;damping:boolean};
+export const DEFAULT_CAD_WORKSPACE:CadWorkspacePreferences={followToothStyle:false,grid:false,axes:false,background:'studio',rotateSpeed:1,zoomSpeed:1,panSpeed:1,damping:true};
 export function normalizeCadWorkspace(input:unknown):CadWorkspacePreferences {
  const v=input&&typeof input==='object'?input as Partial<CadWorkspacePreferences>:{};
  const speed=(n:unknown)=>typeof n==='number'&&Number.isFinite(n)?Math.max(.25,Math.min(2,n)):1;
- return {followToothStyle:v.followToothStyle===true,grid:v.grid===true,axes:v.axes===true,background:['graphite','slate','paper'].includes(v.background??'')?v.background!:v.background==='theme'?'theme':'graphite',rotateSpeed:speed(v.rotateSpeed),zoomSpeed:speed(v.zoomSpeed),panSpeed:speed(v.panSpeed),damping:v.damping!==false};
+ return {followToothStyle:v.followToothStyle===true,grid:v.grid===true,axes:v.axes===true,background:['studio','graphite','slate','paper'].includes(v.background??'')?v.background!:v.background==='theme'?'theme':'studio',rotateSpeed:speed(v.rotateSpeed),zoomSpeed:speed(v.zoomSpeed),panSpeed:speed(v.panSpeed),damping:v.damping!==false};
 }
 const KEY='dentaya:cad-workspace:v1',listeners=new Set<()=>void>();let state=DEFAULT_CAD_WORKSPACE,loaded=false;
 function read(){try{return normalizeCadWorkspace(JSON.parse(localStorage.getItem(KEY)||'{}'));}catch{return DEFAULT_CAD_WORKSPACE;}}

@@ -88,8 +88,7 @@ async function ready(page, route) {
   await page.goto(`${base}${route}`);
   await page.locator('.desktop-shell').waitFor();
   await page.locator('h1').first().waitFor();
-  const continueButton = page.getByRole('button', { name: 'Çalışmaya geç', exact: false });
-  if (await continueButton.count()) await continueButton.click({ force: true });
+  assert.equal(await page.locator('[data-loading-reading]').count(),0,'Ready routes have no mandatory reading overlay');
   if (route === '/patients') await page.locator('.patient-card').waitFor();
   if (route === '/appointments') await page.locator('.planner-week>button').last().waitFor();
   if (route === '/finance') await page.locator('.finance-case').waitFor();
@@ -126,12 +125,12 @@ async function layout(page, route, viewport, { mobile = false } = {}) {
     assert.ok(bounds[name] && bounds[name].left >= -1 && bounds[name].right <= bounds.width + 1, `${name} fits the screen: ${description}`);
   }
   if (!mobile) {
-    assert.ok(Math.abs(bounds.titlebar.height - 48) <= 1, `Desktop application titlebar is 48px: ${description}`);
-    assert.ok(Math.abs(bounds.statusbar.height - 24) <= 1, `Desktop application statusbar is 24px: ${description}`);
+    assert.ok(Math.abs(bounds.titlebar.height - 42) <= 1, `Desktop application titlebar is 42px: ${description}`);
+    assert.ok(Math.abs(bounds.statusbar.height - 26) <= 1, `Desktop application statusbar is 26px: ${description}`);
     assert.ok(bounds.documentHeight <= bounds.height + 1, `Desktop work scrolls inside its panels: ${description}`);
     assert.ok(bounds.content.top >= bounds.titlebar.bottom - 1 && bounds.content.bottom <= bounds.statusbar.top + 1, `Content stays between application chrome: ${description}`);
     assert.ok(bounds.statusbar.bottom <= bounds.height + 1, `Status remains on screen: ${description}`);
-    assert.ok(bounds.navigation && Math.abs(bounds.navigation.width - 208) <= 1, `Desktop module navigation is 208px: ${description}`);
+    assert.ok(bounds.navigation && Math.abs(bounds.navigation.width - 80) <= 1, `Desktop module activity dock is 80px: ${description}`);
   }
   if (bounds.module) assert.ok(bounds.module.left >= -1 && bounds.module.right <= bounds.width + 1, `Real module fits horizontally: ${description}`);
   layoutSamples.push({ route, viewport, ...bounds });
@@ -285,8 +284,7 @@ try {
   await keyboardAndPreferences(page);
   await page.reload();
   await page.locator('.patient-card').waitFor();
-  const reading = page.locator('[data-loading-reading]');
-  if (await reading.isVisible()) await reading.getByRole('button', { name: /Çalışmaya geç/ }).click();
+  assert.equal(await page.locator('[data-loading-reading]').count(),0,'Reload exposes the ready module without a timer');
   assert.equal(await page.locator('html').getAttribute('data-workspace-reduced-motion'), 'true', 'Reduced motion preference persists after reload');
   await context.setOffline(true);
   await page.locator('.desktop-network-status i[data-online="false"]').waitFor();
@@ -308,7 +306,7 @@ try {
   await layout(page, '/patients-light', { width: 1440, height: 1000 });
   await page.keyboard.press('Control+,');
   await preferences.waitFor();
-  await appearance.selectOption('theme:midnight');
+  await appearance.selectOption('theme:navy');
   await page.waitForFunction(() => document.documentElement.dataset.dyColorFamily === 'dark');
   await preferences.getByRole('button', { name: 'Dil ve bölge', exact: true }).click();
   await preferences.locator('.language-select select').selectOption('ar');

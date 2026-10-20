@@ -1,18 +1,18 @@
 :root {
-  --dy-bg: #07131d;
-  --dy-surface: #0b1c28;
-  --dy-surface2: #0d202c;
+  --dy-bg: #ebe9f0;
+  --dy-surface: #ffffff;
+  --dy-surface2: #f2f0f5;
   --dy-panel-surface: var(--dy-surface);
   --dy-panel-surface-2: var(--dy-surface2);
-  --dy-border: #29465d;
-  --dy-text: #f2f6f8;
-  --dy-muted: #96a9b6;
-  --dy-accent: #6de2cf;
-  --dy-accent-soft: #12322f;
-  --dy-accent-contrast: #04110e;
-  --dy-input: #081722;
-  --dy-shadow: rgba(0, 0, 0, 0.28);
-  --dy-radius: 15px;
+  --dy-border: #c9c3d2;
+  --dy-text: #302b38;
+  --dy-muted: #77717e;
+  --dy-accent: #72568f;
+  --dy-accent-soft: #ece5f4;
+  --dy-accent-contrast: #ffffff;
+  --dy-input: #faf9fc;
+  --dy-shadow: rgba(44, 33, 58, 0.15);
+  --dy-radius: 6px;
   --dy-motion-fast: 150ms;
   --dy-motion-normal: 240ms;
   --dy-font-body: 15.5px;
@@ -20,7 +20,7 @@
   --dy-font-label: 12.5px;
   --dy-font-family: Inter, ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color-scheme: dark;
+  color-scheme: light;
   font-synthesis: none;
 }
 

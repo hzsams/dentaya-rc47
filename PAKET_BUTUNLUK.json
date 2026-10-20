@@ -1,15 +1,17 @@
 {
-  "release": "1.0.0-rc.51",
+  "release": "1.0.0-rc.52",
   "status": "source-release-candidate",
-  "date": "2026-10-20",
-  "baseRelease": "1.0.0-rc.50",
-  "baseCommit": "d2993fabb842cef329931498aac8dd0885278ae4",
+  "date": "2026-10-21",
+  "baseRelease": "1.0.0-rc.51",
+  "baseCommit": "b052eea9fb46165936431b7ac61588e839c776cc",
   "nativeModelInferenceVerified": false,
   "windowsInstallerProduced": false,
   "liveOrganizationBackendVerified": false,
   "dentalFactsActual": 220,
   "dentalFactsTarget": 30000,
-  "verification": "RC51_KONTROL_RAPORU.md",
+  "ayaQuestionCatalogueActual": 1008,
+  "verification": "RC52_KONTROL_RAPORU.md",
+  "sourceVerification": "verification/RC52/source-verification.json",
   "files": [
     {
       "path": ".env.example",
@@ -19,7 +21,7 @@
     {
       "path": ".env.release.example",
       "size": 407,
-      "sha256": "2dce7af9d74c7e1ff526b3949080996022902cf326408f451c3f89b60a1c2cfc"
+      "sha256": "0ff4a5ba1ae6726ae1885eb49d6b556fdb60183ee965c0a803e8446c3f6fc301"
     },
     {
       "path": ".gitignore",
@@ -33,8 +35,8 @@
     },
     {
       "path": "AGENTS.md",
-      "size": 2240,
-      "sha256": "f251227551fab444627af3b9e391ca013701d0acf648c23a611792c28692594c"
+      "size": 2781,
+      "sha256": "0e30feb2517c58c497e05be2386704dd5f941c079ea78bc4aa001a2c58eb1c42"
     },
     {
       "path": "AYA_ACTIONS_QA.md",
@@ -153,8 +155,8 @@
     },
     {
       "path": "DENTAYA_GUNCELLE_DERLE.cmd",
-      "size": 3136,
-      "sha256": "7834bc0460fdb465c586325916d283fb308dc36f8dae7c9742a4146c8b20d6cd"
+      "size": 3125,
+      "sha256": "c8f0d5de129a3c923a8dc7548c1fe0213203609099e92f92ad2754d143d178be"
     },
     {
       "path": "DentAYA_CAD_Degisiklikler.txt",
@@ -193,8 +195,8 @@
     },
     {
       "path": "KURULUM.txt",
-      "size": 2595,
-      "sha256": "75a77da00466fbce111c98f2090aaf76392b71b6ce95b1da80c0b0ce54e1466a"
+      "size": 3248,
+      "sha256": "4ad4db45e1a9561f606590e368b4d0c3573409fc1f23c155d701e30201607a6c"
     },
     {
       "path": "LOGO_GUNCELLEME.txt",
@@ -602,6 +604,21 @@
       "sha256": "3648ae8278aed8f40f8c87ae5e6d2bb103f30b9f8190deab23b4e58d581f342c"
     },
     {
+      "path": "RC52_AYA_1008_SORU_CEVAP.json",
+      "size": 365775,
+      "sha256": "c06c5ad4c02dec3f4693202e3ef177e67d3919877ba6e93e79cfe4d078c47b02"
+    },
+    {
+      "path": "RC52_KONTROL_RAPORU.md",
+      "size": 11193,
+      "sha256": "0ba584a62c1b6ac8ef81fd9529c19bffdea1b9c97dc724c8cfd55b5b290d4156"
+    },
+    {
+      "path": "RC52_KULLANIM.md",
+      "size": 4367,
+      "sha256": "15b9542988997eab6550c162717350e8ad221bbe0e330f4db3e3e28de320ab90"
+    },
+    {
       "path": "RC6_CHANGELOG.md",
       "size": 805,
       "sha256": "3da664df997388f7c74588f417e0676b263ac4aa225fced31091f5f197b6a03f"
@@ -618,8 +635,8 @@
     },
     {
       "path": "README.md",
-      "size": 3447,
-      "sha256": "99bf2d8f5e437ece5de41889e6f987311fee9b2d2c4850d8d95d457c1709344f"
+      "size": 4307,
+      "sha256": "cdba965d7432398e82917570fad06c893a56b362702af722d50c228f4218e67d"
     },
     {
       "path": "README_BUILD_FIX_01.md",
@@ -1384,12 +1401,12 @@
     {
       "path": "package-lock.json",
       "size": 354831,
-      "sha256": "ec39197bfaa16e3e154f564bf2d75dfbf1c75d96da4b3b1b1ecba5288a7b1022"
+      "sha256": "a9f1800bba82771c3372cee1d4b65f490cd2b1a14de72c008388475cd6765d76"
     },
     {
       "path": "package.json",
       "size": 8645,
-      "sha256": "398c6390f749c0dc49ce90bda051988e1230ec1999d56d4ced764739eb4e9712"
+      "sha256": "5bda657662a409a3c5c7742962fc0c81e81bac827c91e3215f719e296dcf55fd"
     },
     {
       "path": "public/aya/aya-alert.png",
@@ -2578,8 +2595,8 @@
     },
     {
       "path": "scripts/verify-appearance-browser.mjs",
-      "size": 11559,
-      "sha256": "b17d4d72356d5c5bc26fc27832aad7320ed0cf5cfb4c593eda3a9f5d05211f02"
+      "size": 11769,
+      "sha256": "11542772b679e329e8eedb6c87fc900dbd7b103e339b146200e7aaa6f0def39d"
     },
     {
       "path": "scripts/verify-appointment-planner.ts",
@@ -2703,13 +2720,13 @@
     },
     {
       "path": "scripts/verify-cad-browser.mjs",
-      "size": 24322,
-      "sha256": "8d048f4cd07512e013873801ebbd577ff2a7382ebcc6f07e10722ae03726341b"
+      "size": 25746,
+      "sha256": "508c6d501addcc7b169074e25fc43d4f5a78bc4d395850ba8da6dc98f6cfe231"
     },
     {
       "path": "scripts/verify-cad-daily-browser.mjs",
-      "size": 44972,
-      "sha256": "0d69ac2d9700399755123944180da36c38d00e4bedce1cdb92a4d002abfec5ed"
+      "size": 46062,
+      "sha256": "329508bc3a13cf7245ee89780eb0600055123786ede99809290e3d13413c65b6"
     },
     {
       "path": "scripts/verify-cad-daily.ts",
@@ -2728,8 +2745,8 @@
     },
     {
       "path": "scripts/verify-cad-guided-browser.mjs",
-      "size": 32790,
-      "sha256": "31b24b89a71c457fb999f9817d474c55bb4ffb0416e11c660d6d7c2007973b54"
+      "size": 33543,
+      "sha256": "fcfe0c82246d4a395134743bf36d087039ef1261cbe7b7ede0bd750c25de690c"
     },
     {
       "path": "scripts/verify-cad-guided.ts",
@@ -2753,8 +2770,8 @@
     },
     {
       "path": "scripts/verify-cad-library-browser.mjs",
-      "size": 24257,
-      "sha256": "72ea241d5b6c931060434cada0c55de6df50f0db4121ef0c5292ccd0219407e1"
+      "size": 25399,
+      "sha256": "3f78a730a36a9b4f1a6b6e6778c2ec0fd54f5eadece8afd97054ed743a47f8ba"
     },
     {
       "path": "scripts/verify-cad-panel.mjs",
@@ -2793,8 +2810,8 @@
     },
     {
       "path": "scripts/verify-desktop-shell-browser.mjs",
-      "size": 27984,
-      "sha256": "5c0a5d12b1aa1e0611e7e3aa880ae7031e2143a86f01ec76e405047b6bb540ef"
+      "size": 27882,
+      "sha256": "bae8d32a632fd05fe8f3aa52f1380743f47828f1a0c798a3c839ace36028c480"
     },
     {
       "path": "scripts/verify-e2e-workflow.ts",
@@ -2808,8 +2825,8 @@
     },
     {
       "path": "scripts/verify-experience.ts",
-      "size": 2434,
-      "sha256": "19d8af9607b3bffa68e4309bdf54bcafc3fbeabc8a8ec50ac034f9b201411faa"
+      "size": 3081,
+      "sha256": "0b59cc10b6f92b206b6cae57c85f89de321d8cd7f1e4eaf21b16436a8c9abd82"
     },
     {
       "path": "scripts/verify-home-dashboard.mjs",
@@ -2828,13 +2845,13 @@
     },
     {
       "path": "scripts/verify-loading-play.ts",
-      "size": 5385,
-      "sha256": "bf64867f2ffa21d8e53a0953b7af9aa75c4606b09f73dec95b38da47ab291f48"
+      "size": 5407,
+      "sha256": "d794fbf3898071143c5694ffaa51383d495606a9619a8bf8be9bda501a5df80f"
     },
     {
       "path": "scripts/verify-loading-reading-browser.mjs",
-      "size": 11764,
-      "sha256": "8a5d2e73f4f7be58bc8ba822a3dd3e695180cb73348b96bfec7c2a02288febbe"
+      "size": 11216,
+      "sha256": "b3b56092af2868441c318f723f7e7ee469f93aff0a3acf9e53507e5d5ce827d0"
     },
     {
       "path": "scripts/verify-local-aya.cjs",
@@ -2873,13 +2890,13 @@
     },
     {
       "path": "scripts/verify-professional-modules-browser.mjs",
-      "size": 20690,
-      "sha256": "18adf39ca0e490eebcb8465cc1ac77ad8e5c4c1f2f19e5dde0bb69a6437a0679"
+      "size": 20909,
+      "sha256": "1c3b383723d2c8dd09c79cfd285ff2fd086922f27353f35e48699e671a7c73b6"
     },
     {
       "path": "scripts/verify-professional-shell-browser.mjs",
-      "size": 13139,
-      "sha256": "290a6ff914eb89e133cd2d805005e042df684d6184cae8c7102ffce26f7b2f91"
+      "size": 13475,
+      "sha256": "558b6cd115d88ce43ad508799c76b695c24e20bf435d1c195b1002a461a1065c"
     },
     {
       "path": "scripts/verify-professional-shell.ts",
@@ -3028,13 +3045,13 @@
     },
     {
       "path": "src/app/HomeClient.tsx",
-      "size": 28818,
-      "sha256": "1cee06cf94f9fcbe268e761006ebc32461b3ba9389179670b22a228897fbc1b6"
+      "size": 26327,
+      "sha256": "987cfe90d986fb9de450eab33833479635418cf1f014dbfb7cbe0f3e64cf079d"
     },
     {
       "path": "src/app/HomeDashboard.tsx",
-      "size": 15846,
-      "sha256": "23e427ae41dc90e32f33edd52e0064aeea9d8e3195c27db5806e17d21fa5d259"
+      "size": 19357,
+      "sha256": "978125912004508bb415324bfbff496e94f787ddc463e258a6ed604e16dc1ae2"
     },
     {
       "path": "src/app/HomeNotifications.tsx",
@@ -3073,8 +3090,8 @@
     },
     {
       "path": "src/app/ModuleNavigation.tsx",
-      "size": 3225,
-      "sha256": "082251dbf12f72ec47c6870f7a98c8f83800d04d1c590765b04d0db81190c857"
+      "size": 3268,
+      "sha256": "5e8a6334fb83074092e3f187df98e8617545ed5571e19b19291dc0e739ccb153"
     },
     {
       "path": "src/app/ModuleQuickLink.tsx",
@@ -3118,8 +3135,8 @@
     },
     {
       "path": "src/app/WorkspaceChrome.tsx",
-      "size": 14400,
-      "sha256": "b31d3c3bde9a47942db3486a38c601e11d919a733b53d41042040d69f364d1f0"
+      "size": 15304,
+      "sha256": "3f0a1e6e8cbc00efefb4bc33308b0c0a57de2268093475a411bcb2b7703c8449"
     },
     {
       "path": "src/app/WorkspaceLauncher.tsx",
@@ -3298,8 +3315,8 @@
     },
     {
       "path": "src/app/dentaya-theme.tsx",
-      "size": 23027,
-      "sha256": "3fcd7cae946eada73c0be03099f935fec9259145684dd4802dab1d8d6eb9cc99"
+      "size": 23043,
+      "sha256": "0db6a9d8cb368e08d809d696082c38815bb16e619f5466cdfa8e6d76aeeca501"
     },
     {
       "path": "src/app/design/CadAyaPanel.tsx",
@@ -3318,13 +3335,13 @@
     },
     {
       "path": "src/app/design/CadFloatingPanel.tsx",
-      "size": 6051,
-      "sha256": "7cdea60231eeb101fdf813e084c6f5c99183ba6d4f697caa7b2b79bda5a4bc17"
+      "size": 6578,
+      "sha256": "b4d876632b2b9865842ff427d05a7b2c97140cb3be053b83778bd10b6a02b296"
     },
     {
       "path": "src/app/design/CadIcon.tsx",
-      "size": 5329,
-      "sha256": "01f5b0b1bb31f744eb3ef2308064014348c37759c39922ad6340093c0c6ec9d6"
+      "size": 8264,
+      "sha256": "a97a660625bf20b9e6cbcd83ba46bd1daf2f6ee7ebe4cda8d5227d893186b2d6"
     },
     {
       "path": "src/app/design/CadJobSetupPanel.tsx",
@@ -3333,13 +3350,13 @@
     },
     {
       "path": "src/app/design/CadSceneControls.tsx",
-      "size": 7391,
-      "sha256": "e5e071d0d118b2334e95117e2a79f164f8dede84b76df7c28863c67e5a5f0895"
+      "size": 7429,
+      "sha256": "7f9621324b3732872b646e73bd782bb31a8ced05facdad1c7d8dbb1224e760da"
     },
     {
       "path": "src/app/design/CadToolPalette.tsx",
       "size": 1247,
-      "sha256": "94d68d5d53710f2852fdcca56a286ac86979c81c42e68e5360205406e42eb13f"
+      "sha256": "ef1f6f4b77043ae32ecd188228d86d7fd7b746b24561d7390c04f685a77b40fc"
     },
     {
       "path": "src/app/design/CadWorkbench.tsx",
@@ -3353,18 +3370,18 @@
     },
     {
       "path": "src/app/design/DesignStudioClient.tsx",
-      "size": 172134,
-      "sha256": "d25e2256724b8eeebb7676464fc608f5824e8d540705b10c7e3293303c0d0b53"
+      "size": 172194,
+      "sha256": "ea7419842646d79a14f46d1dd9ec60686dbe7fa45587751a274c7cea6de903a5"
     },
     {
       "path": "src/app/design/DesignViewport.tsx",
-      "size": 130995,
-      "sha256": "41460440f0ef689e0d05ff31cda3c990cb0f56c2b5a4a86921566275f26324b3"
+      "size": 131014,
+      "sha256": "70c6959ff662e4c8406e287405d2506e021d5aadd7eff93892b1952ffb2c37d0"
     },
     {
       "path": "src/app/design/cad-workspace.css",
-      "size": 49819,
-      "sha256": "5a7dc904c21600b24d645f83fe5ee28948034f4d22f83b0285be95bceb57f722"
+      "size": 53543,
+      "sha256": "d3e8d1abbf3d27ac3d5392517c689b0576f69d5c3e494be2af19a675ac496853"
     },
     {
       "path": "src/app/design/page.tsx",
@@ -3373,8 +3390,8 @@
     },
     {
       "path": "src/app/desktop-shell.css",
-      "size": 18294,
-      "sha256": "d4eaa897a59dacad555f5c74019ce4bf21a1cf93380ca226ed449ba4d8ab807c"
+      "size": 18316,
+      "sha256": "f851dfa69f07d60e048d521ae742de9eb5fab68aeb4b4cc45edc01a478bad6f2"
     },
     {
       "path": "src/app/error.tsx",
@@ -3388,8 +3405,8 @@
     },
     {
       "path": "src/app/globals.css",
-      "size": 122602,
-      "sha256": "a2a292913d6c2888c874881cf0435cc84f54bf47ceb0e0cc3fa57ffcc17a5335"
+      "size": 122605,
+      "sha256": "e3433067afe63f4d902928bec0f194d6c55afda8918dc25d0dfb6cf5cff1eff0"
     },
     {
       "path": "src/app/invite/page.tsx",
@@ -3433,13 +3450,13 @@
     },
     {
       "path": "src/app/loading-play/LoadingExperience.tsx",
-      "size": 2885,
-      "sha256": "f3800469d09c698f275b7a6c46cd0250c7228715fea7703168b604599cd69f76"
+      "size": 1982,
+      "sha256": "e6393d3bbf9943f04b0071343c0576c2ac81cf35e35882f87cff46e9396e2866"
     },
     {
       "path": "src/app/loading-play/LoadingReadingRuntime.tsx",
-      "size": 3229,
-      "sha256": "e449cebacb1f8e4a5a45beedfeca722d6a5b1c61c4e8ecccd0a3f86f3b60d2b3"
+      "size": 309,
+      "sha256": "22234333d3ed0422df56ace1a2f16f817c8b46faf9acdec95d2c4f639c7c5ec5"
     },
     {
       "path": "src/app/loading-play/MemoryGame.tsx",
@@ -3498,8 +3515,8 @@
     },
     {
       "path": "src/app/page.tsx",
-      "size": 97,
-      "sha256": "b5aca7a5cdc5bc4552f9e279bc94c8b2de842d0651c84db179cf3680974ebb3c"
+      "size": 106,
+      "sha256": "b8ddbf8717a87d82ca19c60ee196d3b1adaaae398d1d0ae559a835dc16353917"
     },
     {
       "path": "src/app/patients/page.tsx",
@@ -3568,8 +3585,13 @@
     },
     {
       "path": "src/app/settings/page.tsx",
-      "size": 80795,
-      "sha256": "dbce5af084ac1b1900d43dee6f385e29b9c6f562f896f84b0e226beccd0622a8"
+      "size": 81222,
+      "sha256": "301df03e8598849663a8fa8b034fc4f8f44fa3d056d34b4625eeba2e2e386945"
+    },
+    {
+      "path": "src/app/settings/settings.css",
+      "size": 8768,
+      "sha256": "af447a46b9ee59f4740a2f2f682db510459e52077864bbae0ac4cb3fc3603883"
     },
     {
       "path": "src/app/start/page.tsx",
@@ -3598,8 +3620,8 @@
     },
     {
       "path": "src/app/workspace-desktop.css",
-      "size": 29963,
-      "sha256": "8d92048f8016bee9a55307cd411f0a108f790896ecdaedcd7edb15a49681f1d9"
+      "size": 25712,
+      "sha256": "ca8cbb7590e87f9c1a3e68d489fa488713ee38c2bdb4c8228b8b06b8620b89c4"
     },
     {
       "path": "src/app/workspace/page.tsx",
@@ -3793,8 +3815,8 @@
     },
     {
       "path": "src/lib/cad-workspace-preferences.ts",
-      "size": 2065,
-      "sha256": "7b11ee4ba19f6bd4ae0457bdf61731d93f43488de4714774ce67ec0c3d7d80ef"
+      "size": 2079,
+      "sha256": "fc62e2aafd6671e13546f9a5b79bedad21a9ec48509cfcec74f43f486319571f"
     },
     {
       "path": "src/lib/community.ts",
@@ -4403,8 +4425,8 @@
     },
     {
       "path": "src/lib/loading-activity.ts",
-      "size": 2298,
-      "sha256": "f3fa46a50e2948f250aceb0ac32cffe62c5ca1bee10463b27981079c981c8631"
+      "size": 1614,
+      "sha256": "63c2dacd91d13a41632556ddf8ecc16d3ed53682761468898ac335bf2ffa2a71"
     },
     {
       "path": "src/lib/mesh-quality.ts",
@@ -4439,7 +4461,7 @@
     {
       "path": "src/lib/release.ts",
       "size": 418,
-      "sha256": "8c6913b41975fb6d241b96df773d2e1b9607cb6c218bacead69707aa6fdbd45e"
+      "sha256": "b998a22ed4241d393984784b87b6d88510de633a97e30415e05f7d48c61b4766"
     },
     {
       "path": "src/lib/retry.ts",
@@ -4474,7 +4496,7 @@
     {
       "path": "src/lib/supabase.ts",
       "size": 1108,
-      "sha256": "d88e4a9af7e12702f53b102a30ea53350c1e505131ad35d9df84fddae1a64c79"
+      "sha256": "4684d1a4d9cf690e8aa6a7b87c587ecbaee359545559af8e92ff81dbc3ac51b4"
     },
     {
       "path": "src/lib/system-messages.ts",
@@ -5460,6 +5482,146 @@
       "path": "verification/RC51/verify.txt",
       "size": 43378,
       "sha256": "f2aae14b72baee5ae264dc61fad3235c808c6528e1941eefc8f169fb5643106e"
+    },
+    {
+      "path": "verification/RC52/AYA_BasicDialogue.png",
+      "size": 82698,
+      "sha256": "8a7514cc6c38af546bb764a22e343bd9229837dfa5fb33be07b25012ca241dc1"
+    },
+    {
+      "path": "verification/RC52/CAD.png",
+      "size": 376168,
+      "sha256": "3699323ee15914ae2eed0af2d8d64902be2a7d78ed14ccfb2284436877d1aca9"
+    },
+    {
+      "path": "verification/RC52/CAD_Daily.png",
+      "size": 211282,
+      "sha256": "e969ef601058d316806932286194b7bc73c110022069755bd95b8dbac9cc59ce"
+    },
+    {
+      "path": "verification/RC52/CAD_Expert.png",
+      "size": 386430,
+      "sha256": "7055d996673118d289148a34cd150341a00ee778c6b415e5724c8a1800a13ff1"
+    },
+    {
+      "path": "verification/RC52/CAD_Guided.png",
+      "size": 627209,
+      "sha256": "ea9d5551f674c0f0d377adfaccc754ee60f6e0f7377c4dff2b31914df8810499"
+    },
+    {
+      "path": "verification/RC52/CAD_Library.png",
+      "size": 211314,
+      "sha256": "0e6c9f08e8fd158eea655add74efc345099b601caa20dfbed73535c7012405cb"
+    },
+    {
+      "path": "verification/RC52/CAD_Mobile.png",
+      "size": 114211,
+      "sha256": "b63b02db2ed8e5ed39fcf77caa7812a7ed827a07acec4122e6859d8a90f9d6a3"
+    },
+    {
+      "path": "verification/RC52/Guest.png",
+      "size": 150850,
+      "sha256": "340bb9ee19eb7ede9d9191f4133213ed223f4e21c59d083a78f2c2b5443e6785"
+    },
+    {
+      "path": "verification/RC52/Loading_Ready_Mobile.png",
+      "size": 22345,
+      "sha256": "13586fbf246eca90200afb780ce3dd79c55cb70ebd2daa3d1bdfc7b8c8ee798e"
+    },
+    {
+      "path": "verification/RC52/Messages_Mobile.png",
+      "size": 57858,
+      "sha256": "151ec7665c5311a5c9b32826be48511e62ce78b72b342adba4fb36bc543d786e"
+    },
+    {
+      "path": "verification/RC52/Settings.png",
+      "size": 193699,
+      "sha256": "5ce5b0712b47dbfd9b0298fc66010e129b23e3f83720ecf8d019b8b4d5ab58f6"
+    },
+    {
+      "path": "verification/RC52/WorkManager.png",
+      "size": 148158,
+      "sha256": "1897c52452c5d9e90d2b83dc4f291fd23eccdc6d774bed0440312ddc2a8f3b2c"
+    },
+    {
+      "path": "verification/RC52/appearance-browser.txt",
+      "size": 975,
+      "sha256": "c248e34d5da883a783da2accba7fad6bb8db8a0a645dcac8ea7723b234cefeaa"
+    },
+    {
+      "path": "verification/RC52/aya-conversation-browser.txt",
+      "size": 765,
+      "sha256": "3f1a8448e2c4824cb79df83fb7b1839071fcfb6cd918e9d1b904fb10cefdcd17"
+    },
+    {
+      "path": "verification/RC52/browser-results.json",
+      "size": 23383,
+      "sha256": "0dbfb4a2e5f14c8bf86955794e72cb4ffb9c97681ef291a5ba263537c5a261f7"
+    },
+    {
+      "path": "verification/RC52/cad-daily-browser.txt",
+      "size": 2285,
+      "sha256": "d230727703c6174f4d2bcb9295a9322b7b47e33dc425b8e3862c854d38dc4b2d"
+    },
+    {
+      "path": "verification/RC52/cad-expert-browser.txt",
+      "size": 1110,
+      "sha256": "74dc1980e44cc20b73be86a554152efcbcfbd84ad48e67160e76576488340d53"
+    },
+    {
+      "path": "verification/RC52/cad-guided-browser.txt",
+      "size": 1628,
+      "sha256": "22a0cef77390e3688e8e60b501f998c69b9de16e9a57d480cac87dcd1b69056d"
+    },
+    {
+      "path": "verification/RC52/cad-library-browser.txt",
+      "size": 1833,
+      "sha256": "d3398c32ca71de75d4ab4c38790a3d825c34e1db8c7196150c6e3f28bf46428b"
+    },
+    {
+      "path": "verification/RC52/desktop-shell-browser-report.json",
+      "size": 25687,
+      "sha256": "4ce991da916d1493f35ff84d317800b7e42253224467f134e834f9cf9a6d074e"
+    },
+    {
+      "path": "verification/RC52/desktop-shell-browser.txt",
+      "size": 1329,
+      "sha256": "d6a024296e25e847b61d6a1d0f90354f86a72d6974305da45719485a0225cef0"
+    },
+    {
+      "path": "verification/RC52/loading-reading-browser.txt",
+      "size": 721,
+      "sha256": "9ad283a5d3229fd3ef51d726c92d2809f3581bbab9dc6d1937ff375d175af3e9"
+    },
+    {
+      "path": "verification/RC52/preview-cad.txt",
+      "size": 261,
+      "sha256": "0d53060ce9e16f0935d0e07c100219673e78897281980eb0e48a28dfdbc053d4"
+    },
+    {
+      "path": "verification/RC52/preview-shell.txt",
+      "size": 58,
+      "sha256": "0d143e5c2140a56ce6a2df0247a2a0a610d08bc73f073e2613626fca6bbc1a25"
+    },
+    {
+      "path": "verification/RC52/professional-modules-browser.txt",
+      "size": 551,
+      "sha256": "efb0ac0013ab4d9298ac592918a66b541f160e565c023bc1f57f30075cb8b115"
+    },
+    {
+      "path": "verification/RC52/professional-shell-browser.txt",
+      "size": 623,
+      "sha256": "feea258e8aaa49ad9a43422aad55e4d2e882955855e02e1530ee2c5f0928847d"
+    },
+    {
+      "path": "verification/RC52/source-verification.json",
+      "size": 10114,
+      "sha256": "8c772c5f5ebe17b46f6b3a029b7827919f403d2fdb24532373a1182e49bf3d32"
+    },
+    {
+      "path": "verification/RC52/verify.txt",
+      "size": 36030,
+      "sha256": "df2ccde9a3c95f69f7daf557196bf889570f940db45509c1cfa26e804ce7398b"
     },
     {
       "path": "verification/professional/aya.json",

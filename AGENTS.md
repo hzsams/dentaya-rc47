@@ -1,8 +1,9 @@
 # DentAYA çalışma talimatı
 
-Bu klasör RC46/RC47 tabanından geliştirilen RC51 kaynak güncellemesidir. Önce CODEX_DEVIR_NOTLARI.md ve CODEX_BASLANGIC_PROMPTU.md dosyalarını oku; bunlar ilk WIP devir kayıtlarıdır. Güncel kapsam ve test sınırları RC51_KONTROL_RAPORU.md içindedir. Windows EXE ve gerçek model çıkarımını doğrulanmış kabul etme.
+Bu klasör RC46/RC47 tabanından geliştirilen RC52 kaynak güncellemesidir. Önce CODEX_DEVIR_NOTLARI.md ve CODEX_BASLANGIC_PROMPTU.md dosyalarını oku; bunlar ilk WIP devir kayıtlarıdır. Güncel kapsam ve test sınırları RC52_KONTROL_RAPORU.md içindedir. RC52'nin dokuz tarayıcı kontrolü, tam verify zinciri, üretim derlemesi ve üretim yükleme kontrolü geçti. Windows EXE, gerçek model çıkarımı ve canlı kurum kabulünü doğrulanmış kabul etme.
 
-- RC51 arayüzü özgün DentAYA varlıklarıyla masaüstü CAD düzeni kullanır; exocad/3Shape ergonomik referanstır. Tescilli kod, logo veya arayüz varlığı kopyalama. Geçerli tema, dil, kılavuzlu/uzman mod ve taşıma/sıfırlama davranışlarını koru.
+- RC52, Studio aydınlık panellerini, mor başlıkları ve CAD'de sağ koyu komut şeridini kullanır; nesneler parametrelerin üstünde soldadır. CAD'de ortak uygulama başlığını veya ek modül kenar çubuğunu geri getirme. exocad/3Shape ergonomik referanstır; tescilli kod, logo veya arayüz varlığı kopyalama. Geçerli dil, açıkça seçilmiş görünüm tercihleri, kılavuzlu/uzman mod ve taşıma/sıfırlama davranışlarını koru.
+- Yükleme yalnız gerçek bekleyen işlemin ömrünü izler. Zorunlu 5 saniyelik okuma, işlem sonrasında kalan katman veya hazır ekranda odak tuzağı ekleme. Bilgi kartları ve mini oyunlar isteğe bağlı kalır.
 - Kullanıcının önceliği: sade ve tutarlı profesyonel arayüz, model öncelikli yerel AYA, çalışma belleği ve gerçek CAD araçlarıyla bağlamlı yardım. “AI based kaldır” açıklaması AYA’yı kaldırmak değildir.
 - CAD manuel ve deterministik çalışır; asistan mevcut tipli komutları kullanıcı tıklamasıyla çağırır.
 - Üründe 220 gerçek kısa bilgi kartı vardır; 30.000 kapasite testini gerçek içerik sayısı diye sunma. Hazır soru sayısını artırmayı ana görevin yerine koyma; iptal edilen RC38 form ailelerini geri getirme.

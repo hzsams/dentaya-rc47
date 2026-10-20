@@ -3,6 +3,7 @@ import LoadingExperience from '@/app/loading-play/LoadingExperience';
 import UiMessage from "@/lib/i18n/UiMessage";
 import UserText from '@/lib/i18n/UserText';
 import UiNode from "@/lib/i18n/UiNode";
+import { desktopShellText } from '@/lib/i18n/desktop-shell';
 import { useTranslation } from '@/lib/i18n';
 import { playExperienceCue } from '@/lib/experience-audio';
 import { animateExperienceSurface } from '@/lib/experience-motion';
@@ -267,6 +268,7 @@ const STEPS: StepDefinition[] = [
 ];
 export default function DesignStudioClient() {
     const { t: uiText, intlLocale, locale } = useTranslation();
+    const desktopCopy = desktopShellText(locale);
     const cadCopy=ayaAgentText(locale);
     useDentayaThemeRuntime();
     const router = useRouter();
@@ -1741,11 +1743,12 @@ export default function DesignStudioClient() {
       <CadJobSetupPanel open={setupOpen} caseNumber={selectedCase?.case_number} caseTitle={selectedCase?.title} setup={jobSetup} onChange={changeJobSetup} onClose={() => setSetupOpen(false)} onConfirm={confirmJobSetup} onOpenLibrary={setLibraryTarget} libraryNames={Object.fromEntries(Object.values(settings.cad_library_assets??{}).map(f=>[f.id,f.name]))}/>
       <CadLibraryDialog open={libraryTarget!==null} onClose={()=>setLibraryTarget(null)} ownerId={user?.id??''} anatomyCode={jobSetup.units.find(u=>u.id===libraryTarget)?.anatomy_code} projectForms={Object.values(settings.cad_library_assets??{})} onSelect={libraryTarget?selectLibraryForm:undefined}/>
       <UiNode as="header" className="cad-main-header">
+        <UiNode as="button" type="button" className="cad-button cad-button--primary" aria-label={saving ? 'Kaydediliyor…' : 'Kaydet'} title="Kaydet" disabled={saving || !project} onClick={() => void saveProject(true)}><CadIcon name="save" size={18}/><UiNode as="span">{saving ? 'Kaydediliyor…' : 'Kaydet'}</UiNode></UiNode>
+        <UiNode as="button" type="button" className="cad-button cad-tool-command" aria-label="Araç kataloğu" title="Araç kataloğu" onClick={() => setToolLibraryOpen(true)}><CadIcon name="tools" size={27}/><UiNode as="span">Araçlar</UiNode></UiNode>
         <UiNode as="button" type="button" className="cad-hub-link" title="DentAYA Hub" disabled={saving||exiting} onClick={()=>void saveAndExit()}><CadIcon name="back" size={19}/></UiNode>
         <UiNode as="div" className="cad-product"><BrandLogo width={122} height={27}/><UiNode as="strong">CAD</UiNode></UiNode>
-        <UiNode as="select" aria-label="Çalışma vakası" className="cad-case-select" value={selectedCaseId} disabled={saving||exiting||submitting||contextLoading} onChange={event=>void switchCase(event.target.value)}>{cases.map(item => <UiNode as="option" key={item.id} value={item.id}><UserText>{item.case_number} · {item.title}</UserText></UiNode>)}</UiNode>
-        <UiNode as="span" className="cad-save-state" data-save-state={saving?'saving':hasUnsavedChanges?'dirty':'saved'} translateChildren={false} title={saving?uiText('Kaydediliyor…'):hasUnsavedChanges?cadCopy.unsaved:cadCopy.saved}><CadIcon name={saving?'save':hasUnsavedChanges?'save':'check'} size={14}/>{saving?uiText('Kaydediliyor…'):hasUnsavedChanges?cadCopy.unsaved:uiText('Kaydedildi')}</UiNode>
-        <UiNode as="div" className="cad-case-material"><UiNode as="span">{selectedCase?.material || '—'}</UiNode><UiNode as="b">{selectedCase?.shade || '—'}</UiNode><StatusBadge value={project?.status ?? 'draft'}/></UiNode>
+      <UiNode as="details" name="cad-chrome" className="cad-chrome-menu cad-workflow" data-cad-menu="workflow"><UiNode as="summary" aria-label="Tasarım adımları" title="Tasarım adımları"><CadIcon name="design" size={27}/><UiNode as="span">Tasarım adımları</UiNode></UiNode><UiNode as="nav" className="cad-workflow-list" aria-label="Tasarım adımları">{workspaceMode === 'expert' ? STEPS.map(step => <UiNode as="button" type="button" key={step.id} data-cad-stage={step.id} data-complete={step.index - 1 < activeStepIndex} aria-current={step.id === activeStep.id ? 'step' : undefined} disabled={!project || !cadReady} onClick={() => { closeChromeMenus(); void setStage(step.id); }}><UiNode as="span" className="cad-step-index">{step.index - 1 < activeStepIndex ? <CadIcon name="check" size={13}/> : step.index}</UiNode><CadIcon name={step.id} size={18}/><UiNode as="span">{step.label}</UiNode></UiNode>) : CAD_GUIDED_TASKS.map((task, index) => <UiNode as="button" type="button" key={task.tab} data-cad-task-step={task.tab} data-complete={index < activeTaskIndex} aria-current={task.tab === panelTab ? 'step' : undefined} disabled={!project || index > activeTaskIndex + 1 || (!cadReady && index > activeTaskIndex)} onClick={() => { closeChromeMenus(); void setStage(task.stage, task.tab); }}><UiNode as="span" className="cad-step-index">{index < activeTaskIndex ? <CadIcon name="check" size={13}/> : index + 1}</UiNode><UiNode as="span">{cadTaskLabel(task.tab)}</UiNode></UiNode>)}<UiNode as="span" className="cad-workflow-progress">{workspaceMode === 'wizard' ? `${activeTaskIndex + 1} / ${CAD_GUIDED_TASKS.length}` : `${progress}%`}</UiNode></UiNode></UiNode>
+        <UiNode as="button" type="button" className="cad-button cad-module-command" translateChildren={false} aria-label={desktopCopy.modules} onClick={() => window.dispatchEvent(new Event('dentaya:open-modules'))}><CadIcon name="file" size={27}/><UiNode as="span">{desktopCopy.modules}</UiNode></UiNode>
         <UiNode as="details" className="cad-chrome-menu cad-app-menu" name="cad-chrome" data-cad-menu="app">
           <UiNode as="summary"><CadIcon name="settings" size={18}/><UiNode as="span">Ayarlar</UiNode></UiNode>
           <UiNode as="div" className="cad-menu-content">
@@ -1758,87 +1761,24 @@ export default function DesignStudioClient() {
             <LanguageSelect compact/>
           </UiNode>
         </UiNode>
-        <UiNode as="button" type="button" className="cad-button" aria-label="İş tanımı" title="İş tanımı" onClick={() => setSetupOpen(true)} data-required={!jobSetup.complete}><CadIcon name="design" size={18}/><UiNode as="span">İş tanımı</UiNode></UiNode>
-        <UiNode as="button" type="button" className="cad-button cad-button--primary" aria-label={saving ? 'Kaydediliyor…' : 'Kaydet'} title="Kaydet" disabled={saving || !project} onClick={() => void saveProject(true)}><CadIcon name="save" size={18}/><UiNode as="span">{saving ? 'Kaydediliyor…' : 'Kaydet'}</UiNode></UiNode>
         <UiNode as="button" type="button" className="cad-button" aria-label="Kaydet ve çık" title="Kaydet ve çık" disabled={saving||exiting||!cadReady} onClick={()=>void saveAndExit()}><CadIcon name="export" size={18}/><UiNode as="span">Kaydet ve çık</UiNode></UiNode>
         <UiNode as="button" type="button" className="cad-button" aria-label="Form kütüphanesi" title="Form kütüphanesi" onClick={()=>setLibraryTarget('')}><CadIcon name="file" size={18}/><UiNode as="span">Form kütüphanesi</UiNode></UiNode>
         <UiNode as="button" type="button" className="cad-button cad-aya-toggle" aria-label="AYA" aria-pressed={ayaOpen} onClick={()=>setAyaOpen(v=>!v)}><CadIcon name="help" size={18}/>AYA</UiNode>
       </UiNode>
-      <UiNode as="nav" className="cad-workflow" aria-label="Tasarım adımları">{workspaceMode === 'expert' ? STEPS.map(step => <UiNode as="button" type="button" key={step.id} data-cad-stage={step.id} data-complete={step.index - 1 < activeStepIndex} aria-current={step.id === activeStep.id ? 'step' : undefined} disabled={!project || !cadReady} onClick={() => void setStage(step.id)}><UiNode as="span" className="cad-step-index">{step.index - 1 < activeStepIndex ? <CadIcon name="check" size={13}/> : step.index}</UiNode><CadIcon name={step.id} size={18}/><UiNode as="span">{step.label}</UiNode></UiNode>) : CAD_GUIDED_TASKS.map((task, index) => <UiNode as="button" type="button" key={task.tab} data-cad-task-step={task.tab} data-complete={index < activeTaskIndex} aria-current={task.tab === panelTab ? 'step' : undefined} disabled={!project || index > activeTaskIndex + 1 || (!cadReady && index > activeTaskIndex)} onClick={() => void setStage(task.stage, task.tab)}><UiNode as="span" className="cad-step-index">{index < activeTaskIndex ? <CadIcon name="check" size={13}/> : index + 1}</UiNode><UiNode as="span">{cadTaskLabel(task.tab)}</UiNode></UiNode>)}<UiNode as="span" className="cad-workflow-progress">{workspaceMode === 'wizard' ? `${activeTaskIndex + 1} / ${CAD_GUIDED_TASKS.length}` : `${progress}%`}</UiNode></UiNode>
       {contextLoadError&&<UiNode as="div" role="alert" className="cad-context-error"><UserText>{contextLoadError}</UserText><UiNode as="button" type="button" onClick={()=>{if(selectedCase&&org&&user){setContextLoadError('');void loadCaseContext(selectedCase,org,user);}}}>Tekrar dene</UiNode><UiNode as="button" type="button" onClick={()=>setContextLoadError('')}>Kapat</UiNode></UiNode>}
       <UiNode as="section" className="cad-shell" aria-label="Üç boyutlu CAD çalışma alanı">
+        <UiNode as="div" className="cad-viewport-frame">
+<UiNode as="div" className="cad-session-strip">
+        <UiNode as="button" type="button" className="cad-button" aria-label="İş tanımı" title="İş tanımı" onClick={() => setSetupOpen(true)} data-required={!jobSetup.complete}><CadIcon name="design" size={18}/><UiNode as="span">İş tanımı</UiNode></UiNode>
+        <UiNode as="select" aria-label="Çalışma vakası" className="cad-case-select" value={selectedCaseId} disabled={saving||exiting||submitting||contextLoading} onChange={event=>void switchCase(event.target.value)}>{cases.map(item => <UiNode as="option" key={item.id} value={item.id}><UserText>{item.case_number} · {item.title}</UserText></UiNode>)}</UiNode>
+        <UiNode as="span" className="cad-save-state" data-save-state={saving?'saving':hasUnsavedChanges?'dirty':'saved'} translateChildren={false} title={saving?uiText('Kaydediliyor…'):hasUnsavedChanges?cadCopy.unsaved:cadCopy.saved}><CadIcon name={saving?'save':hasUnsavedChanges?'save':'check'} size={14}/>{saving?uiText('Kaydediliyor…'):hasUnsavedChanges?cadCopy.unsaved:uiText('Kaydedildi')}</UiNode>
+        <UiNode as="div" className="cad-case-material"><UiNode as="span">{selectedCase?.material || '—'}</UiNode><UiNode as="b">{selectedCase?.shade || '—'}</UiNode><StatusBadge value={project?.status ?? 'draft'}/></UiNode>
+</UiNode>
+      <CadFloatingPanel visible={!focusMode && toolPanelVisible} revealKey={`${workspaceMode}:${activeStep.id}:${panelTab}`} onClose={() => setToolPanelVisible(false)} title={workspaceMode === 'wizard' ? activeTaskLabel : 'Tasarım araçları'}>
         <UiNode as="div" className="cad-viewport-toolbar">
           <UiNode as="div" className="cad-history-actions"><CadCommand label="Geri al" icon="undo" shortcut="Ctrl Z" disabled={historyState.undoCount === 0} onClick={() => viewportRef.current?.undo()}/><CadCommand label="Yinele" icon="redo" shortcut="Ctrl Y" disabled={historyState.redoCount === 0} onClick={() => viewportRef.current?.redo()}/><UiNode as="span" className="cad-history-count">{historyState.undoCount} / {historyState.redoCount}</UiNode></UiNode>
           {workspaceMode === 'expert' && <CadToolPalette compact tools={activeTools} tool={tool} onSelect={selectManualTool} shortcuts={shortcutBindings} disabled={!cadReady}/>}
-          {workspaceMode === 'wizard' && <UiNode as="details" name="cad-chrome" className="cad-chrome-menu cad-task-path" data-cad-menu="tasks">
-            <UiNode as="summary" aria-label="Tasarım adımları"><UiNode as="span" className="cad-task-number">{activeTaskIndex + 1} / {CAD_GUIDED_TASKS.length}</UiNode><CadIcon name={activeStep.id} size={17}/><UiNode as="strong" data-cad-stage={activeStep.id} aria-current="step">{activeTaskLabel}</UiNode><CadIcon name="collapse" size={14}/></UiNode>
-            <UiNode as="div" className="cad-menu-content">{CAD_GUIDED_TASKS.map((task, index) => <UiNode as="button" type="button" key={task.tab} data-cad-task-target={task.tab} disabled={!project || index > activeTaskIndex + 1 || (!cadReady && index > activeTaskIndex)} aria-current={task.tab === panelTab ? 'step' : undefined} onClick={() => { closeChromeMenus(); void setStage(task.stage, task.tab); }}><UiNode as="small">{index + 1}</UiNode><UiNode as="span">{cadTaskLabel(task.tab)}</UiNode>{index < activeTaskIndex && <CadIcon name="check" size={14}/>}</UiNode>)}</UiNode>
-          </UiNode>}
         </UiNode>
-        <UiNode as="div" className="cad-viewport-frame">
-          <DesignViewport ref={viewportRef} projectId={project?.id} source={displaySource} referenceSources={referenceSources} onContextMenuRequest={setContextPoint} toothCodes={selectedCase?.tooth_codes ?? []} settings={settings} tool={tool} viewMode={viewMode} marginPoints={marginPoints} measurements={measurements} onMarginPointsChange={changeMargin} onMeasurementsChange={setMeasurements} onConnectorsChange={connectors => patchSetting('connectors', connectors)} onBrushRadiusChange={value => patchSetting('brush_radius_mm', value)} onBrushStrengthChange={value => patchSetting('brush_strength_mm', value)} onGeometryCommit={() => setGeometryRevision(v => v + 1)} onReadyChange={setCadReady} onHistoryChange={setHistoryState} onPerformanceInfo={setPerformanceInfo} onSceneStateChange={setSceneState} onInsertionAxisChange={axis => setSettings(current => ({ ...current, insertion_axis_x: axis.x, insertion_axis_y: axis.y, insertion_axis_z: axis.z }))} onStatus={setStatus}/>
-          {!focusMode && <UiNode as="aside" className={`cad-object-panel${objectPanelCollapsed ? ' cad-object-panel--collapsed' : ''}`} aria-label="Nesne yöneticisi">
-            <UiNode as="div" className="cad-object-panel-title"><CadIcon name="layers" size={18}/>{!objectPanelCollapsed && <UiNode as="strong">Sahne</UiNode>}<CadCommand label={objectPanelCollapsed ? 'Nesne panelini aç' : 'Nesne panelini daralt'} icon={objectPanelCollapsed ? 'layers' : 'collapse'} onClick={() => setObjectPanelCollapsed(v => !v)}/></UiNode>
-            {!objectPanelCollapsed && <>
-              <CadSceneControls settings={settings} patch={patch => setSettings(s => ({ ...s, ...patch }))} sources={sources} referenceKeys={referenceKeys} onReference={(arch, value) => patchSetting(`reference_${arch}_key`, value)} reset={restoreVisibility} scene={sceneState} onBite={showRecordedBite}/>
-              <UiNode as="section" className="cad-unit-selector" aria-label="Çalışma ünitesi"><UiNode as="header"><UiNode as="strong">Çalışma ünitesi</UiNode></UiNode><UiNode as="div">{jobSetup.units.map(unit => <UiNode as="button" type="button" key={unit.id} aria-label={`Diş ${unit.tooth_code}`} aria-pressed={jobSetup.active_unit_id === unit.id} data-role={unit.role} onClick={() => changeJobSetup({ ...jobSetup, active_unit_id: unit.id })} uiMessages={{ "aria-label": { source: "Di\u015F {0}", values: [unit.tooth_code], userValues: [] } }}><CadIcon name="design" size={22}/><UiNode as="b">{unit.tooth_code}</UiNode><UiNode as="small">{unit.role === 'pontic' ? 'Gövde' : 'Ünite'}</UiNode></UiNode>)}</UiNode><UiNode as="p">{activeJobUnit ? cadRestorationLabel(activeJobUnit.design_type) : 'İş tanımını tamamlayın'}</UiNode></UiNode>
-              <UiNode as="details" className="cad-scene-files"><UiNode as="summary">Tasarım sürümleri <UiNode as="b">{versions.length}</UiNode></UiNode>{versions.map(version => <UiNode as="div" key={version.id}><UiNode as="b">v{version.version_number}</UiNode><UiNode as="span">{statusLabel(version.status)}</UiNode><UiNode as="small">{formatDate(version.created_at, intlLocale())}</UiNode></UiNode>)}</UiNode>
-            </>}
-          </UiNode>}
-          <UiNode as="aside" className="cad-view-toolbar" aria-label="Kamera ve analiz araçları">
-            <CadCommand label="Ekrana sığdır" icon="fit" shortcut="Num 5" disabled={!cadReady} onClick={() => viewportRef.current?.fit()}/>
-            <UiNode as="details" name="cad-chrome" className="cad-chrome-menu" data-cad-menu="camera"><UiNode as="summary" aria-label="Kamera ve analiz araçları" title="Kamera ve analiz araçları"><CadIcon name="iso" size={19}/></UiNode><UiNode as="div" className="cad-menu-content">{(['iso', 'top', 'bottom', 'front', 'back', 'left', 'right'] as const).map(view => <UiNode as="button" type="button" key={view} disabled={!cadReady} onClick={() => { viewportRef.current?.setView(view); closeChromeMenus(); }}><CadIcon name={view === 'back' ? 'rear' : view} size={17}/><UiNode as="span">{cameraLabel(view)}</UiNode></UiNode>)}</UiNode></UiNode>
-            <UiNode as="details" name="cad-chrome" className="cad-chrome-menu" data-cad-menu="analysis"><UiNode as="summary" aria-label="Kalınlık & kontrol" title="Kalınlık & kontrol"><CadIcon name={viewMode === 'contact' ? 'contacts' : viewMode} size={19}/></UiNode><UiNode as="div" className="cad-menu-content">{activeViews.map(mode => <UiNode as="button" type="button" key={mode} aria-pressed={viewMode === mode} disabled={!cadReady} onClick={() => { selectViewMode(mode); closeChromeMenus(); }}><CadIcon name={mode === 'contact' ? 'contacts' : mode} size={17}/><UiNode as="span">{viewLabel(mode)}</UiNode></UiNode>)}</UiNode></UiNode>
-            {(!toolPanelVisible || focusMode) && <CadCommand label="Tasarım paneli" icon="tools" onClick={() => { setToolPanelVisible(true); setFocusMode(false); }}/>}
-          </UiNode>
-          <UiNode as="div" className="cad-active-display"><CadIcon name={tool} size={19}/><UiNode as="strong">{toolLabel(tool)}</UiNode><UiNode as="span">{viewLabel(viewMode)}</UiNode>{['add', 'reduce', 'smooth', 'flatten'].includes(tool) && <UiNode as="span">Ø {(settings.brush_radius_mm * 2).toFixed(1)} mm</UiNode>}</UiNode>
-          {viewMode==='contact'&&!sceneState.antagonistReady&&<UiNode as="div" className="cad-analysis-key">Antagonist ve kapanış verisini kontrol et</UiNode>}
-          {viewMode !== 'natural' && viewMode !== 'wireframe' && viewMode !== 'section' && (viewMode!=='contact'||sceneState.antagonistReady) && <UiNode as="div" className="cad-analysis-key"><UiNode as="strong">{viewLabel(viewMode)}</UiNode><UiNode as="div"/><UiNode as="span">{viewMode === 'undercut' ? 'Ters yüzey → giriş yönü' : viewMode === 'thickness' ? <UiMessage source="Kaynak mesafesi · hedef {0} mm" values={[settings.minimum_thickness_mm.toFixed(2)]} userValues={[]}/> : 'Kaynak yüzeyine mesafe'}</UiNode></UiNode>}
-          {recoveryDecisionPending && recoveryCandidate && <UiNode as="div" className="cad-recovery-notice" role="alert"><CadIcon name="reset"/><UiNode data-dy-copy-stack as="div"><UiNode as="strong">Kurtarma kaydı bulundu</UiNode><UiNode as="span">{formatRecoveryTime(recoveryCandidate.savedAt, intlLocale())} · Geometri ve ayarlar</UiNode></UiNode><UiNode as="button" type="button" onClick={restoreRecoveryDraft}>Geri yükle</UiNode><UiNode as="button" type="button" onClick={discardRecoveryDraft}>Vazgeç</UiNode></UiNode>}
-                      {shortcutHelpOpen && (<UiNode as="section" style={ui.shortcutPanel}>
-                <UiNode as="div" style={ui.shortcutHeader}>
-                  <UiNode as="div">
-                    <UiNode as="span" style={ui.shortcutEyebrow}>KLAVYE VE FARE</UiNode>
-                    <UiNode as="strong" style={ui.shortcutTitle}>Hızlı kontrol & kısayollar</UiNode>
-                  </UiNode>
-                  <UiNode as="button" type="button" style={ui.shortcutClose} onClick={() => setShortcutHelpOpen(false)}>×</UiNode>
-                </UiNode>
-
-                <UiNode as="div" style={ui.shortcutGrid}>
-                  {CAD_FIXED_SHORTCUTS.map((shortcut) => (<UiNode as="div" key={`${shortcut.key}-${shortcut.label}`} style={ui.shortcutRow}>
-                      <UiNode as="kbd" style={ui.shortcutKey}>{shortcut.key}</UiNode>
-                      <UiNode as="span">{shortcut.label}</UiNode>
-                    </UiNode>))}
-                </UiNode>
-
-                <UiNode as="div" style={ui.shortcutToolbar}>
-                  <UiNode as="button" type="button" style={ui.shortcutEditButton} onClick={() => setShortcutEditOpen((current) => !current)}>
-                    {shortcutEditOpen ? "Kısayol düzenlemeyi kapat" : "Kısayolları özelleştir"}
-                  </UiNode>
-                  {shortcutEditOpen && (<UiNode as="button" type="button" style={ui.shortcutResetButton} onClick={resetCadShortcuts}>
-                      {uiText(" Varsayılana dön ")}</UiNode>)}
-                </UiNode>
-
-                {shortcutEditOpen && (<UiNode as="div" style={ui.shortcutEditorGrid}>
-                    {(Object.keys(CAD_SHORTCUT_ACTION_LABELS) as CadShortcutAction[]).map((action) => (<UiNode as="label" key={action} style={ui.shortcutEditRow}>
-                        <UiNode as="span">{CAD_SHORTCUT_ACTION_LABELS[action]}</UiNode>
-                        <UiNode as="input" aria-label={`${CAD_SHORTCUT_ACTION_LABELS[action]} kısayolu`} style={ui.shortcutInput} value={shortcutBindings[action].toUpperCase()} maxLength={1} inputMode="text" onChange={(event) => updateShortcutBinding(action, event.currentTarget.value)} uiMessages={{ "aria-label": { source: "{0} k\u0131sayolu", values: [CAD_SHORTCUT_ACTION_LABELS[action]], userValues: [] } }}/>
-                      </UiNode>))}
-                  </UiNode>)}
-
-                <UiNode as="p" style={ui.shortcutFootnote}>
-                  Kısa sağ tık araç menüsünü açar; sağ tuşla sürükleme döndürür, orta tuş kaydırır. Ctrl/Cmd + tekerlek hızlı zoomdur. Fırça presetleri; hardness/falloff ve X/Y simetri ayarları Serbest şekillendirme panelindedir. Kişisel kısayollar bu kullanıcı için tarayıcıda saklanır.
-                </UiNode>
-              </UiNode>)}
-
-
-        </UiNode>
-        {ayaOpen&&<CadAyaPanel key={ayaScope} context={ayaContext} onRun={runAyaAction} onClose={()=>setAyaOpen(false)}/>} 
-        <UiNode as="dialog" ref={saveDialogRef} className="cad-save-dialog" aria-label={exitFailure?'CAD projesi kaydedilemedi.':contextLoading?'Vaka yükleniyor…':'Kaydediliyor…'} onCancel={e=>{e.preventDefault();if(!exiting&&!submitting)setExitFailure(false);}}>
-          {exitFailure?<><UiNode as="strong">CAD projesi kaydedilemedi.</UiNode><UiNode as="button" type="button" onClick={()=>void saveAndExit(exitDestinationRef.current)}>Kaydet ve çık</UiNode>{localExitReadyRef.current&&<UiNode as="button" type="button" onClick={()=>void exitWithLocalCopy()}>Yerel kaydet ve çık</UiNode>}<UiNode as="button" type="button" onClick={()=>setExitFailure(false)}>Kapat</UiNode></>:<UiNode as="p" role="status">{contextLoading?'Vaka yükleniyor…':'Kaydediliyor…'}</UiNode>}
-        </UiNode>
-        <UiNode as="footer" className="cad-status-bar"><UiNode as="span" role="status">{contextLoading ? 'Vaka yükleniyor…' : status}</UiNode><UiNode as="span">{activeSource?.source.fileName ? <UserText>{activeSource.source.fileName}</UserText> : 'Kaynak seçilmedi'} · mm</UiNode><UiNode as="span" title={performanceInfo ? `${performanceInfo.sourceTriangles} kaynak / ${performanceInfo.renderTriangles} görünüm / ${performanceInfo.kernelTriangles} analiz üçgeni` : undefined}>{performanceInfo ? <UiMessage source="{0} üçgen" values={[performanceInfo.renderTriangles.toLocaleString(intlLocale())]} userValues={[]}/> : ''}{localRecoverySavedAt && !recoveryDecisionPending ? <UiMessage source=" · Yerel {0}" values={[formatRecoveryTime(localRecoverySavedAt, intlLocale())]} userValues={[]}/> : ''}</UiNode></UiNode>
-      <CadFloatingPanel visible={!focusMode && toolPanelVisible} revealKey={`${workspaceMode}:${activeStep.id}:${panelTab}`} onClose={() => setToolPanelVisible(false)} title={workspaceMode === 'wizard' ? activeTaskLabel : 'Tasarım araçları'}>
         {workspaceMode === 'wizard' && <UiNode as="div" className="cad-stage-brief"><UiNode as="span">{activeTaskIndex + 1} / {CAD_GUIDED_TASKS.length}</UiNode><UiNode as="p">{activeStep.label}</UiNode></UiNode>}
         {workspaceMode === 'wizard' && <UiNode as="div" className="cad-task-tools"><CadToolPalette tools={activeTools} tool={tool} onSelect={selectManualTool} shortcuts={shortcutBindings} disabled={!cadReady}/></UiNode>}
         {workspaceMode === 'expert' && <UiNode as="div" className="cad-panel-tabs" role="tablist" aria-label="Tasarım araç grupları" onKeyDown={event => {
@@ -2221,6 +2161,70 @@ export default function DesignStudioClient() {
         </UiNode>
         <UiNode as="footer" className="cad-panel-footer"><UiNode as="button" type="button" disabled={!project || (workspaceMode === 'wizard' ? activeTaskIndex : activeStepIndex) <= 0} onClick={() => void moveStep(-1)}><CadIcon name="back" size={16}/>Geri</UiNode><UiNode as="span">{workspaceMode === 'wizard' ? `${activeTaskIndex + 1} / ${CAD_GUIDED_TASKS.length}` : `${activeStep.index} / ${STEPS.length}`}</UiNode><UiNode as="button" type="button" className="cad-next-step" disabled={!cadReady||!project||exiting} onClick={()=>activeStepId==='review'?void saveAndExit():void moveStep(1)}>{activeStepId==='review'?'Kaydet ve çık':'Sonraki'}<CadIcon name="next" size={16}/></UiNode></UiNode>
       </CadFloatingPanel>
+          <DesignViewport ref={viewportRef} projectId={project?.id} source={displaySource} referenceSources={referenceSources} onContextMenuRequest={setContextPoint} toothCodes={selectedCase?.tooth_codes ?? []} settings={settings} tool={tool} viewMode={viewMode} marginPoints={marginPoints} measurements={measurements} onMarginPointsChange={changeMargin} onMeasurementsChange={setMeasurements} onConnectorsChange={connectors => patchSetting('connectors', connectors)} onBrushRadiusChange={value => patchSetting('brush_radius_mm', value)} onBrushStrengthChange={value => patchSetting('brush_strength_mm', value)} onGeometryCommit={() => setGeometryRevision(v => v + 1)} onReadyChange={setCadReady} onHistoryChange={setHistoryState} onPerformanceInfo={setPerformanceInfo} onSceneStateChange={setSceneState} onInsertionAxisChange={axis => setSettings(current => ({ ...current, insertion_axis_x: axis.x, insertion_axis_y: axis.y, insertion_axis_z: axis.z }))} onStatus={setStatus}/>
+          {!focusMode && <UiNode as="aside" className={`cad-object-panel${objectPanelCollapsed ? ' cad-object-panel--collapsed' : ''}`} aria-label="Nesne yöneticisi">
+            <UiNode as="div" className="cad-object-panel-title"><CadIcon name="layers" size={18}/>{!objectPanelCollapsed && <UiNode as="strong">Sahne</UiNode>}<CadCommand label={objectPanelCollapsed ? 'Nesne panelini aç' : 'Nesne panelini daralt'} icon={objectPanelCollapsed ? 'layers' : 'collapse'} onClick={() => setObjectPanelCollapsed(v => !v)}/></UiNode>
+            {!objectPanelCollapsed && <>
+              <CadSceneControls settings={settings} patch={patch => setSettings(s => ({ ...s, ...patch }))} sources={sources} referenceKeys={referenceKeys} onReference={(arch, value) => patchSetting(`reference_${arch}_key`, value)} reset={restoreVisibility} scene={sceneState} onBite={showRecordedBite}/>
+              <UiNode as="section" className="cad-unit-selector" aria-label="Çalışma ünitesi"><UiNode as="header"><UiNode as="strong">Çalışma ünitesi</UiNode></UiNode><UiNode as="div">{jobSetup.units.map(unit => <UiNode as="button" type="button" key={unit.id} aria-label={`Diş ${unit.tooth_code}`} aria-pressed={jobSetup.active_unit_id === unit.id} data-role={unit.role} onClick={() => changeJobSetup({ ...jobSetup, active_unit_id: unit.id })} uiMessages={{ "aria-label": { source: "Di\u015F {0}", values: [unit.tooth_code], userValues: [] } }}><CadIcon name="design" size={22}/><UiNode as="b">{unit.tooth_code}</UiNode><UiNode as="small">{unit.role === 'pontic' ? 'Gövde' : 'Ünite'}</UiNode></UiNode>)}</UiNode><UiNode as="p">{activeJobUnit ? cadRestorationLabel(activeJobUnit.design_type) : 'İş tanımını tamamlayın'}</UiNode></UiNode>
+              <UiNode as="details" className="cad-scene-files"><UiNode as="summary">Tasarım sürümleri <UiNode as="b">{versions.length}</UiNode></UiNode>{versions.map(version => <UiNode as="div" key={version.id}><UiNode as="b">v{version.version_number}</UiNode><UiNode as="span">{statusLabel(version.status)}</UiNode><UiNode as="small">{formatDate(version.created_at, intlLocale())}</UiNode></UiNode>)}</UiNode>
+            </>}
+          </UiNode>}
+          <UiNode as="aside" className="cad-view-toolbar" aria-label="Kamera ve analiz araçları">
+            <CadCommand label="Ekrana sığdır" icon="fit" shortcut="Num 5" disabled={!cadReady} onClick={() => viewportRef.current?.fit()}/>
+            <UiNode as="details" name="cad-chrome" className="cad-chrome-menu" data-cad-menu="camera"><UiNode as="summary" aria-label="Kamera ve analiz araçları" title="Kamera ve analiz araçları"><CadIcon name="iso" size={19}/></UiNode><UiNode as="div" className="cad-menu-content">{(['iso', 'top', 'bottom', 'front', 'back', 'left', 'right'] as const).map(view => <UiNode as="button" type="button" key={view} disabled={!cadReady} onClick={() => { viewportRef.current?.setView(view); closeChromeMenus(); }}><CadIcon name={view === 'back' ? 'rear' : view} size={17}/><UiNode as="span">{cameraLabel(view)}</UiNode></UiNode>)}</UiNode></UiNode>
+            <UiNode as="details" name="cad-chrome" className="cad-chrome-menu" data-cad-menu="analysis"><UiNode as="summary" aria-label="Kalınlık & kontrol" title="Kalınlık & kontrol"><CadIcon name={viewMode === 'contact' ? 'contacts' : viewMode} size={19}/></UiNode><UiNode as="div" className="cad-menu-content">{activeViews.map(mode => <UiNode as="button" type="button" key={mode} aria-pressed={viewMode === mode} disabled={!cadReady} onClick={() => { selectViewMode(mode); closeChromeMenus(); }}><CadIcon name={mode === 'contact' ? 'contacts' : mode} size={17}/><UiNode as="span">{viewLabel(mode)}</UiNode></UiNode>)}</UiNode></UiNode>
+            {(!toolPanelVisible || focusMode) && <CadCommand label="Tasarım paneli" icon="tools" onClick={() => { setToolPanelVisible(true); setFocusMode(false); }}/>}
+          </UiNode>
+          <UiNode as="div" className="cad-watermark" aria-hidden="true"><BrandLogo width={172} height={39}/></UiNode>
+          <UiNode as="div" className="cad-active-display"><CadIcon name={tool} size={19}/><UiNode as="strong">{toolLabel(tool)}</UiNode><UiNode as="span">{viewLabel(viewMode)}</UiNode>{['add', 'reduce', 'smooth', 'flatten'].includes(tool) && <UiNode as="span">Ø {(settings.brush_radius_mm * 2).toFixed(1)} mm</UiNode>}</UiNode>
+          {viewMode==='contact'&&!sceneState.antagonistReady&&<UiNode as="div" className="cad-analysis-key">Antagonist ve kapanış verisini kontrol et</UiNode>}
+          {viewMode !== 'natural' && viewMode !== 'wireframe' && viewMode !== 'section' && (viewMode!=='contact'||sceneState.antagonistReady) && <UiNode as="div" className="cad-analysis-key"><UiNode as="strong">{viewLabel(viewMode)}</UiNode><UiNode as="div"/><UiNode as="span">{viewMode === 'undercut' ? 'Ters yüzey → giriş yönü' : viewMode === 'thickness' ? <UiMessage source="Kaynak mesafesi · hedef {0} mm" values={[settings.minimum_thickness_mm.toFixed(2)]} userValues={[]}/> : 'Kaynak yüzeyine mesafe'}</UiNode></UiNode>}
+          {recoveryDecisionPending && recoveryCandidate && <UiNode as="div" className="cad-recovery-notice" role="alert"><CadIcon name="reset"/><UiNode data-dy-copy-stack as="div"><UiNode as="strong">Kurtarma kaydı bulundu</UiNode><UiNode as="span">{formatRecoveryTime(recoveryCandidate.savedAt, intlLocale())} · Geometri ve ayarlar</UiNode></UiNode><UiNode as="button" type="button" onClick={restoreRecoveryDraft}>Geri yükle</UiNode><UiNode as="button" type="button" onClick={discardRecoveryDraft}>Vazgeç</UiNode></UiNode>}
+                      {shortcutHelpOpen && (<UiNode as="section" style={ui.shortcutPanel}>
+                <UiNode as="div" style={ui.shortcutHeader}>
+                  <UiNode as="div">
+                    <UiNode as="span" style={ui.shortcutEyebrow}>KLAVYE VE FARE</UiNode>
+                    <UiNode as="strong" style={ui.shortcutTitle}>Hızlı kontrol & kısayollar</UiNode>
+                  </UiNode>
+                  <UiNode as="button" type="button" style={ui.shortcutClose} onClick={() => setShortcutHelpOpen(false)}>×</UiNode>
+                </UiNode>
+
+                <UiNode as="div" style={ui.shortcutGrid}>
+                  {CAD_FIXED_SHORTCUTS.map((shortcut) => (<UiNode as="div" key={`${shortcut.key}-${shortcut.label}`} style={ui.shortcutRow}>
+                      <UiNode as="kbd" style={ui.shortcutKey}>{shortcut.key}</UiNode>
+                      <UiNode as="span">{shortcut.label}</UiNode>
+                    </UiNode>))}
+                </UiNode>
+
+                <UiNode as="div" style={ui.shortcutToolbar}>
+                  <UiNode as="button" type="button" style={ui.shortcutEditButton} onClick={() => setShortcutEditOpen((current) => !current)}>
+                    {shortcutEditOpen ? "Kısayol düzenlemeyi kapat" : "Kısayolları özelleştir"}
+                  </UiNode>
+                  {shortcutEditOpen && (<UiNode as="button" type="button" style={ui.shortcutResetButton} onClick={resetCadShortcuts}>
+                      {uiText(" Varsayılana dön ")}</UiNode>)}
+                </UiNode>
+
+                {shortcutEditOpen && (<UiNode as="div" style={ui.shortcutEditorGrid}>
+                    {(Object.keys(CAD_SHORTCUT_ACTION_LABELS) as CadShortcutAction[]).map((action) => (<UiNode as="label" key={action} style={ui.shortcutEditRow}>
+                        <UiNode as="span">{CAD_SHORTCUT_ACTION_LABELS[action]}</UiNode>
+                        <UiNode as="input" aria-label={`${CAD_SHORTCUT_ACTION_LABELS[action]} kısayolu`} style={ui.shortcutInput} value={shortcutBindings[action].toUpperCase()} maxLength={1} inputMode="text" onChange={(event) => updateShortcutBinding(action, event.currentTarget.value)} uiMessages={{ "aria-label": { source: "{0} k\u0131sayolu", values: [CAD_SHORTCUT_ACTION_LABELS[action]], userValues: [] } }}/>
+                      </UiNode>))}
+                  </UiNode>)}
+
+                <UiNode as="p" style={ui.shortcutFootnote}>
+                  Kısa sağ tık araç menüsünü açar; sağ tuşla sürükleme döndürür, orta tuş kaydırır. Ctrl/Cmd + tekerlek hızlı zoomdur. Fırça presetleri; hardness/falloff ve X/Y simetri ayarları Serbest şekillendirme panelindedir. Kişisel kısayollar bu kullanıcı için tarayıcıda saklanır.
+                </UiNode>
+              </UiNode>)}
+
+
+        </UiNode>
+        {ayaOpen&&<CadAyaPanel key={ayaScope} context={ayaContext} onRun={runAyaAction} onClose={()=>setAyaOpen(false)}/>}
+        <UiNode as="dialog" ref={saveDialogRef} className="cad-save-dialog" aria-label={exitFailure?'CAD projesi kaydedilemedi.':contextLoading?'Vaka yükleniyor…':'Kaydediliyor…'} onCancel={e=>{e.preventDefault();if(!exiting&&!submitting)setExitFailure(false);}}>
+          {exitFailure?<><UiNode as="strong">CAD projesi kaydedilemedi.</UiNode><UiNode as="button" type="button" onClick={()=>void saveAndExit(exitDestinationRef.current)}>Kaydet ve çık</UiNode>{localExitReadyRef.current&&<UiNode as="button" type="button" onClick={()=>void exitWithLocalCopy()}>Yerel kaydet ve çık</UiNode>}<UiNode as="button" type="button" onClick={()=>setExitFailure(false)}>Kapat</UiNode></>:<UiNode as="p" role="status">{contextLoading?'Vaka yükleniyor…':'Kaydediliyor…'}</UiNode>}
+        </UiNode>
+        <UiNode as="footer" className="cad-status-bar"><UiNode as="span" role="status">{contextLoading ? 'Vaka yükleniyor…' : status}</UiNode><UiNode as="span">{activeSource?.source.fileName ? <UserText>{activeSource.source.fileName}</UserText> : 'Kaynak seçilmedi'} · mm</UiNode><UiNode as="span" title={performanceInfo ? `${performanceInfo.sourceTriangles} kaynak / ${performanceInfo.renderTriangles} görünüm / ${performanceInfo.kernelTriangles} analiz üçgeni` : undefined}>{performanceInfo ? <UiMessage source="{0} üçgen" values={[performanceInfo.renderTriangles.toLocaleString(intlLocale())]} userValues={[]}/> : ''}{localRecoverySavedAt && !recoveryDecisionPending ? <UiMessage source=" · Yerel {0}" values={[formatRecoveryTime(localRecoverySavedAt, intlLocale())]} userValues={[]}/> : ''}</UiNode></UiNode>
+
       </UiNode>
             {toolLibraryOpen && (<UiNode as="div" style={ui.toolLibraryBackdrop} onMouseDown={() => setToolLibraryOpen(false)}>
           <UiNode as="section" className="cad-command-browser" role="dialog" aria-modal="true" aria-label="Tasarım Araçları" style={ui.toolLibraryPanel} onMouseDown={(event) => event.stopPropagation()}>
@@ -2229,7 +2233,7 @@ export default function DesignStudioClient() {
                 <UiNode as="p" style={ui.inspectorOverline}>DENTAYA DESIGN · ARAÇ KÜTÜPHANESİ</UiNode>
                 <UiNode as="h2" style={ui.toolLibraryTitle}>Tasarım Araçları</UiNode>
                 <UiNode as="p" style={ui.toolLibraryIntro}>
-                  Aracı seçin, parametrelerini ayarlayın ve model üzerinde uygulayın. 
+                  Aracı seçin, parametrelerini ayarlayın ve model üzerinde uygulayın.
                 </UiNode>
               </UiNode>
               <UiNode as="button" type="button" className="cad-action" style={ui.secondaryButton} onClick={() => setToolLibraryOpen(false)}>Kapat ×</UiNode>
@@ -2249,7 +2253,7 @@ export default function DesignStudioClient() {
 
             <UiNode as="div" style={ui.toolLibraryStats}>
               <UiNode as="span"><UiNode as="strong">{availableCommands.length}</UiNode> {uiText(" aktif")}</UiNode>
-              
+
             </UiNode>
 
             <UiNode as="div" style={ui.toolLibraryGrid}>
@@ -2443,7 +2447,7 @@ function MiniButton({ label, active = false, onClick, }: {
 }) {
     return (<UiNode as="button" type="button" className="cad-action cad-mini-command" aria-pressed={active} onClick={onClick} style={{
             ...ui.miniButton,
-            
+
         }}>
       <CadIcon name={miniIcon(label)} size={16}/><UiNode as="span">{label}</UiNode>
     </UiNode>);

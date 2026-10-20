@@ -103,29 +103,43 @@ try {
  // Intentional network holds must begin after the editor's 900ms scheduled autosave.
  // Otherwise an autosave can block Playwright's Save actionability wait until the real 20s timeout.
  const settleAutosave=async()=>{await page.waitForTimeout(1100);await page.waitForFunction(()=>Array.from(document.querySelectorAll('.cad-main-header button')).some(button=>button.textContent?.trim()==='Kaydet'&&!button.disabled));};
+ const navigateModule=async href=>{
+  await page.locator('.cad-main-header').getByRole('button',{name:'Modüller',exact:true}).click();
+  const modules=page.locator('.desktop-module-menu');await modules.waitFor({state:'visible'});
+  await modules.locator(`a[href="${href}"]`).click();await modules.waitFor({state:'hidden'});
+ };
+ const selectStage=async stage=>{
+  const workflow=page.locator('[data-cad-menu=workflow]');
+  if(await workflow.getAttribute('open')===null)await workflow.locator('summary').click();
+  await workflow.locator(`button[data-cad-stage=${stage}]`).click();await page.keyboard.press('Escape');
+ };
 
  await page.goto(url);await ready();
- const openCaseUrl=page.url();await page.locator('.desktop-document-tabs a[href="/design"]').click();assert.equal(page.url(),openCaseUrl,'The active Design tab preserves its open case');
- // Measure the real canvas between both docks, then detach and restore the same inspector.
+ const openCaseUrl=page.url();await navigateModule('/design');assert.equal(page.url(),openCaseUrl,'The active Design module preserves its open case');
+ // Both docks share the left column, leaving one continuous canvas beside them.
  const inspectorPanel=page.locator('.cad-floating-panel');
  assert.equal(await inspectorPanel.getAttribute('data-docked'),'true');
  await frames();
  const dockedScene=await page.locator('.cad-scene-viewport').boundingBox(),objectDock=await page.locator('.cad-object-panel').boundingBox(),parameterDock=await inspectorPanel.boundingBox();
- assert.ok(dockedScene.x>=objectDock.x+objectDock.width-1,'The object manager has its own column');
- assert.ok(dockedScene.x+dockedScene.width<=parameterDock.x+1,'The parameter inspector does not cover the 3D scene');
- assert.ok(Math.abs(dockedScene.y-parameterDock.y)<2&&Math.abs(dockedScene.height-parameterDock.height)<2,'The inspector follows the actual viewport height');
+ assert.ok(dockedScene.x>=objectDock.x+objectDock.width-1,'The object manager stays beside the canvas');
+ assert.ok(dockedScene.x>=parameterDock.x+parameterDock.width-1,'The parameter inspector stays beside the canvas');
+ assert.ok(objectDock.y+objectDock.height<=parameterDock.y+1,'The object manager and parameter inspector are stacked without overlap');
+ for(const dock of [objectDock,parameterDock])assert.ok(dock.x>=0&&dock.y>=0&&dock.x+dock.width<=1600&&dock.y+dock.height<=1000,'The left docks remain inside the application window');
+ assert.ok(dockedScene.width>700&&dockedScene.height>600,'The actual 3D scene remains the dominant work area');
  await page.evaluate(()=>{window.__cadDockCanvas=document.querySelector('.cad-professional canvas');});
- await inspectorPanel.getByRole('button',{name:'Araç panelini taşı',exact:true}).press('Shift+ArrowLeft');
+ await inspectorPanel.getByRole('button',{name:'Araç panelini taşı',exact:true}).press('Shift+ArrowRight');
  await page.waitForFunction(()=>document.querySelector('.cad-floating-panel')?.dataset.docked==='false');
  await frames();
- assert.ok((await page.locator('.cad-scene-viewport').boundingBox()).width>dockedScene.width+200,'Detaching the inspector gives its column back to the scene');
+ assert.ok((await page.locator('.cad-scene-viewport').boundingBox()).width>=dockedScene.width-2,'Detaching the inspector preserves the continuous 3D scene');
+ const detached=await inspectorPanel.boundingBox();assert.ok(detached.x>=0&&detached.y>=0&&detached.x+detached.width<=1600&&detached.y+detached.height<=1000,'The detached inspector stays inside the window');
  assert.ok(await page.evaluate(()=>window.__cadDockCanvas===document.querySelector('.cad-professional canvas')),'Dock changes preserve the WebGL canvas');
- await inspectorPanel.getByRole('button',{name:'Paneli sağa sabitle',exact:true}).click();
+ await inspectorPanel.getByRole('button',{name:/^Paneli .*sabitle$/,exact:true}).click();
  await page.waitForFunction(()=>document.querySelector('.cad-floating-panel')?.dataset.docked==='true');
  await frames();
  assert.ok(Math.abs((await page.locator('.cad-scene-viewport').boundingBox()).width-dockedScene.width)<2,'Docking restores the measured scene column');
+ const restoredDock=await inspectorPanel.boundingBox();assert.ok(Math.abs(restoredDock.x-parameterDock.x)<2&&Math.abs(restoredDock.y-parameterDock.y)<2,'Redocking restores the left parameter panel');
  assert.equal(await page.evaluate(()=>localStorage.getItem('dentaya:cad-floating-panel-v3')),null,'Docking clears the detached position');
- console.log('PASS: measured object/inspector docks, keyboard detach, expanded real canvas and explicit redock.');
+ console.log('PASS: measured left-stacked docks, continuous real canvas, keyboard detach and explicit redock.');
  await page.getByRole('button',{name:'Sonraki',exact:true}).click();
  await page.waitForFunction(()=>document.querySelector('.cad-professional')?.dataset.cadTask==='fit');
  let snapshot=await save();const first=snapshot.units['unit-46-0'];
@@ -138,7 +152,7 @@ try {
   // Keep the complete workflow suite as the default; this branch only measures quality rows.
   await page.locator('[data-cad-menu=app]>summary').click();
   await page.getByRole('button',{name:'Uzman',exact:true}).click();
-  await page.locator('button[data-cad-stage=review]').click();
+  await selectStage('review');
   const measurements=[];
   for(const viewport of [{width:1366,height:768},{width:1600,height:1000}]){
    await page.setViewportSize(viewport);await frames();
@@ -150,7 +164,7 @@ try {
    assert.equal(rows.length,4,'The real final review must display all four quality rows');
    for(const [index,value] of rows.entries()){
     assert.ok(value.text.width>100,`Quality text receives usable width at ${viewport.width}px`);
-    assert.ok(value.icon.width<=22,'Only the status icon receives the compact width');
+    assert.ok(value.icon.width<=40&&value.text.width>value.icon.width*2,'The status icon leaves the quality text usable space');
     for(const part of value.parts)for(const line of part.lines){
      assert.ok(line.left>=value.row.left-1&&line.right<=value.row.right+1,`${part.text} stays within its row horizontally`);
      assert.ok(line.top>=value.row.top-1&&line.bottom<=value.row.bottom+1,`${part.text} stays within its row vertically`);
@@ -238,7 +252,7 @@ try {
  await page.evaluate(()=>{for(const resolve of window.rc47CadModel.pending.splice(0))resolve();window.rc47CadModel.mode='ok';});assert.doesNotMatch(await aya.getByRole('log').textContent(),/Gecikmiş model yanıtı/);await aya.getByRole('button',{name:'Kapat',exact:true}).click();
  snapshot=await save();assert.deepEqual(unitMesh(snapshot),edited,'Manual redo restores the same deterministic sculpted geometry');
  console.log('PASS: AYA undo and manual redo use real history; geometry changes invalidate a pending model reply and old evidence.');
- await page.getByRole('button',{name:'Diş 47',exact:true}).click();await page.locator('button[data-cad-stage=design]').click();
+ await page.getByRole('button',{name:'Diş 47',exact:true}).click();await selectStage('design');
  snapshot=await save();assert.equal(snapshot.units['unit-47-1'].anchor.placed,true);assert.ok(Math.abs(snapshot.units['unit-47-1'].anchor.position[0]+16)<.001);
  await page.getByRole('button',{name:'Diş 46',exact:true}).click();snapshot=await save();assert.deepEqual(unitMesh(snapshot),edited);
  assert.ok(await page.locator('.cad-history-actions button[aria-label="Geri al"]').isEnabled());
@@ -271,7 +285,7 @@ try {
  await page.goto(url);await ready();
  await page.waitForFunction(()=>window.rc51RecoveryReads.length>=2);
  const lookupPatchCount=requestLog.filter(request=>request.method==='PATCH').length;
- await page.locator('.desktop-document-tabs a[href="/ai"]').click();
+ await navigateModule('/ai');
  await page.locator('.cad-main-header').getByRole('button',{name:'Kaydet',exact:true}).click();
  await page.waitForTimeout(1100);
  assert.ok(page.url().includes('/design'),'Navigation waits for recovery lookup');
@@ -280,7 +294,7 @@ try {
  await page.locator('.cad-recovery-notice').waitFor();
  assert.equal((await readDrafts()).length,1,'An intentional local checkpoint survives expiry pruning');
  const pendingPatchCount=requestLog.filter(request=>request.method==='PATCH').length;
- await page.locator('.desktop-document-tabs a[href="/ai"]').click();
+ await navigateModule('/ai');
  await page.locator('.cad-main-header').getByRole('button',{name:'Kaydet',exact:true}).click();
  await page.waitForTimeout(1100);
  assert.ok(page.url().includes('/design'),'Unresolved recovery must keep the case open');
@@ -290,7 +304,7 @@ try {
  await page.getByRole('button',{name:'Geri yükle',exact:true}).click();failWrites=false;snapshot=await save();assert.deepEqual(unitMesh(snapshot),offlineMesh);
  console.log('PASS: delayed recovery lookup and pending recovery choice block writes/navigation; explicit local exit and recovery retain all geometry.');
  // Publishing must include the exact geometry checkpoint, then accept the RPC timestamp despite JSONB key order.
- await menu.locator('summary').click();await page.getByRole('button',{name:'Uzman',exact:true}).click();await page.locator('button[data-cad-stage=review]').click();
+ await menu.locator('summary').click();await page.getByRole('button',{name:'Uzman',exact:true}).click();await selectStage('review');
  await page.getByRole('button',{name:'STL oluştur ve kliniğin onayına gönder',exact:true}).click();
  await page.waitForFunction(()=>document.querySelector('.cad-status-bar')?.textContent?.includes('kliniğin onayına gönderildi'));
  assert.equal(submissions.length,1);assert.deepEqual(unitMesh(await decodeCadWorkspace(submissions[0].p_parameters.settings.cad_workspace)),offlineMesh);
@@ -299,13 +313,13 @@ try {
  // New desktop links must preserve the existing error, retry and acknowledged-save guards.
  if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC51_CAD_daily.png'),animations:'disabled',caret:'initial',style:'nextjs-portal{visibility:hidden!important}',timeout:15000});}
  const acknowledgedVersion=savedProject.updated_at;savedProject.updated_at=new Date(Date.now()+100000).toISOString();
- await page.locator('.desktop-document-tabs a[href="/ai"]').click();
+ await navigateModule('/ai');
  await modal.waitFor();await modal.getByRole('button',{name:'Yerel kaydet ve çık',exact:true}).waitFor();assert.ok(page.url().includes('/design'),'A conflicting desktop navigation save keeps the edited case open');
  savedProject.updated_at=acknowledgedVersion;
  let releaseNavigation;holdWrite=new Promise(resolve=>{releaseNavigation=resolve;});
  const navigationRequest=page.waitForRequest(request=>request.method()==='PATCH'&&new URL(request.url()).pathname.endsWith('/design_projects'));
  await modal.getByRole('button',{name:'Kaydet ve çık',exact:true}).click();
- await navigationRequest;assert.ok(page.url().includes('/design'),'Module tabs keep CAD open while the retry is pending');
+ await navigationRequest;assert.ok(page.url().includes('/design'),'Module navigation keeps CAD open while the retry is pending');
  releaseNavigation();holdWrite=null;await page.waitForURL('**/ai');
  assert.deepEqual(unitMesh(await decodeCadWorkspace(savedProject.settings.cad_workspace)),offlineMesh,'Module navigation retains the complete edited scene');
  console.log('PASS: desktop module navigation rejects conflicting saves, waits for retry acknowledgment and retains the requested destination and edited scene.');

@@ -63,6 +63,13 @@ try {
   let releaseModel;
   const modelGate = new Promise(resolve => { releaseModel = resolve; });
   await page.route('**/training-scans/602.stl', async route => { await modelGate; await route.continue(); });
+  // The development-only Next.js badge otherwise covers the real bottom-left Back button.
+  // Runtime errors are still collected and asserted; the production app has no developer badge.
+  await page.addInitScript(()=>{
+    document.addEventListener('DOMContentLoaded',()=>{
+      const style=document.createElement('style');style.textContent='nextjs-portal{visibility:hidden!important}';document.head.appendChild(style);
+    },{once:true});
+  });
   await page.goto(url);
   await page.locator('.cad-professional').waitFor({timeout:55000});
   await page.waitForFunction(()=>document.querySelector('.cad-scene-viewport')?.textContent?.includes('Tarama ve CAD sahnesi hazırlanıyor'));
@@ -75,12 +82,13 @@ try {
 
   await page.waitForFunction(()=>document.querySelector('.dental-break-status')?.textContent?.includes('Yükleme tamamlandı'));
   await breakDialog.getByRole('button',{name:'Oyunları kapat',exact:true}).click();assert.equal(await page.locator('.cad-scene-viewport .dental-facts').count(),0);assert.equal(await page.locator('.cad-save-dialog[open]').count(),0);
-  if(await page.locator('[data-loading-reading]').isVisible())await page.getByRole('button',{name:'Çalışmaya geç',exact:false}).click();
-  console.log('PASS: real CAD loading fact and nonmodal game; data readiness is not delayed; optional five-second reading can be skipped.');
+  assert.equal(await page.locator('[data-loading-reading]').count(),0,'Completed CAD loading does not create a reading overlay');
+  console.log('PASS: real CAD loading fact and nonmodal game; the working screen is available as soon as the data is ready.');
   const task = () => page.locator('.cad-professional').getAttribute('data-cad-task');
   const tools = () => page.locator('.cad-tool-palette [data-cad-tool]').evaluateAll(nodes=>nodes.map(n=>n.dataset.cadTool));
   const canvasStable = () => page.evaluate(()=>document.querySelector('canvas')===window.__guidedCanvas);
   const appMenu = async() => { const menu=page.locator('[data-cad-menu=app]'); if(await menu.getAttribute('open')===null)await menu.locator('summary').first().click(); };
+  const workflowMenu = async() => { const menu=page.locator('[data-cad-menu=workflow]'); if(await menu.getAttribute('open')===null)await menu.locator('summary').click(); return menu; };
   const next = async(target) => { await page.getByRole('button',{name:'Sonraki',exact:true}).click(); await page.waitForFunction(target=>document.querySelector('.cad-professional')?.dataset.cadTask===target,target).catch(async error=>{console.error('GUIDED_NEXT_DIAGNOSTIC',target,await page.locator('.cad-status-bar').textContent());throw error;}); assert.equal(await canvasStable(),true); };
   const inspector = page.locator('#cad-tool-content');
   await page.evaluate(()=>{window.__guidedCanvas=document.querySelector('canvas');});
@@ -88,10 +96,13 @@ try {
   assert.equal(await page.locator('.cad-professional').getAttribute('data-workspace-mode'),'wizard');
   assert.deepEqual(await tools(),['orbit']);
   assert.equal(await page.getByRole('tab').count(),0,'No task tabs in the guided workspace');
-  assert.equal(await page.locator('.cad-workflow').count(),1,'The guided desktop shows its complete task sequence');
+  assert.equal(await page.locator('.cad-workflow').count(),1,'The guided desktop has one task sequence menu');
+  await workflowMenu();
+  assert.equal(await page.locator('.cad-workflow-list').isVisible(),true,'The right command rail opens the complete task sequence');
   assert.equal(await page.locator('.cad-workflow [data-cad-task-step]').count(),8);
   assert.equal(await page.locator('.cad-workflow [aria-current=step]').getAttribute('data-cad-task-step'),'files');
   assert.ok(await page.locator('.cad-workflow [data-cad-task-step=anatomy]').isDisabled(),'The visible task sequence retains future-step gates');
+  await page.keyboard.press('Escape');
   assert.equal(await page.locator('.cad-floating-panel').count(),1);
   assert.equal(await page.locator('.cad-inspector-section[open]').count(),1);
   assert.ok((await page.locator('.cad-object-panel').boundingBox()).width>180);
@@ -118,8 +129,8 @@ try {
   assert.equal(await page.locator('[data-cad-menu=camera]').getAttribute('open'),null);
   assert.equal(await page.locator('[data-cad-menu=analysis]').getAttribute('open'),null);
   assert.equal(await page.getByRole('button',{name:'Üstten',exact:true}).isVisible(),false);
-  await page.locator('[data-cad-menu=tasks] summary').click();
-  assert.ok(await page.locator('[data-cad-task-target=anatomy]').isDisabled());
+  await workflowMenu();
+  assert.ok(await page.locator('[data-cad-task-step=anatomy]').isDisabled());
   await page.keyboard.press('Escape');
   await page.locator('[data-cad-menu=camera] summary').click();
   assert.ok(await page.getByRole('button',{name:'Üstten',exact:true}).isVisible());
@@ -135,7 +146,7 @@ try {
   assert.equal(await page.getByRole('menuitem',{name:'Ekle',exact:true}).count(),0);
   assert.equal(await page.getByRole('menuitem',{name:'Marjin çiz',exact:true}).count(),0);
   await page.keyboard.press('Escape');
-  await appMenu();await page.getByRole('button',{name:'Araç kataloğu',exact:true}).click();
+  await page.locator('.cad-main-header>.cad-tool-command').click();
   const acts=await page.locator('[data-cad-activation]').evaluateAll(nodes=>nodes.map(n=>n.dataset.cadActivation));
   assert.equal(new Set(acts).size,acts.length);
   assert.ok(acts.every(id=>!id.startsWith('stage:')&&!id.startsWith('setting:')&&id!=='command:crown-shell'));
@@ -148,10 +159,11 @@ try {
   assert.equal(await task(),'margin','Missing margin prevents the internal-fit task');
   await page.keyboard.press('Control+Space');
   assert.equal(await task(),'margin');
-  await page.locator('[data-cad-menu=tasks] summary').click();
-  assert.ok(await page.locator('[data-cad-task-target=anatomy]').isDisabled());
-  await page.locator('[data-cad-task-target=fit]').click();
+  await workflowMenu();
+  assert.ok(await page.locator('[data-cad-task-step=anatomy]').isDisabled());
+  await page.locator('[data-cad-task-step=fit]').click();
   assert.equal(await task(),'margin','Progress menu uses the same prerequisites');
+  await page.keyboard.press('Escape');
   assert.equal(await page.locator('.cad-inspector-section[open]').count(),1);
   await page.locator('[data-cad-tool=margin]').click();
   await page.keyboard.press('Numpad8');await page.keyboard.press('Numpad5');
@@ -281,7 +293,7 @@ try {
   await moduleMenu.waitFor({state:'hidden'});
   await page.goto('http://127.0.0.1:3050/workspace');
   await page.locator('.desktop-workspace-home').waitFor({timeout:25000});
-  const homeNav=await page.locator('.desktop-home-module-links a').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('href')));
+  const homeNav=await page.locator('.desktop-home-command-ribbon a[data-module-destination]').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('href')));
   assert.ok(homeNav.length>0);
   assert.equal(new Set(homeNav).size,homeNav.length);
   assert.equal(await page.locator('.desktop-titlebar').count(),1);
@@ -289,6 +301,6 @@ try {
   assert.equal(await page.locator('.desktop-titlebar-actions').getByRole('button',{name:'Görünüm ve tercihler',exact:true}).count(),1);
   assert.equal(await page.locator('.workspace-settings-trigger').count(),0);
   assert.deepEqual(errors,[]);
-  console.log(JSON.stringify({pass:true,realWebGL:true,storedStages:6,guidedTasks:8,initialStage:'scan',noGuidedTabs:true,visibleTaskSequence:true,objectPanelVisible:true,technicalColors:true,cadColourGroups:6,customRoleColoursSaveAndReload:true,ayaLiveChecklist:true,ayaUnitConversion:true,opacityAndHide:true,registeredBite:true,utilityMenusOnDemand:true,oneExpandedParameterSection:true,connectorParametersOnDemand:true,savedTaskResume:true,futureStepsLocked:true,realMarginDrawing:true,blockedNextPreservesPanel:true,keyboardCannotBypassStages:true,contextMenuFollowsStages:true,onlyStageParameterTabs:true,explicitExpertOnly:true,onePrimaryToolPalette:true,reviewOnlySubmit:true,reviewStatusRemainsWorkingUntilSubmission:true,scenePreserved:true,marginSaved:true,catalogCommandsUnique:true,labNavigationUnique:true,homeNavigationUnique:true,hiddenSidebarFallback:true,backend:'intercepted fixture, no production data'},null,2));
+  console.log(JSON.stringify({pass:true,realWebGL:true,storedStages:6,guidedTasks:8,initialStage:'scan',noGuidedTabs:true,taskSequenceMenu:true,objectPanelVisible:true,technicalColors:true,cadColourGroups:6,customRoleColoursSaveAndReload:true,ayaLiveChecklist:true,ayaUnitConversion:true,opacityAndHide:true,registeredBite:true,utilityMenusOnDemand:true,oneExpandedParameterSection:true,connectorParametersOnDemand:true,savedTaskResume:true,futureStepsLocked:true,realMarginDrawing:true,blockedNextPreservesPanel:true,keyboardCannotBypassStages:true,contextMenuFollowsStages:true,onlyStageParameterTabs:true,explicitExpertOnly:true,onePrimaryToolPalette:true,reviewOnlySubmit:true,reviewStatusRemainsWorkingUntilSubmission:true,scenePreserved:true,marginSaved:true,catalogCommandsUnique:true,labNavigationUnique:true,homeNavigationUnique:true,hiddenSidebarFallback:true,backend:'intercepted fixture, no production data'},null,2));
 } catch(error){console.error(logs);if(browser&&screenshotDir){for(const page of browser.contexts().flatMap(context=>context.pages()))await page.screenshot({path:path.join(screenshotDir,'RC36-guided-failure.png'),timeout:5000}).catch(()=>{});}throw error;}
 finally {releaseHeldSave?.();await browser?.close();if(server){server.kill('SIGTERM');await new Promise(resolve=>{if(server.exitCode!==null)return resolve();server.once('exit',resolve);setTimeout(resolve,3000);});}}

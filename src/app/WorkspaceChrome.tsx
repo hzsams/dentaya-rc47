@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { BrandLogo } from "./BrandLogo";
 import ModuleWorkcard from "./ModuleWorkcard";
 import ModuleNavigation from "./ModuleNavigation";
-import DentayaIcon from "./DentayaIcon";
+import DentayaIcon, { type DentayaIconName } from "./DentayaIcon";
 import LanguageSettings from "./LanguageSettings";
 import ExperienceSettings from "./ExperienceSettings";
 import AyaPreferencesPanel from "./ai/AyaPreferencesPanel";
@@ -88,7 +88,7 @@ export default function WorkspaceChrome({ children }: {
     }
     useEffect(()=>{
         const keyboard=(event:KeyboardEvent)=>{if(isDesktop&&event.altKey&&!event.ctrlKey&&!event.metaKey&&event.key.toLowerCase()==='m'){event.preventDefault();openModuleMenu();}};
-        window.addEventListener('keydown',keyboard);return()=>window.removeEventListener('keydown',keyboard);
+        window.addEventListener('keydown',keyboard);window.addEventListener('dentaya:open-modules',openModuleMenu);return()=>{window.removeEventListener('keydown',keyboard);window.removeEventListener('dentaya:open-modules',openModuleMenu);};
     },[isDesktop]);
     function openPreferences() {
         if (document.querySelector('dialog[open]')) return;
@@ -147,9 +147,10 @@ export default function WorkspaceChrome({ children }: {
       </UiNode>
       <UiNode as="div" className={`desktop-workspace module-workspace ${isCad||!preferences.navigation?'module-workspace--wide':''}`}>
         {!isCad&&preferences.navigation&&<UiNode as="aside" className="module-navigation desktop-module-navigation" aria-label={desktopCopy.modules} translateChildren={false}>
-          <UiNode as="div" className="desktop-navigation-heading"><UiNode as="span">{desktopCopy.workspace}</UiNode><UiNode as="small">DENTAYA</UiNode></UiNode>
-          <ModuleNavigation pathname={pathname}/>
-          <Link href="/ai" className="desktop-sidebar-assistant"><DentayaIcon name="ai" size={16}/><UiNode as="span">AYA</UiNode><UiNode as="small">↗</UiNode></Link>
+          <UiNode as="nav" className="studio-activity-dock" aria-label={desktopCopy.workspaces}>
+            {([['/workspace', desktopCopy.workManager, 'case'], ['/design', desktopCopy.design, 'design'], ['/patients', uiText('Hastalar'), 'patient'], ['/scans', uiText('Taramalar'), 'scan'], ['/messages', uiText('Mesajlar'), 'message'], ['/finance', uiText('Finans'), 'finance'], ['/ai', 'AYA', 'ai']] as [string, string, DentayaIconName][]).map(([href,label,icon]) => <Link href={href} key={href} aria-current={pathname===href||pathname.startsWith(href+'/')?'page':undefined} title={label}><UiNode as="span" className="studio-dock-icon" data-icon={icon}><DentayaIcon name={icon} size={25}/></UiNode><UiNode as="span">{label}</UiNode></Link>)}
+          </UiNode>
+          <UiNode as="div" className="studio-dock-bottom"><UiNode as="button" type="button" title={desktopCopy.modules} aria-label={desktopCopy.modules} onClick={openModuleMenu}><DentayaIcon name="guide" size={22}/></UiNode><Link href="/settings" title={uiText('Ayarlar')} aria-label={uiText('Ayarlar')}><DentayaIcon name="settings" size={23}/></Link></UiNode>
         </UiNode>}
         <UiNode as="div" className="module-body desktop-document">
           <UiNode as="div" className={`module-content desktop-content ${isWorkspace?'desktop-content--manager':''} ${isCad?'desktop-content--cad':''} ${isAya?'desktop-content--aya':''}`}>

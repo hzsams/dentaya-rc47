@@ -263,7 +263,7 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
             controlsRef.current.enableDamping = p.damping;
         }
         if (sceneRef.current)
-            sceneRef.current.background = new THREE.Color(p.background === 'theme' ? readThemeColor('--dy-bg', '#081019') : { graphite: '#202226', slate: '#253346', paper: '#e8e9e6' }[p.background]);
+            sceneRef.current.background = new THREE.Color(p.background === 'theme' ? readThemeColor('--dy-bg', '#081019') : { studio: '#483b62', graphite: '#202226', slate: '#253346', paper: '#e8e9e6' }[p.background]);
     }
     const referenceIndexesRef=useRef<Partial<Record<'upper'|'lower',CadSpatialIndex>>>({});
     const frozenUnitsRef=useRef(new Map<string,{mesh:THREE.Mesh;record:CadUnitGeometryState}>());

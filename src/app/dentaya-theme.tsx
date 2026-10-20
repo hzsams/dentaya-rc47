@@ -49,7 +49,7 @@ export const THEME_OPTIONS: Array<{
   family: "dark" | "light";
   swatches: string[];
 }> = [
-  { id:"midnight", name:"Midnight", description:"DentAYA koyu turkuaz kimliği", family:"dark", swatches:["#07131d","#0b1c28","#6de2cf"] },
+  { id:"midnight", name:"DentAYA Studio", description:"Aydınlık klinik çalışma alanı", family:"light", swatches:["#ebe9f0","#ffffff","#72568f"] },
   { id:"ocean", name:"Ocean", description:"Klinik mavi ve canlı cyan", family:"dark", swatches:["#071520","#0b2634","#4cc9f0"] },
   { id:"emerald", name:"Emerald", description:"Sakin yeşil laboratuvar görünümü", family:"dark", swatches:["#071713","#0b241d","#66e0a3"] },
   { id:"violet", name:"Violet", description:"Teknolojik mor ve yumuşak kontrast", family:"dark", swatches:["#12101d","#1b1830","#b69cff"] },
@@ -86,7 +86,7 @@ export const DENTAYA_DEFAULT_PREFERENCES: DentayaPreferences = {
 };
 
 const PALETTES: Record<DentayaTheme, Palette> = {
-  midnight:{bg:"#10171e",surface:"#18232d",surface2:"#202d38",border:"#354550",text:"#edf2f5",muted:"#a4b3bf",accent:"#a6d4c2",accentSoft:"#243c36",accentContrast:"#0c2119",shadow:"rgba(0,0,0,.20)",input:"#141e27"},
+  midnight:{bg:"#ebe9f0",surface:"#ffffff",surface2:"#f2f0f5",border:"#c9c3d2",text:"#302b38",muted:"#77717e",accent:"#72568f",accentSoft:"#ece5f4",accentContrast:"#ffffff",shadow:"rgba(44,33,58,.15)",input:"#faf9fc"},
   ocean:{bg:"#071520",surface:"#0b2634",surface2:"#0d3141",border:"#26566e",text:"#eff9ff",muted:"#8eb3c8",accent:"#4cc9f0",accentSoft:"#0f3440",accentContrast:"#03131b",shadow:"rgba(0,0,0,.28)",input:"#081c28"},
   emerald:{bg:"#071713",surface:"#0b241d",surface2:"#103126",border:"#285f4d",text:"#f2faf7",muted:"#93b5a7",accent:"#66e0a3",accentSoft:"#103629",accentContrast:"#04130d",shadow:"rgba(0,0,0,.28)",input:"#091d18"},
   violet:{bg:"#12101d",surface:"#1b1830",surface2:"#241f3d",border:"#4b4368",text:"#f7f3ff",muted:"#aaa0c2",accent:"#b69cff",accentSoft:"#2b2450",accentContrast:"#140c27",shadow:"rgba(0,0,0,.30)",input:"#171426"},

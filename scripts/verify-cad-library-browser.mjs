@@ -18,7 +18,7 @@ const block=new THREE.Mesh(new THREE.BoxGeometry(50,25,.6));block.position.x=6;g
 for(const [x,y,h] of [[18,-5,5],[-10,4,6.2]]){const g=new THREE.CylinderGeometry(2,2,h,32);g.rotateX(Math.PI/2);const post=new THREE.Mesh(g);post.position.set(x,y,h/2);group.add(post);}
 group.updateMatrixWorld(true);const fixture=new STLExporter().parse(group);
 let server,browser,logs='',serverExit=null,failWrites=false,holdWrite=null,clock=0;
-const errors=[],writes=[],submissions=[];
+const errors=[],writes=[],submissions=[],patchResults=[];
 const custom=new THREE.Mesh(new THREE.BoxGeometry(8,9,10,2,2,2));custom.updateMatrixWorld(true);const customStl=new STLExporter().parse(custom);
 const invalid=new THREE.Mesh(new THREE.PlaneGeometry(8,9));invalid.updateMatrixWorld(true);const invalidStl=new STLExporter().parse(invalid);
 const reorder=value=>value&&typeof value==='object'?Array.isArray(value)?value.map(reorder):Object.fromEntries(Object.entries(value).reverse().map(([k,v])=>[k,reorder(v)])):value;
@@ -52,20 +52,38 @@ try {
     else {const data=req.postDataJSON();writes.push(data);savedProject={...savedProject,...data,updated_at:new Date(Date.now()+ ++clock).toISOString()};body=[savedProject];}
    }else body=[savedProject];
   }else if(table==='profiles')body=[{id:userId,display_name:'CAD Test'}];
+  if(table==='design_projects'&&req.method()==='PATCH')patchResults.push({status,updatedAt:savedProject.updated_at});
   if(req.headers().accept?.includes('application/vnd.pgrst.object+json'))body=Array.isArray(body)?body[0]??null:body;
   await route.fulfill({status,headers:{'access-control-allow-origin':'*','access-control-allow-headers':'*','content-type':'application/json'},body:JSON.stringify(body)});
  });
  await page.route('**/training-scans/602.stl',route=>route.fulfill({status:200,contentType:'model/stl',body:fixture}));
  await page.addInitScript(({userId})=>{
+  document.addEventListener('DOMContentLoaded',()=>{
+   const style=document.createElement('style');style.textContent='nextjs-portal{visibility:hidden!important}';document.head.appendChild(style);
+  });
   const exp=Math.floor(Date.now()/1000)+86400,payload=btoa(JSON.stringify({sub:userId,exp,aud:'authenticated',role:'authenticated'}));
   localStorage.setItem('sb-127-auth-token',JSON.stringify({access_token:`eyJhbGciOiJIUzI1NiJ9.${payload}.test`,refresh_token:'test',token_type:'bearer',expires_in:86400,expires_at:exp,user:{id:userId,email:'cad-test@example.invalid',aud:'authenticated',role:'authenticated',app_metadata:{},user_metadata:{},created_at:'2026-01-01T00:00:00Z'}}));
   localStorage.setItem('dentaya:cad-workspace:v1',JSON.stringify({background:'graphite',grid:false,axes:false,damping:false}));
   localStorage.setItem('dentaya:experience:v1',JSON.stringify({motion:'reduced'}));
  },{userId});
  const ready=async()=>{await page.locator('.cad-professional').waitFor();await page.waitForFunction(()=>document.querySelector('.cad-status-bar')?.textContent?.match(/Tarama (senkronize|hazır)/),{},{timeout:55000});};
- const save=async()=>{const n=writes.length;await page.locator('.cad-main-header').getByRole('button',{name:'Kaydet',exact:true}).click();const deadline=Date.now()+25000;while(writes.length<=n&&Date.now()<deadline)await new Promise(r=>setTimeout(r,50));assert.ok(writes.length>n);await page.waitForFunction(()=>document.querySelector('.cad-status-bar')?.textContent?.includes('CAD projesi kaydedildi.'));return decodeCadWorkspace(savedProject.settings.cad_workspace);};
+ const save=async()=>{
+  const observed=patchResults.length,writeCount=writes.length;
+  const [response]=await Promise.all([page.waitForResponse(response=>response.request().method()==='PATCH'&&new URL(response.url()).pathname.endsWith('/design_projects')),page.locator('.cad-main-header').getByRole('button',{name:'Kaydet',exact:true}).click()]);
+  assert.equal(response.status(),200,'The save must receive a successful server response');
+  const acknowledgement=await response.json();assert.equal(acknowledgement.id,savedProject.id);assert.ok(acknowledgement.updated_at);
+  await page.waitForFunction(async()=>{const idle=()=>document.querySelector('.cad-save-state')?.getAttribute('data-save-state')==='saved'&&Array.from(document.querySelectorAll('.cad-main-header button')).some(button=>button.textContent?.trim()==='Kaydet'&&!button.disabled);if(!idle())return false;await new Promise(requestAnimationFrame);return idle();});
+  assert.ok(writes.length>writeCount,'A complete scene was written');
+  assert.ok(patchResults.slice(observed).every(result=>result.status===200),'A failed or conflicting queued save must remain a test failure');
+  return decodeCadWorkspace(savedProject.settings.cad_workspace);
+ };
  const unitMesh=s=>s.units['unit-46-0'].geometry.positions;
  const frames=()=>page.evaluate(async()=>{for(let i=0;i<25;i++)await new Promise(requestAnimationFrame);});
+ const selectStage=async stage=>{
+  const workflow=page.locator('[data-cad-menu=workflow]');
+  if(await workflow.getAttribute('open')===null)await workflow.locator('summary').click();
+  await workflow.locator(`button[data-cad-stage=${stage}]`).click();await page.keyboard.press('Escape');
+ };
  await page.goto(url);await ready();
  assert.equal(await page.locator('[data-tooth-family]').count(),0,'The rejected 24-family browser is absent');
  await page.locator('.cad-main-header').getByRole('button',{name:'Form kütüphanesi',exact:true}).click();
@@ -82,7 +100,7 @@ try {
  const downloadPromise=page.waitForEvent('download');await library.getByRole('button',{name:'Dışa aktar',exact:true}).click();const download=await downloadPromise;
  const exported=await fs.readFile(await download.path(),'utf8');assert.equal(JSON.parse(exported).forms[0].sha256,imported.sha256);
  await library.getByRole('button',{name:'Kapat',exact:true}).click();
- await page.locator('.cad-main-header').getByRole('button',{name:'İş tanımı',exact:true}).click();
+ await page.locator('.cad-session-strip').getByRole('button',{name:'İş tanımı',exact:true}).click();
  const setup=page.getByRole('dialog',{name:'CAD iş tanımı',exact:true});const firstUnit=setup.locator('article').first();
  assert.equal(await firstUnit.getByRole('combobox',{name:'Diş formu',exact:true}).locator('option').count(),6);
  await firstUnit.getByRole('button',{name:'Form kütüphanesi',exact:true}).click();await library.waitFor();
@@ -100,14 +118,14 @@ try {
  const z=first.base.filter((_,i)=>i%3===2);assert.ok(Math.max(...z)-Math.min(...z)<15,'Crown is sized from the local margin, not the whole arch');
  const poseZ=Math.min(...first.placementBase.filter((_,i)=>i%3===2));assert.ok(Math.abs(first.anchor.position[2]+poseZ+1.75)<.001);
  console.log('PASS: implant-abutment crown appears on its offset margin, sized locally.');
- await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();
- const aya=page.getByRole('dialog',{name:'AYA çalışma asistanı',exact:true});await aya.getByRole('button',{name:'Marjin',exact:true}).click();
- await aya.getByRole('log').waitFor();assert.match(await aya.getByRole('log').textContent(),/46/);assert.match(await aya.getByRole('log').textContent(),/32/);
- await aya.getByRole('button',{name:'Koleye yerleştir',exact:true}).click();
- const again=await save();assert.deepEqual(unitMesh(again),unitMesh(snapshot),'Repeated margin placement must not shrink or erase the crown');
- await aya.getByRole('button',{name:'Kapat',exact:true}).click();
- console.log('PASS: live CAD-aware AYA works without a model; placement is idempotent.');
  const menu=page.locator('[data-cad-menu=app]');await menu.locator('summary').click();await page.getByRole('button',{name:'Uzman',exact:true}).click();
+ await page.getByRole('tab',{name:'Anatomi',exact:true}).click();
+ const placementSection=page.locator('#cad-tool-content .cad-inspector-section').filter({has:page.getByRole('button',{name:'Koleye yerleştir',exact:true,includeHidden:true})});
+ if(await placementSection.getAttribute('open')===null)await placementSection.locator('summary').first().click();
+ await placementSection.getByRole('button',{name:'Koleye yerleştir',exact:true}).click();
+ const again=await save();assert.deepEqual(unitMesh(again),unitMesh(snapshot),'Repeated margin placement must not shrink or erase the crown');
+ assert.equal(savedProject.margin_points.length,32,'Repeated placement preserves the actual selected contour');
+ console.log('PASS: the actual manual placement control preserves the imported crown and selected contour.');
  await page.getByRole('tab',{name:'Serbest',exact:true}).click();
  if(await page.getByRole('button',{name:'Nesne panelini aç',exact:true}).count())await page.getByRole('button',{name:'Nesne panelini aç',exact:true}).click();await page.getByRole('button',{name:'Restorasyon tek başına göster',exact:true}).click();
  const sculpt=async()=>{
@@ -119,7 +137,7 @@ try {
   }throw Error('A real brush stroke did not hit the placed crown');
  };
  await sculpt();snapshot=await save();assert.notDeepEqual(unitMesh(snapshot),unitMesh(again));const edited=unitMesh(snapshot);
- await page.getByRole('button',{name:'Diş 47',exact:true}).click();await page.locator('button[data-cad-stage=design]').click();
+ await page.getByRole('button',{name:'Diş 47',exact:true}).click();await selectStage('design');
  snapshot=await save();assert.equal(snapshot.units['unit-47-1'].anchor.placed,true);assert.ok(Math.abs(snapshot.units['unit-47-1'].anchor.position[0]+16)<.001);
  await page.waitForFunction(()=>JSON.parse(document.querySelector('[data-cad-render-state]').dataset.cadRenderState).state.renderedUnits===2);
  await page.locator('.cad-unit-visibility summary').click();await page.getByLabel('FDI 46',{exact:true}).uncheck();await page.waitForFunction(()=>JSON.parse(document.querySelector('[data-cad-render-state]').dataset.cadRenderState).state.renderedUnits===1);await page.getByLabel('FDI 46',{exact:true}).check();await page.waitForFunction(()=>JSON.parse(document.querySelector('[data-cad-render-state]').dataset.cadRenderState).state.renderedUnits===2);
@@ -137,7 +155,7 @@ try {
  await library.getByRole('button',{name:'Kapat',exact:true}).click();
  console.log('PASS: an exported technician library is imported through the actual JSON upload control.');
 
- if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();await aya.getByRole('button',{name:'Marjin',exact:true}).click();await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC41_CAD_AYA.png'),animations:'disabled',timeout:15000});await aya.getByRole('button',{name:'Kapat',exact:true}).click();}
+ if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC52_CAD_Library.png'),animations:'disabled',timeout:15000});}
  let release;holdWrite=new Promise(resolve=>{release=resolve;});
  await page.locator('.cad-main-header').getByRole('button',{name:'Kaydet ve çık',exact:true}).click();
  const modal=page.locator('.cad-save-dialog[open]');await modal.waitFor();assert.ok(page.url().includes('/design'));assert.equal(await page.evaluate(()=>document.querySelector('.cad-save-dialog')?.matches(':modal')),true);
@@ -154,7 +172,7 @@ try {
  await page.goto(url);await ready();assert.equal((await readDrafts()).length,1,'An intentional local checkpoint survives expiry pruning');await page.getByRole('button',{name:'Geri yükle',exact:true}).click();failWrites=false;snapshot=await save();assert.deepEqual(unitMesh(snapshot),offlineMesh);
  console.log('PASS: a failed remote save stays in CAD; explicit local exit and recovery retain all geometry.');
  // Publishing must include the exact geometry checkpoint, then accept the RPC timestamp despite JSONB key order.
- await menu.locator('summary').click();await page.getByRole('button',{name:'Uzman',exact:true}).click();await page.locator('button[data-cad-stage=review]').click();
+ await menu.locator('summary').click();await page.getByRole('button',{name:'Uzman',exact:true}).click();await selectStage('review');
  await page.getByRole('button',{name:'STL oluştur ve kliniğin onayına gönder',exact:true}).click();
  await page.waitForFunction(()=>document.querySelector('.cad-status-bar')?.textContent?.includes('kliniğin onayına gönderildi'));
  assert.equal(submissions.length,1);assert.deepEqual(unitMesh(await decodeCadWorkspace(submissions[0].p_parameters.settings.cad_workspace)),offlineMesh);
@@ -169,5 +187,5 @@ try {
  await page.setViewportSize({width:390,height:844});assert.ok(await page.locator('.cad-form-library').evaluate(el=>el.getBoundingClientRect().right<=innerWidth));
  console.log('PASS: the standalone technician catalog persists and fits a small screen.');
  assert.deepEqual(errors,[]);
- console.log(JSON.stringify({pass:true,realEditor:true,realWebGL:true,libraryStlImport:true,libraryPreview:true,libraryPersistence:true,libraryTransfer:true,libraryBundleImport:true,standaloneCatalog:true,mobileCatalog:true,perUnitLibrarySelection:true,importedTopologyUsed:true,libraryDeletionDoesNotBreakProject:true,syntheticImplantAbutments:true,localMarginSizing:true,hiddenZeroOpacityRecovered:true,placementIdempotent:true,fullMeshPersistence:true,perUnitPersistence:true,multiplePlacedUnitsVisible:true,perUnitVisibility:true,cloudReopen:true,saveExitAcknowledged:true,modalEditGuard:true,offlineExitRecovery:true,retainedLocalCheckpoint:true,publishCheckpoint:true,saveAfterPublish:true,optimisticConflictRejected:true,ayaContextGuide:true,backend:'intercepted API fixture; no production data'},null,2));
+ console.log(JSON.stringify({pass:true,realEditor:true,realWebGL:true,libraryStlImport:true,libraryPreview:true,libraryPersistence:true,libraryTransfer:true,libraryBundleImport:true,standaloneCatalog:true,mobileCatalog:true,perUnitLibrarySelection:true,importedTopologyUsed:true,libraryDeletionDoesNotBreakProject:true,syntheticImplantAbutments:true,localMarginSizing:true,hiddenZeroOpacityRecovered:true,placementIdempotent:true,fullMeshPersistence:true,perUnitPersistence:true,multiplePlacedUnitsVisible:true,perUnitVisibility:true,cloudReopen:true,saveExitAcknowledged:true,modalEditGuard:true,offlineExitRecovery:true,retainedLocalCheckpoint:true,publishCheckpoint:true,saveAfterPublish:true,optimisticConflictRejected:true,manualPlacementControl:true,backend:'intercepted API fixture; no production data'},null,2));
 }catch(error){console.error(logs);throw error;}finally{await browser?.close();if(server){server.kill('SIGTERM');await new Promise(resolve=>{if(server.exitCode!==null)return resolve();server.once('exit',resolve);setTimeout(resolve,3000);});}}

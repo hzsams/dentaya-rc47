@@ -1,0 +1,82 @@
+/* Settings is a parameter inspector within DentAYA Studio. All rules stay local. */
+.settings-studio,
+.settings-studio * { box-sizing: border-box; }
+.settings-studio { --settings-ui-scale: calc(var(--dy-font-scale,1) * var(--dy-custom-text-scale,1)); line-height: var(--dy-reading-line-height,1.45); }
+.settings-window-title { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.desktop-shell .desktop-content .settings-studio .settings-titlebar h1 { margin: 0; color: inherit; font-size: calc(16px * var(--settings-ui-scale,1)) !important; line-height: 1.3; letter-spacing: 0 !important; }
+.settings-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; min-height: 57px; margin-bottom: 14px; padding: 10px 13px; border: 1px solid var(--studio-border,var(--dy-border)); border-top: 0; border-radius: 0 0 5px 5px; background: var(--studio-panel,var(--dy-surface)); box-shadow: inset 0 1px #ffffff70, 0 1px 3px #21192c0a; }
+.settings-toolbar-context { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; min-width: 0; font-size: calc(12px * var(--settings-ui-scale,1)); }
+.settings-toolbar-context strong { color: var(--dy-text); font-weight: 600; overflow-wrap: anywhere; }
+.settings-toolbar-context span { color: var(--dy-muted); font-size: calc(11px * var(--settings-ui-scale,1)); }
+.settings-studio :is(button,a,input,select,textarea):focus-visible { outline: 2px solid var(--dy-accent); outline-offset: 2px; }
+.settings-studio :is(button,a) { -webkit-tap-highlight-color: transparent; }
+.settings-studio button { font-family: inherit; font-size: calc(12px * var(--settings-ui-scale,1)); }
+.settings-studio button:disabled { cursor: default; opacity: .55; }
+.settings-studio .settings-nav-item strong { font-size: calc(12px * var(--settings-ui-scale,1)); font-weight: 600; line-height: 1.3; }
+.settings-studio .settings-nav-item small { font-size: calc(10.5px * var(--settings-ui-scale,1)); line-height: 1.3; color: #c2b8cc; }
+.settings-studio .settings-nav-item[aria-pressed=true] small { color: #e7deef; }
+.settings-studio .settings-nav-item:not([aria-pressed=true]):hover { border-color: #ffffff1c !important; background: #ffffff09 !important; }
+.settings-nav > a:hover { color: #fff !important; background: #ffffff06; }
+.settings-nav > a span { color: #bfb6c8; font-size: calc(10.5px * var(--settings-ui-scale,1)); line-height: 1.4; }
+.settings-inspector { align-content: start; }
+.settings-panel-title > div:first-child { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; min-width: 0; }
+.settings-panel-title h2 { color: inherit; }
+.settings-panel-actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; flex: 0 1 auto; min-width: 0; }
+.settings-panel-actions > a { min-height: 26px !important; padding: 3px 8px !important; border-color: #ffffff35 !important; background: #ffffff12 !important; color: #fff !important; font-size: calc(11px * var(--settings-ui-scale,1)); box-shadow: inset 0 1px #ffffff16 !important; }
+.settings-panel-body { display: grid; gap: 13px; min-width: 0; padding: 15px; }
+.settings-panel-body > :last-child { margin-bottom: 0; }
+.settings-panel-body :is(h3,h4) { margin: 2px 0 8px; font-size: calc(13px * var(--settings-ui-scale,1)); font-weight: 600; color: var(--dy-text); }
+.settings-panel-body :is(p,small) { font-size: calc(12px * var(--settings-ui-scale,1)); line-height: 1.5; }
+.settings-panel-body label { min-width: 0; font-size: calc(12px * var(--settings-ui-scale,1)); }
+.settings-panel-body :is(input,select,textarea):not([type=range]):not([type=checkbox]):not([type=color]):not([type=file]) { min-height: 36px; min-width: 0; border-radius: 4px; font: inherit; font-size: calc(13px * var(--settings-ui-scale,1)); color: var(--dy-text); background: var(--dy-input); }
+.settings-panel-body :is(input,select):not([type=range]):not([type=checkbox]):not([type=color]):not([type=file]) { width: 100%; padding: 7px 10px; }
+.settings-panel-body textarea { width: 100%; padding: 9px 10px; resize: vertical; }
+.settings-panel-body input[type=checkbox] { flex: 0 0 auto; width: 16px; height: 16px; accent-color: var(--dy-accent); }
+.settings-panel-body input[type=range] { accent-color: var(--dy-accent); }
+.settings-panel-body :is(button,.settings-preview-action) { line-height: 1.4; }
+.settings-card { transition: border-color var(--dy-motion-fast,150ms), box-shadow var(--dy-motion-fast,150ms); }
+.settings-card:hover { border-color: var(--dy-accent) !important; box-shadow: inset 0 1px #ffffff60, 0 1px 2px #21192c12; }
+.settings-studio .settings-card[aria-pressed=true] { box-shadow: inset 3px 0 var(--dy-accent), inset 0 1px #ffffff60; }
+.settings-preview-action { display: inline-flex; align-items: center; justify-content: center; cursor: default !important; }
+.settings-panel-body .experience-settings { padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.settings-panel-body :is(.experience-fields,.customize-controls) { gap: 12px; }
+.settings-panel-body .experience-samples { gap: 6px; }
+.settings-panel-body :is(.experience-settings,.customize-panel,.tooth-appearance-settings) button:not(.tooth-shade-row button):not(.tooth-style-grid button) { min-height: 36px; padding: 7px 11px; border: 1px solid var(--dy-border); border-radius: 4px; color: var(--dy-text); background: linear-gradient(var(--studio-button-top,var(--dy-surface)),var(--studio-button-bottom,var(--dy-surface2))); box-shadow: inset 0 1px #ffffff70, 0 1px 2px #21192c10; font-size: calc(12px * var(--settings-ui-scale,1)); }
+.settings-panel-body :is(.experience-settings,.customize-panel,.tooth-appearance-settings) button[aria-pressed=true] { border-color: var(--dy-accent); color: var(--dy-accent); background: var(--dy-accent-soft); }
+.settings-studio .language-settings { margin: 0; padding: 15px; border: 1px solid var(--dy-border); border-radius: 5px; background: var(--studio-panel,var(--dy-surface)); box-shadow: 0 2px 4px #21192c0b; }
+.settings-studio .language-settings h3 { margin: 0 0 13px; padding-bottom: 10px; border-bottom: 1px solid var(--dy-border); font-size: calc(13px * var(--settings-ui-scale,1)); font-weight: 600; }
+.settings-studio .language-settings p { font-size: calc(12px * var(--settings-ui-scale,1)); line-height: 1.5; }
+.settings-studio .language-settings select { min-height: 36px; font-size: calc(13px * var(--settings-ui-scale,1)); }
+.settings-studio .workspace-presets { gap: 8px; }
+.settings-studio .workspace-presets > button { min-height: 0; padding: 10px; border-radius: 4px; font-size: calc(12px * var(--settings-ui-scale,1)); box-shadow: inset 0 1px #ffffff50; }
+.settings-studio .workspace-presets > button > span:last-child { font-size: calc(11px * var(--settings-ui-scale,1)); }
+.settings-studio .workspace-preset-preview { height: 50px; border-radius: 3px; }
+.settings-panel-body .brand-premium-collection { max-width: 720px; margin-inline: auto; border-radius: 5px; }
+.settings-panel-body .brand-premium-artwork { max-height: 230px; object-fit: contain; }
+.settings-panel-body .logo-choice-grid { gap: 8px; }
+.settings-panel-body .logo-choice { border-radius: 4px; }
+.settings-panel-body .logo-choice-preview { min-height: 64px; }
+.settings-panel-body .customize-sample { border-radius: 4px; }
+
+@media (max-width: 980px) {
+  .settings-studio .settings-shell { grid-template-columns: minmax(0,1fr) !important; }
+  .settings-studio .settings-nav { position: static !important; grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .settings-nav > a,.settings-nav > div { grid-column: 1 / -1; }
+  .settings-studio .preview-grid { grid-template-columns: minmax(0,1fr) !important; }
+}
+@media (max-width: 620px) {
+  .settings-studio .settings-nav { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .settings-studio :is(.form-grid,.choice-grid,.custom-accent-row) { grid-template-columns: minmax(0,1fr) !important; }
+  .settings-titlebar { gap: 8px !important; }
+  .settings-toolbar { align-items: stretch; gap: 10px; padding: 10px; }
+  .settings-toolbar > div:last-child { width: 100%; }
+  .settings-toolbar > div:last-child button { flex: 1 1 0; padding-inline: 8px !important; font-size: calc(11px * var(--settings-ui-scale,1)); }
+  .settings-panel-title { flex-wrap: wrap; gap: 7px !important; padding-inline: 11px !important; }
+  .settings-panel-actions { justify-content: flex-start; }
+  .settings-panel-body { padding: 12px; }
+  .settings-panel-body .settings-identity-grid { grid-template-columns: minmax(0,1fr) !important; }
+  .settings-panel-body .settings-setting-block { grid-template-columns: minmax(0,1fr) !important; gap: 8px !important; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .settings-studio .settings-card { transition: none; }
+}

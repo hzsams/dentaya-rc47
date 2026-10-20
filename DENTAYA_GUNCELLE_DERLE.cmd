@@ -3,13 +3,13 @@ setlocal DisableDelayedExpansion
 cd /d "%~dp0"
 if errorlevel 1 goto wrong
 if not exist package.json goto wrong
-findstr /C:"1.0.0-rc.51" package.json >nul
+findstr /C:"1.0.0-rc.52" package.json >nul
 if errorlevel 1 goto wrong
 if not exist electron\aya\language-packs.cjs goto wrong
 if not exist electron\aya\core.cjs goto wrong
 if not exist src\lib\i18n\UiNode.tsx goto wrong
 if not exist scripts\package-windows.mjs goto wrong
-echo DentAYA RC51 - Masaustu calisma alani ve CAD panel guncellemesi
+echo DentAYA RC52 - Studio arayuzu ve bekletmesiz yukleme
 where node.exe >nul 2>nul
 if errorlevel 1 goto missing_node
 where npm.cmd >nul 2>nul
@@ -21,7 +21,7 @@ if not defined LOCALAPPDATA goto missing_local
 if not exist "%SystemRoot%\System32\robocopy.exe" goto missing_local
 set "DENTAYA_SOURCE=%CD%"
 :choose_build
-set "DENTAYA_BUILD=%LOCALAPPDATA%\DentAYA\Builds\rc51-%RANDOM%-%RANDOM%"
+set "DENTAYA_BUILD=%LOCALAPPDATA%\DentAYA\Builds\rc52-%RANDOM%-%RANDOM%"
 if exist "%DENTAYA_BUILD%" goto choose_build
 mkdir "%DENTAYA_BUILD%"
 if errorlevel 1 goto stage_failed
@@ -44,7 +44,7 @@ if errorlevel 1 goto failed
 node scripts\package-windows.mjs --show-result --reveal
 if errorlevel 1 goto failed
 echo.
-echo Derleme tamamlandi. Kurulum adi: DentAYA-Setup-1.0.0-rc.51.exe
+echo Derleme tamamlandi. Kurulum adi: DentAYA-Setup-1.0.0-rc.52.exe
 echo DentAYA programini kaydedip kapatin, sonra yeni Setup dosyasini calistirin.
 pause
 exit /b 0
@@ -78,7 +78,7 @@ echo Calisma klasoru: "%DENTAYA_BUILD%"
 pause
 exit /b 1
 :wrong
-echo Bu dosyayi RC51 paketindeki package.json ile ayni klasore koyup acin.
+echo Bu dosyayi RC52 paketindeki package.json ile ayni klasore koyup acin.
 echo Proje klasorunun adinin RC20 olmasi tek basina sorun degildir.
 pause
 exit /b 1

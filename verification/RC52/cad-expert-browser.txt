@@ -1,0 +1,37 @@
+PASS: real CAD canvas and source models loaded.
+PASS: six original CAD presets and independent per-unit save/reload.
+PASS: manual morphology edit and undo/redo.
+{
+  "pass": true,
+  "realEditor": true,
+  "realWebGL": true,
+  "legacyCadPresets": 6,
+  "cancelledFamiliesAbsent": true,
+  "perUnitMorphology": true,
+  "morphologyReloadPreserved": true,
+  "defaultGuided": true,
+  "expertRequiresExplicitSelection": true,
+  "onePrimaryToolSelector": true,
+  "localeChangesPreserveScene": true,
+  "paletteChangesPreserveScene": true,
+  "paletteChangesPreserveUndoHistory": true,
+  "actualCadBackgroundFollowsPalette": true,
+  "publicScanModels": 2,
+  "backend": "intercepted fixture, no production data",
+  "expertTabs": 8,
+  "manualTools": 8,
+  "objectControls": true,
+  "numericBrush": true,
+  "sculptUndoRedo": true,
+  "hiddenTargetProtection": true,
+  "panelDragKeyboardBounds": true,
+  "positionSaved": true,
+  "modelLoadingGuard": true,
+  "allToolSelections": true,
+  "tabKeyboard": true,
+  "mobilePanels": true,
+  "preferencesDialog": true,
+  "rightClickAndOrbit": true,
+  "activeUnit": true,
+  "save": true
+}

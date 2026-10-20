@@ -43,7 +43,7 @@ try {
     localStorage.setItem('dentaya:experience:v1',JSON.stringify({motion:'reduced'}));
   },{userId});
   const appMenu = async() => { const menu=page.locator('[data-cad-menu=app]'); if(await menu.getAttribute('open')===null)await menu.locator('summary').first().click(); };
-  const appAction = async(name) => { await appMenu(); await page.getByRole('button',{name,exact:true}).click(); };
+  const appAction = async(name) => { await appMenu(); await page.locator('[data-cad-menu=app]').getByRole('button',{name,exact:true}).click(); };
   let releaseModel;
   const modelGate = new Promise(resolve => { releaseModel = resolve; });
   await page.route('**/training-scans/602.stl', async route => { await modelGate; await route.continue(); });
@@ -62,7 +62,7 @@ try {
   assert.equal(await page.locator('.cad-tool-palette--compact [data-cad-tool=connector]').count(),0);
   assert.equal(await page.locator('#cad-tool-content [data-cad-tool]').count(),0,'One primary tool selector');
   // RC41 restores the six original CAD presets; custom files use the separate library.
-  await page.locator('.cad-main-header').getByRole('button',{name:'İş tanımı',exact:true}).click();
+  await page.locator('.cad-session-strip').getByRole('button',{name:'İş tanımı',exact:true}).click();
   const setup=page.getByRole('dialog',{name:'CAD iş tanımı',exact:true});
   const first=setup.locator('article').nth(0),second=setup.locator('article').nth(1);
   const family=()=>first.getByRole('combobox',{name:'Diş formu',exact:true});
@@ -72,7 +72,7 @@ try {
   await page.locator('.cad-main-header').getByRole('button',{name:'Kaydet',exact:true}).click();await page.waitForFunction(()=>document.querySelector('.cad-status-bar')?.textContent?.includes('kaydedildi'));
   assert.equal(savedProject.settings.job_setup.units[0].tooth_form,'square');assert.equal(savedProject.settings.job_setup.units[1].tooth_form,'oval');
   await page.reload();await page.waitForFunction(()=>document.querySelector('.cad-status-bar')?.textContent?.match(/Tarama (senkronize|hazır)/),{},{timeout:55000});
-  await page.locator('.cad-main-header').getByRole('button',{name:'İş tanımı',exact:true}).click();assert.equal(await family().inputValue(),'square');assert.equal(await second.getByRole('combobox',{name:'Diş formu',exact:true}).inputValue(),'oval');await setup.getByRole('button',{name:'Kapat',exact:true}).click();
+  await page.locator('.cad-session-strip').getByRole('button',{name:'İş tanımı',exact:true}).click();assert.equal(await family().inputValue(),'square');assert.equal(await second.getByRole('combobox',{name:'Diş formu',exact:true}).inputValue(),'oval');await setup.getByRole('button',{name:'Kapat',exact:true}).click();
   console.log('PASS: six original CAD presets and independent per-unit save/reload.');
   await appAction('Uzman');
   assert.equal(await page.locator('.cad-panel-tabs [role=tab]').count(),8);
@@ -102,15 +102,25 @@ try {
   await page.getByRole('button',{name:'Sivri',exact:true}).click();assert.equal(await page.getByRole('button',{name:'Sivri',exact:true}).getAttribute('aria-pressed'),'true');
   assert.equal(await page.locator('.cad-floating-panel').getAttribute('data-docked'),'true');
   const dockedCanvas=await page.locator('canvas').boundingBox();
+  await page.evaluate(()=>{window.__cadExpertDockCanvas=document.querySelector('canvas');});
   const handle=page.getByRole('button',{name:'Araç panelini taşı'}),before=await handle.boundingBox();
-  await page.mouse.move(before.x+60,before.y+15);await page.mouse.down();await page.mouse.move(before.x-120,before.y+70,{steps:8});await page.mouse.up();
-  const moved=await handle.boundingBox();assert.ok(moved.x<before.x-150);assert.ok(moved.y>=(await page.locator('.cad-viewport-frame').boundingBox()).y+7);
+  await page.mouse.move(before.x+60,before.y+15);await page.mouse.down();await page.mouse.move(before.x+240,before.y-55,{steps:8});await page.mouse.up();
+  const moved=await handle.boundingBox();assert.ok(moved.x>before.x+150);assert.ok(moved.y>=(await page.locator('.cad-viewport-frame').boundingBox()).y+7);
   assert.equal(await page.locator('.cad-floating-panel').getAttribute('data-docked'),'false');
-  assert.ok((await page.locator('canvas').boundingBox()).width>dockedCanvas.width+200,'The real scene reclaims the detached inspector column');
+  assert.ok((await page.locator('canvas').boundingBox()).width>=dockedCanvas.width-2,'Detaching the left inspector preserves the real scene area');
+  assert.equal(await page.evaluate(()=>window.__cadExpertDockCanvas===document.querySelector('canvas')),true,'Detaching preserves the existing WebGL canvas');
   const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('dentaya:cad-floating-panel-v3')));
   const panelBounds=await page.locator('.cad-floating-panel').boundingBox();assert.ok(Math.abs(stored.x-panelBounds.x)<2);
 
   await handle.focus();await handle.press('Shift+ArrowRight');assert.ok((await handle.boundingBox()).x>moved.x+35);
+  // Dragged or restored panels must leave the command rail and bottom controls accessible.
+  for(let n=0;n<36;n++)await handle.press('Shift+ArrowRight');
+  for(let n=0;n<22;n++)await handle.press('Shift+ArrowDown');
+  const floatingBounds=await page.locator('.cad-floating-panel').boundingBox(),railBounds=await page.locator('.cad-main-header').boundingBox();
+  assert.ok(floatingBounds.x+floatingBounds.width<=railBounds.x-7,'Floating inspector stays clear of the right command rail');
+  assert.ok(floatingBounds.y+floatingBounds.height<=1000-25,'Floating inspector fits vertically with its real rendered height');
+  assert.ok(await page.getByRole('button',{name:'Araç panelini gizle',exact:true}).isVisible());
+  await appAction('Panel konumunu sıfırla');
   let scene=await page.locator('canvas').boundingBox();const cx=scene.x+scene.width*.43,cy=scene.y+scene.height*.5;
   await page.mouse.click(cx,cy,{button:'right'});await page.getByRole('menu',{name:'CAD sağ tık araçları'}).waitFor();
   await page.getByRole('menuitem',{name:'Yumuşat',exact:true}).click();assert.equal(await page.locator('.cad-tool-palette--compact [data-cad-tool=smooth]').getAttribute('aria-pressed'),'true');
@@ -122,6 +132,7 @@ try {
   assert.equal(await page.locator('.cad-floating-panel').getAttribute('data-docked'),'true');
   scene=await page.locator('canvas').boundingBox();
   assert.ok(Math.abs(scene.width-dockedCanvas.width)<2,'Reset redocks the inspector and restores the scene width');
+  assert.equal(await page.evaluate(()=>window.__cadExpertDockCanvas===document.querySelector('canvas')),true,'Reset keeps the same WebGL scene');
   // Sculpt the actual restoration, then verify geometry history and hidden-target protection.
   await page.getByRole('button',{name:'Restorasyon tek başına göster',exact:true}).click();
   await page.keyboard.press('Numpad8');
@@ -173,8 +184,8 @@ try {
     assert.equal(await page.evaluate(()=>document.documentElement.dir),locale==='ar'?'rtl':'ltr');
   }
   await page.setViewportSize({width:1280,height:800});await appAction('Panel konumunu sıfırla');
-  await page.waitForFunction(()=>{const r=document.querySelector('.cad-floating-panel')?.getBoundingClientRect();return r&&r.x>=8&&r.right<=innerWidth&&r.y>=116&&r.bottom<=innerHeight;},{},{timeout:5000});
-  const bounds=await page.locator('.cad-floating-panel').boundingBox();assert.ok(bounds.x>=8&&bounds.x+bounds.width<=1280);assert.ok(bounds.y>=116&&bounds.y+bounds.height<=800);
+  await page.waitForFunction(()=>{const r=document.querySelector('.cad-floating-panel')?.getBoundingClientRect(),frame=document.querySelector('.cad-viewport-frame')?.getBoundingClientRect();return r&&frame&&r.x>=0&&r.right<=innerWidth&&r.y>=frame.top&&r.bottom<=innerHeight;},{},{timeout:5000});
+  const bounds=await page.locator('.cad-floating-panel').boundingBox();assert.ok(bounds.x>=0&&bounds.x+bounds.width<=1280);assert.ok(bounds.y>=(await page.locator('.cad-viewport-frame').boundingBox()).y&&bounds.y+bounds.height<=800);
   await appAction('Görünüm ve ses ayarları');
   await page.getByRole('dialog').waitFor();
   const paletteSelect=page.locator('dialog[open] .appearance-palette select');
@@ -201,8 +212,8 @@ try {
   await page.getByRole('tab',{name:'Serbest',exact:true}).focus();await page.keyboard.press('ArrowRight');assert.equal(await page.getByRole('tab',{name:'Anatomi',exact:true}).getAttribute('aria-selected'),'true');
   await page.keyboard.press('Home');assert.equal(await page.getByRole('tab',{name:'Serbest',exact:true}).getAttribute('aria-selected'),'true');
   await page.setViewportSize({width:390,height:844});await appAction('Panel konumunu sıfırla');
-  await page.waitForFunction(()=>{const r=document.querySelector('.cad-floating-panel')?.getBoundingClientRect();return r&&r.x>=8&&r.right<=innerWidth-8;},{},{timeout:5000});
-  const mobile=await page.locator('.cad-floating-panel').boundingBox();assert.ok(mobile.x>=8&&mobile.x+mobile.width<=390-8);
+  await page.waitForFunction(()=>{const r=document.querySelector('.cad-floating-panel')?.getBoundingClientRect();return r&&r.x>=0&&r.right<=innerWidth&&r.y>=0&&r.bottom<=innerHeight;},{},{timeout:5000});
+  const mobile=await page.locator('.cad-floating-panel').boundingBox();assert.ok(mobile.x>=0&&mobile.x+mobile.width<=390);assert.ok(mobile.y>=0&&mobile.y+mobile.height<=844);
   await page.getByRole('button',{name:'Araç panelini gizle',exact:true}).click();await page.getByRole('button',{name:'Nesne panelini daralt',exact:true}).click();
   assert.ok((await page.locator('.cad-object-panel').boundingBox()).width<50);assert.equal(await page.locator('.cad-floating-panel').count(),0);
   assert.ok(await page.getByRole('button',{name:'Tasarım paneli',exact:true}).isVisible());
@@ -216,7 +227,7 @@ try {
       await page.keyboard.press('Numpad5');
       await page.evaluate(async()=>{for(let n=0;n<35;n++)await new Promise(requestAnimationFrame);});
       await page.waitForFunction(()=>{const r=document.querySelector('.cad-floating-panel')?.getBoundingClientRect();return r&&r.right<=innerWidth&&r.bottom<=innerHeight;},{},{timeout:5000});
-      await page.screenshot({path:path.join(screenshotDir,'DentAYA_RC51_CAD_Expert.png'),timeout:15000,animations:'disabled',caret:'initial',style:'nextjs-portal{visibility:hidden!important}'});
+      await page.screenshot({path:path.join(screenshotDir,'DentAYA_RC52_CAD_Expert.png'),timeout:15000,animations:'disabled',caret:'initial',style:'nextjs-portal{visibility:hidden!important}'});
     } catch(error) { console.warn('Optional CAD screenshot unavailable:',error.message); }
   }
 

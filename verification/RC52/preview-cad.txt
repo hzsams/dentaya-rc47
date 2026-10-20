@@ -1,0 +1,7 @@
+{
+  "pass": true,
+  "realWebGL": true,
+  "source": "current RC52",
+  "capture": "expert panels; public scan models; natural view; fitted camera; real rendered frames; bounded mobile inspector",
+  "backend": "intercepted synthetic fixture; no production data"
+}

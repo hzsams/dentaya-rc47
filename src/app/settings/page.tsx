@@ -1,4 +1,5 @@
 "use client";
+import "./settings.css";
 import LoadingExperience from '@/app/loading-play/LoadingExperience';
 import {memberRoleLabel} from '@/lib/display-labels';
 import UserText from "@/lib/i18n/UserText";
@@ -596,109 +597,24 @@ export default function SettingsPage() {
         }
     }
     if (loading) return <LoadingExperience title="Ayarlar yükleniyor…"/>;
-    return (<UiNode as="main" style={s.page}>
+    return (<UiNode as="main" className="settings-studio" style={s.page}>
       <ConnectionStatus />
-      <style>
-        {`
-          * { box-sizing: border-box; }
-
-          .settings-card {
-            transition:
-              transform var(--dy-motion-fast,150ms) ease,
-              border-color var(--dy-motion-fast,150ms) ease,
-              background var(--dy-motion-fast,150ms) ease;
-          }
-
-          .settings-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--dy-accent,#6de2cf) !important;
-          }
-
-          @media (max-width: 980px) {
-            .settings-shell {
-              grid-template-columns: 1fr !important;
-            }
-
-            .settings-nav {
-              position: static !important;
-              display: grid !important;
-              grid-template-columns: repeat(3, minmax(0, 1fr));
-              min-width: 0;
-            }
-
-            .settings-nav button {
-              min-width: 0;
-            }
-
-            .settings-nav > a,
-            .settings-nav > div {
-              grid-column: 1 / -1;
-            }
-
-            .themes {
-              grid-template-columns: repeat(2, 1fr) !important;
-            }
-
-            .preview-grid {
-              grid-template-columns: 1fr !important;
-            }
-          }
-
-          @media (max-width: 620px) {
-            .settings-nav {
-              grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .themes {
-              grid-template-columns: 1fr !important;
-            }
-
-            .choice-grid {
-              grid-template-columns: 1fr !important;
-            }
-
-            .form-grid {
-              grid-template-columns: 1fr !important;
-            }
-
-            .custom-accent-row {
-              grid-template-columns: 1fr !important;
-            }
-          }
-        `}
-      </style>
-
-      <UiNode as="header" style={s.header}>
-        <UiNode as="div">
-          <Link href="/" style={s.back}>
-            ← Ana panel
-          </Link>
-
-          <UiNode as="p" style={s.eyebrow}>
-            DENTAYA KONTROL MERKEZİ
-          </UiNode>
-
-          <UiNode as="h1" style={s.title}>
-            {uiText(" Ayarlar ")}</UiNode>
-
-          <UiNode as="p" style={s.sub}>
-            Görünümü, hareket
-            davranışını ve çalışma
-            yoğunluğunu kişiselleştir.
-            Kurum ayarları rolüne göre
-            ayrı tutulur.
-          </UiNode>
+      <UiNode as="header" className="settings-titlebar" style={s.header}>
+        <UiNode as="div" className="settings-window-title">
+          <DentayaIcon name="settings" size={18}/>
+          <UiNode as="h1" style={s.title}>{uiText(" Ayarlar ")}</UiNode>
         </UiNode>
-
+        <Link href="/" style={s.back}>← Ana panel</Link>
+      </UiNode>
+      <UiNode as="div" className="settings-toolbar">
+        <UiNode as="div" className="settings-toolbar-context">
+          <UiNode as="strong"><UserText>{org?.name}</UserText></UiNode>
+          <UiNode as="span">{memberRoleLabel(membership?.role ?? "member")}</UiNode>
+        </UiNode>
         <UiNode as="div" style={s.headerActions}>
-          <UiNode as="button" type="button" onClick={resetAppearance} style={s.secondaryButton}>
-            Görünümü Sıfırla
-          </UiNode>
-
+          <UiNode as="button" type="button" onClick={resetAppearance} style={s.secondaryButton}>Görünümü Sıfırla</UiNode>
           <UiNode as="button" type="button" onClick={() => void saveAll()} disabled={saving} style={s.primary}>
-            {saving
-            ? uiText("Kaydediliyor…")
-            : "Tümünü Kaydet"}
+            {saving ? uiText("Kaydediliyor…") : "Tümünü Kaydet"}
           </UiNode>
         </UiNode>
       </UiNode>
@@ -708,7 +624,7 @@ export default function SettingsPage() {
         </UiNode>)}
 
       <UiNode as="div" className="settings-shell" style={s.shell}>
-        <UiNode as="nav" className="settings-nav" style={s.nav}>
+        <UiNode as="nav" className="settings-nav" aria-label={uiText("Ayarlar")} style={s.nav}>
           <NavButton active={activeSection ===
             "account"} icon="patient" label="Hesabım" detail="Profil ve erişim" onClick={() => setActiveSection("account")}/>
 
@@ -755,7 +671,7 @@ export default function SettingsPage() {
           </UiNode>
         </UiNode>
 
-        <UiNode as="section" style={s.content}>
+        <UiNode as="section" id="settings-content" className="settings-inspector" style={s.content}>
           {activeSection ===
             "account" && (<>
               <Panel eyebrow="HESAP" title="Kişisel profil" right={<UiNode as="span" style={s.tag}>
@@ -800,7 +716,7 @@ export default function SettingsPage() {
                     "admin") ? (<Link href="/team" style={s.secondary}>
                       Ekip Yönetimi
                     </Link>) : undefined}>
-                <UiNode as="div" style={s.identityGrid}>
+                <UiNode as="div" className="settings-identity-grid" style={s.identityGrid}>
                   <Identity label="Kurum" value={org?.name ?? "—"}/>
 
                   <Identity label="Kurum türü" value={orgTypeLabel(org?.org_type)}/>
@@ -885,7 +801,7 @@ export default function SettingsPage() {
                       </UiNode>
                     </UiNode>
 
-                    <UiNode as="button" type="button" style={s.primary}>
+                    <UiNode as="span" className="settings-preview-action" style={s.primary}>
                       Örnek aksiyon
                     </UiNode>
                   </UiNode>
@@ -969,7 +885,7 @@ export default function SettingsPage() {
             ]} onChange={(value) => updateWorkspacePrefs({ headerScale: value as WorkspaceHeaderScale })}/>
                 </SettingBlock>
 
-                <UiNode as="label" style={s.toggleRow}>
+                <UiNode as="label" className="settings-toggle-row" style={s.toggleRow}>
                   <UiNode data-dy-copy-stack as="div">
                     <UiNode as="strong">Modül simgeleri</UiNode>
                     <UiNode as="span">Modül başlıklarının yanında işlevsel ikonları göster.</UiNode>
@@ -977,7 +893,7 @@ export default function SettingsPage() {
                   <UiNode as="input" type="checkbox" checked={workspacePrefs.showModuleIcons} onChange={(event) => updateWorkspacePrefs({ showModuleIcons: event.target.checked })}/>
                 </UiNode>
 
-                <UiNode as="label" style={s.toggleRow}>
+                <UiNode as="label" className="settings-toggle-row" style={s.toggleRow}>
                   <UiNode data-dy-copy-stack as="div">
                     <UiNode as="strong">Lobide AYA</UiNode>
                     <UiNode as="span">İsteğe bağlı AYA yardım bağlantısını ana ekranda göster.</UiNode>
@@ -985,7 +901,7 @@ export default function SettingsPage() {
                   <UiNode as="input" type="checkbox" checked={workspacePrefs.showAyaLobby} onChange={(event) => updateWorkspacePrefs({ showAyaLobby: event.target.checked })}/>
                 </UiNode>
 
-                <UiNode as="label" style={s.toggleRow}>
+                <UiNode as="label" className="settings-toggle-row" style={s.toggleRow}>
                   <UiNode data-dy-copy-stack as="div">
                     <UiNode as="strong">Çalışma düzeni önerisi</UiNode>
                     <UiNode as="span">Ana sayfadaki çalışma düzeni önerisini göster. Öncelikli işler görünür kalır.</UiNode>
@@ -993,7 +909,7 @@ export default function SettingsPage() {
                   <UiNode as="input" type="checkbox" checked={workspacePrefs.showAttentionSummary} onChange={(event) => updateWorkspacePrefs({ showAttentionSummary: event.target.checked })}/>
                 </UiNode>
 
-                <UiNode as="label" style={s.toggleRow}>
+                <UiNode as="label" className="settings-toggle-row" style={s.toggleRow}>
                   <UiNode data-dy-copy-stack as="div">
                     <UiNode as="strong">Merkezlenmiş içerik</UiNode>
                     <UiNode as="span">Geniş ekranlarda içerik genişliğini kontrollü tut.</UiNode>
@@ -1003,7 +919,7 @@ export default function SettingsPage() {
               </Panel>
 
               <Panel eyebrow="YOĞUNLUK" title={uiText("Çalışma düzeni")}>
-                <UiNode as="label" style={s.toggleRow}>
+                <UiNode as="label" className="settings-toggle-row" style={s.toggleRow}>
                   <UiNode data-dy-copy-stack as="div">
                     <UiNode as="strong">
                       Kompakt görünüm
@@ -1119,7 +1035,7 @@ export default function SettingsPage() {
                     {(org?.org_type ===
                     "laboratory" ||
                     org?.org_type ===
-                        "courier") && (<UiNode as="label" style={s.toggleRow}>
+                        "courier") && (<UiNode as="label" className="settings-toggle-row" style={s.toggleRow}>
                         <UiNode data-dy-copy-stack as="div">
                           <UiNode as="strong">
                             Dizinde görünür
@@ -1139,7 +1055,7 @@ export default function SettingsPage() {
                             .checked,
                     }))}/>
                       </UiNode>)}
-                  </>) : (<UiNode as="div" style={s.identityGrid}>
+                  </>) : (<UiNode as="div" className="settings-identity-grid" style={s.identityGrid}>
                     <Identity label="Kurum" value={org?.name ??
                     "—"}/>
 
@@ -1190,7 +1106,7 @@ export default function SettingsPage() {
                               </UiNode>)}
                           </UiNode>)}
                       </UiNode>
-                    </>) : (<UiNode as="div" style={s.identityGrid}>
+                    </>) : (<UiNode as="div" className="settings-identity-grid" style={s.identityGrid}>
                       <Identity label={uiText("Adres")} value={organizationForm.formattedAddress || organizationAddressQuery() || "Henüz girilmedi"}/>
                       <Identity label="Harita" value={organizationForm.addressVerifiedAt ? "Doğrulandı" : "Doğrulanmadı"}/>
                     </UiNode>)}
@@ -1297,7 +1213,7 @@ export default function SettingsPage() {
               <Panel eyebrow="AYA" title="Akıllı Yardım Asistanı" right={<Link href="/ai" style={s.secondary}>
                     AYA&apos;yı Aç
                   </Link>}>
-                <UiNode as="div" style={s.identityGrid}>
+                <UiNode as="div" className="settings-identity-grid" style={s.identityGrid}>
                   <Identity label="Asistan adı" value="AYA"/>
                   <Identity label="Açılım" value="Akıllı Yardım Asistanı"/>
                   <Identity label="Kapsam" value="Vaka · Modül · Ayar · Rehber"/>
@@ -1405,21 +1321,21 @@ function NavButton({ active, label, detail, icon, onClick, }: {
     icon: DentayaIconName;
     onClick: () => void;
 }) {
-    return (<UiNode as="button" type="button" onClick={onClick} style={{
+    return (<UiNode as="button" type="button" className="settings-nav-item" aria-pressed={active} aria-controls="settings-content" onClick={onClick} style={{
             ...s.navButton,
             ...(active
                 ? s.navButtonActive
                 : {}),
         }}>
       <UiNode as="span" style={{
-            width: 34,
-            height: 34,
+            width: 28,
+            height: 28,
             display: "grid",
             placeItems: "center",
-            borderRadius: 10,
-            background: active ? dy.accentSoft : dy.input,
-            color: active ? dy.accent : dy.muted,
-            border: `1px solid ${dy.border}`,
+            borderRadius: 4,
+            background: active ? "#ffffff12" : "transparent",
+            color: "inherit",
+            border: "1px solid transparent",
         }}>
         <DentayaIcon name={icon} size={17}/>
       </UiNode>
@@ -1436,8 +1352,8 @@ function Panel({ eyebrow, title, right, children, }: {
     children: React.ReactNode;
 }) {
     const { t: uiText } = useTranslation();
-    return (<UiNode as="section" style={s.panel}>
-      <UiNode as="div" style={s.sectionHead}>
+    return (<UiNode as="section" className="settings-parameter-panel" style={s.panel}>
+      <UiNode as="header" className="settings-panel-title" style={s.sectionHead}>
         <UiNode as="div">
           <UiNode as="p" style={s.eyebrow}>
             {eyebrow}
@@ -1448,10 +1364,9 @@ function Panel({ eyebrow, title, right, children, }: {
           </UiNode>
         </UiNode>
 
-        {right}
+        {right && <UiNode as="div" className="settings-panel-actions">{right}</UiNode>}
       </UiNode>
-
-      {children}
+      <UiNode as="div" className="settings-panel-body">{children}</UiNode>
     </UiNode>);
 }
 function ChoiceCard({ active, title, detail, onClick, }: {
@@ -1461,7 +1376,7 @@ function ChoiceCard({ active, title, detail, onClick, }: {
     onClick: () => void;
 }) {
     const { t: uiText } = useTranslation();
-    return (<UiNode data-dy-copy-stack as="button" type="button" className="settings-card" onClick={onClick} style={{
+    return (<UiNode data-dy-copy-stack as="button" type="button" className="settings-card" aria-pressed={active} onClick={onClick} style={{
             ...s.choiceCard,
             borderColor: active
                 ? dy.accent
@@ -1488,7 +1403,7 @@ function Segmented({ value, options, onChange, }: {
     onChange: (value: string) => void;
 }) {
     return (<UiNode as="div" style={s.segmented}>
-      {options.map(([id, label]) => (<UiNode as="button" key={id} type="button" onClick={() => onChange(id)} style={{
+      {options.map(([id, label]) => (<UiNode as="button" key={id} type="button" aria-pressed={value === id} onClick={() => onChange(id)} style={{
                 ...s.segment,
                 background: value === id
                     ? dy.accent
@@ -1506,7 +1421,7 @@ function SettingBlock({ title, description, children, }: {
     description: string;
     children: React.ReactNode;
 }) {
-    return (<UiNode as="div" style={s.settingBlock}>
+    return (<UiNode as="div" className="settings-setting-block" style={s.settingBlock}>
       <UiNode data-dy-copy-stack as="div">
         <UiNode as="strong">
           {title}
@@ -1592,7 +1507,7 @@ function NotificationToggle({ title, detail, value, onChange, }: {
     value: boolean;
     onChange: (value: boolean) => void;
 }) {
-    return (<UiNode as="label" style={s.toggleRow}>
+    return (<UiNode as="label" className="settings-toggle-row" style={s.toggleRow}>
       <UiNode data-dy-copy-stack as="div">
         <UiNode as="strong">
           {title}
@@ -1734,31 +1649,36 @@ function quickLinks(type: Org["org_type"] | undefined) {
 }
 const s: Record<string, CSSProperties> = {
     page: {
-        minHeight: "100vh",
+        minHeight: "100%",
         background: dy.bg,
         color: dy.text,
-        padding: "clamp(18px,3vw,42px)",
-        fontFamily: "Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",
-        fontSize: `calc(14px * ${dy.fontScale})`,
+        padding: 16,
+        fontFamily: dy.fontFamily,
+        fontSize: `calc(13px * ${dy.fontScale} * var(--dy-custom-text-scale,1))`,
     },
     center: {
         maxWidth: 700,
         margin: "100px auto",
         padding: 25,
         border: `1px solid ${dy.border}`,
-        borderRadius: dy.radius,
+        borderRadius: 5,
         background: dy.surface,
         backdropFilter: dy.backdrop,
         textAlign: "center",
     },
     header: {
-        maxWidth: 1380,
-        margin: "0 auto 20px",
+        minHeight: 43,
+        margin: 0,
+        padding: "8px 14px",
         display: "flex",
         justifyContent: "space-between",
-        alignItems: "flex-end",
-        gap: 20,
-        flexWrap: "wrap",
+        alignItems: "center",
+        gap: 16,
+        border: "1px solid var(--studio-border, var(--dy-border))",
+        borderRadius: "5px 5px 0 0",
+        color: "var(--studio-on-chrome, #fff)",
+        background: "linear-gradient(color-mix(in srgb, var(--studio-chrome, var(--dy-accent)) 92%, white), var(--studio-chrome, var(--dy-accent)))",
+        boxShadow: "inset 0 1px #ffffff24",
     },
     headerActions: {
         display: "flex",
@@ -1766,130 +1686,130 @@ const s: Record<string, CSSProperties> = {
         flexWrap: "wrap",
     },
     back: {
-        color: dy.muted,
+        color: "inherit",
         textDecoration: "none",
-        fontSize: 13,
+        fontSize: 12,
+        opacity: .9,
+        whiteSpace: "nowrap",
     },
     eyebrow: {
-        color: dy.accent,
-        fontWeight: 900,
-        letterSpacing: ".17em",
-        fontSize: 13,
-        margin: "12px 0 6px",
+        color: "inherit",
+        fontWeight: 600,
+        letterSpacing: ".08em",
+        fontSize: 10,
+        opacity: .78,
+        margin: 0,
     },
     title: {
-        fontSize: "clamp(38px,5vw,62px)",
-        lineHeight: 0.98,
-        letterSpacing: "-.05em",
-        margin: "0 0 10px",
-    },
-    sub: {
-        color: dy.muted,
-        maxWidth: 820,
-        lineHeight: 1.65,
+        fontSize: 16,
+        fontWeight: 600,
+        lineHeight: 1.3,
+        letterSpacing: 0,
         margin: 0,
-        fontSize: 14,
     },
     primary: {
-        minHeight: 42,
+        minHeight: 36,
         padding: "0 14px",
-        border: 0,
-        borderRadius: 11,
-        background: dy.accent,
+        borderRadius: 4,
+        background: "linear-gradient(color-mix(in srgb, var(--dy-accent) 87%, white), var(--dy-accent))",
         color: dy.accentContrast,
-        fontWeight: 900,
+        boxShadow: "inset 0 1px #ffffff38, 0 1px 2px #21192c20",
+        border: "1px solid color-mix(in srgb, var(--dy-accent) 75%, #30283e)",
+        fontWeight: 650,
         cursor: "pointer",
         textDecoration: "none",
     },
     secondary: {
-        minHeight: 40,
+        minHeight: 36,
         display: "inline-grid",
         placeItems: "center",
         padding: "0 13px",
         border: `1px solid ${dy.border}`,
-        borderRadius: 11,
-        background: dy.surface2,
+        borderRadius: 4,
+        background: "linear-gradient(var(--studio-button-top, var(--dy-surface)), var(--studio-button-bottom, var(--dy-surface2)))",
         color: dy.text,
-        fontWeight: 800,
+        boxShadow: "inset 0 1px #ffffff80, 0 1px 2px #21192c12",
+        fontWeight: 600,
         textDecoration: "none",
     },
     secondaryButton: {
-        minHeight: 42,
+        minHeight: 36,
         padding: "0 14px",
         border: `1px solid ${dy.border}`,
-        borderRadius: 11,
-        background: dy.surface2,
+        borderRadius: 4,
+        background: "linear-gradient(var(--studio-button-top, var(--dy-surface)), var(--studio-button-bottom, var(--dy-surface2)))",
         color: dy.text,
-        fontWeight: 850,
+        boxShadow: "inset 0 1px #ffffff80, 0 1px 2px #21192c12",
+        fontWeight: 600,
         cursor: "pointer",
     },
     notice: {
-        maxWidth: 1380,
-        margin: "0 auto 14px",
+        maxWidth: "none",
+        margin: "0 0 12px",
         padding: 12,
         border: `1px solid ${dy.border}`,
-        borderRadius: 12,
+        borderRadius: 4,
         background: dy.surface2,
         color: dy.muted,
     },
     shell: {
-        maxWidth: 1380,
+        maxWidth: "none",
         margin: "0 auto",
         display: "grid",
-        gridTemplateColumns: "220px minmax(0,1fr)",
-        gap: 14,
+        gridTemplateColumns: "210px minmax(0,1fr)",
+        gap: 12,
         alignItems: "start",
     },
     nav: {
         position: "sticky",
-        top: 14,
-        padding: 8,
+        top: 0,
+        padding: 7,
         display: "grid",
-        gap: 4,
-        border: `1px solid ${dy.border}`,
-        borderRadius: dy.radius,
-        background: dy.surface,
-        backdropFilter: dy.backdrop,
+        gap: 3,
+        border: "1px solid #211d29",
+        borderRadius: 5,
+        background: "linear-gradient(90deg, #2b2833, #35313d)",
+        color: "#e6e0ec",
+        boxShadow: "inset 0 1px #ffffff0d, 0 1px 2px #21192c16",
     },
     navButton: {
-        minHeight: 58,
+        minHeight: 52,
         display: "grid",
-        gridTemplateColumns: "34px minmax(0,1fr)",
+        gridTemplateColumns: "28px minmax(0,1fr)",
         alignItems: "center",
-        gap: 10,
+        gap: 8,
         minWidth: 0,
-        padding: "10px 11px",
+        padding: "7px 8px",
         textAlign: "left",
         border: "1px solid transparent",
-        borderRadius: 11,
+        borderRadius: 4,
         background: "transparent",
-        color: dy.muted,
+        color: "#ded8e5",
         cursor: "pointer",
     },
     navButtonActive: {
-        borderColor: dy.border,
-        background: dy.accentSoft,
-        color: dy.text,
+        borderColor: "#c9b9db55",
+        background: "linear-gradient(color-mix(in srgb, var(--dy-accent) 65%, #6a5a77), color-mix(in srgb, var(--dy-accent) 60%, #372e43))",
+        color: "#fff",
+        boxShadow: "inset 0 1px #ffffff20, 0 1px 2px #0003",
     },
     guideLink: {
-        padding: "12px 13px",
+        padding: "10px 8px",
         display: "grid",
         gap: 3,
-        border: `1px solid ${dy.border}`,
-        borderRadius: 12,
-        background: dy.surface2,
-        color: dy.text,
+        borderTop: "1px solid #ffffff15",
+        color: "#e1dbe9",
         textDecoration: "none",
-        fontSize: 13,
+        fontSize: 12,
     },
     navIdentity: {
-        marginTop: 7,
-        padding: 10,
+        marginTop: 4,
+        padding: "11px 8px 6px",
         display: "grid",
-        gap: 3,
-        borderTop: `1px solid ${dy.border}`,
-        color: dy.muted,
-        fontSize: 13,
+        gap: 4,
+        borderTop: "1px solid #ffffff18",
+        color: "#c2bbc9",
+        fontSize: 11,
     },
     content: {
         minWidth: 0,
@@ -1897,31 +1817,40 @@ const s: Record<string, CSSProperties> = {
         gap: 12,
     },
     panel: {
-        padding: 18,
-        border: `1px solid ${dy.border}`,
-        borderRadius: dy.radius,
-        background: dy.surface,
-        backdropFilter: dy.backdrop,
-        boxShadow: `0 18px 55px ${dy.shadow}`,
+        minWidth: 0,
+        padding: 0,
+        border: "1px solid var(--studio-border, var(--dy-border))",
+        borderRadius: 5,
+        background: "var(--studio-panel, var(--dy-surface))",
+        boxShadow: "inset 0 1px #ffffff55, 0 2px 4px #21192c0b",
+        overflow: "hidden",
     },
     sectionHead: {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        gap: 10,
-        marginBottom: 11,
+        gap: 12,
+        minHeight: 38,
+        padding: "8px 13px",
+        borderBottom: "1px solid #21192c26",
+        background: "linear-gradient(color-mix(in srgb, var(--studio-chrome, var(--dy-accent)) 90%, white), var(--studio-chrome, var(--dy-accent)))",
+        color: "var(--studio-on-chrome, #fff)",
+        boxShadow: "inset 0 1px #ffffff20",
     },
     h2: {
         margin: 0,
-        fontSize: 22,
+        fontSize: 13,
+        fontWeight: 600,
+        lineHeight: 1.35,
     },
     tag: {
-        padding: "5px 8px",
-        borderRadius: 999,
-        background: dy.accentSoft,
-        color: dy.accent,
-        fontSize: 13,
-        fontWeight: 900,
+        padding: "3px 6px",
+        border: "1px solid #ffffff30",
+        borderRadius: 3,
+        background: "#ffffff12",
+        color: "inherit",
+        fontSize: 11,
+        fontWeight: 500,
     },
     themes: {
         display: "grid",
@@ -1933,7 +1862,7 @@ const s: Record<string, CSSProperties> = {
         textAlign: "left",
         padding: 11,
         border: "1px solid",
-        borderRadius: 13,
+        borderRadius: 4,
         color: dy.text,
         cursor: "pointer",
         display: "grid",
@@ -1961,20 +1890,20 @@ const s: Record<string, CSSProperties> = {
         gap: 8,
     },
     choiceCard: {
-        minHeight: 90,
+        minHeight: 64,
         padding: 12,
         display: "grid",
         gap: 6,
         textAlign: "left",
         border: "1px solid",
-        borderRadius: 13,
+        borderRadius: 4,
         color: dy.text,
         cursor: "pointer",
     },
     previewCard: {
         padding: 14,
         border: `1px solid ${dy.border}`,
-        borderRadius: dy.radius,
+        borderRadius: 5,
         background: dy.surface2,
         display: "grid",
         gap: 9,
@@ -1987,18 +1916,18 @@ const s: Record<string, CSSProperties> = {
     fakeAvatar: {
         width: 40,
         height: 40,
-        borderRadius: 13,
+        borderRadius: 4,
         display: "grid",
         placeItems: "center",
         background: dy.accentSoft,
         color: dy.accent,
-        fontWeight: 900,
+        fontWeight: 650,
     },
     previewMetric: {
         display: "flex",
         justifyContent: "space-between",
         padding: 9,
-        borderRadius: 10,
+        borderRadius: 4,
         background: dy.input,
     },
     customAccentRow: {
@@ -2014,7 +1943,7 @@ const s: Record<string, CSSProperties> = {
         gap: 12,
         padding: 12,
         border: `1px solid ${dy.border}`,
-        borderRadius: 13,
+        borderRadius: 4,
         background: dy.surface2,
         color: dy.text,
     },
@@ -2023,7 +1952,7 @@ const s: Record<string, CSSProperties> = {
         height: 48,
         padding: 2,
         border: `1px solid ${dy.border}`,
-        borderRadius: 12,
+        borderRadius: 4,
         background: dy.input,
         cursor: "pointer",
     },
@@ -2031,7 +1960,7 @@ const s: Record<string, CSSProperties> = {
         minHeight: 72,
         padding: 12,
         border: `1px solid ${dy.border}`,
-        borderRadius: 13,
+        borderRadius: 4,
         background: dy.surface2,
         display: "flex",
         justifyContent: "space-between",
@@ -2039,7 +1968,7 @@ const s: Record<string, CSSProperties> = {
         gap: 12,
     },
     settingBlock: {
-        minHeight: 76,
+        minHeight: 60,
         display: "grid",
         gridTemplateColumns: "minmax(0,1fr) auto",
         alignItems: "center",
@@ -2056,15 +1985,15 @@ const s: Record<string, CSSProperties> = {
         minHeight: 36,
         padding: "0 11px",
         border: `1px solid ${dy.border}`,
-        borderRadius: 10,
+        borderRadius: 4,
         cursor: "pointer",
-        fontWeight: 800,
+        fontWeight: 600,
     },
     toggleRow: {
-        minHeight: 76,
+        minHeight: 60,
         padding: 12,
         border: `1px solid ${dy.border}`,
-        borderRadius: 13,
+        borderRadius: 4,
         background: dy.surface2,
         display: "flex",
         justifyContent: "space-between",
@@ -2077,13 +2006,13 @@ const s: Record<string, CSSProperties> = {
         gap: 8,
     },
     workspaceCard: {
-        minHeight: 135,
+        minHeight: 94,
         padding: 13,
         display: "grid",
         alignContent: "space-between",
         gap: 8,
         border: "1px solid",
-        borderRadius: 13,
+        borderRadius: 4,
         background: dy.surface2,
         color: dy.text,
         textDecoration: "none",
@@ -2094,13 +2023,13 @@ const s: Record<string, CSSProperties> = {
         gap: 7,
     },
     quickLink: {
-        minHeight: 82,
+        minHeight: 58,
         padding: 11,
         display: "grid",
         alignContent: "space-between",
         gap: 7,
         border: `1px solid ${dy.border}`,
-        borderRadius: 12,
+        borderRadius: 4,
         background: dy.surface2,
         color: dy.text,
         textDecoration: "none",
@@ -2111,11 +2040,11 @@ const s: Record<string, CSSProperties> = {
         gap: 8,
     },
     identity: {
-        minHeight: 84,
+        minHeight: 62,
         padding: 11,
         display: "grid",
         gap: 5,
-        borderRadius: 12,
+        borderRadius: 4,
         border: `1px solid ${dy.border}`,
         background: dy.surface2,
         color: dy.muted,
@@ -2132,8 +2061,8 @@ const s: Record<string, CSSProperties> = {
         color: dy.muted,
     },
     input: {
-        minHeight: 42,
-        borderRadius: 11,
+        minHeight: 36,
+        borderRadius: 4,
         border: `1px solid ${dy.border}`,
         background: dy.input,
         color: dy.text,
@@ -2150,7 +2079,7 @@ const s: Record<string, CSSProperties> = {
         gap: 7,
         alignItems: "center",
         padding: "8px 10px",
-        borderRadius: 10,
+        borderRadius: 4,
         border: `1px solid ${dy.border}`,
         background: dy.surface2,
     },
@@ -2168,7 +2097,7 @@ const s: Record<string, CSSProperties> = {
         display: "grid",
         gap: 4,
         border: `1px solid ${dy.border}`,
-        borderRadius: 11,
+        borderRadius: 4,
         background: dy.accentSoft,
         color: dy.text,
         fontSize: 13,
@@ -2176,12 +2105,12 @@ const s: Record<string, CSSProperties> = {
     },
     tagMuted: {
         padding: "6px 9px",
-        borderRadius: 999,
+        borderRadius: 3,
         border: `1px solid ${dy.border}`,
         background: dy.surface2,
         color: dy.muted,
         fontSize: 12,
-        fontWeight: 850,
+        fontWeight: 600,
     },
     panelText: {
         margin: 0,
@@ -2193,14 +2122,14 @@ const s: Record<string, CSSProperties> = {
         gap: 7,
     },
     systemRow: {
-        minHeight: 66,
+        minHeight: 56,
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
         gap: 12,
         padding: "10px 11px",
         border: `1px solid ${dy.border}`,
-        borderRadius: 11,
+        borderRadius: 4,
         background: dy.surface2,
     },
 };

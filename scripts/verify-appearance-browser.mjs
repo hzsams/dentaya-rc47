@@ -33,6 +33,9 @@ try {
   });
   await page.route('**/api/health',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({status:'ready'})}));
   await page.addInitScript(({userId})=>{
+    document.addEventListener('DOMContentLoaded',()=>{
+      const style=document.createElement('style');style.textContent='nextjs-portal{visibility:hidden!important}';document.head.appendChild(style);
+    });
     const payload=btoa(JSON.stringify({sub:userId,exp:Math.floor(Date.now()/1000)+86400,aud:'authenticated',role:'authenticated'}));
     localStorage.setItem('sb-127-auth-token',JSON.stringify({access_token:`eyJhbGciOiJIUzI1NiJ9.${payload}.test`,refresh_token:'test',token_type:'bearer',expires_in:86400,expires_at:Math.floor(Date.now()/1000)+86400,user:{id:userId,email:'palette@example.invalid',aud:'authenticated',role:'authenticated',app_metadata:{},user_metadata:{},created_at:'2026-01-01T00:00:00Z'}}));
     if(!localStorage.getItem('palette-test-seeded')){
@@ -68,7 +71,7 @@ try {
   const locales=['en','de','fr','es','it','pt','nl','pl','ro','ru','uk','ar','zh','ja','sv','da','el','cs','ko','bg','hr','et','fi','hu','ga','lv','lt','mt','sk','sl','no','is','sr','bs','sq','mk','az','ka','hy','he','fa','hi','bn','id','vi','tr'];
   for(const locale of locales){await page.locator('.language-select--compact select').selectOption(locale);await page.waitForFunction(locale=>document.documentElement.lang===locale,locale);assert.equal(await select().inputValue(),'style:retro');await expectColors(['#e7dfcc','#fff5df','#8e3d25']);languages.push(locale);}
   const download=page.waitForEvent('download');await page.locator('.customize-panel:visible').getByRole('button',{name:'Ek ayarları dışa aktar',exact:true}).click();const saved=JSON.parse(await fs.readFile(await (await download).path(),'utf8'));assert.equal(saved.version,2);assert.equal(saved.customization.appearancePreset,'style:retro');assert.ok(saved.theme);
-  await page.getByRole('button',{name:'Görünümü Sıfırla',exact:true}).click();await expectColors(['#10171e','#18232d','#a6d4c2']);
+  await page.getByRole('button',{name:'Görünümü Sıfırla',exact:true}).click();await expectColors(['#ebe9f0','#ffffff','#72568f']);
   await page.locator('.customize-panel:visible input[type=file]').setInputFiles({name:'palette.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(saved))});await expectColors(['#e7dfcc','#fff5df','#8e3d25']);assert.equal(await select().inputValue(),'style:retro');
   const old={version:1,logo:saved.logo,customization:{...saved.customization,appearancePreset:null,style:'old-money',background:'#ede9de',panel:'#faf7ef',accent:'#294e3d',font:'classic'}};
   await page.locator('.customize-panel:visible input[type=file]').setInputFiles({name:'old-palette.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(old))});await expectColors(['#ede9de','#faf7ef','#294e3d']);assert.equal(await select().inputValue(),'style:old-money');

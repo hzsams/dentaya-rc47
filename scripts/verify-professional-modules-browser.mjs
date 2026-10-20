@@ -66,6 +66,9 @@ async function installBackend(page) {
     await route.fulfill({ status, headers: { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'content-type': 'application/json' }, body: JSON.stringify(result) });
   });
   await page.addInitScript(({ user }) => {
+    document.addEventListener('DOMContentLoaded', () => {
+      const style = document.createElement('style'); style.textContent = 'nextjs-portal{visibility:hidden!important}'; document.head.appendChild(style);
+    });
     const exp = Math.floor(Date.now() / 1000) + 86400, payload = btoa(JSON.stringify({ sub: user.id, exp, aud: 'authenticated', role: 'authenticated' }));
     localStorage.setItem('sb-127-auth-token', JSON.stringify({ access_token: `eyJhbGciOiJIUzI1NiJ9.${payload}.synthetic`, refresh_token: 'synthetic', token_type: 'bearer', expires_in: 86400, expires_at: exp, user }));
     localStorage.setItem('dentaya:locale:v1', 'tr');

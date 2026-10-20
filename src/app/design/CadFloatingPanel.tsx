@@ -6,7 +6,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 're
 const KEY = 'dentaya:cad-floating-panel-v3';
 export default function CadFloatingPanel({ visible, onClose, children, title = 'Tasarım araçları', revealKey }: { visible: boolean; onClose: () => void; children: ReactNode; title?: string; revealKey?: string }) {
   const { locale } = useTranslation();
-  const dockLabel = locale === 'tr' ? 'Paneli sağa sabitle' : 'Dock panel on the right';
+  const dockLabel = locale === 'tr' ? 'Paneli sola sabitle' : 'Dock panel on the left';
   const ref = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
   const [docked, setDocked] = useState(true);
@@ -16,11 +16,18 @@ export default function CadFloatingPanel({ visible, onClose, children, title = '
   useLayoutEffect(() => { positionRef.current = position; dockedRef.current = docked; }, [position, docked]);
   const drag = useRef<{ pointer: number; x: number; y: number; left: number; top: number } | null>(null);
   function topBoundary() { return Math.max(64, (document.querySelector('.cad-viewport-frame')?.getBoundingClientRect().top ?? 86) + 8); }
+  function rightBoundary() {
+    const rail = document.querySelector('.cad-main-header')?.getBoundingClientRect();
+    return rail && rail.width > 0 ? Math.min(window.innerWidth, rail.left) : window.innerWidth;
+  }
   function clamp(x: number, y: number) {
-    const width = ref.current?.offsetWidth || Math.min(320, window.innerWidth - 16);
+    const right = rightBoundary();
+    const width = Math.min(ref.current?.offsetWidth || 320, Math.max(0, right - 20));
     const top = topBoundary();
-    const height = Math.min(ref.current?.offsetHeight || 420, window.innerHeight - top - 38);
-    return { x: Math.max(8, Math.min(window.innerWidth - width - 12, x)), y: Math.max(top, Math.min(Math.max(top, window.innerHeight - height - 38), y)) };
+    const available = Math.max(0, window.innerHeight - top - 38);
+    const minimum = ref.current?.querySelector('.cad-floating-body') ? Math.min(240, available) : 0;
+    const height = Math.min(Math.max(ref.current?.offsetHeight || 420, minimum), available);
+    return { x: Math.max(8, Math.min(right - width - 12, x)), y: Math.max(top, Math.min(Math.max(top, window.innerHeight - height - 38), y)) };
   }
   function initial() { return clamp(window.innerWidth - Math.min(320, window.innerWidth - 16) - 20, topBoundary()); }
   useEffect(() => { setCollapsed(false); drag.current = null; }, [revealKey]);
@@ -51,7 +58,7 @@ export default function CadFloatingPanel({ visible, onClose, children, title = '
   function save(p: { x: number; y: number }) { setDocked(false); setPosition(p); try { localStorage.setItem(KEY, JSON.stringify(p)); } catch {} }
   function endDrag() { if (drag.current && positionRef.current) save(positionRef.current); drag.current = null; }
   if (!visible) return null;
-  return <UiNode as="section" ref={ref} className="cad-floating-panel" data-docked={docked} aria-label="Tasarım araç paneli" style={docked ? undefined : { left: position?.x ?? 'calc(100vw - 340px)', top: position?.y ?? 94 }}>
+  return <UiNode as="section" ref={ref} className="cad-floating-panel" data-docked={docked} aria-label="Tasarım araç paneli" style={docked ? undefined : { left: position?.x ?? 'calc(100vw - 340px)', top: position?.y ?? 94, maxWidth: 'calc(100vw - var(--cad-command-width, 76px) - 20px)', maxHeight: `calc(100dvh - ${(position?.y ?? 94) + 38}px)` }}>
     <UiNode as="header" className="cad-panel-header">
       <UiNode as="button" className="cad-panel-handle" type="button" aria-label="Araç panelini taşı" title="Sürükle veya yön tuşlarıyla taşı" onPointerDown={e => {
         if (e.button !== 0 || !ref.current) return;
