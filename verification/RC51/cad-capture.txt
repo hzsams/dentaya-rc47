@@ -1,0 +1,7 @@
+{
+  "pass": true,
+  "realWebGL": true,
+  "source": "current RC51",
+  "capture": "expert panels; natural isolated restoration; fit camera; rendered frames after resize",
+  "backend": "intercepted synthetic fixture; no production data"
+}

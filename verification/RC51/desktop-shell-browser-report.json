@@ -1,0 +1,1281 @@
+{
+  "pass": true,
+  "routes": [
+    "/workspace",
+    "/patients",
+    "/appointments",
+    "/finance",
+    "/messages",
+    "/ai"
+  ],
+  "desktopViewports": [
+    "1366×768",
+    "1440×1000"
+  ],
+  "mobileViewport": "390×844",
+  "checks": [
+    "unauthenticated workspace exposes local CAD and opens local AYA",
+    "Alt+M module menu and search; single navigation owner; Ctrl+K search and active descendant; modal Escape/focus restoration; Ctrl+, local preferences",
+    "network status follows real browser online/offline events without a connected-backend claim",
+    "real patient search/create entry, appointment planner/form, finance record controls, bounded message composer, local AYA calculation",
+    "persisted reduced motion; light and dark presets; Arabic RTL desktop and mobile"
+  ],
+  "samples": 22,
+  "screenshots": "/workspace/dentaya-desktop-ui-validation",
+  "backend": "synthetic intercepted HTTP only; no live clinic/backend verification",
+  "automaticReadReceiptsIntercepted": 1,
+  "automaticOnboardingSyncIntercepted": 0,
+  "cadGeometryLifecycle": "separate verify-cad-daily-browser test",
+  "pageErrors": 0,
+  "layoutSamples": [
+    {
+      "route": "/workspace-guest",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "width": 1440,
+      "height": 1000,
+      "documentWidth": 1440,
+      "documentHeight": 1000,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 1440,
+        "bottom": 48,
+        "width": 1440,
+        "height": 48
+      },
+      "tabs": {
+        "left": 208,
+        "top": 0,
+        "right": 1241.046875,
+        "bottom": 47,
+        "width": 1033.046875,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 976,
+        "right": 1440,
+        "bottom": 1000,
+        "width": 1440,
+        "height": 24
+      },
+      "content": {
+        "left": 208,
+        "top": 48,
+        "right": 1440,
+        "bottom": 976,
+        "width": 1232,
+        "height": 928
+      },
+      "navigation": {
+        "left": 0,
+        "top": 48,
+        "right": 208,
+        "bottom": 976,
+        "width": 208,
+        "height": 928
+      },
+      "module": {
+        "left": 208,
+        "top": 48,
+        "right": 1440,
+        "bottom": 976,
+        "width": 1232,
+        "height": 928
+      }
+    },
+    {
+      "route": "/workspace",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "width": 1366,
+      "height": 768,
+      "documentWidth": 1366,
+      "documentHeight": 768,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 1366,
+        "bottom": 48,
+        "width": 1366,
+        "height": 48
+      },
+      "tabs": {
+        "left": 208,
+        "top": 0,
+        "right": 1167.046875,
+        "bottom": 47,
+        "width": 959.046875,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 744,
+        "right": 1366,
+        "bottom": 768,
+        "width": 1366,
+        "height": 24
+      },
+      "content": {
+        "left": 208,
+        "top": 48,
+        "right": 1366,
+        "bottom": 744,
+        "width": 1158,
+        "height": 696
+      },
+      "navigation": {
+        "left": 0,
+        "top": 48,
+        "right": 208,
+        "bottom": 744,
+        "width": 208,
+        "height": 696
+      },
+      "module": {
+        "left": 208,
+        "top": 48,
+        "right": 1366,
+        "bottom": 744,
+        "width": 1158,
+        "height": 696
+      }
+    },
+    {
+      "route": "/workspace",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "width": 1440,
+      "height": 1000,
+      "documentWidth": 1440,
+      "documentHeight": 1000,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 1440,
+        "bottom": 48,
+        "width": 1440,
+        "height": 48
+      },
+      "tabs": {
+        "left": 208,
+        "top": 0,
+        "right": 1241.046875,
+        "bottom": 47,
+        "width": 1033.046875,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 976,
+        "right": 1440,
+        "bottom": 1000,
+        "width": 1440,
+        "height": 24
+      },
+      "content": {
+        "left": 208,
+        "top": 48,
+        "right": 1440,
+        "bottom": 976,
+        "width": 1232,
+        "height": 928
+      },
+      "navigation": {
+        "left": 0,
+        "top": 48,
+        "right": 208,
+        "bottom": 976,
+        "width": 208,
+        "height": 928
+      },
+      "module": {
+        "left": 208,
+        "top": 48,
+        "right": 1440,
+        "bottom": 976,
+        "width": 1232,
+        "height": 928
+      }
+    },
+    {
+      "route": "/workspace",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "width": 390,
+      "height": 844,
+      "documentWidth": 390,
+      "documentHeight": 844,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 390,
+        "bottom": 48,
+        "width": 390,
+        "height": 48
+      },
+      "tabs": {
+        "left": 133,
+        "top": 0,
+        "right": 321,
+        "bottom": 47,
+        "width": 188,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 820,
+        "right": 390,
+        "bottom": 844,
+        "width": 390,
+        "height": 24
+      },
+      "content": {
+        "left": 0,
+        "top": 48,
+        "right": 390,
+        "bottom": 820,
+        "width": 390,
+        "height": 772
+      },
+      "navigation": null,
+      "module": {
+        "left": 0,
+        "top": 48,
+        "right": 390,
+        "bottom": 820,
+        "width": 390,
+        "height": 772
+      }
+    },
+    {
+      "route": "/patients",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "width": 1366,
+      "height": 768,
+      "documentWidth": 1366,
+      "documentHeight": 768,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 1366,
+        "bottom": 48,
+        "width": 1366,
+        "height": 48
+      },
+      "tabs": {
+        "left": 208,
+        "top": 0,
+        "right": 1167.046875,
+        "bottom": 47,
+        "width": 959.046875,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 744,
+        "right": 1366,
+        "bottom": 768,
+        "width": 1366,
+        "height": 24
+      },
+      "content": {
+        "left": 208,
+        "top": 48,
+        "right": 1366,
+        "bottom": 744,
+        "width": 1158,
+        "height": 696
+      },
+      "navigation": {
+        "left": 0,
+        "top": 48,
+        "right": 208,
+        "bottom": 744,
+        "width": 208,
+        "height": 696
+      },
+      "module": {
+        "left": 208,
+        "top": 48,
+        "right": 1366,
+        "bottom": 744,
+        "width": 1158,
+        "height": 696
+      }
+    },
+    {
+      "route": "/patients",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "width": 1440,
+      "height": 1000,
+      "documentWidth": 1440,
+      "documentHeight": 1000,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 1440,
+        "bottom": 48,
+        "width": 1440,
+        "height": 48
+      },
+      "tabs": {
+        "left": 208,
+        "top": 0,
+        "right": 1241.046875,
+        "bottom": 47,
+        "width": 1033.046875,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 976,
+        "right": 1440,
+        "bottom": 1000,
+        "width": 1440,
+        "height": 24
+      },
+      "content": {
+        "left": 208,
+        "top": 48,
+        "right": 1440,
+        "bottom": 976,
+        "width": 1232,
+        "height": 928
+      },
+      "navigation": {
+        "left": 0,
+        "top": 48,
+        "right": 208,
+        "bottom": 976,
+        "width": 208,
+        "height": 928
+      },
+      "module": {
+        "left": 208,
+        "top": 48,
+        "right": 1440,
+        "bottom": 976,
+        "width": 1232,
+        "height": 928
+      }
+    },
+    {
+      "route": "/patients",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "width": 390,
+      "height": 844,
+      "documentWidth": 390,
+      "documentHeight": 844,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 390,
+        "bottom": 48,
+        "width": 390,
+        "height": 48
+      },
+      "tabs": {
+        "left": 133,
+        "top": 0,
+        "right": 321,
+        "bottom": 47,
+        "width": 188,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 820,
+        "right": 390,
+        "bottom": 844,
+        "width": 390,
+        "height": 24
+      },
+      "content": {
+        "left": 0,
+        "top": 48,
+        "right": 390,
+        "bottom": 820,
+        "width": 390,
+        "height": 772
+      },
+      "navigation": null,
+      "module": {
+        "left": 0,
+        "top": 48,
+        "right": 390,
+        "bottom": 820,
+        "width": 390,
+        "height": 772
+      }
+    },
+    {
+      "route": "/appointments",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "width": 1366,
+      "height": 768,
+      "documentWidth": 1366,
+      "documentHeight": 768,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 1366,
+        "bottom": 48,
+        "width": 1366,
+        "height": 48
+      },
+      "tabs": {
+        "left": 208,
+        "top": 0,
+        "right": 1167.046875,
+        "bottom": 47,
+        "width": 959.046875,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 744,
+        "right": 1366,
+        "bottom": 768,
+        "width": 1366,
+        "height": 24
+      },
+      "content": {
+        "left": 208,
+        "top": 48,
+        "right": 1366,
+        "bottom": 744,
+        "width": 1158,
+        "height": 696
+      },
+      "navigation": {
+        "left": 0,
+        "top": 48,
+        "right": 208,
+        "bottom": 744,
+        "width": 208,
+        "height": 696
+      },
+      "module": {
+        "left": 208,
+        "top": 48,
+        "right": 1366,
+        "bottom": 744,
+        "width": 1158,
+        "height": 696
+      }
+    },
+    {
+      "route": "/appointments",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "width": 1440,
+      "height": 1000,
+      "documentWidth": 1440,
+      "documentHeight": 1000,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 1440,
+        "bottom": 48,
+        "width": 1440,
+        "height": 48
+      },
+      "tabs": {
+        "left": 208,
+        "top": 0,
+        "right": 1241.046875,
+        "bottom": 47,
+        "width": 1033.046875,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 976,
+        "right": 1440,
+        "bottom": 1000,
+        "width": 1440,
+        "height": 24
+      },
+      "content": {
+        "left": 208,
+        "top": 48,
+        "right": 1440,
+        "bottom": 976,
+        "width": 1232,
+        "height": 928
+      },
+      "navigation": {
+        "left": 0,
+        "top": 48,
+        "right": 208,
+        "bottom": 976,
+        "width": 208,
+        "height": 928
+      },
+      "module": {
+        "left": 208,
+        "top": 48,
+        "right": 1440,
+        "bottom": 976,
+        "width": 1232,
+        "height": 928
+      }
+    },
+    {
+      "route": "/appointments",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "width": 390,
+      "height": 844,
+      "documentWidth": 390,
+      "documentHeight": 844,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 390,
+        "bottom": 48,
+        "width": 390,
+        "height": 48
+      },
+      "tabs": {
+        "left": 133,
+        "top": 0,
+        "right": 321,
+        "bottom": 47,
+        "width": 188,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 820,
+        "right": 390,
+        "bottom": 844,
+        "width": 390,
+        "height": 24
+      },
+      "content": {
+        "left": 0,
+        "top": 48,
+        "right": 390,
+        "bottom": 820,
+        "width": 390,
+        "height": 772
+      },
+      "navigation": null,
+      "module": {
+        "left": 0,
+        "top": 48,
+        "right": 390,
+        "bottom": 820,
+        "width": 390,
+        "height": 772
+      }
+    },
+    {
+      "route": "/finance",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "width": 1366,
+      "height": 768,
+      "documentWidth": 1366,
+      "documentHeight": 768,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 1366,
+        "bottom": 48,
+        "width": 1366,
+        "height": 48
+      },
+      "tabs": {
+        "left": 208,
+        "top": 0,
+        "right": 1167.046875,
+        "bottom": 47,
+        "width": 959.046875,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 744,
+        "right": 1366,
+        "bottom": 768,
+        "width": 1366,
+        "height": 24
+      },
+      "content": {
+        "left": 208,
+        "top": 48,
+        "right": 1366,
+        "bottom": 744,
+        "width": 1158,
+        "height": 696
+      },
+      "navigation": {
+        "left": 0,
+        "top": 48,
+        "right": 208,
+        "bottom": 744,
+        "width": 208,
+        "height": 696
+      },
+      "module": {
+        "left": 208,
+        "top": 48,
+        "right": 1366,
+        "bottom": 744,
+        "width": 1158,
+        "height": 696
+      }
+    },
+    {
+      "route": "/finance",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "width": 1440,
+      "height": 1000,
+      "documentWidth": 1440,
+      "documentHeight": 1000,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 1440,
+        "bottom": 48,
+        "width": 1440,
+        "height": 48
+      },
+      "tabs": {
+        "left": 208,
+        "top": 0,
+        "right": 1241.046875,
+        "bottom": 47,
+        "width": 1033.046875,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 976,
+        "right": 1440,
+        "bottom": 1000,
+        "width": 1440,
+        "height": 24
+      },
+      "content": {
+        "left": 208,
+        "top": 48,
+        "right": 1440,
+        "bottom": 976,
+        "width": 1232,
+        "height": 928
+      },
+      "navigation": {
+        "left": 0,
+        "top": 48,
+        "right": 208,
+        "bottom": 976,
+        "width": 208,
+        "height": 928
+      },
+      "module": {
+        "left": 208,
+        "top": 48,
+        "right": 1440,
+        "bottom": 976,
+        "width": 1232,
+        "height": 928
+      }
+    },
+    {
+      "route": "/finance",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "width": 390,
+      "height": 844,
+      "documentWidth": 390,
+      "documentHeight": 844,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 390,
+        "bottom": 48,
+        "width": 390,
+        "height": 48
+      },
+      "tabs": {
+        "left": 133,
+        "top": 0,
+        "right": 321,
+        "bottom": 47,
+        "width": 188,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 820,
+        "right": 390,
+        "bottom": 844,
+        "width": 390,
+        "height": 24
+      },
+      "content": {
+        "left": 0,
+        "top": 48,
+        "right": 390,
+        "bottom": 820,
+        "width": 390,
+        "height": 772
+      },
+      "navigation": null,
+      "module": {
+        "left": 0,
+        "top": 48,
+        "right": 390,
+        "bottom": 820,
+        "width": 390,
+        "height": 772
+      }
+    },
+    {
+      "route": "/messages",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "width": 1366,
+      "height": 768,
+      "documentWidth": 1366,
+      "documentHeight": 768,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 1366,
+        "bottom": 48,
+        "width": 1366,
+        "height": 48
+      },
+      "tabs": {
+        "left": 208,
+        "top": 0,
+        "right": 1167.046875,
+        "bottom": 47,
+        "width": 959.046875,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 744,
+        "right": 1366,
+        "bottom": 768,
+        "width": 1366,
+        "height": 24
+      },
+      "content": {
+        "left": 208,
+        "top": 48,
+        "right": 1366,
+        "bottom": 744,
+        "width": 1158,
+        "height": 696
+      },
+      "navigation": {
+        "left": 0,
+        "top": 48,
+        "right": 208,
+        "bottom": 744,
+        "width": 208,
+        "height": 696
+      },
+      "module": {
+        "left": 208,
+        "top": 48,
+        "right": 1366,
+        "bottom": 744,
+        "width": 1158,
+        "height": 696
+      }
+    },
+    {
+      "route": "/messages",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "width": 1440,
+      "height": 1000,
+      "documentWidth": 1440,
+      "documentHeight": 1000,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 1440,
+        "bottom": 48,
+        "width": 1440,
+        "height": 48
+      },
+      "tabs": {
+        "left": 208,
+        "top": 0,
+        "right": 1241.046875,
+        "bottom": 47,
+        "width": 1033.046875,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 976,
+        "right": 1440,
+        "bottom": 1000,
+        "width": 1440,
+        "height": 24
+      },
+      "content": {
+        "left": 208,
+        "top": 48,
+        "right": 1440,
+        "bottom": 976,
+        "width": 1232,
+        "height": 928
+      },
+      "navigation": {
+        "left": 0,
+        "top": 48,
+        "right": 208,
+        "bottom": 976,
+        "width": 208,
+        "height": 928
+      },
+      "module": {
+        "left": 208,
+        "top": 48,
+        "right": 1440,
+        "bottom": 976,
+        "width": 1232,
+        "height": 928
+      }
+    },
+    {
+      "route": "/messages",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "width": 390,
+      "height": 844,
+      "documentWidth": 390,
+      "documentHeight": 844,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 390,
+        "bottom": 48,
+        "width": 390,
+        "height": 48
+      },
+      "tabs": {
+        "left": 133,
+        "top": 0,
+        "right": 321,
+        "bottom": 47,
+        "width": 188,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 820,
+        "right": 390,
+        "bottom": 844,
+        "width": 390,
+        "height": 24
+      },
+      "content": {
+        "left": 0,
+        "top": 48,
+        "right": 390,
+        "bottom": 820,
+        "width": 390,
+        "height": 772
+      },
+      "navigation": null,
+      "module": {
+        "left": 0,
+        "top": 48,
+        "right": 390,
+        "bottom": 820,
+        "width": 390,
+        "height": 772
+      }
+    },
+    {
+      "route": "/ai",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "width": 1366,
+      "height": 768,
+      "documentWidth": 1366,
+      "documentHeight": 768,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 1366,
+        "bottom": 48,
+        "width": 1366,
+        "height": 48
+      },
+      "tabs": {
+        "left": 208,
+        "top": 0,
+        "right": 1167.046875,
+        "bottom": 47,
+        "width": 959.046875,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 744,
+        "right": 1366,
+        "bottom": 768,
+        "width": 1366,
+        "height": 24
+      },
+      "content": {
+        "left": 208,
+        "top": 48,
+        "right": 1366,
+        "bottom": 744,
+        "width": 1158,
+        "height": 696
+      },
+      "navigation": {
+        "left": 0,
+        "top": 48,
+        "right": 208,
+        "bottom": 744,
+        "width": 208,
+        "height": 696
+      },
+      "module": {
+        "left": 208,
+        "top": 48,
+        "right": 1366,
+        "bottom": 744,
+        "width": 1158,
+        "height": 696
+      }
+    },
+    {
+      "route": "/ai",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "width": 1440,
+      "height": 1000,
+      "documentWidth": 1440,
+      "documentHeight": 1000,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 1440,
+        "bottom": 48,
+        "width": 1440,
+        "height": 48
+      },
+      "tabs": {
+        "left": 208,
+        "top": 0,
+        "right": 1241.046875,
+        "bottom": 47,
+        "width": 1033.046875,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 976,
+        "right": 1440,
+        "bottom": 1000,
+        "width": 1440,
+        "height": 24
+      },
+      "content": {
+        "left": 208,
+        "top": 48,
+        "right": 1440,
+        "bottom": 976,
+        "width": 1232,
+        "height": 928
+      },
+      "navigation": {
+        "left": 0,
+        "top": 48,
+        "right": 208,
+        "bottom": 976,
+        "width": 208,
+        "height": 928
+      },
+      "module": {
+        "left": 208,
+        "top": 48,
+        "right": 1440,
+        "bottom": 976,
+        "width": 1232,
+        "height": 928
+      }
+    },
+    {
+      "route": "/ai",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "width": 390,
+      "height": 844,
+      "documentWidth": 390,
+      "documentHeight": 844,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 390,
+        "bottom": 48,
+        "width": 390,
+        "height": 48
+      },
+      "tabs": {
+        "left": 133,
+        "top": 0,
+        "right": 321,
+        "bottom": 47,
+        "width": 188,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 820,
+        "right": 390,
+        "bottom": 844,
+        "width": 390,
+        "height": 24
+      },
+      "content": {
+        "left": 0,
+        "top": 48,
+        "right": 390,
+        "bottom": 820,
+        "width": 390,
+        "height": 772
+      },
+      "navigation": null,
+      "module": {
+        "left": 0,
+        "top": 48,
+        "right": 390,
+        "bottom": 820,
+        "width": 390,
+        "height": 772
+      }
+    },
+    {
+      "route": "/patients-light",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "width": 1440,
+      "height": 1000,
+      "documentWidth": 1440,
+      "documentHeight": 1000,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 1440,
+        "bottom": 48,
+        "width": 1440,
+        "height": 48
+      },
+      "tabs": {
+        "left": 208,
+        "top": 0,
+        "right": 1241.046875,
+        "bottom": 47,
+        "width": 1033.046875,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 976,
+        "right": 1440,
+        "bottom": 1000,
+        "width": 1440,
+        "height": 24
+      },
+      "content": {
+        "left": 208,
+        "top": 48,
+        "right": 1440,
+        "bottom": 976,
+        "width": 1232,
+        "height": 928
+      },
+      "navigation": {
+        "left": 0,
+        "top": 48,
+        "right": 208,
+        "bottom": 976,
+        "width": 208,
+        "height": 928
+      },
+      "module": {
+        "left": 208,
+        "top": 48,
+        "right": 1440,
+        "bottom": 976,
+        "width": 1232,
+        "height": 928
+      }
+    },
+    {
+      "route": "/patients-rtl",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "width": 1440,
+      "height": 1000,
+      "documentWidth": 1440,
+      "documentHeight": 1000,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 1440,
+        "bottom": 48,
+        "width": 1440,
+        "height": 48
+      },
+      "tabs": {
+        "left": 191.84375,
+        "top": 0,
+        "right": 1227,
+        "bottom": 47,
+        "width": 1035.15625,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 976,
+        "right": 1440,
+        "bottom": 1000,
+        "width": 1440,
+        "height": 24
+      },
+      "content": {
+        "left": 0,
+        "top": 48,
+        "right": 1232,
+        "bottom": 976,
+        "width": 1232,
+        "height": 928
+      },
+      "navigation": {
+        "left": 1232,
+        "top": 48,
+        "right": 1440,
+        "bottom": 976,
+        "width": 208,
+        "height": 928
+      },
+      "module": {
+        "left": 0,
+        "top": 48,
+        "right": 1232,
+        "bottom": 976,
+        "width": 1232,
+        "height": 928
+      }
+    },
+    {
+      "route": "/patients-rtl",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "width": 390,
+      "height": 844,
+      "documentWidth": 390,
+      "documentHeight": 844,
+      "titlebar": {
+        "left": 0,
+        "top": 0,
+        "right": 390,
+        "bottom": 48,
+        "width": 390,
+        "height": 48
+      },
+      "tabs": {
+        "left": 69,
+        "top": 0,
+        "right": 257,
+        "bottom": 47,
+        "width": 188,
+        "height": 47
+      },
+      "statusbar": {
+        "left": 0,
+        "top": 820,
+        "right": 390,
+        "bottom": 844,
+        "width": 390,
+        "height": 24
+      },
+      "content": {
+        "left": 0,
+        "top": 48,
+        "right": 390,
+        "bottom": 820,
+        "width": 390,
+        "height": 772
+      },
+      "navigation": null,
+      "module": {
+        "left": 0,
+        "top": 48,
+        "right": 390,
+        "bottom": 820,
+        "width": 390,
+        "height": 772
+      }
+    }
+  ]
+}

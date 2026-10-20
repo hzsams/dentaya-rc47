@@ -63,6 +63,17 @@ try {
  });
  await page.route('**/training-scans/602.stl',route=>route.fulfill({status:200,contentType:'model/stl',body:fixture}));
  await page.addInitScript(({userId})=>{
+  const openRecovery=indexedDB.open.bind(indexedDB);
+  window.rc51RecoveryReads=[];
+  indexedDB.open=(...args)=>{
+   const request=openRecovery(...args);
+   if(args[0]==='dentaya-cad-recovery')request.addEventListener('success',event=>{
+    if(sessionStorage.getItem('rc51:hold-recovery')!=='yes')return;
+    event.stopImmediatePropagation();
+    window.rc51RecoveryReads.push(()=>request.dispatchEvent(new Event('success')));
+   },{capture:true});
+   return request;
+  };
   const model=window.rc47CadModel={ready:false,calls:[],pending:[],mode:'ok',cancels:0};
   window.dentayaDesktop={onOpenPreferences:()=>()=>{},localAyaStatus:async()=>({ok:true,models:model.ready?[{name:'cad-model-fixture',size:1000}]:[],progress:{running:false,status:'ready',completed:0,total:0}}),localAyaChat:async input=>{
    model.calls.push(input);
@@ -94,6 +105,27 @@ try {
  const settleAutosave=async()=>{await page.waitForTimeout(1100);await page.waitForFunction(()=>Array.from(document.querySelectorAll('.cad-main-header button')).some(button=>button.textContent?.trim()==='Kaydet'&&!button.disabled));};
 
  await page.goto(url);await ready();
+ const openCaseUrl=page.url();await page.locator('.desktop-document-tabs a[href="/design"]').click();assert.equal(page.url(),openCaseUrl,'The active Design tab preserves its open case');
+ // Measure the real canvas between both docks, then detach and restore the same inspector.
+ const inspectorPanel=page.locator('.cad-floating-panel');
+ assert.equal(await inspectorPanel.getAttribute('data-docked'),'true');
+ await frames();
+ const dockedScene=await page.locator('.cad-scene-viewport').boundingBox(),objectDock=await page.locator('.cad-object-panel').boundingBox(),parameterDock=await inspectorPanel.boundingBox();
+ assert.ok(dockedScene.x>=objectDock.x+objectDock.width-1,'The object manager has its own column');
+ assert.ok(dockedScene.x+dockedScene.width<=parameterDock.x+1,'The parameter inspector does not cover the 3D scene');
+ assert.ok(Math.abs(dockedScene.y-parameterDock.y)<2&&Math.abs(dockedScene.height-parameterDock.height)<2,'The inspector follows the actual viewport height');
+ await page.evaluate(()=>{window.__cadDockCanvas=document.querySelector('.cad-professional canvas');});
+ await inspectorPanel.getByRole('button',{name:'Araç panelini taşı',exact:true}).press('Shift+ArrowLeft');
+ await page.waitForFunction(()=>document.querySelector('.cad-floating-panel')?.dataset.docked==='false');
+ await frames();
+ assert.ok((await page.locator('.cad-scene-viewport').boundingBox()).width>dockedScene.width+200,'Detaching the inspector gives its column back to the scene');
+ assert.ok(await page.evaluate(()=>window.__cadDockCanvas===document.querySelector('.cad-professional canvas')),'Dock changes preserve the WebGL canvas');
+ await inspectorPanel.getByRole('button',{name:'Paneli sağa sabitle',exact:true}).click();
+ await page.waitForFunction(()=>document.querySelector('.cad-floating-panel')?.dataset.docked==='true');
+ await frames();
+ assert.ok(Math.abs((await page.locator('.cad-scene-viewport').boundingBox()).width-dockedScene.width)<2,'Docking restores the measured scene column');
+ assert.equal(await page.evaluate(()=>localStorage.getItem('dentaya:cad-floating-panel-v3')),null,'Docking clears the detached position');
+ console.log('PASS: measured object/inspector docks, keyboard detach, expanded real canvas and explicit redock.');
  await page.getByRole('button',{name:'Sonraki',exact:true}).click();
  await page.waitForFunction(()=>document.querySelector('.cad-professional')?.dataset.cadTask==='fit');
  let snapshot=await save();const first=snapshot.units['unit-46-0'];
@@ -138,8 +170,11 @@ try {
  await page.setViewportSize({width:1366,height:768});await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).waitFor();const composerBox=await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).boundingBox();assert.ok(composerBox&&composerBox.y+composerBox.height<768,'The composer remains reachable on a laptop screen');
  await page.keyboard.press('Escape');assert.equal(await aya.count(),0);assert.equal(await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).evaluate(button=>document.activeElement===button),true,'Closing the sidebar restores keyboard focus');await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();await page.setViewportSize({width:1600,height:1000});
  const ask=async text=>{await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).fill(text);await aya.getByRole('button',{name:'Gönder',exact:true}).click();await aya.getByRole('button',{name:'Gönder',exact:true}).waitFor();};
- await ask('Koleyı çizdim diş gelmiyor');
- assert.match(await aya.getByRole('log').textContent(),/46/);assert.match(await aya.getByRole('log').textContent(),/32/);
+ // RC50 uses the scoped CAD dialogue for explicit current-workspace reviews.
+ // A catalogue placement definition is not evidence of a live scene assessment.
+ await ask('Güncel çalışma durumunu değerlendir ve sıradaki adımı öner.');
+ assert.match(await aya.getByRole('log').textContent(),/Çalışma ünitesi: 46/);
+ assert.equal(await aya.locator('[data-proposal-tool=inspect]').count(),1,'The scoped review offers the actual available geometry check');
  assert.equal(await aya.locator('[data-check-id]').count(),7);await aya.locator('[data-aya-tool=inspect]').click();
  assert.equal(await aya.locator('[data-check-id=position]').getAttribute('data-check-state'),'ready');
  assert.match(await aya.locator('.aya-cad-evidence').textContent(),/Antagonist karşılaştırması yok/);
@@ -232,8 +267,28 @@ try {
  const beforeExit=await readDrafts();assert.equal(beforeExit.length,1);const offlineMesh=unitMesh(beforeExit[0].workspace.designSnapshot);assert.notDeepEqual(offlineMesh,edited);
  await modal.getByRole('button',{name:'Yerel kaydet ve çık',exact:true}).click();await page.waitForURL('**/lab');assert.equal((await readDrafts())[0].retained,true);
  await page.evaluate(()=>new Promise((resolve,reject)=>{const r=indexedDB.open('dentaya-cad-recovery',1);r.onsuccess=()=>{const db=r.result,tx=db.transaction('drafts','readwrite'),store=tx.objectStore('drafts'),q=store.getAll();q.onsuccess=()=>{for(const draft of q.result)store.put({...draft,savedAt:Date.now()-8*86400000});};tx.oncomplete=()=>{db.close();resolve();};tx.onabort=()=>reject(tx.error);};r.onerror=()=>reject(r.error);}));
- await page.goto(url);await ready();assert.equal((await readDrafts()).length,1,'An intentional local checkpoint survives expiry pruning');await page.getByRole('button',{name:'Geri yükle',exact:true}).click();failWrites=false;snapshot=await save();assert.deepEqual(unitMesh(snapshot),offlineMesh);
- console.log('PASS: a failed remote save stays in CAD; explicit local exit and recovery retain all geometry.');
+ await page.evaluate(()=>sessionStorage.setItem('rc51:hold-recovery','yes'));
+ await page.goto(url);await ready();
+ await page.waitForFunction(()=>window.rc51RecoveryReads.length>=2);
+ const lookupPatchCount=requestLog.filter(request=>request.method==='PATCH').length;
+ await page.locator('.desktop-document-tabs a[href="/ai"]').click();
+ await page.locator('.cad-main-header').getByRole('button',{name:'Kaydet',exact:true}).click();
+ await page.waitForTimeout(1100);
+ assert.ok(page.url().includes('/design'),'Navigation waits for recovery lookup');
+ assert.equal(requestLog.filter(request=>request.method==='PATCH').length,lookupPatchCount,'Manual and automatic saves cannot write during recovery lookup');
+ await page.evaluate(()=>{sessionStorage.removeItem('rc51:hold-recovery');for(const release of window.rc51RecoveryReads.splice(0))release();});
+ await page.locator('.cad-recovery-notice').waitFor();
+ assert.equal((await readDrafts()).length,1,'An intentional local checkpoint survives expiry pruning');
+ const pendingPatchCount=requestLog.filter(request=>request.method==='PATCH').length;
+ await page.locator('.desktop-document-tabs a[href="/ai"]').click();
+ await page.locator('.cad-main-header').getByRole('button',{name:'Kaydet',exact:true}).click();
+ await page.waitForTimeout(1100);
+ assert.ok(page.url().includes('/design'),'Unresolved recovery must keep the case open');
+ assert.equal(requestLog.filter(request=>request.method==='PATCH').length,pendingPatchCount,'Navigation and manual Save cannot write before an explicit recovery decision');
+ const unresolvedDrafts=await readDrafts();assert.equal(unresolvedDrafts[0].retained,true);assert.deepEqual(unitMesh(unresolvedDrafts[0].workspace.designSnapshot),offlineMesh,'The retained recovery geometry remains intact');
+ assert.equal(await page.locator('.cad-recovery-notice').count(),1);assert.equal(await page.locator('.cad-save-dialog[open]').count(),0);
+ await page.getByRole('button',{name:'Geri yükle',exact:true}).click();failWrites=false;snapshot=await save();assert.deepEqual(unitMesh(snapshot),offlineMesh);
+ console.log('PASS: delayed recovery lookup and pending recovery choice block writes/navigation; explicit local exit and recovery retain all geometry.');
  // Publishing must include the exact geometry checkpoint, then accept the RPC timestamp despite JSONB key order.
  await menu.locator('summary').click();await page.getByRole('button',{name:'Uzman',exact:true}).click();await page.locator('button[data-cad-stage=review]').click();
  await page.getByRole('button',{name:'STL oluştur ve kliniğin onayına gönder',exact:true}).click();
@@ -241,13 +296,22 @@ try {
  assert.equal(submissions.length,1);assert.deepEqual(unitMesh(await decodeCadWorkspace(submissions[0].p_parameters.settings.cad_workspace)),offlineMesh);
  snapshot=await save();assert.deepEqual(unitMesh(snapshot),offlineMesh);
  console.log('PASS: publication saves complete geometry and save after publication accepts reordered JSONB metadata.');
- // A concurrent writer must be rejected rather than silently overwritten.
- savedProject.updated_at=new Date(Date.now()+100000).toISOString();
- await page.locator('.cad-main-header').getByRole('button',{name:'Kaydet ve çık',exact:true}).click();await modal.waitFor();await modal.getByRole('button',{name:'Yerel kaydet ve çık',exact:true}).waitFor();assert.ok(page.url().includes('/design'));
- await modal.getByRole('button',{name:'Kapat',exact:true}).click();
- if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC40_CAD_daily.png'),animations:'disabled',timeout:15000});}
+ // New desktop links must preserve the existing error, retry and acknowledged-save guards.
+ if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC51_CAD_daily.png'),animations:'disabled',caret:'initial',style:'nextjs-portal{visibility:hidden!important}',timeout:15000});}
+ const acknowledgedVersion=savedProject.updated_at;savedProject.updated_at=new Date(Date.now()+100000).toISOString();
+ await page.locator('.desktop-document-tabs a[href="/ai"]').click();
+ await modal.waitFor();await modal.getByRole('button',{name:'Yerel kaydet ve çık',exact:true}).waitFor();assert.ok(page.url().includes('/design'),'A conflicting desktop navigation save keeps the edited case open');
+ savedProject.updated_at=acknowledgedVersion;
+ let releaseNavigation;holdWrite=new Promise(resolve=>{releaseNavigation=resolve;});
+ const navigationRequest=page.waitForRequest(request=>request.method()==='PATCH'&&new URL(request.url()).pathname.endsWith('/design_projects'));
+ await modal.getByRole('button',{name:'Kaydet ve çık',exact:true}).click();
+ await navigationRequest;assert.ok(page.url().includes('/design'),'Module tabs keep CAD open while the retry is pending');
+ releaseNavigation();holdWrite=null;await page.waitForURL('**/ai');
+ assert.deepEqual(unitMesh(await decodeCadWorkspace(savedProject.settings.cad_workspace)),offlineMesh,'Module navigation retains the complete edited scene');
+ console.log('PASS: desktop module navigation rejects conflicting saves, waits for retry acknowledgment and retains the requested destination and edited scene.');
+
  assert.deepEqual(errors,[]);
- console.log(JSON.stringify({pass:true,realEditor:true,realWebGL:true,syntheticImplantAbutments:true,localMarginSizing:true,hiddenZeroOpacityRecovered:true,ayaChecksDoNotChangeMesh:true,fullMeshPersistence:true,perUnitPersistence:true,cloudReopen:true,saveExitAcknowledged:true,modalEditGuard:true,offlineExitRecovery:true,retainedLocalCheckpoint:true,publishCheckpoint:true,saveAfterPublish:true,optimisticConflictRejected:true,ayaContextGuide:true,ayaModelBridge:'mock; no native inference',ayaProposalClickOnly:true,ayaActualQcFollowup:true,ayaLateReplyGuard:true,ayaScopedMemory:true,saveBeforeCaseSwitch:true,caseFailureRetainsScene:true,targetReadFailureRestoresCase:true,ayaKeyboardAndLaptopComposer:true,noContactWithoutAntagonist:true,backend:'intercepted API fixture; no production data'},null,2));
+ console.log(JSON.stringify({pass:true,realEditor:true,realWebGL:true,syntheticImplantAbutments:true,localMarginSizing:true,hiddenZeroOpacityRecovered:true,ayaChecksDoNotChangeMesh:true,fullMeshPersistence:true,perUnitPersistence:true,cloudReopen:true,saveExitAcknowledged:true,modalEditGuard:true,offlineExitRecovery:true,retainedLocalCheckpoint:true,publishCheckpoint:true,saveAfterPublish:true,optimisticConflictRejected:true,desktopNavigationSaveGuard:true,pendingRecoveryBlocksNavigationAndSave:true,ayaContextGuide:true,ayaModelBridge:'mock; no native inference',ayaProposalClickOnly:true,ayaActualQcFollowup:true,ayaLateReplyGuard:true,ayaScopedMemory:true,saveBeforeCaseSwitch:true,caseFailureRetainsScene:true,targetReadFailureRestoresCase:true,ayaKeyboardAndLaptopComposer:true,noContactWithoutAntagonist:true,backend:'intercepted API fixture; no production data'},null,2));
  }
 }catch(error){
  console.error(logs);

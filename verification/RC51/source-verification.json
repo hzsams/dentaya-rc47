@@ -1,0 +1,13 @@
+{
+  "release": "1.0.0-rc.51",
+  "status": "pass",
+  "command": "npm run verify",
+  "exitCode": 0,
+  "productionStaticPages": 38,
+  "eslintWarnings": 0,
+  "browserSuites": 8,
+  "nativeModelInferenceVerified": false,
+  "windowsInstallerProduced": false,
+  "liveOrganizationBackendVerified": false,
+  "log": "verify.txt"
+}

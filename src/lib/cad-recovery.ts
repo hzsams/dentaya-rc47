@@ -1,5 +1,7 @@
 "use client";
 
+import { decodeCadWorkspace, sameCadJson, validateCadWorkspace, type CadWorkspaceRecord } from './cad-project-state';
+
 export type CadRecoveryWorkspace = {
   designSnapshot?: import('./cad-project-state').CadWorkspaceSnapshot;
   settings: unknown;
@@ -23,6 +25,38 @@ const DB_NAME = "dentaya-cad-recovery";
 const DB_VERSION = 1;
 const STORE = "drafts";
 const MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+
+type AcknowledgedCadProject = {
+  id: string;
+  settings: unknown;
+  margin_points: unknown[];
+  measurements: unknown[];
+  workflow_stage: string;
+  status: string;
+};
+
+/** A timestamp alone cannot establish that the server contains a local edit. */
+export async function isCadRecoveryDraftAcknowledged(draft: CadRecoveryDraft, project: AcknowledgedCadProject): Promise<boolean> {
+  if (draft.retained || draft.projectId !== project.id || !Number.isFinite(draft.savedAt)) return false;
+  try {
+    const local = draft.workspace;
+    const settingsObject = (value: unknown): value is Record<string, unknown> => Boolean(value && typeof value === 'object' && !Array.isArray(value));
+    if (!local || !settingsObject(local.settings) || !settingsObject(project.settings) ||
+      !Array.isArray(local.marginPoints) || !Array.isArray(project.margin_points) ||
+      !Array.isArray(local.measurements) || !Array.isArray(project.measurements) ||
+      !validateCadWorkspace(local.designSnapshot) || local.designSnapshot.sourceKey !== draft.sourceKey) return false;
+    const record = project.settings.cad_workspace as Partial<CadWorkspaceRecord> | undefined;
+    if (!record || typeof record.savedAt !== 'number' || !Number.isFinite(record.savedAt) || record.savedAt < draft.savedAt) return false;
+    const remote = await decodeCadWorkspace(record);
+    if (!remote || !sameCadJson(local.designSnapshot, remote)) return false;
+    const editableSettings = (settings: Record<string, unknown>) => Object.fromEntries(Object.entries(settings).filter(([key]) => key !== 'cad_workspace'));
+    return sameCadJson(editableSettings(local.settings), editableSettings(project.settings)) &&
+      sameCadJson(local.marginPoints, project.margin_points) && sameCadJson(local.measurements, project.measurements) &&
+      local.workflowStage === project.workflow_stage && local.projectStatus === project.status;
+  } catch {
+    return false;
+  }
+}
 
 function openRecoveryDb(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {

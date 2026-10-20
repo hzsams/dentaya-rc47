@@ -29,7 +29,7 @@ import { BrandLogo } from "@/app/BrandLogo";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { dentayaError } from "@/lib/dentaya-errors";
-import { acknowledgeCadRecoveryDraft, deleteCadRecoveryDraft, loadCadRecoveryDraft, makeCadRecoveryKey, pruneCadRecoveryDrafts, saveCadRecoveryDraft, type CadRecoveryDraft, } from "@/lib/cad-recovery";
+import { acknowledgeCadRecoveryDraft, deleteCadRecoveryDraft, isCadRecoveryDraftAcknowledged, loadCadRecoveryDraft, makeCadRecoveryKey, pruneCadRecoveryDrafts, saveCadRecoveryDraft, type CadRecoveryDraft, } from "@/lib/cad-recovery";
 import {encodeCadWorkspace,sameCadJson} from '@/lib/cad-project-state';
 import { supabase } from "@/lib/supabase";
 import { dy, useDentayaThemeRuntime, } from "@/app/dentaya-theme";
@@ -343,7 +343,7 @@ export default function DesignStudioClient() {
     });
     const [performanceInfo, setPerformanceInfo] = useState<CadPerformanceInfo | null>(null);
     const [recoveryCandidate, setRecoveryCandidate] = useState<CadRecoveryDraft | null>(null);
-    const [recoveryLookupReady, setRecoveryLookupReady] = useState(false);
+    const [recoveryLookupKey, setRecoveryLookupKey] = useState<string | null>(null);
     const [recoveryDecisionPending, setRecoveryDecisionPending] = useState(false);
     const savedVersionRef=useRef(new Map<string,string>());
     const saveChainRef=useRef<Promise<boolean>>(Promise.resolve(true));
@@ -357,6 +357,8 @@ export default function DesignStudioClient() {
     const [libraryTarget,setLibraryTarget]=useState<string|null>(null);
     const [exiting,setExiting]=useState(false),[exitFailure,setExitFailure]=useState(false);
     const localExitReadyRef=useRef(false);
+    const exitDestinationRef=useRef('/lab');
+    const navigationExitRef=useRef<((destination:string)=>Promise<boolean>)|null>(null);
     const saveDialogRef=useRef<HTMLDialogElement>(null);
     useEffect(()=>{const dialog=saveDialogRef.current;if(!dialog)return;if(exiting||exitFailure||submitting||contextLoading){if(!dialog.open)dialog.showModal();}else if(dialog.open)dialog.close();},[exiting,exitFailure,submitting,contextLoading]);
     const [localRecoverySavedAt, setLocalRecoverySavedAt] = useState<number | null>(null);
@@ -364,6 +366,7 @@ export default function DesignStudioClient() {
     const jobSetup = settings.job_setup;
     const activeJobUnit = activeCadUnit(jobSetup);
     const recoveryKey = useMemo(() => project?.id && sourceKey ? makeCadRecoveryKey(project.id, sourceKey) : "", [project?.id, sourceKey]);
+    const recoveryLookupReady = recoveryLookupKey === recoveryKey;
     const sources = useMemo<SourceItem[]>(() => {
         const scanSources: SourceItem[] = scans
             .filter((scan) => Boolean(scan.storage_path))
@@ -431,8 +434,8 @@ export default function DesignStudioClient() {
         if (previous.tool !== tool || previous.stage !== activeStepId)
             animateExperienceSurface(document.querySelector<HTMLElement>('.cad-viewport-toolbar'));
     }, [tool, viewMode, activeStepId, project?.id]);
-    const saveStateRef=useRef({project,user,selectedCase,settings,marginPoints,measurements,activeSource,sourceKey,panelTab,workspaceMode,recoveryKey,contextLoading});
-    saveStateRef.current={project,user,selectedCase,settings,marginPoints,measurements,activeSource,sourceKey,panelTab,workspaceMode,recoveryKey,contextLoading};
+    const saveStateRef=useRef({project,user,selectedCase,settings,marginPoints,measurements,activeSource,sourceKey,panelTab,workspaceMode,recoveryKey,contextLoading,recoveryLookupReady,recoveryDecisionPending});
+    saveStateRef.current={project,user,selectedCase,settings,marginPoints,measurements,activeSource,sourceKey,panelTab,workspaceMode,recoveryKey,contextLoading,recoveryLookupReady,recoveryDecisionPending};
     useEffect(()=>{dirtyRevisionRef.current++;setHasUnsavedChanges(true);},[settings,marginPoints,measurements,geometryRevision,sourceKey,project?.workflow_stage,project?.status]);
     useEffect(()=>{const guard=(event:BeforeUnloadEvent)=>{if(saveStateRef.current.project&&dirtyRevisionRef.current!==cleanRevisionRef.current){event.preventDefault();event.returnValue='';}};window.addEventListener('beforeunload',guard);return()=>window.removeEventListener('beforeunload',guard);},[]);
     const gates = useMemo(() => ({
@@ -719,7 +722,7 @@ export default function DesignStudioClient() {
         return()=>{requestState.value++;};
     }, [selectedCase, org, user,loadCaseContext]);
     useEffect(() => {
-        if (!project || contextLoading || !cadReady || exiting || submitting || recoveryDecisionPending)
+        if (!project || contextLoading || !cadReady || exiting || submitting || !recoveryLookupReady || recoveryDecisionPending)
             return;
         const timer = window.setTimeout(() => {
             void saveProject(false);
@@ -736,6 +739,7 @@ export default function DesignStudioClient() {
         contextLoading,
         exiting,
         submitting,
+        recoveryLookupReady,
         recoveryDecisionPending,
         project?.workflow_stage,
         project?.status,
@@ -743,12 +747,13 @@ export default function DesignStudioClient() {
     ]);
     useEffect(() => {
         let cancelled = false;
+        const recoveryProject = saveStateRef.current.project;
         setRecoveryCandidate(null);
         setRecoveryDecisionPending(false);
-        setRecoveryLookupReady(false);
+        setRecoveryLookupKey(null);
         setLocalRecoverySavedAt(null);
-        if (!recoveryKey || !project?.id || !sourceKey) {
-            setRecoveryLookupReady(true);
+        if (!recoveryKey || !recoveryProject?.id || !sourceKey) {
+            setRecoveryLookupKey(recoveryKey);
             return () => {
                 cancelled = true;
             };
@@ -756,21 +761,23 @@ export default function DesignStudioClient() {
         void Promise.all([
             loadCadRecoveryDraft(recoveryKey),
             pruneCadRecoveryDrafts().catch(() => undefined),
-        ]).then(([draft]) => {
+        ]).then(async ([draft]) => {
             if (cancelled)
                 return;
             if (draft &&
-                draft.projectId === project.id &&
+                draft.projectId === recoveryProject.id &&
                 draft.sourceKey === sourceKey &&
-                draft.geometry.length > 0) {
+                draft.geometry.length > 0 &&
+                !await isCadRecoveryDraftAcknowledged(draft, recoveryProject)) {
+                if (cancelled) return;
                 setRecoveryCandidate(draft);
                 setRecoveryDecisionPending(true);
                 setLocalRecoverySavedAt(draft.savedAt);
             }
-            setRecoveryLookupReady(true);
+            if (!cancelled) setRecoveryLookupKey(recoveryKey);
         }).catch(() => {
             if (!cancelled)
-                setRecoveryLookupReady(true);
+                setRecoveryLookupKey(recoveryKey);
         });
         return () => {
             cancelled = true;
@@ -1048,6 +1055,8 @@ export default function DesignStudioClient() {
         const requestedProject=project?.id;if(!requestedProject)return false;
         const task=async()=>{
             const state=saveStateRef.current;
+            if(state.recoveryKey&&!state.recoveryLookupReady){setStatus('DentAYA CAD hazırlanıyor…');return false;}
+            if(state.recoveryDecisionPending){setStatus('Kurtarma kaydı bulundu');document.querySelector<HTMLElement>('.cad-recovery-notice button')?.focus();return false;}
             if(!state.project||!state.user||!state.selectedCase||state.contextLoading||state.project.id!==requestedProject||state.project.case_id!==state.selectedCase.id)return false;
             const workspace=viewportRef.current?.captureWorkspace();if(state.activeSource&&!workspace){setStatus('Modelin yüklenmesini bekleyin.');return false;}
             const revision=dirtyRevisionRef.current;setSaving(true);localExitReadyRef.current=false;
@@ -1084,13 +1093,33 @@ export default function DesignStudioClient() {
             router.replace(`${pathname==='/cad'?'/cad':'/design'}?case=${nextId}`);
         }finally{caseSwitchLock.current=false;setExiting(false);}
     }
-    async function saveAndExit(){
-        if(exiting||submitting||contextLoading)return false;localExitReadyRef.current=false;if(!project){router.push('/lab');return true;}setExiting(true);setExitFailure(false);
+    async function saveAndExit(destination='/lab'){
+        if(recoveryKey&&!recoveryLookupReady){setStatus('DentAYA CAD hazırlanıyor…');return false;}
+        if(recoveryDecisionPending){setStatus('Kurtarma kaydı bulundu');document.querySelector<HTMLElement>('.cad-recovery-notice button')?.focus();return false;}
+        if(exiting||submitting||contextLoading)return false;exitDestinationRef.current=destination;localExitReadyRef.current=false;if(!project){router.push(destination);return true;}setExiting(true);setExitFailure(false);
         const ok=await saveProject(true);
-        if(ok){cleanRevisionRef.current=dirtyRevisionRef.current;router.push('/lab');}
+        if(ok){cleanRevisionRef.current=dirtyRevisionRef.current;router.push(destination);}
         else {setExiting(false);setExitFailure(true);}
         return ok;
     }
+    useLayoutEffect(()=>{navigationExitRef.current=saveAndExit;});
+    useEffect(()=>{
+        const navigate=(event:MouseEvent)=>{
+            if(event.defaultPrevented||event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||!saveStateRef.current.project)return;
+            const anchor=event.target instanceof Element?event.target.closest<HTMLAnchorElement>('a[href]'):null;
+            if(!anchor||anchor.download||(anchor.target&&anchor.target!=='_self'))return;
+            const destination=new URL(anchor.href,window.location.href);
+            if(destination.origin!==window.location.origin)return;
+            if(destination.pathname===window.location.pathname&&destination.search===window.location.search)return;
+            // The active Design tab keeps its open case instead of reopening the base route.
+            if(['/design','/cad'].includes(destination.pathname)&&!destination.search){event.preventDefault();return;}
+            event.preventDefault();event.stopPropagation();
+            anchor.closest('dialog')?.close();
+            void navigationExitRef.current?.(destination.pathname+destination.search+destination.hash);
+        };
+        document.addEventListener('click',navigate,true);
+        return()=>document.removeEventListener('click',navigate,true);
+    },[]);
     async function exitWithLocalCopy(){
         if(!localExitReadyRef.current||exiting)return;
         setExiting(true);setExitFailure(false);
@@ -1098,7 +1127,7 @@ export default function DesignStudioClient() {
             const draft=await loadCadRecoveryDraft(recoveryKey);
             if(!draft||draft.projectId!==project?.id)throw Error('CAD_LOCAL_COPY_MISSING');
             await saveCadRecoveryDraft({...draft,retained:true});
-            cleanRevisionRef.current=dirtyRevisionRef.current;router.push('/lab');
+            cleanRevisionRef.current=dirtyRevisionRef.current;router.push(exitDestinationRef.current);
         } catch(error){setStatus(dentayaError(error,'CAD projesi kaydedilemedi.'));setExiting(false);setExitFailure(true);localExitReadyRef.current=false;}
     }
     function selectLibraryForm(form:CadLibraryForm){
@@ -1659,7 +1688,7 @@ export default function DesignStudioClient() {
         scope:ayaScope,dataToken:ayaDataToken,snapshot:cadStateToken([ayaDataToken,ayaEpoch,activeStepId,panelTab,tool,viewMode,historyState,saving,exiting,submitting,contextLoading,cadReady,sceneState]),
         unit:activeJobUnit?.tooth_code??'',restoration:activeJobUnit?cadRestorationLabel(activeJobUnit.design_type):'',
         stage:activeStepId,task:panelTab,upperReady:sceneState.upperReady,lowerReady:sceneState.lowerReady,antagonistReady:sceneState.antagonistReady,openingMm:sceneState.openingMm,
-        setupComplete:jobSetup.complete,sourceReady:Boolean(activeSource),modelReady:cadReady&&!contextLoading&&!recoveryDecisionPending,
+        setupComplete:jobSetup.complete,sourceReady:Boolean(activeSource),modelReady:cadReady&&!contextLoading&&recoveryLookupReady&&!recoveryDecisionPending,
         marginPoints:marginPoints.length,placed:viewportRef.current?.hasMarginPlacement()??false,visible:sceneState.activeVisible,
         unsaved:dirtyRevisionRef.current!==cleanRevisionRef.current,saveFailed:exitFailure,isSaving:saving||exiting||submitting||contextLoading,
         material:activeJobUnit?.material??project?.material??'',tool,view:viewMode,undoCount:historyState.undoCount,redoCount:historyState.redoCount,
@@ -1729,13 +1758,13 @@ export default function DesignStudioClient() {
             <LanguageSelect compact/>
           </UiNode>
         </UiNode>
-        <UiNode as="button" type="button" className="cad-button" onClick={() => setSetupOpen(true)} data-required={!jobSetup.complete}><CadIcon name="design" size={18}/><UiNode as="span">İş tanımı</UiNode></UiNode>
-        <UiNode as="button" type="button" className="cad-button" disabled={saving || !project} onClick={() => void saveProject(true)}><CadIcon name="save" size={18}/><UiNode as="span">{saving ? 'Kaydediliyor…' : 'Kaydet'}</UiNode></UiNode>
-        <UiNode as="button" type="button" className="cad-button" disabled={saving||exiting||!cadReady} onClick={()=>void saveAndExit()}>Kaydet ve çık</UiNode>
-        <UiNode as="button" type="button" className="cad-button" onClick={()=>setLibraryTarget('')}>Form kütüphanesi</UiNode>
-        <UiNode as="button" type="button" className="cad-button" aria-pressed={ayaOpen} onClick={()=>setAyaOpen(v=>!v)}><CadIcon name="help" size={18}/>AYA</UiNode>
+        <UiNode as="button" type="button" className="cad-button" aria-label="İş tanımı" title="İş tanımı" onClick={() => setSetupOpen(true)} data-required={!jobSetup.complete}><CadIcon name="design" size={18}/><UiNode as="span">İş tanımı</UiNode></UiNode>
+        <UiNode as="button" type="button" className="cad-button cad-button--primary" aria-label={saving ? 'Kaydediliyor…' : 'Kaydet'} title="Kaydet" disabled={saving || !project} onClick={() => void saveProject(true)}><CadIcon name="save" size={18}/><UiNode as="span">{saving ? 'Kaydediliyor…' : 'Kaydet'}</UiNode></UiNode>
+        <UiNode as="button" type="button" className="cad-button" aria-label="Kaydet ve çık" title="Kaydet ve çık" disabled={saving||exiting||!cadReady} onClick={()=>void saveAndExit()}><CadIcon name="export" size={18}/><UiNode as="span">Kaydet ve çık</UiNode></UiNode>
+        <UiNode as="button" type="button" className="cad-button" aria-label="Form kütüphanesi" title="Form kütüphanesi" onClick={()=>setLibraryTarget('')}><CadIcon name="file" size={18}/><UiNode as="span">Form kütüphanesi</UiNode></UiNode>
+        <UiNode as="button" type="button" className="cad-button cad-aya-toggle" aria-label="AYA" aria-pressed={ayaOpen} onClick={()=>setAyaOpen(v=>!v)}><CadIcon name="help" size={18}/>AYA</UiNode>
       </UiNode>
-      {workspaceMode === 'expert' && <UiNode as="nav" className="cad-workflow" aria-label="Tasarım adımları">{STEPS.map(step => <UiNode as="button" type="button" key={step.id} data-cad-stage={step.id} aria-current={step.id === activeStep.id ? 'step' : undefined} disabled={!project || !cadReady} onClick={() => void setStage(step.id)}><UiNode as="span" className="cad-step-index">{step.index - 1 < activeStepIndex ? <CadIcon name="check" size={13}/> : step.index}</UiNode><CadIcon name={step.id} size={18}/><UiNode as="span">{step.label}</UiNode></UiNode>)}<UiNode as="span" className="cad-workflow-progress">{progress}%</UiNode></UiNode>}
+      <UiNode as="nav" className="cad-workflow" aria-label="Tasarım adımları">{workspaceMode === 'expert' ? STEPS.map(step => <UiNode as="button" type="button" key={step.id} data-cad-stage={step.id} data-complete={step.index - 1 < activeStepIndex} aria-current={step.id === activeStep.id ? 'step' : undefined} disabled={!project || !cadReady} onClick={() => void setStage(step.id)}><UiNode as="span" className="cad-step-index">{step.index - 1 < activeStepIndex ? <CadIcon name="check" size={13}/> : step.index}</UiNode><CadIcon name={step.id} size={18}/><UiNode as="span">{step.label}</UiNode></UiNode>) : CAD_GUIDED_TASKS.map((task, index) => <UiNode as="button" type="button" key={task.tab} data-cad-task-step={task.tab} data-complete={index < activeTaskIndex} aria-current={task.tab === panelTab ? 'step' : undefined} disabled={!project || index > activeTaskIndex + 1 || (!cadReady && index > activeTaskIndex)} onClick={() => void setStage(task.stage, task.tab)}><UiNode as="span" className="cad-step-index">{index < activeTaskIndex ? <CadIcon name="check" size={13}/> : index + 1}</UiNode><UiNode as="span">{cadTaskLabel(task.tab)}</UiNode></UiNode>)}<UiNode as="span" className="cad-workflow-progress">{workspaceMode === 'wizard' ? `${activeTaskIndex + 1} / ${CAD_GUIDED_TASKS.length}` : `${progress}%`}</UiNode></UiNode>
       {contextLoadError&&<UiNode as="div" role="alert" className="cad-context-error"><UserText>{contextLoadError}</UserText><UiNode as="button" type="button" onClick={()=>{if(selectedCase&&org&&user){setContextLoadError('');void loadCaseContext(selectedCase,org,user);}}}>Tekrar dene</UiNode><UiNode as="button" type="button" onClick={()=>setContextLoadError('')}>Kapat</UiNode></UiNode>}
       <UiNode as="section" className="cad-shell" aria-label="Üç boyutlu CAD çalışma alanı">
         <UiNode as="div" className="cad-viewport-toolbar">
@@ -1806,10 +1835,9 @@ export default function DesignStudioClient() {
         </UiNode>
         {ayaOpen&&<CadAyaPanel key={ayaScope} context={ayaContext} onRun={runAyaAction} onClose={()=>setAyaOpen(false)}/>} 
         <UiNode as="dialog" ref={saveDialogRef} className="cad-save-dialog" aria-label={exitFailure?'CAD projesi kaydedilemedi.':contextLoading?'Vaka yükleniyor…':'Kaydediliyor…'} onCancel={e=>{e.preventDefault();if(!exiting&&!submitting)setExitFailure(false);}}>
-          {exitFailure?<><UiNode as="strong">CAD projesi kaydedilemedi.</UiNode><UiNode as="button" type="button" onClick={()=>void saveAndExit()}>Kaydet ve çık</UiNode>{localExitReadyRef.current&&<UiNode as="button" type="button" onClick={()=>void exitWithLocalCopy()}>Yerel kaydet ve çık</UiNode>}<UiNode as="button" type="button" onClick={()=>setExitFailure(false)}>Kapat</UiNode></>:<UiNode as="p" role="status">{contextLoading?'Vaka yükleniyor…':'Kaydediliyor…'}</UiNode>}
+          {exitFailure?<><UiNode as="strong">CAD projesi kaydedilemedi.</UiNode><UiNode as="button" type="button" onClick={()=>void saveAndExit(exitDestinationRef.current)}>Kaydet ve çık</UiNode>{localExitReadyRef.current&&<UiNode as="button" type="button" onClick={()=>void exitWithLocalCopy()}>Yerel kaydet ve çık</UiNode>}<UiNode as="button" type="button" onClick={()=>setExitFailure(false)}>Kapat</UiNode></>:<UiNode as="p" role="status">{contextLoading?'Vaka yükleniyor…':'Kaydediliyor…'}</UiNode>}
         </UiNode>
         <UiNode as="footer" className="cad-status-bar"><UiNode as="span" role="status">{contextLoading ? 'Vaka yükleniyor…' : status}</UiNode><UiNode as="span">{activeSource?.source.fileName ? <UserText>{activeSource.source.fileName}</UserText> : 'Kaynak seçilmedi'} · mm</UiNode><UiNode as="span" title={performanceInfo ? `${performanceInfo.sourceTriangles} kaynak / ${performanceInfo.renderTriangles} görünüm / ${performanceInfo.kernelTriangles} analiz üçgeni` : undefined}>{performanceInfo ? <UiMessage source="{0} üçgen" values={[performanceInfo.renderTriangles.toLocaleString(intlLocale())]} userValues={[]}/> : ''}{localRecoverySavedAt && !recoveryDecisionPending ? <UiMessage source=" · Yerel {0}" values={[formatRecoveryTime(localRecoverySavedAt, intlLocale())]} userValues={[]}/> : ''}</UiNode></UiNode>
-      </UiNode>
       <CadFloatingPanel visible={!focusMode && toolPanelVisible} revealKey={`${workspaceMode}:${activeStep.id}:${panelTab}`} onClose={() => setToolPanelVisible(false)} title={workspaceMode === 'wizard' ? activeTaskLabel : 'Tasarım araçları'}>
         {workspaceMode === 'wizard' && <UiNode as="div" className="cad-stage-brief"><UiNode as="span">{activeTaskIndex + 1} / {CAD_GUIDED_TASKS.length}</UiNode><UiNode as="p">{activeStep.label}</UiNode></UiNode>}
         {workspaceMode === 'wizard' && <UiNode as="div" className="cad-task-tools"><CadToolPalette tools={activeTools} tool={tool} onSelect={selectManualTool} shortcuts={shortcutBindings} disabled={!cadReady}/></UiNode>}
@@ -2193,6 +2221,7 @@ export default function DesignStudioClient() {
         </UiNode>
         <UiNode as="footer" className="cad-panel-footer"><UiNode as="button" type="button" disabled={!project || (workspaceMode === 'wizard' ? activeTaskIndex : activeStepIndex) <= 0} onClick={() => void moveStep(-1)}><CadIcon name="back" size={16}/>Geri</UiNode><UiNode as="span">{workspaceMode === 'wizard' ? `${activeTaskIndex + 1} / ${CAD_GUIDED_TASKS.length}` : `${activeStep.index} / ${STEPS.length}`}</UiNode><UiNode as="button" type="button" className="cad-next-step" disabled={!cadReady||!project||exiting} onClick={()=>activeStepId==='review'?void saveAndExit():void moveStep(1)}>{activeStepId==='review'?'Kaydet ve çık':'Sonraki'}<CadIcon name="next" size={16}/></UiNode></UiNode>
       </CadFloatingPanel>
+      </UiNode>
             {toolLibraryOpen && (<UiNode as="div" style={ui.toolLibraryBackdrop} onMouseDown={() => setToolLibraryOpen(false)}>
           <UiNode as="section" className="cad-command-browser" role="dialog" aria-modal="true" aria-label="Tasarım Araçları" style={ui.toolLibraryPanel} onMouseDown={(event) => event.stopPropagation()}>
             <UiNode as="header" style={ui.toolLibraryHeader}>

@@ -1,17 +1,18 @@
 "use client";
 import LoadingExperience from '@/app/loading-play/LoadingExperience';
 import UiNode from "@/lib/i18n/UiNode";
+import UserText from "@/lib/i18n/UserText";
 import { useTranslation } from '@/lib/i18n';
 import { workflowText } from '@/lib/i18n/workflow-safety';
-import { useCallback, useEffect, useRef, useState, type CSSProperties, } from "react";
+import { professionalShellText } from '@/lib/i18n/professional-shell';
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "@/lib/i18n/UiLink";
-import { BrandLogo } from "@/app/BrandLogo";
 import type { RealtimeChannel, User, } from "@supabase/supabase-js";
 import HomeDashboard from "@/app/HomeDashboard";
 import { loadHomeDashboard } from "@/lib/load-home-dashboard";
 import type { HomeCounts } from "@/lib/home-dashboard";
-import { type DentayaIconName } from "@/app/DentayaIcon";
-import { supabase } from "@/lib/supabase";
+import DentayaIcon, { type DentayaIconName } from "@/app/DentayaIcon";
+import { supabase, supabaseConfiguration } from "@/lib/supabase";
 import { useDentayaThemeRuntime } from "@/app/dentaya-theme";
 type OrgType = "clinic" | "laboratory" | "courier";
 type Organization = {
@@ -350,221 +351,83 @@ export default function HomePage() {
         setMessage("");
     }
     if (booting) return <LoadingExperience title="Çalışma alanı hazırlanıyor..."/>;
-    if (!user) {
-        return (<UiNode as="main" style={page}>
-        <style>
-          {globalCss}
-        </style>
-
-        <UiNode as="div" className="dentaya-auth-shell" style={authShell}>
-          <UiNode as="section" style={authIntro}>
-            <UiNode as="p" style={eyebrow}>
-              DENTAYA
-            </UiNode>
-
-            <UiNode as="h1" style={authTitle}>
-              Dijital diş
-              hekimliği için
-              ortak çalışma
-              alanı.
-            </UiNode>
-
-            <UiNode as="p" style={heroText}>
-              Klinik, laboratuvar
-              ve vaka süreçlerini
-              tek yerde yönet.
-              Tasarım dosyalarını,
-              iletişimi ve teslimat
-              akışını aynı vaka
-              üzerinden takip et.
-            </UiNode>
-
-            <UiNode as="div" style={introSteps}>
-              <UiNode data-dy-copy-stack as="div">
-                <UiNode as="strong">
-                  {uiText(" Klinik ")}</UiNode>
-                <UiNode as="span">
-                  Hasta, vaka,
-                  laboratuvar ve
-                  randevu yönetimi
-                </UiNode>
-              </UiNode>
-
-              <UiNode data-dy-copy-stack as="div">
-                <UiNode as="strong">
-                  {uiText(" Laboratuvar ")}</UiNode>
-                <UiNode as="span">
-                  Tasarım, üretim,
-                  onay ve teslimat
-                  süreci
-                </UiNode>
-              </UiNode>
-
-              <UiNode data-dy-copy-stack as="div">
-                <UiNode as="strong">
-                  Canlı takip
-                </UiNode>
-                <UiNode as="span">
-                  Vaka teslimatlarını
-                  ve kurye akışını
-                  takip et
-                </UiNode>
-              </UiNode>
-            </UiNode>
-          </UiNode>
-
-          <UiNode as="section" style={authCard}>
-            <UiNode as="div" style={authTabs}>
-              <UiNode as="button" type="button" onClick={() => setAuthMode("login")} style={authMode ===
-                "login"
-                ? activeTab
-                : tab}>
-                Giriş
-              </UiNode>
-
-              <UiNode as="button" type="button" onClick={() => setAuthMode("register")} style={authMode ===
-                "register"
-                ? activeTab
-                : tab}>
-                Hesap Oluştur
-              </UiNode>
-            </UiNode>
-
-            {authMode ===
-                "register" && (<Field label={uiText("Ad Soyad")} value={authName} onChange={setAuthName} placeholder={uiText("Ad Soyad")}/>)}
-
-            <Field label={uiText("E-posta")} value={authEmail} onChange={setAuthEmail} placeholder="ornek@dentaya.com" type="email"/>
-
-            <Field label={uiText("Şifre")} value={authPassword} onChange={setAuthPassword} placeholder="Şifren" type="password"/>
-
-            {message && (<UiNode as="div" style={messageBox}>
-                {message}
-              </UiNode>)}
-
-            <UiNode as="button" type="button" disabled={authBusy} onClick={submitAuth} style={primaryButton}>
-              {authBusy
-                ? "İşleniyor..."
-                : authMode ===
-                    "login"
-                    ? uiText("Giriş Yap")
-                    : "Hesap Oluştur"}
-            </UiNode>
-            <Link href="/invite" style={secondaryButton}>{workflowText(locale, "Davet koduyla katıl")}</Link>
-          </UiNode>
-        </UiNode>
-      </UiNode>);
+    if (user && membership && organization) {
+        return <HomeDashboard organization={organization} userId={user.id} name={profile?.full_name ?? ""} role={membership.role} modules={getFocusedModules(organization.org_type)} cases={cases} shipments={shipments} counts={dashboardCounts} loading={dashboardLoading} error={message} updatedAt={dashboardUpdatedAt} onRefresh={() => void loadDashboardData(organization)} onSignOut={() => void signOut()}/>;
     }
-    if (!membership ||
-        !organization) {
-        return (<UiNode as="main" style={page}>
-        <style>
-          {globalCss}
-        </style>
-
-        <UiNode as="section" style={onboardingCard}>
-          <UiNode as="div" style={brand}>
-            <BrandLogo width={181} height={40}/>
-          </UiNode>
-
-          {pendingInviteToken && (<UiNode as="div" style={pendingInviteCard}>
-              <UiNode data-dy-copy-stack as="div" style={{ display: "grid", gap: 4 }}>
-                <UiNode as="strong">Bekleyen Ekip Daveti</UiNode>
-                <UiNode as="span">
-                  Bir çalışma alanı seni ekibine davet etmiş. Yeni kurum oluşturmadan önce bu daveti kabul edebilirsin.
-                </UiNode>
-              </UiNode>
-
-              <Link href={`/invite?token=${encodeURIComponent(pendingInviteToken)}`} style={primaryButton}>
-                Daveti Aç
-              </Link>
-            </UiNode>)}
-          <Link href="/invite" style={secondaryButton}>{workflowText(locale, "Davet koduyla katıl")}</Link>
-
-          <UiNode as="p" style={eyebrow}>
-            İLK KURULUM
-          </UiNode>
-
-          <UiNode as="h1" style={onboardingTitle}>
-            Çalışma alanını
-            oluşturalım.
-          </UiNode>
-
-          <UiNode as="p" style={heroText}>
-            Kurum tipini seç.
-            Bu seçim ana panelde
-            hangi iş akışlarının
-            gösterileceğini
-            belirler.
-          </UiNode>
-
-          <UiNode as="div" style={orgChoices}>
-            <OrgChoice active={orgType ===
-                "clinic"} title={uiText("Klinik")} description="Hasta, vaka, laboratuvar ve randevu süreçleri." onClick={() => setOrgType("clinic")}/>
-
-            <OrgChoice active={orgType ===
-                "laboratory"} title={uiText("Laboratuvar")} description="Vaka kabulü, tasarım, onay, üretim ve teslimat." onClick={() => setOrgType("laboratory")}/>
-
-            <OrgChoice active={orgType ===
-                "courier"} title="Kurye" description="Teslimatlar, sürücüler ve canlı konum akışı." onClick={() => setOrgType("courier")}/>
-          </UiNode>
-
-          <Field label="Kurum Adı" value={orgName} onChange={setOrgName} placeholder="Kurum adını yaz"/>
-
-          {message && (<UiNode as="div" style={messageBox}>
-              {message}
-            </UiNode>)}
-
-          <UiNode as="div" style={onboardingActions}>
-            <UiNode as="button" type="button" disabled={orgBusy} onClick={createOrganization} style={primaryButton}>
-              {orgBusy
-                ? "Oluşturuluyor..."
-                : "Çalışma Alanını Oluştur"}
-            </UiNode>
-
-            <UiNode as="button" type="button" onClick={signOut} style={secondaryButton}>
-              {uiText(" Çıkış Yap ")}</UiNode>
-          </UiNode>
+    const shellCopy = professionalShellText(locale);
+    const connectionLabel = supabaseConfiguration.isConfigured ? uiText(user ? "İLK KURULUM" : "Önce giriş yap") : supabaseConfiguration.status === "invalid" ? shellCopy.invalidTitle : shellCopy.setupTitle;
+    return <UiNode as="main" className="desktop-workspace-home desktop-home-access">
+        <UiNode as="header" className="desktop-home-toolbar">
+            <UiNode as="div" className="desktop-home-heading"><DentayaIcon name="home" size={19}/><UiNode as="h1">Çalışma alanı</UiNode><UiNode as="span" className="desktop-home-divider"/><UiNode as="span" className="desktop-home-muted">{user ? 'İLK KURULUM' : 'Giriş / Hesap Oluştur'}</UiNode></UiNode>
+            <UiNode as="button" type="button" className="desktop-home-button" onClick={() => window.dispatchEvent(new Event("dentaya:open-preferences"))}><DentayaIcon name="settings" size={15}/>Görünüm</UiNode>
         </UiNode>
-      </UiNode>);
-    }
-    return <HomeDashboard organization={organization} userId={user.id} name={profile?.full_name ?? ""} role={membership.role} modules={getFocusedModules(organization.org_type)} cases={cases} shipments={shipments} counts={dashboardCounts} loading={dashboardLoading} error={message} updatedAt={dashboardUpdatedAt} onRefresh={() => void loadDashboardData(organization)} onSignOut={() => void signOut()}/>;
+        <UiNode as="div" className="desktop-home-access-grid">
+            <UiNode as="aside" className="desktop-home-context" aria-label="Aktif çalışma alanı">
+                <UiNode as="div" className="desktop-home-context-title"><DentayaIcon name="case" size={17}/><UiNode as="strong">İş takibi</UiNode></UiNode>
+                <UiNode as="span" className="desktop-home-section-label">Durum</UiNode>
+                <UiNode as="dl" className="desktop-home-context-details"><UiNode as="div"><UiNode as="dt">Oturum</UiNode><UiNode as="dd">{user ? 'Giriş aktif' : 'Önce giriş yap'}</UiNode></UiNode><UiNode as="div"><UiNode as="dt">Kurum</UiNode><UiNode as="dd">{user ? 'İLK KURULUM' : '—'}</UiNode></UiNode><UiNode as="div"><UiNode as="dt">Kurum erişimi</UiNode><UiNode as="dd">Bağlantı gerekli</UiNode></UiNode></UiNode>
+                <UiNode as="div" className="desktop-home-context-bottom"><Link href="/start"><DentayaIcon name="guide" size={15}/>Başlangıç rehberi</Link><Link href="/settings"><DentayaIcon name="settings" size={15}/>Ayarlar</Link></UiNode>
+            </UiNode>
+            <UiNode as="div" className="desktop-home-access-workarea">
+                <UiNode as="section" className="desktop-home-launch-panel" aria-labelledby="desktop-home-tools-title">
+                    <UiNode as="div" className="desktop-home-records-toolbar"><UiNode as="div"><DentayaIcon name="design" size={17}/><UiNode as="h2" id="desktop-home-tools-title">Araçlar</UiNode></UiNode><UiNode as="span" className="desktop-home-muted">Hızlı erişim</UiNode></UiNode>
+                    <UiNode as="div" className="desktop-home-launch-tools">
+                        <Link href="/design" className="desktop-home-tool desktop-home-tool-cad"><UiNode as="span" className="desktop-home-tool-mark"><DentayaIcon name="design" size={25}/></UiNode><UiNode as="div"><UiNode as="strong">DentAYA Design</UiNode><UiNode as="p">Tarama, marjin ve tasarım akışını aç.</UiNode><UiNode as="small">Kurum erişimi</UiNode></UiNode><UiNode as="span" className="desktop-home-tool-arrow" aria-hidden="true">↗</UiNode></Link>
+                        <Link href="/ai" className="desktop-home-tool"><UiNode as="span" className="desktop-home-tool-mark"><DentayaIcon name="ai" size={25}/></UiNode><UiNode as="div"><UiNode as="strong">AYA çalışma asistanı</UiNode><UiNode as="p">Yerel sohbet API anahtarı veya DentAYA oturumu istemez. Mesajlar yalnızca bu bilgisayardaki modele iletilir; buluta otomatik geçilmez.</UiNode><UiNode as="small">Yerel</UiNode></UiNode><UiNode as="span" className="desktop-home-tool-arrow" aria-hidden="true">↗</UiNode></Link>
+                        <Link href="/cad-library" className="desktop-home-tool"><UiNode as="span" className="desktop-home-tool-mark"><DentayaIcon name="case" size={23}/></UiNode><UiNode as="div"><UiNode as="strong">Form kütüphanesi</UiNode><UiNode as="p">STL veya OBJ dosyası seçin.</UiNode><UiNode as="small">Yerel</UiNode></UiNode><UiNode as="span" className="desktop-home-tool-arrow" aria-hidden="true">↗</UiNode></Link>
+                        <Link href="/training" className="desktop-home-tool"><UiNode as="span" className="desktop-home-tool-mark"><DentayaIcon name="guide" size={23}/></UiNode><UiNode as="div"><UiNode as="strong">Demo ve eğitim</UiNode><UiNode as="p">CAD workstation akışını öğren</UiNode><UiNode as="small">Yerel</UiNode></UiNode><UiNode as="span" className="desktop-home-tool-arrow" aria-hidden="true">↗</UiNode></Link>
+                    </UiNode>
+                </UiNode>
+                <UiNode as="section" className="desktop-home-records desktop-home-access-records" aria-labelledby="desktop-home-cases-title">
+                    <UiNode as="div" className="desktop-home-records-toolbar"><UiNode as="div"><DentayaIcon name="case" size={17}/><UiNode as="h2" id="desktop-home-cases-title">Vaka kayıtları ve süreç takibi</UiNode></UiNode><UiNode as="span" className="desktop-home-tag">Bağlantı gerekli</UiNode></UiNode>
+                    <UiNode as="div" className="desktop-home-table-scroll"><UiNode as="table" className="desktop-home-table"><UiNode as="thead"><UiNode as="tr"><UiNode as="th" scope="col">Vaka / Hasta Ref</UiNode><UiNode as="th" scope="col">Durum</UiNode><UiNode as="th" scope="col">Termin</UiNode><UiNode as="th" scope="col">Öncelik</UiNode></UiNode></UiNode><UiNode as="tbody"/></UiNode></UiNode>
+                    <UiNode as="div" className="desktop-home-empty"><UiNode as="div" className="desktop-home-empty-icon"><DentayaIcon name="case" size={30}/></UiNode><UiNode as="strong">{user ? 'Çalışma alanını oluşturalım.' : 'Önce giriş yap'}</UiNode><UiNode as="p">Veriler yüklendiğinde işleriniz burada görünecek.</UiNode><Link href="/invite" className="desktop-home-button"><DentayaIcon name="team" size={15}/>{workflowText(locale, "Davet koduyla katıl")}</Link></UiNode>
+                    <UiNode as="div" className="desktop-home-records-note"><DentayaIcon name="shield" size={14}/><UiNode as="span">Hasta/kurum yetkisi ile görüntülenir.</UiNode></UiNode>
+                </UiNode>
+            </UiNode>
+            <UiNode as="aside" className="desktop-home-account-panel" aria-label={user ? uiText('Kurum üyeliği') : uiText('Giriş / Hesap Oluştur')}>
+                <UiNode as="div" className="desktop-home-inspector-heading"><DentayaIcon name={user ? 'clinic' : 'shield'} size={16}/><UiNode as="h2">{user ? 'İLK KURULUM' : 'Oturum'}</UiNode></UiNode>
+                {user && <UiNode as="div" className="desktop-home-account-user"><UiNode as="strong"><UserText>{profile?.full_name || user.email || '—'}</UserText></UiNode><UiNode as="small">Giriş aktif</UiNode></UiNode>}
+                <UiNode as="div" className="desktop-home-connection-note" role="status"><UiNode as="span" className="desktop-home-connection-dot"/><UiNode as="div"><UiNode as="strong">{user ? uiText('Kurum üyeliği') : connectionLabel}</UiNode><UiNode as="p">{supabaseConfiguration.isConfigured ? uiText('Hasta, tarama ve vaka akışını modül bazında yönet.') : shellCopy.setupDescription}</UiNode></UiNode></UiNode>
+                {pendingInviteToken && <UiNode as="div" className="desktop-home-pending-invite"><UiNode as="strong">Bekleyen Ekip Daveti</UiNode><UiNode as="p">Bir çalışma alanı seni ekibine davet etmiş. Yeni kurum oluşturmadan önce bu daveti kabul edebilirsin.</UiNode><Link href={`/invite?token=${encodeURIComponent(pendingInviteToken)}`} className="desktop-home-button desktop-home-button-primary">Daveti Aç</Link></UiNode>}
+                {!user ? <UiNode as="form" className="desktop-home-account-form" onSubmit={event => { event.preventDefault(); void submitAuth(); }}>
+                    <UiNode as="div" className="desktop-home-auth-tabs" role="group" aria-label="Giriş / Hesap Oluştur"><UiNode as="button" type="button" aria-pressed={authMode === 'login'} onClick={() => setAuthMode('login')}>Giriş</UiNode><UiNode as="button" type="button" aria-pressed={authMode === 'register'} onClick={() => setAuthMode('register')}>Hesap Oluştur</UiNode></UiNode>
+                    {authMode === 'register' && <Field label={uiText('Ad Soyad')} value={authName} onChange={setAuthName} placeholder={uiText('Ad Soyad')}/>}
+                    <Field label={uiText('E-posta')} value={authEmail} onChange={setAuthEmail} placeholder="ornek@dentaya.com" type="email"/>
+                    <Field label={uiText('Şifre')} value={authPassword} onChange={setAuthPassword} placeholder={uiText('Şifre')} type="password" autoComplete={authMode === 'login' ? 'current-password' : 'new-password'}/>
+                    {message && <UiNode as="div" className="desktop-home-form-message" role="status">{message}</UiNode>}
+                    <UiNode as="button" type="submit" className="desktop-home-button desktop-home-button-primary" disabled={authBusy}>{authBusy ? 'İşleniyor...' : authMode === 'login' ? uiText('Giriş Yap') : 'Hesap Oluştur'}</UiNode>
+                    <Link href="/invite" className="desktop-home-account-invite"><DentayaIcon name="team" size={15}/>{workflowText(locale, 'Davet koduyla katıl')}<UiNode as="span" aria-hidden="true">↗</UiNode></Link>
+                </UiNode> : <UiNode as="form" className="desktop-home-account-form" onSubmit={event => { event.preventDefault(); void createOrganization(); }}>
+                    <UiNode as="h3">Çalışma alanını oluşturalım.</UiNode><UiNode as="p" className="desktop-home-form-description">Kurum tipini seç. Bu seçim ana panelde hangi iş akışlarının gösterileceğini belirler.</UiNode>
+                    <UiNode as="div" className="desktop-home-org-choices" role="group" aria-label="Kurum türü"><OrgChoice active={orgType === 'clinic'} title={uiText('Klinik')} description="Hasta, vaka, laboratuvar ve randevu süreçleri." onClick={() => setOrgType('clinic')}/><OrgChoice active={orgType === 'laboratory'} title={uiText('Laboratuvar')} description="Vaka kabulü, tasarım, onay, üretim ve teslimat." onClick={() => setOrgType('laboratory')}/><OrgChoice active={orgType === 'courier'} title={uiText('Kurye')} description="Teslimatlar, sürücüler ve canlı konum akışı." onClick={() => setOrgType('courier')}/></UiNode>
+                    <Field label={uiText('Kurum Adı')} value={orgName} onChange={setOrgName} placeholder={uiText('Kurum adını yaz')}/>
+                    {message && <UiNode as="div" className="desktop-home-form-message" role="status">{message}</UiNode>}
+                    <UiNode as="button" type="submit" className="desktop-home-button desktop-home-button-primary" disabled={orgBusy}>{orgBusy ? 'Oluşturuluyor...' : 'Çalışma Alanını Oluştur'}</UiNode><Link href="/invite" className="desktop-home-account-invite"><DentayaIcon name="team" size={15}/>{workflowText(locale, 'Davet koduyla katıl')}</Link><UiNode as="button" type="button" className="desktop-home-button" onClick={() => void signOut()}>Çıkış Yap</UiNode>
+                </UiNode>}
+                <UiNode as="div" className="desktop-home-account-foot"><DentayaIcon name="shield" size={16}/><UiNode as="span">Hasta/kurum yetkisi ile görüntülenir.</UiNode></UiNode>
+            </UiNode>
+        </UiNode>
+        <UiNode as="footer" className="desktop-home-statusbar"><UiNode as="span"><UiNode as="i" data-state="pending"/>{connectionLabel}</UiNode><UiNode as="span">DentAYA çalışma alanı</UiNode></UiNode>
+    </UiNode>;
 }
-function Field({ label, value, onChange, placeholder, type = "text", }: {
+function Field({ label, value, onChange, placeholder, type = "text", autoComplete }: {
     label: string;
     value: string;
     onChange: (value: string) => void;
     placeholder: string;
     type?: string;
+    autoComplete?: string;
 }) {
-    const { t: uiText } = useTranslation();
-    return (<UiNode as="label" style={field}>
-      <UiNode as="span" style={fieldLabel}>
-        {uiText(label)}
-      </UiNode>
-
-      <UiNode as="input" value={value} type={type} onChange={(event) => onChange(event.target.value)} placeholder={placeholder} style={input}/>
-    </UiNode>);
+    return <UiNode as="label" className="desktop-home-field"><UiNode as="span">{label}</UiNode><UiNode as="input" value={value} type={type} onChange={event => onChange(event.target.value)} placeholder={placeholder} autoComplete={autoComplete ?? (type === 'email' ? 'email' : undefined)}/></UiNode>;
 }
-function OrgChoice({ active, title, description, onClick, }: {
+function OrgChoice({ active, title, description, onClick }: {
     active: boolean;
     title: string;
     description: string;
     onClick: () => void;
 }) {
-    return (<UiNode data-dy-copy-stack as="button" type="button" onClick={onClick} style={{
-            ...orgChoice,
-            ...(active
-                ? orgChoiceActive
-                : {}),
-        }}>
-      <UiNode as="strong">
-        {title}
-      </UiNode>
-
-      <UiNode as="span">
-        {description}
-      </UiNode>
-    </UiNode>);
+    return <UiNode as="button" type="button" className="desktop-home-org-choice" aria-pressed={active} onClick={onClick}><UiNode as="span" className="desktop-home-choice-radio"/><UiNode as="span"><UiNode as="strong">{title}</UiNode><UiNode as="small">{description}</UiNode></UiNode></UiNode>;
 }
 export function getFocusedModules(orgType: OrgType): Array<{
     eyebrow: string;
@@ -603,234 +466,3 @@ export function getFocusedModules(orgType: OrgType): Array<{
         { eyebrow: "AI", title: "AYA · Akıllı Yardım Asistanı", description: "Takip özetlerini yorumlayan akıllı asistan.", href: "/ai", icon: "ai" },
     ];
 }
-const globalCss = `
-  * {
-    box-sizing: border-box;
-  }
-
-  body {
-    margin: 0;
-  }
-
-  a {
-    text-decoration: none;
-  }
-
-  button,
-  input {
-    font: inherit;
-  }
-
-  .module-card,
-  .recent-row {
-    transition:
-      transform .16s ease,
-      border-color .16s ease,
-      background .16s ease;
-  }
-
-  .module-card:hover {
-    transform: translateY(-3px);
-    border-color: #347068 !important;
-    background: var(--dy-surface2, #0d202c) !important;
-  }
-
-  .recent-row:hover {
-    border-color: #31586b !important;
-    background: var(--dy-surface, #0b1c28) !important;
-  }
-
-  @media(max-width: 980px) {
-    .dentaya-home-placeholder {
-      display: none;
-    }
-  }
-
-  @media(max-width: 760px) {
-    header {
-      align-items: flex-start !important;
-      flex-direction: column !important;
-    }
-  }
-`;
-const page: CSSProperties = {
-    minHeight: "100vh",
-    padding: "0 4.5vw 60px",
-    color: "var(--dy-text, #f2f6f8)",
-    background: "linear-gradient(180deg,var(--dy-bg,#07131d),var(--dy-bg,#07131d))",
-    fontFamily: "Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",
-    fontSize: "15px",
-};
-const brand: CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    gap: "6px",
-    fontSize: "30px",
-    lineHeight: 1,
-    fontWeight: 900,
-    letterSpacing: "-1.6px",
-};
-const eyebrow: CSSProperties = {
-    margin: 0,
-    color: "var(--dy-accent, #6de2cf)",
-    fontSize: "12px",
-    fontWeight: 900,
-    letterSpacing: "2.4px",
-};
-const heroText: CSSProperties = {
-    maxWidth: "660px",
-    margin: 0,
-    color: "var(--dy-muted, #8ba0af)",
-    fontSize: "14px",
-    lineHeight: 1.7,
-};
-const primaryButton: CSSProperties = {
-    width: "100%",
-    padding: "13px 16px",
-    border: "none",
-    borderRadius: "10px",
-    background: "var(--dy-accent, #6de2cf)",
-    color: "var(--dy-accent-contrast, #03110e)",
-    fontWeight: 900,
-    cursor: "pointer",
-};
-const secondaryButton: CSSProperties = {
-    padding: "11px 13px",
-    borderRadius: "9px",
-    border: "1px solid var(--dy-border, #29465d)",
-    background: "var(--dy-surface2, #0d1e2a)",
-    color: "var(--dy-text, #d5e0e6)",
-    cursor: "pointer",
-};
-const authShell: CSSProperties = {
-    width: "min(1180px,100%)",
-    minHeight: "100vh",
-    margin: "0 auto",
-    padding: "7vh 0",
-    display: "grid",
-    gridTemplateColumns: "minmax(0,1.2fr) minmax(330px,.8fr)",
-    gap: "25px",
-    alignItems: "center",
-};
-const authIntro: CSSProperties = {
-    padding: "20px 4vw 20px 0",
-};
-const authTitle: CSSProperties = {
-    maxWidth: "720px",
-    margin: "10px 0 18px",
-    fontSize: "clamp(47px,6vw,78px)",
-    lineHeight: 0.98,
-    letterSpacing: "-4px",
-};
-const introSteps: CSSProperties = {
-    marginTop: "35px",
-    display: "grid",
-    gap: "8px",
-};
-const authCard: CSSProperties = {
-    padding: "24px",
-    display: "grid",
-    gap: "14px",
-    background: "linear-gradient(145deg,var(--dy-surface, #0b1c28),var(--dy-bg, #07131d))",
-    border: "1px solid var(--dy-border,#29465d)",
-    borderRadius: "18px",
-    boxShadow: "0 35px 90px rgba(0,0,0,.26)",
-};
-const authTabs: CSSProperties = {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "6px",
-};
-const tab: CSSProperties = {
-    padding: "11px",
-    borderRadius: "8px",
-    border: "1px solid var(--dy-border,#29465d)",
-    background: "var(--dy-input,#081722)",
-    color: "var(--dy-muted, #8296a5)",
-    cursor: "pointer",
-};
-const activeTab: CSSProperties = {
-    ...tab,
-    background: "var(--dy-accent-soft, #12322f)",
-    color: "var(--dy-accent, #91e9dc)",
-    border: "1px solid var(--dy-accent,#6de2cf)",
-};
-const field: CSSProperties = {
-    display: "grid",
-    gap: "6px",
-};
-const fieldLabel: CSSProperties = {
-    color: "var(--dy-muted, #8ea1af)",
-    fontSize: "12px",
-};
-const input: CSSProperties = {
-    width: "100%",
-    padding: "12px",
-    color: "var(--dy-text,#f2f6f8)",
-    background: "var(--dy-bg, #06131d)",
-    border: "1px solid var(--dy-border, #29465d)",
-    borderRadius: "9px",
-    outline: "none",
-};
-const messageBox: CSSProperties = {
-    padding: "11px 12px",
-    border: "1px solid var(--dy-border,#29465d)",
-    borderRadius: "9px",
-    color: "var(--dy-accent, #91ded3)",
-    background: "var(--dy-accent-soft, #10282e)",
-    fontSize: "13px",
-    lineHeight: 1.5,
-};
-const pendingInviteCard: CSSProperties = {
-    width: "100%",
-    marginBottom: "16px",
-    padding: "13px",
-    display: "grid",
-    gap: "9px",
-    border: "1px solid var(--dy-accent,#6de2cf)",
-    borderRadius: "12px",
-    background: "var(--dy-accent-soft,rgba(109,226,207,.08))",
-    color: "var(--dy-text,#eef7fb)",
-};
-const onboardingCard: CSSProperties = {
-    width: "min(760px,100%)",
-    margin: "7vh auto",
-    padding: "28px",
-    background: "linear-gradient(145deg,var(--dy-surface, #0b1c28),var(--dy-bg, #07131d))",
-    border: "1px solid var(--dy-border,#29465d)",
-    borderRadius: "18px",
-};
-const onboardingTitle: CSSProperties = {
-    margin: "8px 0 12px",
-    fontSize: "clamp(36px,5vw,55px)",
-    letterSpacing: "-2px",
-    lineHeight: 1,
-};
-const orgChoices: CSSProperties = {
-    margin: "24px 0",
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))",
-    gap: "8px",
-};
-const orgChoice: CSSProperties = {
-    padding: "15px",
-    display: "grid",
-    gap: "7px",
-    textAlign: "left",
-    color: "var(--dy-text,#f2f6f8)",
-    background: "var(--dy-panel-surface-2,var(--dy-input,#081722))",
-    border: "1px solid var(--dy-border,#29465d)",
-    borderRadius: "11px",
-    cursor: "pointer",
-};
-const orgChoiceActive: CSSProperties = {
-    background: "var(--dy-accent-soft, #12322f)",
-    border: "1px solid var(--dy-accent,#6de2cf)",
-    color: "var(--dy-accent, #a7eee3)",
-};
-const onboardingActions: CSSProperties = {
-    marginTop: "15px",
-    display: "grid",
-    gap: "8px",
-};
-

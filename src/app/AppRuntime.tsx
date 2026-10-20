@@ -8,7 +8,7 @@ import LanguageRuntime from "./LanguageRuntime";
 import { LanguageSelect } from "./LanguageSettings";
 import ExperienceRuntime from "./ExperienceRuntime";
 import WorkspaceChrome from "./WorkspaceChrome";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { useDentayaThemeRuntime } from "@/app/dentaya-theme";
 import { useCustomizationRuntime } from "./customization";
 import { useBrandIconRuntime } from "@/app/BrandLogo";
@@ -27,6 +27,17 @@ export default function AppRuntime({ children }: {
     useBrandIconRuntime(pathname);
     const [online, setOnline] = useState(true);
     const [reconnected, setReconnected] = useState(false);
+    const notices = useRef<HTMLDivElement>(null);
+    const [noticeHeight, setNoticeHeight] = useState(0);
+    useEffect(() => {
+        if (!notices.current) return;
+        const node = notices.current;
+        const measure = () => setNoticeHeight(node.getBoundingClientRect().height);
+        measure();
+        const observer = new ResizeObserver(measure);
+        observer.observe(node);
+        return () => observer.disconnect();
+    }, []);
     useEffect(() => {
         let offlineStartedAt: number | null = null;
         let reconnectTimer: number | null = null;
@@ -96,6 +107,7 @@ export default function AppRuntime({ children }: {
     }, []);
     return (<>
       <LanguageRuntime /><LanguagePackRuntime /><LanguageSelect compact/><ExperienceRuntime />
+      <UiNode as="div" ref={notices} className="runtime-notices">
       {!supabaseConfiguration.isConfigured && needsOrganizationConnection(pathname) ? (<UiNode as="div" translateChildren={false} className="runtime-notice runtime-notice--setup" role="status">
           <UiNode as="strong">{supabaseConfiguration.status === 'invalid' ? copy.invalidTitle : copy.setupTitle}</UiNode>
           <UiNode as="span">{supabaseConfiguration.status === 'invalid' ? copy.invalidDescription : copy.setupDescription}</UiNode>
@@ -109,7 +121,8 @@ export default function AppRuntime({ children }: {
           <UiNode as="strong">{uiText("Bağlantı geri geldi")}</UiNode>
           <UiNode as="span">DentAYA yeniden çevrimiçi. İşlemlere devam edebilirsiniz.</UiNode>
         </UiNode>) : null}
-      <UiNode as="div" id="main-content" className="app-content" tabIndex={-1}>
+      </UiNode>
+      <UiNode as="div" id="main-content" className="app-content" tabIndex={-1} style={{ '--desktop-notice-height': `${noticeHeight}px` } as CSSProperties}>
         <WorkspaceChrome>{children}</WorkspaceChrome>
         <LoadingReadingRuntime/>
         <DentalBreakRuntime/>

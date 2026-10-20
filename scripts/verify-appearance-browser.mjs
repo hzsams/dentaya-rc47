@@ -62,7 +62,7 @@ try {
   await palette().locator('summary').click();await palette().getByLabel('Vurgu rengi',{exact:true}).evaluate(input=>{Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(input,'#aa55cc');input.dispatchEvent(new Event('input',{bubbles:true}));});
   await page.waitForFunction(()=>document.documentElement.style.getPropertyValue('--dy-accent')==='#aa55cc');assert.equal(await select().inputValue(),'custom');
   await palette().getByRole('button',{name:'Tema rengine dön',exact:true}).click();await expectColors(['#101215','#1c2026','#b9c6d7']);assert.equal(await select().inputValue(),'palette:carbon');
-  await page.locator('.module-header button').click();await page.locator('dialog[open] .appearance-palette select').selectOption('style:retro');await expectColors(['#e7dfcc','#fff5df','#8e3d25']);
+  await page.locator('.desktop-titlebar-actions').getByRole('button',{name:'Görünüm ve tercihler',exact:true}).click();await page.locator('dialog[open] .appearance-palette select').selectOption('style:retro');await expectColors(['#e7dfcc','#fff5df','#8e3d25']);
   await page.getByRole('button',{name:'Ayarları kapat',exact:true}).click();assert.equal(await select().inputValue(),'style:retro');
   await openSettings();assert.equal(await select().inputValue(),'style:retro');await expectColors(['#e7dfcc','#fff5df','#8e3d25']);
   const locales=['en','de','fr','es','it','pt','nl','pl','ro','ru','uk','ar','zh','ja','sv','da','el','cs','ko','bg','hr','et','fi','hu','ga','lv','lt','mt','sk','sl','no','is','sr','bs','sq','mk','az','ka','hy','he','fa','hi','bn','id','vi','tr'];

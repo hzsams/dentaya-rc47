@@ -14,6 +14,9 @@ import AyaPreferencesPanel from "./ai/AyaPreferencesPanel";
 import LogoPicker from "./LogoPicker";
 import CustomizationPanel from "./CustomizationPanel";
 import { professionalShellText } from '@/lib/i18n/professional-shell';
+import { desktopShellText } from '@/lib/i18n/desktop-shell';
+import { DENTAYA_RELEASE } from '@/lib/release';
+import './desktop-shell.css';
 const MODULES: Record<string, [
     string,
     string
@@ -52,16 +55,41 @@ function readPreferences(): Preferences {
 export default function WorkspaceChrome({ children }: {
     children: ReactNode;
 }) {
-    const { t: uiText, intlLocale, locale } = useTranslation();
-    const copy = professionalShellText(locale);
+    const { t: uiText, locale } = useTranslation();
+    const copy = professionalShellText(locale), desktopCopy=desktopShellText(locale);
     const pathname = usePathname();
     const currentModule = MODULES[pathname.split("/")[1]];
-    const available = Boolean(currentModule) || ["/", "/workspace", "/design", "/cad", "/ai"].includes(pathname);
+    const isCad=pathname==='/design'||pathname==='/cad';
+    const isWorkspace=pathname==='/workspace',isAya=pathname==='/ai';
+    const isLibrary=pathname==='/cad-library';
+    const isDesktop=Boolean(currentModule)||isCad||isWorkspace||isAya||isLibrary;
+    const available=isDesktop||pathname==='/';
+    const moduleKey=pathname.split('/')[1];
+    const moduleLabel=currentModule?uiText(currentModule[0]):isCad?'DentAYA Design':isAya?'AYA':isLibrary?uiText('Form kütüphanesi'):desktopCopy.workManager;
     const [preferences, setPreferences] = useState(defaults);
     const [tab, setTab] = useState("appearance");
     const [message, setMessage] = useState("");
+    const [online,setOnline]=useState(true);
+    const moduleMenu=useRef<HTMLDialogElement>(null);
+    const moduleMenuTrigger=useRef<HTMLElement|null>(null);
+    const menuButton=useRef<HTMLButtonElement>(null);
     const dialog = useRef<HTMLDialogElement>(null);
-    useEffect(() => { dialog.current?.close(); }, [pathname]);
+    useEffect(() => { dialog.current?.close();moduleMenu.current?.close(); }, [pathname]);
+    useEffect(()=>{
+        const network=()=>setOnline(navigator.onLine);
+        network();window.addEventListener('online',network);window.addEventListener('offline',network);
+        return()=>{window.removeEventListener('online',network);window.removeEventListener('offline',network);};
+    },[]);
+    function openModuleMenu(){
+        if(document.querySelector('dialog[open]'))return;
+        moduleMenuTrigger.current=document.activeElement instanceof HTMLElement?document.activeElement:null;
+        moduleMenu.current?.showModal();
+        moduleMenu.current?.querySelector<HTMLInputElement>('input[type="search"]')?.focus();
+    }
+    useEffect(()=>{
+        const keyboard=(event:KeyboardEvent)=>{if(isDesktop&&event.altKey&&!event.ctrlKey&&!event.metaKey&&event.key.toLowerCase()==='m'){event.preventDefault();openModuleMenu();}};
+        window.addEventListener('keydown',keyboard);return()=>window.removeEventListener('keydown',keyboard);
+    },[isDesktop]);
     function openPreferences() {
         if (document.querySelector('dialog[open]')) return;
         dialog.current?.showModal();
@@ -100,14 +128,47 @@ export default function WorkspaceChrome({ children }: {
         }
     }
     return <>
-    {currentModule ? <UiNode as="div" className={`module-workspace professional-chrome ${preferences.navigation ? "" : "module-workspace--wide"}`}>
-      {preferences.navigation && <UiNode as="aside" className="module-navigation"><UiNode as="div" className="module-brand"><BrandLogo width={164} height={36}/></UiNode><UiNode as="small">{uiText("ÇALIŞMA ALANI")}</UiNode>
-        <ModuleNavigation pathname={pathname}/>
-        <UiNode as="div" className="module-nav-foot"><Link href="/ai">{uiText("İsteğe bağlı AYA yardımcısı →")}</Link></UiNode>
+    {isDesktop ? <UiNode as="div" className={`desktop-shell professional-chrome ${isCad?'desktop-shell--cad':''}`} data-desktop-module={moduleKey}>
+      <UiNode as="header" className="desktop-titlebar" translateChildren={false}>
+        <UiNode as="div" className="desktop-brand-area">
+          <UiNode as="button" type="button" className="desktop-icon-button desktop-navigation-toggle" aria-label={desktopCopy.toggleNavigation} aria-expanded={!isCad&&preferences.navigation} onClick={()=>{if(isCad||window.matchMedia('(max-width: 800px)').matches)openModuleMenu();else update({navigation:!preferences.navigation});}}><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"/></svg></UiNode>
+          <Link href="/workspace" className="desktop-brand" aria-label="DentAYA"><BrandLogo width={124} height={28} priority/></Link>
+        </UiNode>
+        <UiNode as="nav" className="desktop-document-tabs" aria-label={desktopCopy.workspaces} translateChildren={false}>
+          <Link href="/workspace" aria-current={isWorkspace?'page':undefined}><DentayaIcon name="case" size={15}/><UiNode as="span">{desktopCopy.workManager}</UiNode></Link>
+          <Link href="/design" aria-current={isCad?'page':undefined}><DentayaIcon name="design" size={15}/><UiNode as="span">{desktopCopy.design}</UiNode></Link>
+          <Link href="/ai" aria-current={isAya?'page':undefined}><DentayaIcon name="ai" size={15}/><UiNode as="span">{desktopCopy.assistant}</UiNode></Link>
+          {!isWorkspace&&!isCad&&!isAya&&<Link href={pathname} aria-current="page"><UiNode as="span">{moduleLabel}</UiNode></Link>}
+        </UiNode>
+        <UiNode as="div" className="desktop-titlebar-actions">
+          <UiNode as="button" ref={menuButton} type="button" onClick={openModuleMenu} title={desktopCopy.menuHint} className="desktop-modules-button"><DentayaIcon name="home" size={15}/><UiNode as="span">{desktopCopy.modules}</UiNode><UiNode as="kbd" translateChildren={false}>{desktopCopy.menuHint}</UiNode></UiNode>
+          <UiNode as="button" type="button" onClick={openPreferences} aria-label={desktopCopy.preferences} title={copy.appearance}><DentayaIcon name="settings" size={17}/></UiNode>
+        </UiNode>
+      </UiNode>
+      <UiNode as="div" className={`desktop-workspace module-workspace ${isCad||!preferences.navigation?'module-workspace--wide':''}`}>
+        {!isCad&&preferences.navigation&&<UiNode as="aside" className="module-navigation desktop-module-navigation" aria-label={desktopCopy.modules} translateChildren={false}>
+          <UiNode as="div" className="desktop-navigation-heading"><UiNode as="span">{desktopCopy.workspace}</UiNode><UiNode as="small">DENTAYA</UiNode></UiNode>
+          <ModuleNavigation pathname={pathname}/>
+          <Link href="/ai" className="desktop-sidebar-assistant"><DentayaIcon name="ai" size={16}/><UiNode as="span">AYA</UiNode><UiNode as="small">↗</UiNode></Link>
+        </UiNode>}
+        <UiNode as="div" className="module-body desktop-document">
+          <UiNode as="div" className={`module-content desktop-content ${isWorkspace?'desktop-content--manager':''} ${isCad?'desktop-content--cad':''} ${isAya?'desktop-content--aya':''}`}>
+            {children}
+            {currentModule&&<ModuleWorkcard key={moduleKey} module={moduleKey}/>}
+          </UiNode>
+        </UiNode>
+      </UiNode>
+      {!isCad&&<UiNode as="footer" className="desktop-statusbar" translateChildren={false}>
+        <UiNode as="span" className="desktop-status-module"><DentayaIcon name="shield" size={12}/>{moduleLabel}</UiNode>
+        <UiNode as="span" className="desktop-network-status"><UiNode as="i" data-online={online} aria-hidden="true"/>{online?desktopCopy.networkAvailable:desktopCopy.offline}</UiNode>
+        <UiNode as="code">{DENTAYA_RELEASE.version.replace('1.0.0-rc.','RC')}</UiNode>
       </UiNode>}
-      <UiNode as="div" className="module-body"><UiNode as="header" className="module-header">{!preferences.navigation && <UiNode as="details" className="module-navigation-inline"><UiNode as="summary" translateChildren={false}>{copy.menu}</UiNode><UiNode as="div"><ModuleNavigation pathname={pathname}/></UiNode></UiNode>}<UiNode as="div"><UiNode as="small">DENTAYA / {uiText(currentModule[0]).toLocaleUpperCase(intlLocale())}</UiNode><UiNode as="p" className="module-header-context">{uiText(currentModule[1])}</UiNode></UiNode><UiNode as="button" onClick={openPreferences} translateChildren={false}><DentayaIcon name="settings" size={16}/> {copy.appearance}</UiNode></UiNode><UiNode as="div" className="module-content">{children}<ModuleWorkcard key={pathname.split("/")[1]} module={pathname.split("/")[1]}/></UiNode></UiNode>
+      <UiNode as="dialog" ref={moduleMenu} className="desktop-module-menu" aria-label={desktopCopy.modules} onKeyDown={event=>{if(event.key==='Escape'){event.preventDefault();moduleMenu.current?.close();}}} onClick={event=>{if(event.target===moduleMenu.current)moduleMenu.current?.close();}} onClose={()=>{const trigger=moduleMenuTrigger.current??menuButton.current;if(trigger?.isConnected)trigger.focus();}}>
+        <UiNode as="header" translateChildren={false}><UiNode as="strong">{desktopCopy.modules}</UiNode><UiNode as="button" type="button" aria-label={desktopCopy.closeMenu} onClick={()=>moduleMenu.current?.close()}>✕</UiNode></UiNode>
+        <UiNode as="div" onClick={event=>{if((event.target as HTMLElement).closest('a'))moduleMenu.current?.close();}}><ModuleNavigation pathname={pathname}/></UiNode>
+      </UiNode>
     </UiNode> : children}
-    {available && !currentModule && <UiNode as="button" className="workspace-settings-trigger" title="Hızlı ayarlar · Ctrl+," onClick={openPreferences}><DentayaIcon name="settings" size={16}/> {uiText(" Görünüm")}</UiNode>}
+    {available && !isDesktop && <UiNode as="button" className="workspace-settings-trigger" title="Hızlı ayarlar · Ctrl+," onClick={openPreferences}><DentayaIcon name="settings" size={16}/> {uiText(" Görünüm")}</UiNode>}
     {available && <UiNode as="dialog" ref={dialog} className="workspace-settings" aria-labelledby="workspace-settings-title" onClick={event => { if (event.target === dialog.current)
             dialog.current?.close(); }}>
       <UiNode as="div" className="workspace-settings-inner"><UiNode as="header"><UiNode as="div"><UiNode as="small">ÇALIŞMA ALANIN</UiNode><UiNode as="h2" id="workspace-settings-title">{uiText("Sana göre DentAYA")}</UiNode><UiNode as="p">{uiText("Ekrandan ayrılmadan düzenle.")}</UiNode></UiNode><UiNode as="button" autoFocus aria-label={uiText("Ayarları kapat")} onClick={() => dialog.current?.close()}>✕</UiNode></UiNode>

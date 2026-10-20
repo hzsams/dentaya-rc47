@@ -1,0 +1,23 @@
+{
+  "pass": true,
+  "launcherSingleOwner": true,
+  "unmountedOwnerTakeover": true,
+  "newMountDoesNotStealOwner": true,
+  "nativeModal": true,
+  "keyboardWrapAndEnter": true,
+  "activeDescendant": true,
+  "escapeRestoresFocus": true,
+  "routeClosesPersistentPalette": true,
+  "realModules": [
+    "patients",
+    "appointments"
+  ],
+  "oneH1PerModule": true,
+  "moduleBeforePersonalChecklist": true,
+  "systemToolsCollapsedAndSearchable": true,
+  "personalChecklistScopedAndLocal": true,
+  "sevenDayPlanner": true,
+  "mobileFits": true,
+  "backend": "intercepted synthetic fixture; no production data",
+  "pageErrors": 0
+}

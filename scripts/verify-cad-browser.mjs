@@ -100,14 +100,18 @@ try {
   assert.equal(await page.getByLabel('Fırça yarıçapı sürgüsü').inputValue(),'2.8');
   await page.locator('#cad-tool-content .cad-advanced-parameters>summary').click();
   await page.getByRole('button',{name:'Sivri',exact:true}).click();assert.equal(await page.getByRole('button',{name:'Sivri',exact:true}).getAttribute('aria-pressed'),'true');
+  assert.equal(await page.locator('.cad-floating-panel').getAttribute('data-docked'),'true');
+  const dockedCanvas=await page.locator('canvas').boundingBox();
   const handle=page.getByRole('button',{name:'Araç panelini taşı'}),before=await handle.boundingBox();
   await page.mouse.move(before.x+60,before.y+15);await page.mouse.down();await page.mouse.move(before.x-120,before.y+70,{steps:8});await page.mouse.up();
   const moved=await handle.boundingBox();assert.ok(moved.x<before.x-150);assert.ok(moved.y>=(await page.locator('.cad-viewport-frame').boundingBox()).y+7);
+  assert.equal(await page.locator('.cad-floating-panel').getAttribute('data-docked'),'false');
+  assert.ok((await page.locator('canvas').boundingBox()).width>dockedCanvas.width+200,'The real scene reclaims the detached inspector column');
   const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('dentaya:cad-floating-panel-v3')));
   const panelBounds=await page.locator('.cad-floating-panel').boundingBox();assert.ok(Math.abs(stored.x-panelBounds.x)<2);
 
   await handle.focus();await handle.press('Shift+ArrowRight');assert.ok((await handle.boundingBox()).x>moved.x+35);
-  const scene=await page.locator('canvas').boundingBox(),cx=scene.x+scene.width*.43,cy=scene.y+scene.height*.5;
+  let scene=await page.locator('canvas').boundingBox();const cx=scene.x+scene.width*.43,cy=scene.y+scene.height*.5;
   await page.mouse.click(cx,cy,{button:'right'});await page.getByRole('menu',{name:'CAD sağ tık araçları'}).waitFor();
   await page.getByRole('menuitem',{name:'Yumuşat',exact:true}).click();assert.equal(await page.locator('.cad-tool-palette--compact [data-cad-tool=smooth]').getAttribute('aria-pressed'),'true');
   await page.mouse.move(cx,cy);await page.mouse.down({button:'right'});await page.mouse.move(cx+80,cy+40,{steps:8});await page.mouse.up({button:'right'});assert.equal(await page.getByRole('menu').count(),0);
@@ -115,10 +119,15 @@ try {
   await page.getByRole('button',{name:'Araç panelini gizle',exact:true}).click();assert.equal(await page.locator('.cad-floating-panel').count(),0);
   await page.getByRole('button',{name:'Tasarım paneli',exact:true}).click();await handle.waitFor();
   await appAction('Panel konumunu sıfırla');
+  assert.equal(await page.locator('.cad-floating-panel').getAttribute('data-docked'),'true');
+  scene=await page.locator('canvas').boundingBox();
+  assert.ok(Math.abs(scene.width-dockedCanvas.width)<2,'Reset redocks the inspector and restores the scene width');
   // Sculpt the actual restoration, then verify geometry history and hidden-target protection.
   await page.getByRole('button',{name:'Restorasyon tek başına göster',exact:true}).click();
   await page.keyboard.press('Numpad8');
+  await page.keyboard.press('Numpad5');
   await page.evaluate(async()=>{for(let n=0;n<35;n++)await new Promise(requestAnimationFrame);});
+  scene=await page.locator('canvas').boundingBox();
   await page.locator('.cad-tool-palette--compact [data-cad-tool=add]').click();
   let hit=false;
   for(const [dx,dy] of [[0,0],[0,-30],[-25,0],[25,0],[0,30]]){
@@ -204,8 +213,10 @@ try {
       await page.setViewportSize({width:1600,height:1000});
       if(await page.getByRole('button',{name:'Nesne panelini aç',exact:true}).count())await page.getByRole('button',{name:'Nesne panelini aç',exact:true}).click();
       await appAction('Panel konumunu sıfırla');
+      await page.keyboard.press('Numpad5');
+      await page.evaluate(async()=>{for(let n=0;n<35;n++)await new Promise(requestAnimationFrame);});
       await page.waitForFunction(()=>{const r=document.querySelector('.cad-floating-panel')?.getBoundingClientRect();return r&&r.right<=innerWidth&&r.bottom<=innerHeight;},{},{timeout:5000});
-      await page.screenshot({path:path.join(screenshotDir,'DentAYA_RC36_CAD_Expert.png'),timeout:15000,animations:'disabled'});
+      await page.screenshot({path:path.join(screenshotDir,'DentAYA_RC51_CAD_Expert.png'),timeout:15000,animations:'disabled',caret:'initial',style:'nextjs-portal{visibility:hidden!important}'});
     } catch(error) { console.warn('Optional CAD screenshot unavailable:',error.message); }
   }
 
