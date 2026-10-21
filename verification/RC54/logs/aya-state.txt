@@ -1,0 +1,17 @@
+{
+  "pass": true,
+  "sessionEditorIsolation": true,
+  "pendingReplyMemoryConflict": true,
+  "userDraftPreserved": true,
+  "explicitMemoryReload": true,
+  "lateStatusCannotOverwriteReady": true,
+  "cadInstallAndUnavailableUseCore": true,
+  "cadBusyPollingRecovers": true,
+  "modelCallsAreMock": true,
+  "cadCallbacksAreSynthetic": true,
+  "nativeInference": false,
+  "screenshots": [
+    "/workspace/dentaya-rc54-validation/AYA_RC54_memory_conflict.png",
+    "/workspace/dentaya-rc54-validation/AYA_RC54_unavailable_model_core.png"
+  ]
+}

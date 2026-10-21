@@ -1,8 +1,8 @@
 # DentAYA çalışma talimatı
 
-Bu klasör RC46/RC47 tabanından geliştirilen RC53 kaynak güncellemesidir. Önce CODEX_DEVIR_NOTLARI.md ve CODEX_BASLANGIC_PROMPTU.md dosyalarını oku; bunlar ilk WIP devir kayıtlarıdır. Güncel kapsam ve test sınırları RC53_KONTROL_RAPORU.md içindedir. RC53 sonuçlarını verification/RC53 kayıtlarından kontrol et; önceki sürümün geçen kontrollerini yeni kaynak doğrulaması sayma. Windows EXE, gerçek model çıkarımı ve canlı kurum kabulünü doğrulanmış kabul etme.
+Bu klasör RC46/RC47 tabanından geliştirilen RC54 kaynak güncellemesidir. Önce CODEX_DEVIR_NOTLARI.md ve CODEX_BASLANGIC_PROMPTU.md dosyalarını oku; bunlar ilk WIP devir kayıtlarıdır. Güncel kapsam ve test sınırları RC54_KONTROL_RAPORU.md içindedir. RC54 sonuçlarını verification/RC54 kayıtlarından kontrol et; önceki sürümün geçen kontrollerini yeni kaynak doğrulaması sayma. Windows EXE, gerçek model çıkarımı ve canlı kurum kabulünü doğrulanmış kabul etme.
 
-- RC53, RC52'nin Studio aydınlık panellerini, mor başlıkları ve CAD'de sağ koyu komut şeridini kullanır; nesneler parametrelerin üstünde soldadır. CAD'de ortak uygulama başlığını veya ek modül kenar çubuğunu geri getirme. exocad/3Shape ergonomik referanstır; tescilli kod, logo veya arayüz varlığı kopyalama. Geçerli dil, açıkça seçilmiş görünüm tercihleri, kılavuzlu/uzman mod ve taşıma/sıfırlama davranışlarını koru.
+- RC54, RC52'nin Studio aydınlık panellerini, mor başlıkları ve CAD'de sağ koyu komut şeridini kullanır; nesneler parametrelerin üstünde soldadır. CAD'de ortak uygulama başlığını veya ek modül kenar çubuğunu geri getirme. exocad/3Shape ergonomik referanstır; tescilli kod, logo veya arayüz varlığı kopyalama. Geçerli dil, açıkça seçilmiş görünüm tercihleri, kılavuzlu/uzman mod ve taşıma/sıfırlama davranışlarını koru.
 - Yükleme yalnız gerçek bekleyen işlemin ömrünü izler. Zorunlu 5 saniyelik okuma, işlem sonrasında kalan katman veya hazır ekranda odak tuzağı ekleme. Bilgi kartları ve mini oyunlar isteğe bağlı kalır.
 - Kullanıcının önceliği: sade ve tutarlı profesyonel arayüz, model öncelikli yerel AYA, çalışma belleği ve gerçek CAD araçlarıyla bağlamlı yardım. “AI based kaldır” açıklaması AYA’yı kaldırmak değildir.
 - CAD manuel ve deterministik çalışır; asistan mevcut 27 tipli komutu kullanıcı tıklamasıyla çağırır. Uzman inceleme panelindeki fener/yüzey/kesit/kamera kontrolleri geometriyi veya geri alma geçmişini değiştirmez. İlk sekiz manuel araç ve kılavuzlu kapılar korunur.
@@ -16,3 +16,5 @@ Bu klasör RC46/RC47 tabanından geliştirilen RC53 kaynak güncellemesidir. Ön
 - Rutin, geri alınabilir kod değişikliklerinde ilerle. Üretim web sitesine dağıtım bu görevin kapsamı değildir.
 - Türkçe, somut ilerleme bilgisi ver. Mock/native çıkarım, kaynak ZIP/Windows EXE, geliştirme/üretim doğrulaması ayrımlarını açık tut.
 
+
+- RC54 alan bazlı model bellek patch sözleşmesini, editör çakışma denetimini, not içe aktarmada güncel listeyi ve son status yanıtını esas alma davranışını koru. CAD recentActions yalnız eşleşen scope/snapshot/dataToken ile güncel kanıttır; canlı saveFailed/unsaved durumu geçmiş sonuçtan önce gelir. Dört ilgili RC54 tarayıcı testi ile tam verify geçti; native grammar 22/22, gerçek model çıkarımı hâlâ doğrulanmadı.

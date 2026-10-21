@@ -64,14 +64,22 @@ async function main(){
   const reply=ask(review,{isSaving:true,saveFailed:true,availableTools:['save','place','inspect']});assert.deepEqual(ids(reply),[]);assert.match(reply.output,/Kayıt sürüyor/);assert.doesNotMatch(reply.output,/projesi kaydedildi|çıkıldı\.$/i);
  });
  await check('failed ordinary save wins over placement and survives later non-save actions',()=>{
-  for(const patch of [{saveFailed:true},{recentActions:[{tool:'save',ok:false,result:'Disk full'},{tool:'inspect',ok:true,result:'Kontrol hesaplandı.'}]}]){
+  for(const patch of [{saveFailed:true},{saveFailed:true,recentActions:[{...base,tool:'save',ok:false,result:'Disk full'},{...base,tool:'inspect',ok:true,result:'Kontrol hesaplandı.'}]}]){
    const reply=ask(review,{placed:false,...patch});assert.deepEqual(ids(reply),['save']);assert.match(reply.output,/kayıt başarısız/i);assert.doesNotMatch(reply.output,/projesi kaydedildi/i);
   }
   const retry=ask(review,{placed:false,recentActions:[{tool:'save',ok:false,result:'Disk full'},{tool:'save',ok:true,result:'Kayıt tamamlandı.'}]});assert.deepEqual(ids(retry),['place']);assert.doesNotMatch(retry.output,/Son kayıt başarısız/);
  });
  await check('save and exit is a proposal and reports actual prior failure',()=>{
   assert.deepEqual(ids(ask('Bu projeyi kaydet ve çık.')),['save-exit']);
-  const reply=ask('Bu projeyi kaydet ve çık.',{recentActions:[{tool:'save-exit',ok:false,result:'Bağlantı kesildi.'}]});assert.deepEqual(ids(reply),['save']);assert.match(reply.output,/Bağlantı kesildi/);assert.doesNotMatch(reply.output,/projesi kaydedildi/);
+  const reply=ask('Bu projeyi kaydet ve çık.',{saveFailed:true,recentActions:[{scope:base.scope,snapshot:base.snapshot,dataToken:base.dataToken,tool:'save-exit',ok:false,result:'Bağlantı kesildi.'}]});assert.deepEqual(ids(reply),['save']);assert.match(reply.output,/Bağlantı kesildi/);assert.doesNotMatch(reply.output,/projesi kaydedildi/);
+ });
+ await check('manual save success and changed geometry outrank historical action text',()=>{
+  const oldFailure={scope:base.scope,snapshot:base.snapshot,dataToken:base.dataToken,tool:'save',ok:false,result:'OLD SAVE FAILURE'};
+  const reply=ask(review,{placed:false,unsaved:false,saveFailed:false,snapshot:'after-manual-save',recentActions:[oldFailure]});
+  assert.deepEqual(ids(reply),['place']);assert.doesNotMatch(reply.output,/Son kayıt başarısız|OLD SAVE FAILURE/);
+  const inspect={...oldFailure,tool:'inspect',ok:true,result:'OLD GEOMETRY: minimum 0.123 mm'};
+  const changed=ask(review,{dataToken:'new-geometry',report:null,recentActions:[inspect]});
+  assert.doesNotMatch(changed.output,/OLD GEOMETRY|0\.123/);assert.match(changed.output,/güncel geometri kontrolü yok/);assert.ok(ids(changed).includes('inspect'));
  });
  await check('undo and redo reflect real history availability',()=>{
   assert.deepEqual(ids(ask('Son mesh işlemini geri al.')),['undo']);assert.deepEqual(ids(ask('Redo işlemini nasıl uygularım?')),['redo']);

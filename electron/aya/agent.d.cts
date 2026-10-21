@@ -1,4 +1,5 @@
 export type AyaWorkingMemory={goal:string;decisions:string[];openQuestions:string[]};
+export type AyaMemoryPatch={goal:'keep'|'set'|'clear';decisions:'keep'|'replace';openQuestions:'keep'|'replace'};
 export type AyaCadTool='inspect'|'setup'|'library'|'place'|'save'|'save-exit'|'undo'|'redo'|'fit-camera'|'show-all'|'isolate'|'recorded-bite'|'view-natural'|'view-contact'|'view-thickness'|'view-undercut'|'view-section'|'tool-margin'|'tool-measure'|'tool-add'|'tool-reduce'|'tool-smooth'|'internal-fit'|'next'|'inspection'|'flashlight-on'|'flashlight-off';
 export type AyaProposal={tool:AyaCadTool;reason:string;scope:string;snapshot:string};
 export const TOOL_IDS:readonly AyaCadTool[];

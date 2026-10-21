@@ -1,5 +1,5 @@
-DentAYA RC53 — TAM KAYNAK GÜNCELLEME PAKETİ
-Sürüm: 1.0.0-rc.53 / AYA Core 0.9.0
+DentAYA RC54 — TAM KAYNAK GÜNCELLEME PAKETİ
+Sürüm: 1.0.0-rc.54 / AYA Core 0.10.0
 
 1. GitHub kaynak ZIP'ini yeni klasöre çıkarın; package.json bulunan klasörü açın.
 2. CMD için package.json yanında .env.local dosyası gerekir. Vaka/sunucu kaydı için mevcut çalışan dosyanızı kopyalayın. Mevcut kayıt ve kişisel ayarlarınızı koruyun.
@@ -9,11 +9,11 @@ Sürüm: 1.0.0-rc.53 / AYA Core 0.9.0
 3. Windows'ta DENTAYA_GUNCELLE_DERLE.cmd dosyasına çift tıklayın.
    Node.js 22.12+ ve npm 11+ gerekir. Tek CMD giriş noktası budur.
 4. Komut LOCALAPPDATA/DentAYA/Builds altında ayrı çalışma klasörü kullanır. OneDrive'daki .next ve node_modules kopyalanmaz. Eksik Electron dağıtımı, DLL kilidi tekrarları ve tanılama önlemleri korunur.
-5. Başarılı Windows derlemesinin ürettiği DentAYA-Setup-1.0.0-rc.53.exe dosyasını çalıştırın. Kesin çıktı yolu dist-desktop/latest-build.json içindedir.
+5. Başarılı Windows derlemesinin ürettiği DentAYA-Setup-1.0.0-rc.54.exe dosyasını çalıştırın. Kesin çıktı yolu dist-desktop/latest-build.json içindedir.
 
-Bu ZIP hazır Windows EXE'si içermez. Güncel kaynak, tarayıcı ve üretim derleme kontrollerinin gerçek sonuçları RC53_KONTROL_RAPORU.md içindedir. Windows üzerinde gerçek paketleme ve yerel model kabulü yapılmış sayılmaz. Sonuçları ve sınırları RC53_KONTROL_RAPORU.md dosyasından okuyun; önceki sürümün sonuçlarını yeni sürüme ait saymayın.
+Bu ZIP hazır Windows EXE'si içermez. Güncel kaynak, tarayıcı ve üretim derleme kontrollerinin gerçek sonuçları RC54_KONTROL_RAPORU.md içindedir. Windows üzerinde gerçek paketleme ve yerel model kabulü yapılmış sayılmaz. Sonuçları ve sınırları RC54_KONTROL_RAPORU.md dosyasından okuyun; önceki sürümün sonuçlarını yeni sürüme ait saymayın.
 
-RC53, aydınlık Studio panellerini, mor başlıkları ve CAD'de koyu sağ komut şeridini kullanır.
+RC54, aydınlık Studio panellerini, mor başlıkları ve CAD'de koyu sağ komut şeridini kullanır.
 Uygulamanın giriş adresi doğrudan İş yöneticisini açar; ayrı web sitesi bu kaynak değişikliğinin kapsamında değildir.
 CAD dışındaki simgeli etkinlik şeridi ana modüllere erişir. Modül menüsü Alt+M, mevcut hızlı arama Ctrl+K, görünüm tercihleri Ctrl+, ile açılır.
 CAD'de nesneler ve parametreler soldadır; ortak uygulama başlığı gösterilmez. Panel taşıma ve konum sıfırlama seçenekleri korunur.
@@ -30,6 +30,6 @@ Geliştirme: npm ci / npm run verify
 Yerel arayüz: npm run dev -- --hostname 127.0.0.1 --port 3010
 Yerel sohbet hesap/API anahtarı gerektirmez; gerçek vaka ve sunucu kaydı mevcut Supabase bağlantısını kullanır. Yeni migration yoktur. Üretim web sitesine dağıtım yapılmaz.
 
-Kullanım: RC53_KULLANIM.md
-Kontrol ve sınırlamalar: RC53_KONTROL_RAPORU.md
+Kullanım: RC54_KULLANIM.md
+Kontrol ve sınırlamalar: RC54_KONTROL_RAPORU.md
 İlk devir kayıtları: CODEX_BASLANGIC_PROMPTU.md / CODEX_DEVIR_NOTLARI.md

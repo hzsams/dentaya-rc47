@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {ayaSetupError} from '../src/lib/aya-setup-status';
+assert.match(ayaSetupError('AYA_DISK_FULL','tr'),/disk alanı.*Yer aç/);
+assert.match(ayaSetupError('AYA_GGUF_INVALID','tr'),/GGUF v2\/v3/);
+assert.match(ayaSetupError('AYA_WINDOWS_REQUIRED','tr'),/Windows.*Ollama/);
+assert.match(ayaSetupError('AYA_ENGINE_MISSING','tr'),/motor eksik.*Ollama/);
+assert.match(ayaSetupError('MODEL_MISSING','tr'),/dosyası bulunamadı/);
+assert.match(ayaSetupError('LOCAL_BUSY','tr'),/başka bir işlemde/);
+for(const error of ['AYA_DOWNLOAD_CHECKSUM','AYA_DOWNLOAD_SIZE','AYA_ENGINE_ARCHIVE'])assert.match(ayaSetupError(error,'tr'),/bütünlüğü doğrulanamadı.*doğrulanmadan kullanılmaz/);
+for(const error of ['AYA_DOWNLOAD_FAILED','fetch failed','EAI_AGAIN'])assert.match(ayaSetupError(error,'tr'),/İnternet bağlantısını.*Kurulu yerel modelleri/);
+assert.equal(ayaSetupError('AYA_DISK_FULL','de'),ayaSetupError('AYA_DISK_FULL','en'),'Unsupported locales use English without changing the selected language');
+assert.match(ayaSetupError('AYA_DISK_FULL','en'),/Free up space/);
+const nativeDetail='Could not access C:\\private\\model.gguf at https://secret.invalid';
+assert.doesNotMatch(ayaSetupError(nativeDetail,'tr'),/private|secret|https:|C:/,'Raw native error details never become setup instructions');
+console.log('PASS: actionable disk/GGUF/platform/integrity/network/engine/busy/missing-model guidance, English fallback and private native-detail exclusion.');

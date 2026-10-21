@@ -127,6 +127,11 @@ try{
  assert.equal(await page.evaluate(()=>window.rc50Work.getContext().unsaved),true,'A failed save keeps unsaved state');
  assert.deepEqual(await page.evaluate(()=>window.rc50Work.actions),['place','save-exit'],'There are no automatic follow-up CAD actions');
  await screenshot(cad,'AYA_RC50_callback_failure_and_stale_proposal.png');
+ // A later manual host save supersedes an older failed AYA save event.
+ await page.evaluate(()=>window.rc50Work.setContext(c=>({...c,saveFailed:false,unsaved:false,snapshot:'rc54-after-manual-save'})));
+ const current=await ask(page,cad,'Güncel çalışma durumunu değerlendir ve sıradaki adımı öner.',true);
+ assert.doesNotMatch(await current.textContent(),/Son kayıt başarısız|Sentetik kayıt başarısız/,'Historical callback text cannot override current successful host save state');
+ assert.equal(await page.evaluate(()=>window.rc50Work.getContext().unsaved),false);
  timings.offlineCadMs=Date.now()-cadStarted;
 
  const modelStarted=Date.now(),modelPage=await browser.newPage({viewport:{width:1280,height:940}});watch(modelPage);
@@ -159,7 +164,7 @@ try{
  await stopServer();
  rmSync(route,{recursive:true,force:true});rmSync(path.join(root,'.next/dev/types'),{recursive:true,force:true});
  assert.equal(existsSync(route),false);timings.totalMs=Date.now()-started;
- console.log(JSON.stringify({pass:true,explicitMemoryInRealChat:true,memoryRecallAndNewConversation:true,historyOptInReload:true,multistepConversionAndMemoryDraft:true,offlineTypedCadProposal:true,applyRequired:true,staleProposalDisabled:true,callbackFailurePreserved:true,noInventedGeometryMetrics:true,readyModelReceivesExplicitMemory:true,modelCallsAreMock:true,cadCallbacksAreSynthetic:true,realGeometryValidated:false,timings,screenshots},null,2));
+ console.log(JSON.stringify({pass:true,explicitMemoryInRealChat:true,memoryRecallAndNewConversation:true,historyOptInReload:true,multistepConversionAndMemoryDraft:true,offlineTypedCadProposal:true,applyRequired:true,staleProposalDisabled:true,callbackFailurePreserved:true,manualSaveSupersedesHistoricalFailure:true,noInventedGeometryMetrics:true,readyModelReceivesExplicitMemory:true,modelCallsAreMock:true,cadCallbacksAreSynthetic:true,realGeometryValidated:false,timings,screenshots},null,2));
 }catch(error){console.error(logs.slice(-14000));throw error;}finally{
  await browser?.close();
  await stopServer();

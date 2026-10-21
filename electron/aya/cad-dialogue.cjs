@@ -81,7 +81,7 @@ function suggestCadReply(prompt,{cadContext=null,locale='tr',workingMemory}={}){
  const add=(tool,a,b)=>{if(proposals.length<4&&can(tool)&&!proposals.some(p=>p.tool===tool))proposals.push({tool,reason:pick(a,b),scope:c.scope,snapshot:c.snapshot});};
  const finish=()=>{if(proposals.length)rows.push(pick('Önerilen işlemler yalnız Uygula düğmesine bastığında çalışır; güncel çalışma tekrar denetlenir.','Suggested actions run only when you click Apply; the current workspace is checked again.'));return reply();};
  const last=c.recentActions.at(-1),lastSave=c.recentActions.filter(a=>a.tool==='save'||a.tool==='save-exit').at(-1);
- const failedSave=c.saveFailed||lastSave?.ok===false;
+ const failedSave=c.saveFailed;
  if(failedSave){
   rows.push(pick('Son kayıt başarısız. Kayıt başarılı olmadan çıkışı tamamlanmış sayma.','The last save failed. Exit is not complete until saving succeeds.'));
   if(lastSave?.ok===false&&lastSave.result)rows.push(pick('Kayıt sonucu: ','Save result: ')+lastSave.result);

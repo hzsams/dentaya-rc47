@@ -11,9 +11,21 @@ function createLocalAya({fetchImpl=fetch,managed}={}){
   if(!response.ok)throw Error(response.status===404?'MODEL_MISSING':'LOCAL_REQUEST_FAILED');
   const reader=response.body.getReader();let size=0;const chunks=[];try{while(true){const {done,value}=await reader.read();if(done)break;size+=value.byteLength;if(size>2_000_000)throw Error('LOCAL_RESPONSE_TOO_LARGE');chunks.push(value);}return JSON.parse(Buffer.concat(chunks).toString('utf8'));}finally{await reader.cancel().catch(()=>{});}
  }
- function isLocal(m){return m&&typeof m.name==='string'&&m.name.length<=120&&m.size>0&&m.details?.format==='gguf'&&!m.remote_model&&!m.remote_host&&!/(?:^|[-:])cloud(?:$|[-:])/i.test(m.name);}
- async function models(){const data=await json('/api/tags');return (Array.isArray(data.models)?data.models:[]).filter(isLocal).map(m=>({name:m.name,size:m.size}));}
- async function status(){if(managed){const local=await managed.status();if(local.installed||local.progress.running||local.models.length)return {ok:local.installed,models:local.models,managed:local,progress:local.progress};try{return {ok:true,models:await models(),managed:local,progress:local.progress};}catch{return {ok:false,models:[],managed:local,progress:local.progress,error:'AYA_ENGINE_MISSING'};}}try{return {ok:true,models:await models(),progress:{...progress}};}catch{return {ok:false,models:[],error:'LOCAL_RUNTIME_MISSING',progress:{...progress}};}}
+ function isLocal(m){return m&&typeof m.name==='string'&&m.name.length<=120&&m.size>0&&m.details?.format==='gguf'&&!m.remote_model&&!m.remote_host&&!/(?:^|[-:])cloud(?:$|[-:])/i.test(m.name)&&!(managed&&m.name.startsWith('aya-local:'));}
+ async function models(timeout=6000){const data=await json('/api/tags',{timeout});return (Array.isArray(data.models)?data.models:[]).filter(isLocal).map(m=>({name:m.name,size:m.size}));}
+ async function status(){
+  if(managed){
+   const local=await managed.status();let ollama=[],ollamaOnline=false;
+   // An incomplete managed installation must not hide an existing local Ollama.
+   // Keep this read-only probe short; inference still validates its selected runtime.
+   try{ollama=await models(1500);ollamaOnline=true;}catch{}
+   const available=local.installed?local.models:[];
+   const combined=[...new Map([...available,...ollama].map(model=>[model.name,model])).values()];
+   const hasRuntime=Boolean(local.installed||ollamaOnline),busy=Boolean(active||pull||local.progress.running||managed.isBusy?.());
+   return {ok:hasRuntime&&!busy,models:combined,managed:local,progress:local.progress,...(busy?{error:'LOCAL_BUSY'}:!hasRuntime?{error:'AYA_ENGINE_MISSING'}:{})};
+  }
+  try{const available=await models(),busy=Boolean(active||pull);return {ok:!busy,models:available,progress:{...progress},...(busy?{error:'LOCAL_BUSY'}:{})};}catch{return {ok:false,models:[],error:'LOCAL_RUNTIME_MISSING',progress:{...progress}};}
+ }
  async function chat(input,owner,translate=s=>s,onToken=()=>{}){
   if(active||pull||managed?.isBusy())return {ok:false,error:'LOCAL_BUSY'};
   if(!input||typeof input.prompt!=='string'||!input.prompt.trim()||input.prompt.length>8000||typeof input.model!=='string'||!input.model.trim()||input.model.length>120)return {ok:false,error:'INVALID_PROMPT'};

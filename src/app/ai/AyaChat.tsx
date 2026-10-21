@@ -3,6 +3,7 @@ import {CopyAyaResponse,ExportAyaConversation} from './AyaMessageTools';
 import {normalizeMemory} from '../../../electron/aya/agent.cjs';
 import {ayaAgentText} from '@/lib/i18n/aya-agent';
 import {resolveAyaReply} from '@/lib/aya-conversation';
+import {createAyaStatusRefreshGate,selectAyaModel} from '@/lib/aya-ui-state';
 import {fallbackReply} from '../../../electron/aya/conversation.cjs';
 import {ayaExperienceText} from '@/lib/i18n/aya-experience';
 import './aya-catalog.css';
@@ -38,32 +39,35 @@ export default function AyaChat() {
     const settingsPanel=useRef<HTMLElement|null>(null);
     const [sessionId, setSessionId] = useState(''), [loaded, setLoaded] = useState(false), [guideMode, setGuideMode] = useState(false);
     const [status, setStatus] = useState<LocalStatus>(empty), [model, setModel] = useState(''), [draft, setDraft] = useState(''), [messages, setMessages] = useState<Message[]>([]), [busy, setBusy] = useState(false), [error, setError] = useState(''), [checking, setChecking] = useState(false), [detailed, setDetailed] = useState(false), [desktop, setDesktop] = useState(false), [verified, setVerified] = useState(false), [lastModelFailure,setLastModelFailure]=useState(false);
+    const statusRequests=useRef(createAyaStatusRefreshGate());
     const requestId=useRef(''),cancelRequest=useRef<(()=>void)|null>(null);
     const lock = useRef(false), live = useRef(true), end = useRef<HTMLDivElement | null>(null);
     async function refresh() {
         const api = window.dentayaDesktop;
-        if (!api?.localAyaStatus)
+        if (!api?.localAyaStatus||!live.current)
             return;
+        const refreshId=statusRequests.current.begin();
         setChecking(true);
         try {
             const result = await api.localAyaStatus();
-            if (!live.current)
+            if (!live.current||!statusRequests.current.isCurrent(refreshId))
                 return;
             setStatus(result);
-            setModel(old => result.models.some(m => m.name === old) ? old : result.models[0]?.name ?? '');
+            setModel(old => selectAyaModel(old,result.models));
         }
         catch {
-            if (live.current) {
+            if (live.current&&statusRequests.current.isCurrent(refreshId)) {
                 setStatus(previous=>({...previous,ok:false}));
                 setError(RUNTIME_ERROR);
             }
         }
         finally {
-            if (live.current)
+            if (live.current&&statusRequests.current.isCurrent(refreshId))
                 setChecking(false);
         }
     }
     useEffect(() => {
+        const statusGate=statusRequests.current;
         live.current = true;
         const saved = readAyaState().sessions[0];
         setSessionId(saved?.id || crypto.randomUUID());
@@ -79,17 +83,17 @@ export default function AyaChat() {
         void refresh();
         return () => {
             const pending=requestId.current;
-            live.current = false;requestId.current='';lock.current=false;
+            live.current = false;statusGate.invalidate();requestId.current='';lock.current=false;
             cancelRequest.current?.();cancelRequest.current=null;
             if(pending)void window.dentayaDesktop?.localAyaCancel?.().catch(()=>{});
         };
     }, []);
     useEffect(() => {
-        if (!status.progress.running)
+        if (!status.progress.running&&status.error!=='LOCAL_BUSY')
             return;
         const id = setInterval(() => void refresh(), 1500);
         return () => clearInterval(id);
-    }, [status.progress.running]);
+    }, [status.progress.running,status.error]);
     useEffect(() => {setVerified(false);setLastModelFailure(false);}, [model]);
     useEffect(() => { if(settingsOpen)settingsPanel.current?.focus({preventScroll:true}); }, [settingsOpen]);
     useEffect(() => {
@@ -211,7 +215,7 @@ export default function AyaChat() {
                 <UiNode as="div" className="aya-settings-nav" role="group" aria-label={copy.settings} translateChildren={false}>{(['setup','memory','library','history','preferences'] as const).map(key=><UiNode as="button" key={key} type="button" aria-pressed={panel===key} aria-controls="aya-settings-content" onClick={()=>setPanel(key)}>{copy[key]}</UiNode>)}</UiNode>
                 <UiNode as="div" id="aya-settings-content" className="aya-settings-content" translateChildren={false}>
                     {panel==='setup'&&<><UiNode as="div" className="aya-mode-bar" translateChildren={false}><UiNode as="label" htmlFor="aya-response-mode">{copy.engine}<UiNode as="select" id="aya-response-mode" value={guideMode?'core':'automatic'} disabled={busy} onChange={e=>responseMode(e.target.value==='core')}><UiNode as="option" value="automatic">{copy.automatic}</UiNode><UiNode as="option" value="core">{copy.coreOnly}</UiNode></UiNode></UiNode><UiNode as="p">{copy.engineHelp}</UiNode><UiNode as="label" className="aya-detail-choice"><UiNode as="input" type="checkbox" checked={detailed} disabled={busy} onChange={e=>setDetailed(e.target.checked)}/>{copy.detailed}</UiNode></UiNode>{desktop?<AyaEngineSetup status={status} model={model} busy={busy} checking={checking} onChoose={choose} onRefresh={refresh} onError={setError}/>:<UiNode as="p">{copy.browserNote}</UiNode>}<UiNode as="button" type="button" disabled={!modelReady||busy} onClick={()=>void send(copy.modelTestPrompt,true)}>{copy.test}</UiNode><UiNode as="div" className="aya-work-tools" translateChildren={false}><UiNode as="strong">{copy.tools}</UiNode>{[{label:copy.calculate,prompt:'1800 × 0,18'},{label:copy.convert,prompt:copy.prompts[2]},{label:copy.checklist,prompt:copy.prompts[1]},{label:copy.handoff,prompt:copy.prompts[3]}].map(tool=><UiNode as="button" type="button" key={tool.label} disabled={busy} onClick={()=>prepare(tool.prompt)}>{tool.label}</UiNode>)}</UiNode><ExportAyaConversation messages={messages} sessionId={sessionId} disabled={busy}/></>}
-                    {panel==='memory'&&<><AyaWorkingMemoryPanel memory={workingMemory} busy={busy} onChange={setWorkingMemory}/><AyaKnowledgePanel/></>}
+                    {panel==='memory'&&<><AyaWorkingMemoryPanel key={sessionId} sessionId={sessionId} memory={workingMemory} busy={busy} onChange={setWorkingMemory}/><AyaKnowledgePanel/></>}
                     {panel==='library'&&<AyaQuestionLibrary disabled={busy} onChoose={question=>{prepare(question);if(window.innerWidth<850)setSettingsOpen(false);}}/>}
                     {panel==='preferences'&&<AyaPreferencesPanel/>}
                     {panel==='history'&&<UiNode as="section" className="aya-session-history" translateChildren={false}><UiNode as="h3">{copy.history}</UiNode>{!options.saveHistory?<UiNode as="p">{copy.historyOff}</UiNode>:!sessions.length?<UiNode as="p">{copy.historyEmpty}</UiNode>:sessions.map(x=><UiNode as="div" key={x.id} className="aya-history-item" translateChildren={false}><UiNode as="button" type="button" className="aya-history-open" disabled={busy} aria-label={copy.openConversation+': '+x.title} onClick={()=>{setSessionId(x.id);setMessages(x.messages);setWorkingMemory(normalizeMemory(x.workingMemory));setDraft('');setError('');setVerified(false);setLastModelFailure(false);}}><UserText>{x.title}</UserText><UiNode as="small">{new Intl.DateTimeFormat(intlLocale(),{dateStyle:'medium',timeStyle:'short'}).format(x.updatedAt)}</UiNode></UiNode><UiNode as="button" type="button" disabled={busy} onClick={()=>{deleteAyaSession(x.id);if(x.id===sessionId)newConversation();}}>{copy.remove}</UiNode></UiNode>)}</UiNode>}

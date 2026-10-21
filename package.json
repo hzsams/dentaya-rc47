@@ -1,6 +1,6 @@
 {
   "name": "dentaya-production-rc",
-  "version": "1.0.0-rc.53",
+  "version": "1.0.0-rc.54",
   "private": true,
   "type": "module",
   "description": "DentAYA klinik, laboratuvar ve dental CAD çalışma platformu",
@@ -92,12 +92,14 @@
     "verify:professional-shell-browser": "node scripts/verify-professional-shell-browser.mjs",
     "verify:professional-modules-browser": "node scripts/verify-professional-modules-browser.mjs",
     "verify:aya-dialogue": "node scripts/verify-aya-dialogue.cjs",
-    "verify:aya-work": "node scripts/verify-aya-memory.cjs && node scripts/verify-aya-tasks.cjs && node scripts/verify-aya-cad-dialogue.cjs && node --import tsx scripts/verify-aya-work.ts && npm run verify:aya-references",
+    "verify:aya-work": "node scripts/verify-aya-memory.cjs && node scripts/verify-aya-tasks.cjs && node scripts/verify-aya-cad-dialogue.cjs && node --import tsx scripts/verify-aya-work.ts && npm run verify:aya-references && npm run verify:aya-state",
     "verify:aya-work-browser": "node scripts/verify-aya-work-browser.mjs",
     "verify:desktop-shell-browser": "node scripts/verify-desktop-shell-browser.mjs",
     "verify:aya-references": "node --import tsx scripts/verify-aya-references.ts",
     "verify:cad-inspection": "node --import tsx scripts/verify-cad-inspection.ts",
-    "verify:cad-inspection-browser": "node scripts/verify-cad-inspection-browser.mjs"
+    "verify:cad-inspection-browser": "node scripts/verify-cad-inspection-browser.mjs",
+    "verify:aya-state": "node --import tsx scripts/verify-aya-ui-state.ts && node --import tsx scripts/verify-aya-setup.ts",
+    "verify:aya-state-browser": "node scripts/verify-aya-state-browser.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.116.0",

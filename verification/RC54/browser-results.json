@@ -1,0 +1,116 @@
+{
+  "release": "1.0.0-rc.54",
+  "status": "pass",
+  "checkedAt": "2026-10-21T17:01:56+03:00",
+  "nativeModelInferenceVerified": false,
+  "windowsInstallerProduced": false,
+  "liveOrganizationBackendVerified": false,
+  "runs": [
+    {
+      "name": "aya-conversation",
+      "command": "node scripts/verify-aya-conversation-browser.mjs",
+      "exitCode": 0,
+      "seconds": 29.9,
+      "log": "logs/aya-conversation.txt",
+      "sha256": "3f1a8448e2c4824cb79df83fb7b1839071fcfb6cd918e9d1b904fb10cefdcd17"
+    },
+    {
+      "name": "aya-work",
+      "command": "node scripts/verify-aya-work-browser.mjs",
+      "exitCode": 0,
+      "seconds": 17.89,
+      "log": "logs/aya-work.txt",
+      "sha256": "1720064461814d7c85c1acef8667cbf27ad1818e58671dd37eb477a24c6ee7c1"
+    },
+    {
+      "name": "cad-daily",
+      "command": "node --import tsx scripts/verify-cad-daily-browser.mjs",
+      "exitCode": 0,
+      "seconds": 173.23,
+      "log": "logs/cad-daily.txt",
+      "sha256": "d230727703c6174f4d2bcb9295a9322b7b47e33dc425b8e3862c854d38dc4b2d"
+    },
+    {
+      "name": "aya-state",
+      "command": "node scripts/verify-aya-state-browser.mjs",
+      "exitCode": 0,
+      "seconds": 41.41,
+      "log": "logs/aya-state.txt",
+      "sha256": "4ea17a035d98722e4f561503657e6da47bc4ffd71621d8f806d89e4c66f6c911"
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "screenshots/AYA_RC49_basic_dialogue.png",
+      "size": 82698,
+      "sha256": "8a7514cc6c38af546bb764a22e343bd9229837dfa5fb33be07b25012ca241dc1"
+    },
+    {
+      "path": "screenshots/AYA_RC49_identity.png",
+      "size": 69172,
+      "sha256": "8898a778be8e4393edbe0963a6e3b064decd2b9b387b45fe0726ff277e7e3a57"
+    },
+    {
+      "path": "screenshots/AYA_RC50_callback_failure_and_stale_proposal.png",
+      "size": 128548,
+      "sha256": "209564f2bae9e9106f9f35142db69a27f0349ad07922f65b4567f5019abb0cc8"
+    },
+    {
+      "path": "screenshots/AYA_RC50_memory_and_multistep.png",
+      "size": 80019,
+      "sha256": "8e84d975f0620b9bc643eb0a5fdccb459d34b9c27545f4bab443f2e6f601dbc3"
+    },
+    {
+      "path": "screenshots/AYA_RC50_model_receives_explicit_memory.png",
+      "size": 69789,
+      "sha256": "cbcd175a36b51d73ec43195563cff19860b319f25c39b40c468956972cf3f60b"
+    },
+    {
+      "path": "screenshots/AYA_RC50_offline_place_proposal.png",
+      "size": 93137,
+      "sha256": "8ad49e310647796b67f70bb723cf09d18026dd241656d2c9b9cded9fad7eba6f"
+    },
+    {
+      "path": "screenshots/AYA_RC54_memory_conflict.png",
+      "size": 115541,
+      "sha256": "cb755a10bfc7b9887697f72fd20a9840934e4ed21d6950f25bd560dbdea3f43d"
+    },
+    {
+      "path": "screenshots/AYA_RC54_unavailable_model_core.png",
+      "size": 57274,
+      "sha256": "2260ca1082913d5719cadfc1f8b540f86eb7c812f757c957e94bb8e82405746d"
+    },
+    {
+      "path": "screenshots/AYA_conversation_desktop.png",
+      "size": 63106,
+      "sha256": "9f02dd4af5370de9d021288a8d387a11e13c7d6681c8a386f2e26c3cbd31b015"
+    },
+    {
+      "path": "screenshots/RC40_CAD_AYA.png",
+      "size": 228237,
+      "sha256": "2350e9420dd96ab8c020df4923559a548126d194428505a7b4e66a472a605e67"
+    },
+    {
+      "path": "screenshots/RC46_AYA_mobile.png",
+      "size": 60030,
+      "sha256": "0c5b83591e0bc56cf8b4064af2493683d6ea82318872cd192649912305809e00"
+    },
+    {
+      "path": "screenshots/RC51_CAD_daily.png",
+      "size": 212768,
+      "sha256": "5f87df1ad460a30b8261112dfbcd7ec00f8f8ebed8e424a6ae6affc3b4d887de"
+    },
+    {
+      "path": "screenshots/loading-ready-mobile.png",
+      "size": 22478,
+      "sha256": "249867be60dfcd54415c12f364abcd1eba4b3e2f8dd8cd4e443da57aebd841b9"
+    }
+  ],
+  "scope": {
+    "modelCalls": "mock",
+    "ayaCadCallbacks": "synthetic",
+    "cadDailyGeometry": "real WebGL/kernel with synthetic backend",
+    "desktopWindows": "not run",
+    "brandAndAppearance": "unchanged; RC53 history is not RC54 verification"
+  }
+}
