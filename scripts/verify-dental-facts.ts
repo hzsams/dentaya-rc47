@@ -4,17 +4,32 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { DENTAL_FACTS, dentalFactSource, shuffleFacts } from '../src/lib/dental-facts';
 import { DENTAL_FACT_CAPACITY, dentalFactFingerprint, validateDentalFactCatalog, type DentalFactCatalog } from '../src/lib/dental-fact-schema';
 
 const content: DentalFactCatalog = JSON.parse(readFileSync(new URL('../src/lib/i18n/dental-facts.json', import.meta.url), 'utf8'));
 const result = validateDentalFactCatalog(content);
 assert.deepEqual(result.errors, []);
-assert.equal(result.count, 220);
-assert.equal(result.sourceCount, 28);
+assert.equal(result.count, 500);
+assert.equal(result.sourceCount, 60);
 assert.equal(content.clinicalReviewStatus, 'not-recorded');
-const additions = { ...content, facts: content.facts.slice(200), sources: Object.fromEntries(Object.entries(content.sources).filter(([id]) => ['jaw-overview', 'cleft-overview', 'salivary-overview'].includes(id))) };
+// Preserve the inherited deck; the RC53 expansion adds records rather than rewriting its history.
+assert.equal(createHash('sha256').update(JSON.stringify(content.facts.slice(0, 220))).digest('hex'), '69506237f28080e56516cadd517aa86690ac90600e3122b919b6e53e66692626');
+const addedFacts = content.facts.slice(220);
+const addedSourceIds = new Set(addedFacts.map(fact => fact.source));
+const additions = { ...content, facts: addedFacts, sources: Object.fromEntries(Object.entries(content.sources).filter(([id]) => addedSourceIds.has(id))) };
+assert.equal(additions.facts.length, 280);
 assert.deepEqual(validateDentalFactCatalog(additions, { requireEvidence: true }).errors, []);
+for (const [index, fact] of additions.facts.entries()) {
+  assert.equal(fact.id, `dental-${221 + index}`, 'New IDs stay stable and follow the inherited deck.');
+  assert.equal(fact.evidence?.url, additions.sources[fact.source].url, 'Each new passage identifies its declared document.');
+  assert.match(fact.evidence!.url, /^https:\/\/github\.com\/(?:mrdoob\/three\.js\/blob\/r186\/docs\/pages\/[A-Za-z0-9]+\.html|isl-org\/Open3D\/blob\/v0\.19\.0\/docs\/jupyter\/(?:geometry|pipelines)\/[a-z_]+\.ipynb)$/);
+  assert.equal(additions.sources[fact.source].license, 'MIT');
+}
+// The previous clinical expansion also retains its per-record evidence and reuse terms.
+const clinicalSources = new Set(content.facts.slice(200, 220).map(fact => fact.source));
+assert.deepEqual(validateDentalFactCatalog({ facts: content.facts.slice(200, 220), sources: Object.fromEntries(Object.entries(content.sources).filter(([id]) => clinicalSources.has(id))) }, { requireEvidence: true }).errors, []);
 assert.equal(DENTAL_FACTS.length, content.facts.length);
 for (const fact of DENTAL_FACTS) assert.equal(dentalFactSource(fact).name, content.sources[fact.source].name);
 
@@ -70,4 +85,4 @@ try {
   writeFileSync(input, JSON.stringify({ ...base, facts: [{ ...base.facts[0], tr: DENTAL_FACTS[0].tr, en: DENTAL_FACTS[0].en }] }));
   assert.equal(run('--check').status, 1, 'An incoming pack cannot duplicate an inherited entry.');
 } finally { rmSync(temporary, { recursive: true, force: true }); }
-console.log(JSON.stringify({ pass: true, shippedDistinctFacts: result.count, shippedSources: result.sourceCount, newSourceBackedFacts: additions.facts.length, clinicallyReviewed: false, syntheticCapacityOnly: DENTAL_FACT_CAPACITY, capacityValidationMs: Math.round(validationMs), indexDeckBytesAtCapacity: deck.byteLength, requestedCountReached: false }, null, 2));
+console.log(JSON.stringify({ pass: true, shippedDistinctFacts: result.count, shippedSources: result.sourceCount, newSourceBackedFacts: additions.facts.length, inheritedFactsPreserved: 220, clinicallyReviewed: false, curatedExpansionTarget: 500, expansionTargetReached: true, syntheticCapacityOnly: DENTAL_FACT_CAPACITY, capacityValidationMs: Math.round(validationMs), indexDeckBytesAtCapacity: deck.byteLength, requested30000Reached: false }, null, 2));

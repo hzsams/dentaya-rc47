@@ -10,15 +10,21 @@ const {LOGOS} = require('../electron/desktop-brand.cjs');
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = file => fs.readFile(path.join(root, file));
 const identity = JSON.parse(await read('public/brand/identity.json'));
+const catalog = JSON.parse(await read('electron/brand-catalog.json'));
 const component = String(await read('src/app/BrandLogo.tsx'));
-const uiIds = [...component.split('] as const;')[0].matchAll(/id: "(\d+)"/g)].map(match => match[1]);
+const adapter = String(await read('src/lib/brand-catalog.ts'));
+assert.ok(component.includes('LOGO_OPTIONS = BRAND_LOGOS.map'));
+assert.ok(adapter.includes('../../electron/brand-catalog.json'));
+const uiIds = catalog.logos.map(logo => logo.id);
 assert.equal(identity.wordmark, 'DENTAYA');
-assert.equal(identity.version, 'premium-2');
-assert.equal(identity.logos.length, 18);
-assert.equal(new Set(identity.logos.map(logo => logo.id)).size, 18);
+assert.equal(identity.version, catalog.version);
+assert.equal(identity.version, 'premium-3');
+assert.equal(identity.logos.length, 100);
+assert.equal(new Set(identity.logos.map(logo => logo.id)).size, 100);
 assert.deepEqual(uiIds, identity.logos.map(logo => logo.id));
 assert.deepEqual(LOGOS, identity.logos.map(logo => logo.file));
-assert.ok(component.includes(`BRAND_ASSET_VERSION = "${identity.version}"`));
+assert.ok(adapter.includes('BRAND_ASSET_VERSION = catalog.version'));
+assert.deepEqual(uiIds, Array.from({length:100},(_,index)=>String(index+1).padStart(2,'0')));
 const silhouettes = new Set();
 let variants = 0, renderedIcons = 0;
 for (const {id, file, material} of identity.logos) {
@@ -33,12 +39,16 @@ for (const {id, file, material} of identity.logos) {
     }
     if (suffix === '' || suffix === '_light' || suffix === '_icon') {
       assert.match(source, /data-depth="vector"/);
+      assert.match(source, /data-bevel="machined"/);
+      assert.match(source, /-bevel/);
+      assert.match(source, /-shine/);
+      assert.match(source, /-shadow/);
       assert.match(source, /<linearGradient/);
       const ids = [...source.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
       for (const match of source.matchAll(/url\(#([^)]+)\)/g)) assert.ok(ids.includes(match[1]), `Unresolved gradient in ${file}`);
       if (suffix === '') {
         // Compare actual contours rather than filenames, colors or gradient IDs.
-        const contour = source.match(/data-depth="vector">.*?<path[^>]+ d="([^"]+)"/s)?.[1];
+        const contour = source.match(/data-depth="vector"[^>]*>.*?<path[^>]+ d="([^"]+)"/s)?.[1];
         assert.ok(contour, `${file} has no mark contour`);
         assert.ok(!silhouettes.has(contour), `${file} duplicates another mark`);
         silhouettes.add(contour);
@@ -53,14 +63,23 @@ for (const {id, file, material} of identity.logos) {
     assert.equal(info.channels, 4);
     assert.equal(data[3], 0, `${file}: tile corner should stay transparent at ${size}px`);
     assert.ok(data[(Math.floor(size/2)*size+Math.floor(size/2))*4+3] > 200);
+    const luma = [];
+    for (let pixel=0;pixel<data.length;pixel+=4)if(data[pixel+3]>200)luma.push((data[pixel]+data[pixel+1]+data[pixel+2])/3);
+    assert.ok(Math.max(...luma)-Math.min(...luma)>60, `${file}: mark needs visible contrast at ${size}px`);
     renderedIcons++;
   }
   const ico = await read(`electron/logos/${file}_icon.ico`);
   assert.equal(ico.readUInt16LE(0), 0); assert.equal(ico.readUInt16LE(2), 1);
   const sizes = Array.from({length:ico.readUInt16LE(4)}, (_, index) => ico[6+index*16] || 256);
   assert.deepEqual(sizes, [16, 24, 32, 48, 64, 128, 256]);
+  for (const [index,size] of sizes.entries()) {
+    const offset=ico.readUInt32LE(6+index*16+12), length=ico.readUInt32LE(6+index*16+8);
+    assert.ok(offset+length<=ico.length);
+    const frame=await sharp(ico.subarray(offset,offset+length)).metadata();
+    assert.equal(frame.width,size);assert.equal(frame.height,size);
+  }
 }
-assert.equal(silhouettes.size, 18);
+assert.equal(silhouettes.size, 100);
 assert.deepEqual(await read('electron/dentaya.ico'), await read('electron/logos/01_dental_form_icon.ico'));
 assert.deepEqual(await read('public/icon-512.png'), await read('public/logos/01_dental_form_icon.png'));
 const artwork = await sharp(await read('public/brand/DentAYA_Premium_Atelier.webp')).metadata();

@@ -1,6 +1,6 @@
-# DentAYA RC52
+# DentAYA RC53
 
-Sürüm `1.0.0-rc.52`, AYA Core `0.8.0`. RC52, aydınlık panelleri ve erik moru başlıklarıyla DentAYA Studio düzenini getirir. CAD; nesneler ve parametreler solda, mevcut komutlar koyu sağ araç şeridinde, geniş 3B alan ortada olacak şekilde düzenlenir. Ortak uygulama başlığı CAD'de gösterilmez. Özgün DentAYA varlıkları kullanılır; exocad/3Shape çalışma ergonomisi referanstır.
+Sürüm `1.0.0-rc.53`, AYA Core `0.9.0`. RC53, aydınlık panelleri ve erik moru başlıklarıyla DentAYA Studio düzenini korur. CAD; nesneler ve parametreler solda, mevcut komutlar koyu sağ araç şeridinde, geniş 3B alan ortada olacak şekilde düzenlenir. Ortak uygulama başlığı CAD'de gösterilmez. Özgün DentAYA varlıkları kullanılır; exocad/3Shape çalışma ergonomisi referanstır.
 
 Uygulama giriş adresi doğrudan İş yöneticisini açar. CAD dışındaki ekranlarda kompakt başlık, simgeli etkinlik şeridi ve durum çubuğu kullanılır. İş yöneticisi mevcut iş kayıtlarını tek ana tabloda toplar; seçili kaydın ayrıntıları bağlama göre açılır. Ayarlar kategori listesi ve araç odaklı ayar alanlarıyla çalışır. Yeni CAD oturumlarında düz Studio arka planı kullanılır; ızgara ve eksenler kapalı başlar. Önceden açıkça seçilmiş sahne arka planları, ızgara ve eksen tercihleri korunur.
 
@@ -10,11 +10,15 @@ AYA'nın RC50 çalışma belleği, desteklenen çok adımlı görevleri ve günc
 
 Kaydetme yanıtını bekleme, kayıt hatasında CAD'de kalma, yerel kurtarma ve ünite bazında çalışma mevcut akışları kullanır. Bu arayüz değişikliği CAD kernel algoritmalarını değiştirmez. Finans, mesajlaşma, randevu, ekip, lojistik ve vaka işlemlerinin erişim, taslak ve eşzamanlı değişiklik kontrolleri korunacak regresyon kapsamındadır.
 
-Başlangıç: [KURULUM.txt](KURULUM.txt). Yeni düzen: [RC52_KULLANIM.md](RC52_KULLANIM.md). Güncel sonuçlar ve sınırlar: [RC52_KONTROL_RAPORU.md](RC52_KONTROL_RAPORU.md). **RC52 kaynak kontrolleri geçti:** dokuz tarayıcı regresyonu, tam verify zinciri, sıfır uyarılı lint, tip kontrolü, 38 sayfalık üretim derlemesi ve üretim ortamında bekletmesiz yükleme kontrolü tamamlandı. Bu kontroller Windows, gerçek model veya canlı kurum kabulü değildir.
+RC53, kaynaklı 500 TR/EN bilgi kartını AYA bağlamına ekler. Kısa takip soruları önceki konuyla ilişkilendirilir; yeni konu önceki hedefe zorlanmaz. Boş model alanları çalışma hedefini ve kararları kendiliğinden silmez. Bellek düzeltme ve sıfırlama açık işlem olarak ele alınır. Kaynak bağlantıları sohbetten açılır ve yalnız geçmiş saklama tercihi açıkken oturumla korunur. Bu iyileştirmeler model eğitimi veya her ifadeyi anlama garantisi değildir.
 
-RC52 ekranları: [CAD](verification/RC52/CAD.png) · [İş yöneticisi](verification/RC52/WorkManager.png) · [Ayarlar](verification/RC52/Settings.png). Ekranlar gerçek arayüzden sentetik test verisiyle alınır; sonuç ve ekran kayıtları `verification/RC52/` altında toplanır. Önceki [RC51 raporu](RC51_KONTROL_RAPORU.md) tarihsel kayıttır. [Özgün marka koleksiyonu](public/brand/DentAYA_Premium_Logo_Koleksiyonu.png) korunur.
+CAD uzman modunda İnceleme paneli; kamera/imleç hedefli gerçek fener, ışık gücü ve konisi, yüzey kenarları, sınırlı normal çizgileri, düz yüzey gölgelemesi, iç yüzey görünümü, pozlama, kesit ekseni/merkez/ters yön ve kamera kontrollerini sunar. Bu görünüm işlemleri geometriyi değiştirmez. AYA’nın `inspection`, `flashlight-on` ve `flashlight-off` önerileri mevcut çalışma denetiminden sonra Uygula ile çalışır. Sekiz manuel araç ve kılavuzlu görev kapıları korunur.
 
-Bilgi kartı sayısı **220**; ayrı AYA soru kataloğu **1008** kayıttır. Kaynaklar ve 30.000 içerik hedefinin durumu [bilgi kataloğu raporunda](DENTAL_BILGI_KATALOGU_RAPORU.md). 30.000 kayıtlık kapasite testinin verileri ürüne eklenmez.
+Ayarlar'da 100 özgün logo bulunur; hacim, metalik yüzey, kenar ışığı ve gölge SVG katmanlarıyla üretilir. Her seçeneğin açık/koyu, simge ve yazı biçimleri ile Windows ICO varlığı vardır. Bunlar hacim etkili çizimlerdir; 3B mesh dosyaları değildir. İlk 18 logo kimliği, tercih aktarımı ve masaüstü simgesi akışı korunur.
+
+Başlangıç: [KURULUM.txt](KURULUM.txt). Kullanım: [RC53_KULLANIM.md](RC53_KULLANIM.md). Güncel test durumu ve sınırlar: [RC53_KONTROL_RAPORU.md](RC53_KONTROL_RAPORU.md). RC52 ve önceki sürümlerin raporları tarihsel kayıttır; yeni değişikliklerin doğrulaması yerine kullanılmaz. **RC53 doğrulaması tamamlandı:** sekiz tarayıcı regresyonu, tam verify, sıfır uyarılı lint, tip kontrolü, üretim derlemesi ve standalone yükleme kontrolü geçti. Yerel b9380 grammar kontrolü 17/17; gerçek model çıkarımı ağırlık indirme engeli nedeniyle doğrulanmadı.
+
+[100 logonun görünümü](public/brand/DentAYA_Premium_Atelier.webp). Bilgi kartı sayısı **500**, kaynak grubu **60**; ayrı AYA soru kataloğu **1008** kayıttır. [Yeni kartların kaynakları](BILGI_KARTLARI_RC53_KAYNAKLAR.md) ve [katalog/30.000 hedefi](DENTAL_BILGI_KATALOGU_RAPORU.md). 30.000 gerçek içerik hedefi tamamlanmadı; kapasite testinin sentetik verileri ürüne eklenmez.
 
 Bu depo tam kaynak içerir. Windows Setup EXE'si, model ağırlıkları veya kişisel bağlantı ayarları içermez. Gerçek Windows, model ve sunucu doğrulamalarının sınırları test raporunda belirtilir.
 

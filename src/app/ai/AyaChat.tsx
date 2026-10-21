@@ -11,6 +11,7 @@ import {readAyaKnowledge} from '@/lib/aya-knowledge';
 import AyaKnowledgePanel from './AyaKnowledgePanel';
 import AyaEngineSetup from './AyaEngineSetup';
 import AyaWorkingMemoryPanel from './AyaWorkingMemoryPanel';
+import AyaSources from './AyaSources';
 import UserText from "@/lib/i18n/UserText";
 import UiNode from "@/lib/i18n/UiNode";
 import { useEffect, useRef, useState } from 'react';
@@ -194,7 +195,7 @@ export default function AyaChat() {
                 {workingMemory.goal&&<UiNode as="button" className="aya-goal-preview" type="button" title={copy.memoryHint} onClick={()=>{setPanel('memory');setSettingsOpen(true);}}><UiNode as="span">{copy.goal}</UiNode><UserText>{workingMemory.goal}</UserText><OpenArrow/></UiNode>}
                 <UiNode as="div" className="aya-chat-messages" role="log" aria-label={copy.conversation} aria-live="polite" aria-busy={busy} translateChildren={false}>
                     {!messages.length&&<UiNode as="div" className="aya-chat-welcome" translateChildren={false}><UiNode as="span" className="aya-welcome-kicker">AYA CORE</UiNode><UiNode as="h2">{copy.welcome}</UiNode><UiNode as="p">{copy.welcomeNote}</UiNode><UiNode as="div" className="aya-prompts" translateChildren={false}>{copy.promptTitles.map((title,i)=><UiNode as="button" type="button" key={title} disabled={busy} onClick={()=>prepare(copy.prompts[i])}><UiNode as="strong">{title}</UiNode><UiNode as="span">{copy.prompts[i]}</UiNode><UiNode as="span" aria-hidden="true"><OpenArrow/></UiNode></UiNode>)}</UiNode></UiNode>}
-                    {messages.map((m,i)=><UiNode as="article" key={i} className={`aya-message aya-message--${m.role}`} translateChildren={false}><UiNode as="strong">{m.role==='user'?copy.you:m.engine==='core'?copy.core:m.engine==='guide'?copy.document:copy.local}</UiNode><UiNode as="div" data-user-content><UserText>{m.content}</UserText></UiNode>{m.references?.map(r=><Link key={r.id} href={r.href} translateChildren={false} onClick={()=>{if(r.href.startsWith('/ai#')){setPanel(r.href.includes('knowledge')?'memory':'library');setSettingsOpen(true);}}}><UserText>{r.title}</UserText> →</Link>)}{m.role==='assistant'&&<CopyAyaResponse text={m.content}/>}</UiNode>)}
+                    {messages.map((m,i)=><UiNode as="article" key={i} className={`aya-message aya-message--${m.role}`} translateChildren={false}><UiNode as="strong">{m.role==='user'?copy.you:m.engine==='core'?copy.core:m.engine==='guide'?copy.document:copy.local}</UiNode><UiNode as="div" data-user-content><UserText>{m.content}</UserText></UiNode><AyaSources references={m.references} onInternalReference={href=>{if(href.startsWith('/ai#')){setPanel(href.includes('knowledge')?'memory':'library');setSettingsOpen(true);}}}/>{m.role==='assistant'&&<CopyAyaResponse text={m.content}/>}</UiNode>)}
                     {busy&&<UiNode as="p" className="aya-thinking" role="status">{copy.answering}…</UiNode>}
                     <UiNode as="div" ref={end}/>
                 </UiNode>

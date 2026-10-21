@@ -1,12 +1,10 @@
-"""Optional ICO packaging utility; requires Pillow. No change to logo artwork."""
+"""Compatibility entry point for the shared SVG → PNG/ICO export pipeline.
+
+Every ICO frame is rendered at its native size by render-brand-assets.mjs.
+The catalog and artwork remain the same as the application choices.
+"""
 from pathlib import Path
-from PIL import Image
+import subprocess
 
 root = Path(__file__).resolve().parents[2]
-sizes = [(size, size) for size in (16, 24, 32, 48, 64, 128, 256)]
-for file in sorted((root / 'public/logos').glob('*_icon.png')):
-    image = Image.open(file).convert('RGBA')
-    target = root / 'electron/logos' / (file.stem + '.ico')
-    image.save(target, format='ICO', sizes=sizes)
-Image.open(root / 'public/icon-512.png').save(root / 'electron/dentaya.ico', format='ICO', sizes=sizes)
-print('DentAYA Premium: 18 ICO choices and the installer icon; 16–256 px sizes.')
+subprocess.run(['node', str(root / 'scripts/render-brand-assets.mjs')], cwd=root, check=True)

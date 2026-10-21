@@ -1,5 +1,5 @@
 {
-  "version": "premium-2",
+  "version": "premium-3",
   "wordmark": "DENTAYA",
   "colors": {
     "ink": "#17343A",
@@ -146,6 +146,498 @@
       "file": "18_bridge",
       "style": "Bridge",
       "material": "emerald"
+    },
+    {
+      "id": "19",
+      "file": "19_molar",
+      "style": "Molar",
+      "material": "jade"
+    },
+    {
+      "id": "20",
+      "file": "20_incisor",
+      "style": "Incisor",
+      "material": "titanium"
+    },
+    {
+      "id": "21",
+      "file": "21_canine",
+      "style": "Canine",
+      "material": "champagne"
+    },
+    {
+      "id": "22",
+      "file": "22_premolar",
+      "style": "Premolar",
+      "material": "emerald"
+    },
+    {
+      "id": "23",
+      "file": "23_root_pair",
+      "style": "Root Pair",
+      "material": "titanium"
+    },
+    {
+      "id": "24",
+      "file": "24_cusp_triad",
+      "style": "Cusp Triad",
+      "material": "champagne"
+    },
+    {
+      "id": "25",
+      "file": "25_occlusal",
+      "style": "Occlusal",
+      "material": "jade"
+    },
+    {
+      "id": "26",
+      "file": "26_enamel_drop",
+      "style": "Enamel Drop",
+      "material": "emerald"
+    },
+    {
+      "id": "27",
+      "file": "27_gingival_arc",
+      "style": "Gingival Arc",
+      "material": "champagne"
+    },
+    {
+      "id": "28",
+      "file": "28_arch_nodes",
+      "style": "Arch Nodes",
+      "material": "jade"
+    },
+    {
+      "id": "29",
+      "file": "29_bite_pair",
+      "style": "Bite Pair",
+      "material": "titanium"
+    },
+    {
+      "id": "30",
+      "file": "30_implant_thread",
+      "style": "Implant",
+      "material": "titanium"
+    },
+    {
+      "id": "31",
+      "file": "31_implant_crown",
+      "style": "Implant Crown",
+      "material": "champagne"
+    },
+    {
+      "id": "32",
+      "file": "32_abutment",
+      "style": "Abutment",
+      "material": "titanium"
+    },
+    {
+      "id": "33",
+      "file": "33_crown_section",
+      "style": "Crown Section",
+      "material": "emerald"
+    },
+    {
+      "id": "34",
+      "file": "34_veneer",
+      "style": "Veneer",
+      "material": "jade"
+    },
+    {
+      "id": "35",
+      "file": "35_arch_span",
+      "style": "Arch Span",
+      "material": "champagne"
+    },
+    {
+      "id": "36",
+      "file": "36_pontic",
+      "style": "Pontic Link",
+      "material": "emerald"
+    },
+    {
+      "id": "37",
+      "file": "37_margin_loop",
+      "style": "Margin Loop",
+      "material": "jade"
+    },
+    {
+      "id": "38",
+      "file": "38_finish_line",
+      "style": "Finish Line",
+      "material": "titanium"
+    },
+    {
+      "id": "39",
+      "file": "39_scan_halo",
+      "style": "Scan Halo",
+      "material": "emerald"
+    },
+    {
+      "id": "40",
+      "file": "40_light_stripes",
+      "style": "Light Stripes",
+      "material": "titanium"
+    },
+    {
+      "id": "41",
+      "file": "41_point_lattice",
+      "style": "Point Lattice",
+      "material": "champagne"
+    },
+    {
+      "id": "42",
+      "file": "42_triangulated",
+      "style": "Triangulated",
+      "material": "emerald"
+    },
+    {
+      "id": "43",
+      "file": "43_voxel_tooth",
+      "style": "Voxel Tooth",
+      "material": "titanium"
+    },
+    {
+      "id": "44",
+      "file": "44_mesh_hex",
+      "style": "Hex Mesh",
+      "material": "jade"
+    },
+    {
+      "id": "45",
+      "file": "45_coordinate",
+      "style": "Coordinate",
+      "material": "titanium"
+    },
+    {
+      "id": "46",
+      "file": "46_caliper",
+      "style": "Caliper",
+      "material": "champagne"
+    },
+    {
+      "id": "47",
+      "file": "47_tool_nib",
+      "style": "Sculpting Nib",
+      "material": "titanium"
+    },
+    {
+      "id": "48",
+      "file": "48_milling",
+      "style": "Milling",
+      "material": "emerald"
+    },
+    {
+      "id": "49",
+      "file": "49_section_wedge",
+      "style": "Section Wedge",
+      "material": "titanium"
+    },
+    {
+      "id": "50",
+      "file": "50_contour_bands",
+      "style": "Contour Bands",
+      "material": "jade"
+    },
+    {
+      "id": "51",
+      "file": "51_offset_shell",
+      "style": "Offset Shell",
+      "material": "champagne"
+    },
+    {
+      "id": "52",
+      "file": "52_contact_pair",
+      "style": "Contact Pair",
+      "material": "emerald"
+    },
+    {
+      "id": "53",
+      "file": "53_clearance",
+      "style": "Clearance",
+      "material": "titanium"
+    },
+    {
+      "id": "54",
+      "file": "54_insertion",
+      "style": "Insertion Axis",
+      "material": "champagne"
+    },
+    {
+      "id": "55",
+      "file": "55_relief",
+      "style": "Relief",
+      "material": "jade"
+    },
+    {
+      "id": "56",
+      "file": "56_thickness",
+      "style": "Thickness",
+      "material": "titanium"
+    },
+    {
+      "id": "57",
+      "file": "57_spline",
+      "style": "Spline",
+      "material": "emerald"
+    },
+    {
+      "id": "58",
+      "file": "58_normals",
+      "style": "Surface Normals",
+      "material": "titanium"
+    },
+    {
+      "id": "59",
+      "file": "59_control_knots",
+      "style": "Control Knots",
+      "material": "champagne"
+    },
+    {
+      "id": "60",
+      "file": "60_construction_cube",
+      "style": "Construction Cube",
+      "material": "jade"
+    },
+    {
+      "id": "61",
+      "file": "61_tetra",
+      "style": "Tetra",
+      "material": "titanium"
+    },
+    {
+      "id": "62",
+      "file": "62_octa",
+      "style": "Octa",
+      "material": "champagne"
+    },
+    {
+      "id": "63",
+      "file": "63_folded_plane",
+      "style": "Folded Plane",
+      "material": "emerald"
+    },
+    {
+      "id": "64",
+      "file": "64_torque",
+      "style": "Torque",
+      "material": "titanium"
+    },
+    {
+      "id": "65",
+      "file": "65_iso_arch",
+      "style": "Isometric Arch",
+      "material": "jade"
+    },
+    {
+      "id": "66",
+      "file": "66_hex_core",
+      "style": "Hex Core",
+      "material": "champagne"
+    },
+    {
+      "id": "67",
+      "file": "67_prism_window",
+      "style": "Prism Window",
+      "material": "emerald"
+    },
+    {
+      "id": "68",
+      "file": "68_helix",
+      "style": "Helix",
+      "material": "titanium"
+    },
+    {
+      "id": "69",
+      "file": "69_ribbon_loop",
+      "style": "Ribbon Loop",
+      "material": "champagne"
+    },
+    {
+      "id": "70",
+      "file": "70_crown_lattice",
+      "style": "Crown Lattice",
+      "material": "jade"
+    },
+    {
+      "id": "71",
+      "file": "71_d_split",
+      "style": "Split D",
+      "material": "emerald"
+    },
+    {
+      "id": "72",
+      "file": "72_d_chamfer",
+      "style": "Chamfer D",
+      "material": "titanium"
+    },
+    {
+      "id": "73",
+      "file": "73_d_vault",
+      "style": "Vault D",
+      "material": "champagne"
+    },
+    {
+      "id": "74",
+      "file": "74_d_ribbon",
+      "style": "Ribbon D",
+      "material": "jade"
+    },
+    {
+      "id": "75",
+      "file": "75_a_crown",
+      "style": "Crowned A",
+      "material": "champagne"
+    },
+    {
+      "id": "76",
+      "file": "76_a_vault",
+      "style": "Vault A",
+      "material": "emerald"
+    },
+    {
+      "id": "77",
+      "file": "77_a_beam",
+      "style": "Beam A",
+      "material": "titanium"
+    },
+    {
+      "id": "78",
+      "file": "78_y_branch",
+      "style": "Branch Y",
+      "material": "jade"
+    },
+    {
+      "id": "79",
+      "file": "79_ya_merge",
+      "style": "YA Merge",
+      "material": "emerald"
+    },
+    {
+      "id": "80",
+      "file": "80_da_mirror",
+      "style": "DA Mirror",
+      "material": "champagne"
+    },
+    {
+      "id": "81",
+      "file": "81_da_keystone",
+      "style": "DA Keystone",
+      "material": "titanium"
+    },
+    {
+      "id": "82",
+      "file": "82_dy_link",
+      "style": "DY Link",
+      "material": "jade"
+    },
+    {
+      "id": "83",
+      "file": "83_aya_nodes",
+      "style": "AYA Nodes",
+      "material": "champagne"
+    },
+    {
+      "id": "84",
+      "file": "84_dental_d",
+      "style": "Dental D",
+      "material": "emerald"
+    },
+    {
+      "id": "85",
+      "file": "85_d_aperture",
+      "style": "D Aperture",
+      "material": "titanium"
+    },
+    {
+      "id": "86",
+      "file": "86_a_orbit",
+      "style": "A Orbit",
+      "material": "champagne"
+    },
+    {
+      "id": "87",
+      "file": "87_y_arc",
+      "style": "Y Arc",
+      "material": "jade"
+    },
+    {
+      "id": "88",
+      "file": "88_da_ligature",
+      "style": "DA Ligature",
+      "material": "emerald"
+    },
+    {
+      "id": "89",
+      "file": "89_dental_ring",
+      "style": "Dental Ring",
+      "material": "titanium"
+    },
+    {
+      "id": "90",
+      "file": "90_laurel_molar",
+      "style": "Laurel Molar",
+      "material": "champagne"
+    },
+    {
+      "id": "91",
+      "file": "91_cusp_compass",
+      "style": "Cusp Compass",
+      "material": "jade"
+    },
+    {
+      "id": "92",
+      "file": "92_dental_beacon",
+      "style": "Dental Beacon",
+      "material": "emerald"
+    },
+    {
+      "id": "93",
+      "file": "93_dental_pulse",
+      "style": "Dental Pulse",
+      "material": "titanium"
+    },
+    {
+      "id": "94",
+      "file": "94_infinity_arch",
+      "style": "Infinity Arch",
+      "material": "champagne"
+    },
+    {
+      "id": "95",
+      "file": "95_origami_crown",
+      "style": "Origami Crown",
+      "material": "jade"
+    },
+    {
+      "id": "96",
+      "file": "96_prism_arch",
+      "style": "Prism Arch",
+      "material": "titanium"
+    },
+    {
+      "id": "97",
+      "file": "97_faceted_molar",
+      "style": "Faceted Molar",
+      "material": "emerald"
+    },
+    {
+      "id": "98",
+      "file": "98_union_crest",
+      "style": "Union Crest",
+      "material": "champagne"
+    },
+    {
+      "id": "99",
+      "file": "99_horizon_d",
+      "style": "Horizon D",
+      "material": "jade"
+    },
+    {
+      "id": "100",
+      "file": "100_studio_jewel",
+      "style": "Studio Jewel",
+      "material": "champagne"
     }
   ]
 }

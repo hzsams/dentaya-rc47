@@ -1,5 +1,5 @@
 'use strict';
-const {prepareContext,guide}=require('./aya/core.cjs');
+const {prepareContext,retainedReferences,guide}=require('./aya/core.cjs');
 const {readAgentReply,normalizeHistory,fitMessagesToBudget,CONTEXT_MARKER}=require('./aya/agent.cjs');
 const ORIGIN='http://127.0.0.1:11434';
 const {LANGUAGES}=require('./aya/language-packs.cjs');
@@ -22,13 +22,14 @@ function createLocalAya({fetchImpl=fetch,managed}={}){
   try{
    const task=(async()=>{
    const prepared=prepareContext(input,translate),language=Object.hasOwn(LANGUAGES,input.locale)?LANGUAGES[input.locale]:LANGUAGES.tr;
-   const history=normalizeHistory(input.history);
-   const instructions='Sen DentAYA AYA çalışma asistanısın. '+language+' dilinde yanıt ver. İstek yeni cümlelerle yazılsa da bağlamı kullanarak doğrudan yanıtla. AYA bize ait çalışma katmanıdır; temel model Qwen veya kullanıcının seçtiği açık ağırlıklı modeldir. Sıfırdan eğitildiğini veya bilinçli olduğunu iddia etme. Kişiye özel tanı, ilaç dozu ve implant torku tahmin etme. Önerilen işlemler kullanıcı uygulayana kadar yapılmış sayılmaz. '+prepared.instructions;
+   const history=normalizeHistory(input.history,input);
+   const instructions='Reply in '+language+'. Base model: Qwen/user-selected. '+prepared.instructions;
    const messages=[{role:'system',content:instructions},{role:'user',content:CONTEXT_MARKER+JSON.stringify(prepared.context)},...history,{role:'user',content:input.prompt.trim()}];
-   const finish=result=>{signal.throwIfAborted();return {ok:true,...result,...(prepared.agent?readAgentReply(result.output,input):{}),model:input.model,references:prepared.references};};
+   let references=prepared.references;
+   const finish=result=>{signal.throwIfAborted();return {ok:true,...result,...(prepared.agent?readAgentReply(result.output,input):{}),model:input.model,references};};
    // Structured replies are displayed after validation, never streamed as executable JSON.
    if(managed&&input.model.startsWith('aya-local:')){
-    const result=await managed.chat({model:input.model,options:prepared.options,responseSchema:prepared.agent?.schema,signal,onToken:prepared.agent?()=>{}:value=>{if(!signal.aborted)onToken(value);},messages});
+    const result=await managed.chat({model:input.model,options:prepared.options,responseSchema:prepared.agent?.schema,signal,onToken:prepared.agent?()=>{}:value=>{if(!signal.aborted)onToken(value);},onContext:budgeted=>{references=retainedReferences(prepared.references,budgeted);},messages});
     return finish(result);
    }
    if(!(await models()).some(m=>m.name===input.model))throw Error('MODEL_MISSING');
@@ -39,8 +40,10 @@ function createLocalAya({fetchImpl=fetch,managed}={}){
    // overhead give a conservative bound, rather than silently allowing its sliding window
    // to discard the user's initial task or the current CAD evidence.
    const budgeted=await fitMessagesToBudget(messages,{maxTokens:prepared.options.maxTokens,countTokens:items=>items.reduce((n,m)=>n+new TextEncoder().encode(m.content).length+16,0)});
+   references=retainedReferences(prepared.references,budgeted);
    signal.throwIfAborted();
    const data=await json('/api/chat',{body:{model:input.model,stream:false,think:false,...(prepared.agent?{format:prepared.agent.schema}:{}),messages:budgeted,options:{num_ctx:8192,num_predict:prepared.options.maxTokens,temperature:prepared.agent?.cad?Math.min(.2,prepared.options.creativity):prepared.options.creativity},keep_alive:'5m'},signal,timeout:180000});
+   if(prepared.agent&&data.done_reason==='length')throw Error('LOCAL_INVALID_PLAN');
    if(data.done!==true||typeof data.message?.content!=='string'||!data.message.content.trim())throw Error('LOCAL_EMPTY_RESPONSE');
    if(data.message.content.length>64000)throw Error('LOCAL_RESPONSE_TOO_LARGE');
    return finish({output:data.message.content.trim(),metrics:{milliseconds:Math.round((Number(data.total_duration)||0)/1e6),tokens:Math.max(0,Number(data.eval_count)||0)}});

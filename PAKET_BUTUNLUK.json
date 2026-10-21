@@ -1,17 +1,23 @@
 {
-  "release": "1.0.0-rc.52",
+  "release": "1.0.0-rc.53",
   "status": "source-release-candidate",
   "date": "2026-10-21",
-  "baseRelease": "1.0.0-rc.51",
-  "baseCommit": "b052eea9fb46165936431b7ac61588e839c776cc",
+  "baseRelease": "1.0.0-rc.52",
+  "baseCommit": "1e155068d58550bb7ee22ad3d353cb6e427d4b0d",
   "nativeModelInferenceVerified": false,
   "windowsInstallerProduced": false,
   "liveOrganizationBackendVerified": false,
-  "dentalFactsActual": 220,
-  "dentalFactsTarget": 30000,
+  "dentalFactsActual": 500,
+  "dentalFactSourcesActual": 60,
+  "brandLogosActual": 100,
   "ayaQuestionCatalogueActual": 1008,
-  "verification": "RC52_KONTROL_RAPORU.md",
-  "sourceVerification": "verification/RC52/source-verification.json",
+  "dentalFactsTarget": 30000,
+  "nativeGrammarVerified": true,
+  "nativeGrammarChecks": 17,
+  "nativeModelWeightsAvailable": false,
+  "nativeModelInferenceStatus": "blocked-model-weights",
+  "verification": "RC53_KONTROL_RAPORU.md",
+  "sourceVerification": "verification/RC53/source-verification.json",
   "files": [
     {
       "path": ".env.example",
@@ -21,7 +27,7 @@
     {
       "path": ".env.release.example",
       "size": 407,
-      "sha256": "0ff4a5ba1ae6726ae1885eb49d6b556fdb60183ee965c0a803e8446c3f6fc301"
+      "sha256": "ff9c80ee6512a95cdde5dd805946ba2201a9bf0d3a703785686dcac5106fa873"
     },
     {
       "path": ".gitignore",
@@ -35,8 +41,8 @@
     },
     {
       "path": "AGENTS.md",
-      "size": 2781,
-      "sha256": "0e30feb2517c58c497e05be2386704dd5f941c079ea78bc4aa001a2c58eb1c42"
+      "size": 3184,
+      "sha256": "915d4956182c8d707d69eac38b91327e6803809b6dc8524027e8e51e910cdc74"
     },
     {
       "path": "AYA_ACTIONS_QA.md",
@@ -57,6 +63,11 @@
       "path": "AYA_QA.md",
       "size": 1171,
       "sha256": "6440097a56b052e15625023d83841fdd03ab934491ba037f50fd058562515e5e"
+    },
+    {
+      "path": "BILGI_KARTLARI_RC53_KAYNAKLAR.md",
+      "size": 5475,
+      "sha256": "7174e87c4b661640b2c5e0c85af5f777f6a2f89814105a3beb00f2ec790e3090"
     },
     {
       "path": "CAD_BRUSH_HUD_QA_RC15.md",
@@ -140,8 +151,8 @@
     },
     {
       "path": "DENTAL_BILGI_KATALOGU_RAPORU.md",
-      "size": 7597,
-      "sha256": "6d0ad83224521186ba6ca96de72cbaa63d703bf5b8fe0602389c5e379955a8d4"
+      "size": 8620,
+      "sha256": "5e768146839477f5e2cfc8120bf9bf7981a5149c6d7e67a9e62f4dd50a37ef22"
     },
     {
       "path": "DENTAYA_BU_SURUM.md",
@@ -155,8 +166,8 @@
     },
     {
       "path": "DENTAYA_GUNCELLE_DERLE.cmd",
-      "size": 3125,
-      "sha256": "c8f0d5de129a3c923a8dc7548c1fe0213203609099e92f92ad2754d143d178be"
+      "size": 3135,
+      "sha256": "76866ae677017aea7d385d5a5faceba81452082f8189a2f4d2acb6d8b8cffedb"
     },
     {
       "path": "DentAYA_CAD_Degisiklikler.txt",
@@ -195,8 +206,8 @@
     },
     {
       "path": "KURULUM.txt",
-      "size": 3248,
-      "sha256": "4ad4db45e1a9561f606590e368b4d0c3573409fc1f23c155d701e30201607a6c"
+      "size": 3591,
+      "sha256": "0ea46b407358ae709aae7ef66bfbfdf0fa07979555b5a013da9ded4f012af6f3"
     },
     {
       "path": "LOGO_GUNCELLEME.txt",
@@ -619,6 +630,21 @@
       "sha256": "15b9542988997eab6550c162717350e8ad221bbe0e330f4db3e3e28de320ab90"
     },
     {
+      "path": "RC53_AYA_1008_SORU_CEVAP.json",
+      "size": 365775,
+      "sha256": "f9b3abcbb61ba57d3165d418ba3bfd1bf217943b6bdc98f478f4ed543bc7d78e"
+    },
+    {
+      "path": "RC53_KONTROL_RAPORU.md",
+      "size": 11864,
+      "sha256": "c51dfc6e1ee1679fa100183f044a674f49aaad0bf35f30301e122f7fbe6bd6de"
+    },
+    {
+      "path": "RC53_KULLANIM.md",
+      "size": 6178,
+      "sha256": "4dacedf3718ba1215d39026b3d1dbdb8e2225a7b1fe50cc9f516cbf2b86b7f1b"
+    },
+    {
       "path": "RC6_CHANGELOG.md",
       "size": 805,
       "sha256": "3da664df997388f7c74588f417e0676b263ac4aa225fced31091f5f197b6a03f"
@@ -635,8 +661,8 @@
     },
     {
       "path": "README.md",
-      "size": 4307,
-      "sha256": "cdba965d7432398e82917570fad06c893a56b362702af722d50c228f4218e67d"
+      "size": 5484,
+      "sha256": "5b6a5caebf6b992ee6e2f529f5d597e20623d9b43d0f01f9b341393d57125441"
     },
     {
       "path": "README_BUILD_FIX_01.md",
@@ -880,8 +906,8 @@
     },
     {
       "path": "electron-builder.yml",
-      "size": 582,
-      "sha256": "96a96ef20afb8cc92406078f820adebb4d904ced85324bb47dcad056016c293c"
+      "size": 617,
+      "sha256": "e9e18c4695869d68f31a538a005ba78b81f70bbbc3d546569a0cbd90ac392242"
     },
     {
       "path": "electron/aya-config.cjs",
@@ -890,23 +916,23 @@
     },
     {
       "path": "electron/aya-local.cjs",
-      "size": 8152,
-      "sha256": "fd788361c5728fcd0890a51eb56d52d15fc4fb491d1989b1f16805777605d0ed"
+      "size": 8017,
+      "sha256": "dedc9c26a58f6db7a6ccac7cae1b0afb473e351e887f30085c9fdf23cd4e18bd"
     },
     {
       "path": "electron/aya/agent.cjs",
-      "size": 11442,
-      "sha256": "196a9bd069ce8ca08fc8f4e38d7b4edaf5e3cb89726304cd2993ee10717abd09"
+      "size": 15673,
+      "sha256": "5e02ecdaee005fbc614851653aea91beb615b4d8cfbc96c5ff2b5843ba21fef4"
     },
     {
       "path": "electron/aya/agent.d.cts",
-      "size": 1200,
-      "sha256": "1281970f05beba186b322f3d68c660f9cbaad5295baa1c67e64fb585de902e8f"
+      "size": 1304,
+      "sha256": "12ebc187a8182cc3d14f5580068b196fc010926df6a5d8990de8c04cb37406d3"
     },
     {
       "path": "electron/aya/assistant.cjs",
       "size": 9980,
-      "sha256": "18c8e23983ed8646a12e83129386fc8f2122950ead90bede0c93abe496724ccb"
+      "sha256": "3ab8e8fcffa9a3d51088f6db8de44ef2942482bf1358df3cf44269fcb9bf51f6"
     },
     {
       "path": "electron/aya/assistant.d.cts",
@@ -955,8 +981,8 @@
     },
     {
       "path": "electron/aya/core.cjs",
-      "size": 4973,
-      "sha256": "db47d207867ab1ef54ff9a48b658a923e188bc88a6a5a88d87e4a2cb6da5f02e"
+      "size": 6678,
+      "sha256": "b5bf6debddd628d323a654f0bc67cb9dafa1d8c737fdc5c7f4b1843d57d61075"
     },
     {
       "path": "electron/aya/dialogue.cjs",
@@ -967,6 +993,11 @@
       "path": "electron/aya/dialogue.d.cts",
       "size": 693,
       "sha256": "5be34037e4d2ad03d262c45f721bb578be79b04384f5de2f61fe1d7dbd28b26d"
+    },
+    {
+      "path": "electron/aya/evidence.cjs",
+      "size": 4074,
+      "sha256": "8816e244025eeaa3c2d7ee18d4b35bf3093c535d368bac10a3598ed4111ba436"
     },
     {
       "path": "electron/aya/knowledge.json",
@@ -995,8 +1026,8 @@
     },
     {
       "path": "electron/aya/managed-runtime.cjs",
-      "size": 15238,
-      "sha256": "cc75a92f6a2392f0b0589a270950fc07c3054aa3f011ac9e7053d38e4fe1c662"
+      "size": 15498,
+      "sha256": "42e432dd7bd9470257672dbb815197607af3626eacf3dd47eed5c2105fa60b34"
     },
     {
       "path": "electron/aya/memory-dialogue.cjs",
@@ -1274,104 +1305,519 @@
       "sha256": "a6532f0247088bb589adc746eb3f741630f53564d92bf2a0372da861caa9132a"
     },
     {
+      "path": "electron/brand-catalog.json",
+      "size": 48995,
+      "sha256": "96f55e77b5e5b6096d86efb013fc2390c25488e611f8ab90fa6e98e12eff6525"
+    },
+    {
       "path": "electron/dentaya.ico",
-      "size": 69365,
-      "sha256": "ffffc2458fde21fd4ea5591c935ef851b67fec91fbc8dcca213f25d64f0ea5c1"
+      "size": 64661,
+      "sha256": "4230e11915ea8c77c561fa60778c9dc90b1d179cd41050509d9d8ed8e8b795c2"
     },
     {
       "path": "electron/desktop-brand.cjs",
-      "size": 1796,
-      "sha256": "b9882c01369cd08ec3b9612d6f498af21d7aee74aea75610dcb53a470334271a"
+      "size": 1639,
+      "sha256": "34a5a147115f3f6654470b04499ba17a6effd9d9e7f1826c39c86220deb51a0b"
     },
     {
       "path": "electron/logos/01_dental_form_icon.ico",
-      "size": 69365,
-      "sha256": "ffffc2458fde21fd4ea5591c935ef851b67fec91fbc8dcca213f25d64f0ea5c1"
+      "size": 64661,
+      "sha256": "4230e11915ea8c77c561fa60778c9dc90b1d179cd41050509d9d8ed8e8b795c2"
     },
     {
       "path": "electron/logos/02_dental_arch_icon.ico",
-      "size": 61199,
-      "sha256": "7793fb186fc82d33fbf0ea769a4c444d67a30b8a707b025ccd2b67ad51ffac51"
+      "size": 59225,
+      "sha256": "27aff9d9829648892d0af0554e66d9d8682219e89a64a530f0eb8a08ba26f9cf"
     },
     {
       "path": "electron/logos/03_cad_geometry_icon.ico",
-      "size": 61997,
-      "sha256": "e690d0e56cc5b6817bbe3b2ae1f8c6a1b41a98e5ff040ba975adfd10f9350885"
+      "size": 59389,
+      "sha256": "3a84cca77e84130a9aaabfe1bbb3a3de6c5e036cd1306e7b506a31677a929e76"
     },
     {
       "path": "electron/logos/04_scan_icon.ico",
-      "size": 68165,
-      "sha256": "cbad1b50bac8b05c940667665b252126f233bce5bc23c9a731f84dee81eec90a"
+      "size": 65386,
+      "sha256": "65faecffe114f223fc1ae72e63a1d648708acc4eed7a036498d82cd0ae2d0ef9"
     },
     {
       "path": "electron/logos/05_orbit_icon.ico",
-      "size": 83448,
-      "sha256": "fbb53c31b0ad025a46ccc0e27a19543efff3bd89c4c5f93f91b804169901decd"
+      "size": 80926,
+      "sha256": "29f683ab0cfcb28415beaabbdca8b6feeeab5981e3d9b4e8f264315ecc62a363"
     },
     {
       "path": "electron/logos/06_crown_icon.ico",
-      "size": 73488,
-      "sha256": "f975680902671bc9140bb553bc307dce580f897d05de31ce16dd58f9208fcd85"
+      "size": 67121,
+      "sha256": "5e9925ef5ea8739260fad811fa30376da6334c7b3870f9c23cd9a1c0faa635cb"
     },
     {
       "path": "electron/logos/07_prism_icon.ico",
-      "size": 81267,
-      "sha256": "99f9a4459377a391873c7f95089f174c442d641adab02703b9da0da92e480992"
+      "size": 75784,
+      "sha256": "b3271c4508036f0ef0300ee144803d37032a0c0f44a3fa5fd9de0a265089f59c"
     },
     {
       "path": "electron/logos/08_wave_icon.ico",
-      "size": 71736,
-      "sha256": "f9eb28534eebfd7d0cf5fa51d34f186247566d4b90cffc40ac7091b19fa5ebf2"
+      "size": 64745,
+      "sha256": "d133f03a1122e6292fe0501004f3238a4308ef9d0d6cd86b46d451b33183089f"
     },
     {
       "path": "electron/logos/09_link_icon.ico",
-      "size": 84032,
-      "sha256": "d635cbdd2336bfd992a3b14459015005fef495ff958335b5a434fb98325fa578"
+      "size": 79522,
+      "sha256": "77eb6577cb29104671a34cd4c6cd3007a1613d69cecf000344383996adba5b9b"
+    },
+    {
+      "path": "electron/logos/100_studio_jewel_icon.ico",
+      "size": 69629,
+      "sha256": "49f5f0dbe7524af5feba3e123fdd75259dd2e8e54026e0c7da74794d41ff40b2"
     },
     {
       "path": "electron/logos/10_spark_icon.ico",
-      "size": 76674,
-      "sha256": "7e1915fa68b783bc23838ce29485b88fc44125e69de78a0388a1854406169eaf"
+      "size": 65385,
+      "sha256": "3f2e13778ba2e409d1c4e106bfcb667a8e1fa4c2d3b9393374e21cdab72df969"
     },
     {
       "path": "electron/logos/11_layer_icon.ico",
-      "size": 94514,
-      "sha256": "eb49e5b6fa0529766de94843882176b5e6c9f8a3ae755ab4f6d652131e14ba89"
+      "size": 76680,
+      "sha256": "d8a68715f6253d0b16f6e614a18fd54e6ec7af285ec17ea2dde4e58374cb5626"
     },
     {
       "path": "electron/logos/12_shield_icon.ico",
-      "size": 86322,
-      "sha256": "07f34e0254f57eaff67948ba81c56b3fcc4a51acda779509df949b671d09d476"
+      "size": 80035,
+      "sha256": "e453c40eba8b3d9ddde976679ff41c12f81d10f20163880fe270553a33550a32"
     },
     {
       "path": "electron/logos/13_apex_icon.ico",
-      "size": 69221,
-      "sha256": "9ede7e141eeab62de0a234b602e949b41674b13be8770c0e75f19953784bfa39"
+      "size": 58937,
+      "sha256": "5b6c2c7d8f0df54206eb8f4b720a575c0b5df0d6edd0b251ee989275d54222db"
     },
     {
       "path": "electron/logos/14_diamond_icon.ico",
-      "size": 81092,
-      "sha256": "4625843011332760cc1fe073459d5dcc2d2905a73b14f0e9a1113d33e9e36f8a"
+      "size": 71989,
+      "sha256": "fe8701d34de605e64e4693b4d4d3253135ec153e48442736959d340c6ec3fb20"
     },
     {
       "path": "electron/logos/15_focus_icon.ico",
-      "size": 89992,
-      "sha256": "d428ce8762d6aec1dd27c6e990dad27ea33fed37e7851b02fafe7452e5214c93"
+      "size": 75106,
+      "sha256": "c650b47206622c987302ff7fee8c5725a984352578f7cc91e52a644e91211e7c"
     },
     {
       "path": "electron/logos/16_flow_icon.ico",
-      "size": 75377,
-      "sha256": "b5cb85b1e1a9fba4761bdc8956af41530eb2ed320ba1685a3f9efe9cfa532947"
+      "size": 69664,
+      "sha256": "6d6e8c889fff6c8eeb88c2e302a28491b617579f14e94d589c3add3fbe4dd86a"
     },
     {
       "path": "electron/logos/17_petal_icon.ico",
-      "size": 88109,
-      "sha256": "4ac5f92a8b1be4bc737cb50f6d854ee722cba1ea8d7014bd57e57e18be1bd906"
+      "size": 72215,
+      "sha256": "1b69232f83351783c43dded3c73053de7dedf0b7d3bfd0b9990f6d57b75ac092"
     },
     {
       "path": "electron/logos/18_bridge_icon.ico",
-      "size": 59408,
-      "sha256": "b8fee0988c2167a041cbef7fa3f54a57e5407304a8aa56087e8ca7fc25a6a8c4"
+      "size": 67003,
+      "sha256": "a3d12bad8406600eeb804d38c1b186724190fadd22653fbda1cbc3cc2cd45e27"
+    },
+    {
+      "path": "electron/logos/19_molar_icon.ico",
+      "size": 62508,
+      "sha256": "6824e9ec92f530fd3e3eb48867eb4192bde7beb2f058198c08231ca9c6023582"
+    },
+    {
+      "path": "electron/logos/20_incisor_icon.ico",
+      "size": 58583,
+      "sha256": "daf48256be88f0c75d045e385e95fc3a8a40f9246a05f7debbecd73e393f2242"
+    },
+    {
+      "path": "electron/logos/21_canine_icon.ico",
+      "size": 61735,
+      "sha256": "063e90d6d37241e95f66126a71e1d471b9c7dff3e2213c370bac769debc96ff2"
+    },
+    {
+      "path": "electron/logos/22_premolar_icon.ico",
+      "size": 65841,
+      "sha256": "c023e0a0b26bde4feeb6bf21556c597cda81e36eb2481a6b79a4b0de87d2634c"
+    },
+    {
+      "path": "electron/logos/23_root_pair_icon.ico",
+      "size": 65844,
+      "sha256": "52cec05858da1ca706d7238ecb6b6f18fbe031309ef4814d6c6559f5d770d174"
+    },
+    {
+      "path": "electron/logos/24_cusp_triad_icon.ico",
+      "size": 66915,
+      "sha256": "a483174658b3082c5e0485a67eeca9c9d9e9ae5958b316512ddb0f1ee9f120a7"
+    },
+    {
+      "path": "electron/logos/25_occlusal_icon.ico",
+      "size": 62518,
+      "sha256": "3c489d7b5d0f3ce46d2b3db9e20464353cfa78edddcbd916b8d4c08831f86d9a"
+    },
+    {
+      "path": "electron/logos/26_enamel_drop_icon.ico",
+      "size": 59631,
+      "sha256": "b61a7c6afb8f8a6fd6340dda5b202ea5011d2b625a4b85d271398e7796f5cca4"
+    },
+    {
+      "path": "electron/logos/27_gingival_arc_icon.ico",
+      "size": 73962,
+      "sha256": "df833796081bcd7870b011ef321de14b66e9d80ce39de9922121cc76dfb4aae1"
+    },
+    {
+      "path": "electron/logos/28_arch_nodes_icon.ico",
+      "size": 67471,
+      "sha256": "cf8a29b4b947e7f6944059d7172191ecb82a92b368a374febecae3e59a4cffe3"
+    },
+    {
+      "path": "electron/logos/29_bite_pair_icon.ico",
+      "size": 62451,
+      "sha256": "e648bdd6a50e9d8811a52baf0c4edab8cb845456fd39e6b69b9a90c424cce40d"
+    },
+    {
+      "path": "electron/logos/30_implant_thread_icon.ico",
+      "size": 62922,
+      "sha256": "61bc5a44076f0d0c0a3d4c8a42590c22351e5d3e0a8035eb48e851f04bb1abef"
+    },
+    {
+      "path": "electron/logos/31_implant_crown_icon.ico",
+      "size": 57417,
+      "sha256": "84c574f1c92cff3157b2f27cd6e88b59a1b2ec44c0f4abc18c36fd333b05ef60"
+    },
+    {
+      "path": "electron/logos/32_abutment_icon.ico",
+      "size": 59502,
+      "sha256": "98bd4243d142416d5da755546a8e3a9d94e75a8ddb6d2af89a8c7a410d74fbfd"
+    },
+    {
+      "path": "electron/logos/33_crown_section_icon.ico",
+      "size": 69457,
+      "sha256": "cf00644205ea8d874445df4436e9023f8c9c9788c30da3eabcd0617638ad1e06"
+    },
+    {
+      "path": "electron/logos/34_veneer_icon.ico",
+      "size": 65848,
+      "sha256": "061947c2b91e85e8ed48a3fabf118874f8ccd6a1f80d0a26385cb8be6c725f87"
+    },
+    {
+      "path": "electron/logos/35_arch_span_icon.ico",
+      "size": 69380,
+      "sha256": "376c251d93fd061127aaeef20dfb42014f59f0c122ab9225bdc43420bf9b717e"
+    },
+    {
+      "path": "electron/logos/36_pontic_icon.ico",
+      "size": 67975,
+      "sha256": "5bba12ccd115c937148d2df577cf0834f9d73c90d18e4e42e89824a3b6b8288d"
+    },
+    {
+      "path": "electron/logos/37_margin_loop_icon.ico",
+      "size": 66646,
+      "sha256": "be02db98a14b22c496847024ff8fb3c912d4bf78460be1673e79d5157ddb822a"
+    },
+    {
+      "path": "electron/logos/38_finish_line_icon.ico",
+      "size": 71524,
+      "sha256": "9a58630ef5ebe8f37627a543673d7ff70a86bd07ab70e869fa8cf0eeeea1558a"
+    },
+    {
+      "path": "electron/logos/39_scan_halo_icon.ico",
+      "size": 67393,
+      "sha256": "79d3e6301afaee54385f0c9205acd46169acef928222311c2216866d902df0ce"
+    },
+    {
+      "path": "electron/logos/40_light_stripes_icon.ico",
+      "size": 73897,
+      "sha256": "5963f3fd74adaaf367457f46ec09ee67767de80840414b9c28a24b2728ba4755"
+    },
+    {
+      "path": "electron/logos/41_point_lattice_icon.ico",
+      "size": 71426,
+      "sha256": "d21ad2bcbc344305d4e2b878d146789fd5e5259c53ca95a0429b2c7fd21e2ab1"
+    },
+    {
+      "path": "electron/logos/42_triangulated_icon.ico",
+      "size": 80473,
+      "sha256": "db8d3632a33452845ac514fd289be55e7b0c4e0439d69377dad8eabf66ad015f"
+    },
+    {
+      "path": "electron/logos/43_voxel_tooth_icon.ico",
+      "size": 61889,
+      "sha256": "a428e617167faa032d7b7e1d093dda0f1118f237dd65e1a8615a83198e46a2d6"
+    },
+    {
+      "path": "electron/logos/44_mesh_hex_icon.ico",
+      "size": 69618,
+      "sha256": "e0260af17656acdbc6d2ab24a55006b9c314fa9696d5ba397f51f5e52ddc148a"
+    },
+    {
+      "path": "electron/logos/45_coordinate_icon.ico",
+      "size": 67881,
+      "sha256": "de564a9b889011c9d235fcd657df9544355d55db8cae02c35f7916d37c3f524e"
+    },
+    {
+      "path": "electron/logos/46_caliper_icon.ico",
+      "size": 65359,
+      "sha256": "0cd86e026d4c6c689ce9eb6a32e9eaf925dc6fe2f665e0a3487bb2db91cbdec4"
+    },
+    {
+      "path": "electron/logos/47_tool_nib_icon.ico",
+      "size": 62473,
+      "sha256": "708c8b90e8c670480a1061b91f5ac1f3bc3d16992cbfca429c42a2aaf417a378"
+    },
+    {
+      "path": "electron/logos/48_milling_icon.ico",
+      "size": 61316,
+      "sha256": "a427784855defc05319de69ddaea3f5333e0355d01d95c9452a722ecde92ccc9"
+    },
+    {
+      "path": "electron/logos/49_section_wedge_icon.ico",
+      "size": 72412,
+      "sha256": "4a805e1d9dd3b5c3cf6ccba203ccd01ec247775529401c57acca2bd0caa3e9cb"
+    },
+    {
+      "path": "electron/logos/50_contour_bands_icon.ico",
+      "size": 70932,
+      "sha256": "ff2cb48e044469ad2095b44d8cd8b61473b5cc0abf8a616ec649fad7b6cead32"
+    },
+    {
+      "path": "electron/logos/51_offset_shell_icon.ico",
+      "size": 73090,
+      "sha256": "61d076a82071dfb10497df758e54361c8f280363ad986bacdb871dd98c490ba0"
+    },
+    {
+      "path": "electron/logos/52_contact_pair_icon.ico",
+      "size": 62984,
+      "sha256": "814c19f1fde5765f2f16826d035aaac8dd8ad6ded7c7f77e5f1b2e1f0a2dce2c"
+    },
+    {
+      "path": "electron/logos/53_clearance_icon.ico",
+      "size": 59880,
+      "sha256": "8af296c818a51083b1a0a0499f3a4ede49b7697d541b62941046df2b110c579f"
+    },
+    {
+      "path": "electron/logos/54_insertion_icon.ico",
+      "size": 57861,
+      "sha256": "613bb6c350e18c7b18a09312b21eb6d075d6ec4351f6e4d04ee505748e2d7ad3"
+    },
+    {
+      "path": "electron/logos/55_relief_icon.ico",
+      "size": 71564,
+      "sha256": "2686a90ac364d22452624c0238bdf3a3db8b2f87afbdc273d68d4def71a2a242"
+    },
+    {
+      "path": "electron/logos/56_thickness_icon.ico",
+      "size": 73845,
+      "sha256": "eb00eeff63d46f46d77de3aa522c8e929c7e13ed5577d817a603a39d270b61e4"
+    },
+    {
+      "path": "electron/logos/57_spline_icon.ico",
+      "size": 66711,
+      "sha256": "0f5d17c8d9e985197c372ec496b8df2226f34051a104784c2f8c24683947e901"
+    },
+    {
+      "path": "electron/logos/58_normals_icon.ico",
+      "size": 68732,
+      "sha256": "c0d8c586c367fb50799db2854aeb6019ea418493413fde9194b2110813a589a4"
+    },
+    {
+      "path": "electron/logos/59_control_knots_icon.ico",
+      "size": 66259,
+      "sha256": "9dc1e7aca8d4ec0613ef47dcc98ff0b1f72353e9d54b3bf51ab715cdd7c67cb9"
+    },
+    {
+      "path": "electron/logos/60_construction_cube_icon.ico",
+      "size": 73964,
+      "sha256": "3c7b1c445056faccfc20bfee5c1dad95d762b2b5174fbfa8da37833527e10e4c"
+    },
+    {
+      "path": "electron/logos/61_tetra_icon.ico",
+      "size": 63440,
+      "sha256": "22ef61ac1837e9262d3e2837181b1add5ca2550960aea5b480c824d140d1f1c4"
+    },
+    {
+      "path": "electron/logos/62_octa_icon.ico",
+      "size": 72564,
+      "sha256": "485f501e96abfeba2be9eccff8df9e71f9b782e99db4dd207102ec429156120c"
+    },
+    {
+      "path": "electron/logos/63_folded_plane_icon.ico",
+      "size": 68838,
+      "sha256": "29b5b3d8f568ecf360d7e9652969abdf85bc8d409ce895746aea54aec7c58fb6"
+    },
+    {
+      "path": "electron/logos/64_torque_icon.ico",
+      "size": 64886,
+      "sha256": "8db445324d96c09e3fcc2f9f92886b752157c96ae88d3bb40ad51ace279aa9e6"
+    },
+    {
+      "path": "electron/logos/65_iso_arch_icon.ico",
+      "size": 72242,
+      "sha256": "dec785723123319f1929509b548f698645fdd8ac2b10591a90bd4e0fc374f8c4"
+    },
+    {
+      "path": "electron/logos/66_hex_core_icon.ico",
+      "size": 73768,
+      "sha256": "57bb35831d02ec7ff07d94ba72a1a6e3631aaadd5cea608a694ecb7788804af1"
+    },
+    {
+      "path": "electron/logos/67_prism_window_icon.ico",
+      "size": 72111,
+      "sha256": "9ee042e0cf8da6816a408287ae25487915d54b18e752a2bd28233d97228cad2b"
+    },
+    {
+      "path": "electron/logos/68_helix_icon.ico",
+      "size": 65072,
+      "sha256": "95a6a731047e81c1d6a1fb4012730927e948412b0fce7ba01659590cb4c0f556"
+    },
+    {
+      "path": "electron/logos/69_ribbon_loop_icon.ico",
+      "size": 67513,
+      "sha256": "b21745199b8fc67dcb024a4844bbcaa758b8f3a634361533a923fb1708224fbc"
+    },
+    {
+      "path": "electron/logos/70_crown_lattice_icon.ico",
+      "size": 66831,
+      "sha256": "caf8d75d56677393e42d9330e10ebc17bd83ab74873bcb5da2fbbffba7cc5465"
+    },
+    {
+      "path": "electron/logos/71_d_split_icon.ico",
+      "size": 65616,
+      "sha256": "23199d6c2208e3f73d3883cdcd0842d62ae3b7a79e3faef6efebc667b8c13700"
+    },
+    {
+      "path": "electron/logos/72_d_chamfer_icon.ico",
+      "size": 57706,
+      "sha256": "af31ad02383a1e0b03fadda9b54dabf4be7cd67dd4c493839e430f951d594bd0"
+    },
+    {
+      "path": "electron/logos/73_d_vault_icon.ico",
+      "size": 70899,
+      "sha256": "8c3451850dc1f6eac2279b3c42c04dc2f5c3db0b72473fddc19d04248cbc7d58"
+    },
+    {
+      "path": "electron/logos/74_d_ribbon_icon.ico",
+      "size": 61107,
+      "sha256": "5fada985830502cdff5213277935b2dfc94086737be053ebfcdabd11bd79bb17"
+    },
+    {
+      "path": "electron/logos/75_a_crown_icon.ico",
+      "size": 64208,
+      "sha256": "81869062116a2ad97491470e8b718c0193654cd6f80f44507810766324cc8793"
+    },
+    {
+      "path": "electron/logos/76_a_vault_icon.ico",
+      "size": 64205,
+      "sha256": "04bbf3662e32ce6ae329c55ce312f955ca835c48586d2fb67c173e57ad0273ca"
+    },
+    {
+      "path": "electron/logos/77_a_beam_icon.ico",
+      "size": 64196,
+      "sha256": "70d5e12b8db34ba01f8ee66943c97893c86c47dfae614fa262c1e2fb349622fd"
+    },
+    {
+      "path": "electron/logos/78_y_branch_icon.ico",
+      "size": 60774,
+      "sha256": "b1479ea82567dc72ae80c74af8b1db6494d03c299d456cc2419dfe637d175827"
+    },
+    {
+      "path": "electron/logos/79_ya_merge_icon.ico",
+      "size": 68776,
+      "sha256": "98c3afb82aebec1e47c6ac3aac83199fe41254419af33bf5d9fe6bd81759476e"
+    },
+    {
+      "path": "electron/logos/80_da_mirror_icon.ico",
+      "size": 80521,
+      "sha256": "3ba29a366ddde85039bae574503e1f759dbd0db37bc32b0ad3f95559a596662e"
+    },
+    {
+      "path": "electron/logos/81_da_keystone_icon.ico",
+      "size": 72065,
+      "sha256": "c17572b1fe550c6fae82eac8faef10c41105873041bdf3e368f4ac165b4d2619"
+    },
+    {
+      "path": "electron/logos/82_dy_link_icon.ico",
+      "size": 78800,
+      "sha256": "a1ebe3a5a468725d4d7ad5c32cb8d892c484d9633db4f5634b8e0d94933dbc86"
+    },
+    {
+      "path": "electron/logos/83_aya_nodes_icon.ico",
+      "size": 85070,
+      "sha256": "6c5bb0fd0a6d435f6d8eccd1ec90ae3ae0e65002f36c5036bbad8042c887b7f7"
+    },
+    {
+      "path": "electron/logos/84_dental_d_icon.ico",
+      "size": 65790,
+      "sha256": "39a923cffe63c1b4ccb47aa68a65d026ae376c920520db5f2c155aabc798bed6"
+    },
+    {
+      "path": "electron/logos/85_d_aperture_icon.ico",
+      "size": 69125,
+      "sha256": "614b7aa9017e0bdddc80861766489b45534e900d6530bf0666f2603caea6931c"
+    },
+    {
+      "path": "electron/logos/86_a_orbit_icon.ico",
+      "size": 74670,
+      "sha256": "12914097837c309bf684e199d499671b8f202621d2956d578c450a98cefa6983"
+    },
+    {
+      "path": "electron/logos/87_y_arc_icon.ico",
+      "size": 72824,
+      "sha256": "dcc717d047365a6e2a395e716c554f4a7f2c98cab471504cb6e41801979b85f5"
+    },
+    {
+      "path": "electron/logos/88_da_ligature_icon.ico",
+      "size": 76967,
+      "sha256": "b30f1ad4abf8f638bbb8ccbae40eee6713e2c312b7fb44bc0c5560fcf3a636c9"
+    },
+    {
+      "path": "electron/logos/89_dental_ring_icon.ico",
+      "size": 74353,
+      "sha256": "9ec3fb9246e29f9116e53d856595f5525c06275d5e91cd3306575c3e2ca558d8"
+    },
+    {
+      "path": "electron/logos/90_laurel_molar_icon.ico",
+      "size": 69693,
+      "sha256": "549ac83529aebee6974d6756443e8230ea64f0798c4db587b0ece435534c923a"
+    },
+    {
+      "path": "electron/logos/91_cusp_compass_icon.ico",
+      "size": 60952,
+      "sha256": "e3ff1923fdf4ea65846a7c83aba85a996d5e8680f0e832aca38430c5c09f6419"
+    },
+    {
+      "path": "electron/logos/92_dental_beacon_icon.ico",
+      "size": 64334,
+      "sha256": "d346216608bebcd511dd685abd217a51a2ed86ca7ced6a5189274d33de3afb36"
+    },
+    {
+      "path": "electron/logos/93_dental_pulse_icon.ico",
+      "size": 70375,
+      "sha256": "c668f1f96f5e81f4621169a681e95c4feb76dd927a98f671c49839b46f52ed2e"
+    },
+    {
+      "path": "electron/logos/94_infinity_arch_icon.ico",
+      "size": 69305,
+      "sha256": "cfcc972026c90786fc24b1715d2bdf9f8e38dba0a068e9ea5cf3d546e2b1063f"
+    },
+    {
+      "path": "electron/logos/95_origami_crown_icon.ico",
+      "size": 65981,
+      "sha256": "b6353bcc2fde5ac1b392755a1d7daa8b7e8a6c36fc81cd630a5d1ad250ec4852"
+    },
+    {
+      "path": "electron/logos/96_prism_arch_icon.ico",
+      "size": 73716,
+      "sha256": "06f09139a6e0645f92be0d85f0af826a4ba45ea8632eb7ae208d5f851fc13de3"
+    },
+    {
+      "path": "electron/logos/97_faceted_molar_icon.ico",
+      "size": 67193,
+      "sha256": "6dc7f9d2469bb196ea46d62eaf168795eb74b75b8142c6d81f38153b97119e1b"
+    },
+    {
+      "path": "electron/logos/98_union_crest_icon.ico",
+      "size": 70132,
+      "sha256": "6f67034a53ca5392560da863473a9cb43bc77fe61cb0b4170ca41d906ab45e77"
+    },
+    {
+      "path": "electron/logos/99_horizon_d_icon.ico",
+      "size": 68997,
+      "sha256": "1399a10847ed4ac7815276d8b31fd9f3bc4983a0720ae7d9a3dbc08f61d2884a"
     },
     {
       "path": "electron/main.cjs",
@@ -1401,12 +1847,12 @@
     {
       "path": "package-lock.json",
       "size": 354831,
-      "sha256": "a9f1800bba82771c3372cee1d4b65f490cd2b1a14de72c008388475cd6765d76"
+      "sha256": "b25007be336dc70cb00e7150419b8207d0dae4440b33e67144f6a15dfff9a719"
     },
     {
       "path": "package.json",
-      "size": 8645,
-      "sha256": "5bda657662a409a3c5c7742962fc0c81e81bac827c91e3215f719e296dcf55fd"
+      "size": 8995,
+      "sha256": "76af5d4c583c4351d057851f6360aa9a1bef614b93e997348af1f8398c1f2188"
     },
     {
       "path": "public/aya/aya-alert.png",
@@ -1454,19 +1900,24 @@
       "sha256": "461e191df91d2e7ad8840627459db9e3c33a790b97483de5ff60048dc20e3e9b"
     },
     {
+      "path": "public/brand/DentAYA_Premium_Atelier.svg",
+      "size": 352614,
+      "sha256": "0127750f621415ecd2bb9a608908e63e2833e17572720bd7c017d2c432a750b0"
+    },
+    {
       "path": "public/brand/DentAYA_Premium_Atelier.webp",
-      "size": 76320,
-      "sha256": "1ad06c9e562f4ff2d1bbbef3440d73c6b7b6cc8a8409bb4fb447186fc32c9a90"
+      "size": 133528,
+      "sha256": "58a1caaeb94c95c601c47203566261990961aa20e9afe79fdf9bb5b4c42af5e0"
     },
     {
       "path": "public/brand/DentAYA_Premium_Logo_Koleksiyonu.png",
-      "size": 361109,
-      "sha256": "2cb4a7d08dff1e32cedb44de1d7c71932cafa1d9826c6cc09db4661bbbd3395e"
+      "size": 645073,
+      "sha256": "016f47d4b0563b335ec15f0fdd69714ba012314a2bfcde9bac7c79896f0aad6a"
     },
     {
       "path": "public/brand/DentAYA_Premium_Logo_Koleksiyonu.svg",
-      "size": 66686,
-      "sha256": "cbd4e94c78ea3b3f7da5e25ab965742fa28ea673d9e036582e87116f29dc2f86"
+      "size": 443887,
+      "sha256": "67f7413acb240a1fefdecec27fb5d82ae5c2be8dec4c450e7a9c1f29b55ef4bd"
     },
     {
       "path": "public/brand/DentAYA_RC38_Logo_Ailesi.png",
@@ -1485,8 +1936,8 @@
     },
     {
       "path": "public/brand/identity.json",
-      "size": 2649,
-      "sha256": "dd9da1c310bc0eef6135f191adcb70f946b5e8cdf6476c15a7080f811c1e42d7"
+      "size": 12365,
+      "sha256": "90403676c5128652cd71352a3344af50ec37c99bfe1711727c619416e534b827"
     },
     {
       "path": "public/community-setup.sql",
@@ -1505,48 +1956,48 @@
     },
     {
       "path": "public/dentaya-logo-light.svg",
-      "size": 2626,
-      "sha256": "cb6a6fd4db126471706ab55cb2af7095af9275fc3f36a54b73b37a03116341cc"
+      "size": 4194,
+      "sha256": "b445ce9d6c229730eaa07283f6f0cf5f1d36a6dfe244b86f5e16456cf079b370"
     },
     {
       "path": "public/dentaya-logo.svg",
-      "size": 2623,
-      "sha256": "9461aa4c945e270cf4f0ff75f2d15eacb6471af7a93cb84aefdbb0aa662de9e4"
+      "size": 4183,
+      "sha256": "e45043daaadebf1cacb825f4ab2f7b43a7b8bff629f0498df53c0c8fd19c4bf5"
     },
     {
       "path": "public/icon-192.png",
-      "size": 18135,
-      "sha256": "8331df69593c9bf50a9f6a7762a58b783a6683877227b15b4b7783f044a97e65"
+      "size": 23893,
+      "sha256": "918d6569a3cf5566ffc8f1cfc3a6f1d7116ab54783324445169d46fe7f0da71e"
     },
     {
       "path": "public/icon-512.png",
-      "size": 53202,
-      "sha256": "72100f882e62e8664afb7664984429f7111a5f7aca35b9e52b5cd7d85637587a"
+      "size": 77972,
+      "sha256": "7e0b85e7db3a2101889b100affc14dc0b0f60c40f39fb9e5e68be6b14b530c65"
     },
     {
       "path": "public/icon.svg",
-      "size": 1554,
-      "sha256": "95d0025a89422547161c81ed477da9be7c14f2c867f31b78e7a6b833faf8d465"
+      "size": 3114,
+      "sha256": "008b8d59cf28a013688b2868a91b08247d6897254084c536d928052eae59690b"
     },
     {
       "path": "public/logos/01_dental_form.svg",
-      "size": 2623,
-      "sha256": "9461aa4c945e270cf4f0ff75f2d15eacb6471af7a93cb84aefdbb0aa662de9e4"
+      "size": 4183,
+      "sha256": "e45043daaadebf1cacb825f4ab2f7b43a7b8bff629f0498df53c0c8fd19c4bf5"
     },
     {
       "path": "public/logos/01_dental_form_icon.png",
-      "size": 53202,
-      "sha256": "72100f882e62e8664afb7664984429f7111a5f7aca35b9e52b5cd7d85637587a"
+      "size": 77972,
+      "sha256": "7e0b85e7db3a2101889b100affc14dc0b0f60c40f39fb9e5e68be6b14b530c65"
     },
     {
       "path": "public/logos/01_dental_form_icon.svg",
-      "size": 1554,
-      "sha256": "95d0025a89422547161c81ed477da9be7c14f2c867f31b78e7a6b833faf8d465"
+      "size": 3114,
+      "sha256": "008b8d59cf28a013688b2868a91b08247d6897254084c536d928052eae59690b"
     },
     {
       "path": "public/logos/01_dental_form_light.svg",
-      "size": 2626,
-      "sha256": "cb6a6fd4db126471706ab55cb2af7095af9275fc3f36a54b73b37a03116341cc"
+      "size": 4194,
+      "sha256": "b445ce9d6c229730eaa07283f6f0cf5f1d36a6dfe244b86f5e16456cf079b370"
     },
     {
       "path": "public/logos/01_dental_form_mono.svg",
@@ -1570,23 +2021,23 @@
     },
     {
       "path": "public/logos/02_dental_arch.svg",
-      "size": 2608,
-      "sha256": "33bb6016fe4f83f98fa94142d968dc5469bd94d7f7ea92c2b75d0179e17ba5d9"
+      "size": 4152,
+      "sha256": "64663bc597a556164bac893e1208b8e34e8a15ffc28ac791f8c146475c59089f"
     },
     {
       "path": "public/logos/02_dental_arch_icon.png",
-      "size": 46171,
-      "sha256": "874d1d6b4569c02009bfc84cf7cfb638e4c12a9ada118691f576f91689b98b63"
+      "size": 73047,
+      "sha256": "6c6884c7c87954bffe28e817dbef00dae3bcf4ca4269089932e15bd6e33460f7"
     },
     {
       "path": "public/logos/02_dental_arch_icon.svg",
-      "size": 1539,
-      "sha256": "c4787e48403e499bc5687b891a953848a7a5c76d64a421f58ac91afd91b36b84"
+      "size": 3083,
+      "sha256": "087c2d5edaf5bf1433b65e88b78185a388eca47f5c814710b6718b3610c86541"
     },
     {
       "path": "public/logos/02_dental_arch_light.svg",
-      "size": 2611,
-      "sha256": "ddedf197a36e4f1e2714971b99a7a9d6c00426b4fd52f6e8ff66294e4df72e35"
+      "size": 4163,
+      "sha256": "05487e9f57409d4efb97607ca02fce4539a4b833b7dacfb80e5b125782b1ca1b"
     },
     {
       "path": "public/logos/02_dental_arch_mono.svg",
@@ -1610,23 +2061,23 @@
     },
     {
       "path": "public/logos/03_cad_geometry.svg",
-      "size": 2097,
-      "sha256": "c38b27d66ce7b392b83be4500d83d3f1a29f9405fd80884ae79efbb1847a50ce"
+      "size": 3537,
+      "sha256": "b5f6385e500e1b1b9f263daa25e9e15d23866aaf81d219d9e4bf2e100293ccc0"
     },
     {
       "path": "public/logos/03_cad_geometry_icon.png",
-      "size": 44933,
-      "sha256": "75119c1e8429ec1422006740c9855a42b8a30aeb678b66f341a00a7c91faf88a"
+      "size": 68348,
+      "sha256": "37692a019ced647c230ff31bd5c5b1345da096c292b05cadffd5007d3ce5796b"
     },
     {
       "path": "public/logos/03_cad_geometry_icon.svg",
-      "size": 1465,
-      "sha256": "c74833d91138fc221fb62fa778a59e61cfd78817e59dd1155305167ed05ce4f3"
+      "size": 2905,
+      "sha256": "efe1c8d55f24dfaf114453e4fe9cbaa1328daf126fc97decef90b608118c7dd4"
     },
     {
       "path": "public/logos/03_cad_geometry_light.svg",
-      "size": 2100,
-      "sha256": "f97e38379177b88c180d58ee60bc8395a570387e3f8da4a852819351c70ab0a0"
+      "size": 3548,
+      "sha256": "f7a496e17e1f000616a7a8f66b18fee64dde09a7ac2dec56592c80d9b77814aa"
     },
     {
       "path": "public/logos/03_cad_geometry_mono.svg",
@@ -1650,23 +2101,23 @@
     },
     {
       "path": "public/logos/04_scan.svg",
-      "size": 2343,
-      "sha256": "c78c60be8bdcc668ac7ebba041e1a2673005a91d39f48dc787851851b3dfb127"
+      "size": 4111,
+      "sha256": "752f76265ca7243aa868913a0b245e9201ac3ae8fd4ab1cf11bce40a7394d04f"
     },
     {
       "path": "public/logos/04_scan_icon.png",
-      "size": 45425,
-      "sha256": "658f93b5aea0c656add0a5826a5e425937ac2e00644f2e8e02e45da8f19c7103"
+      "size": 82826,
+      "sha256": "091e1e0ac4362f25d9e7fa7027e73d9bead35857b1a3a41a0738fb0d359a7283"
     },
     {
       "path": "public/logos/04_scan_icon.svg",
-      "size": 1711,
-      "sha256": "6828c96c1643ec4878bb9b7333b295e3fba853412ef574939bb93d68658ccd62"
+      "size": 3479,
+      "sha256": "8f35f15796ac5aafde10175257e970ffc1745704077ec22c89f4cd773aa59021"
     },
     {
       "path": "public/logos/04_scan_light.svg",
-      "size": 2346,
-      "sha256": "de79af6d1b4829cc62f464f94587c447948fcca5df39700f371a4ba8ac7ae5b5"
+      "size": 4122,
+      "sha256": "8657b36077a3ea5a9790f095692826f8bc1e1d0f54050dd2f913f020d0a30cab"
     },
     {
       "path": "public/logos/04_scan_mono.svg",
@@ -1690,23 +2141,23 @@
     },
     {
       "path": "public/logos/05_orbit.svg",
-      "size": 2818,
-      "sha256": "c4a133502d5510d486bef319e9190e129613531e4b379a01be49922ea5356e16"
+      "size": 4638,
+      "sha256": "a579cdb7449979e8bf569cf1ec05956c7bd5d4356c6a68b777bef62d086f0274"
     },
     {
       "path": "public/logos/05_orbit_icon.png",
-      "size": 63267,
-      "sha256": "8187d9b23f886c9571f8c08a206b2dd687793337aa05c920f5d40049146e29d2"
+      "size": 110954,
+      "sha256": "37b7b216913070fdb666b8c1b40d4553630a021219dbe3ff97aa81a003c9022f"
     },
     {
       "path": "public/logos/05_orbit_icon.svg",
-      "size": 1749,
-      "sha256": "91e64762af522f02a2ce9b4be0e592561b0023614700b27e2d071ee52562db1e"
+      "size": 3569,
+      "sha256": "e31453de0bdb677cb397462c6e8d5621c05499f494667ebb23341aa413bcb390"
     },
     {
       "path": "public/logos/05_orbit_light.svg",
-      "size": 2821,
-      "sha256": "18a277bae197dad04157181f67a94d669693337f1df9d4f197b8da20f6846407"
+      "size": 4649,
+      "sha256": "75f5288f0a70c56770179881fdbe55bc76dcfd801403cec53f813b48bf80d944"
     },
     {
       "path": "public/logos/05_orbit_mono.svg",
@@ -1730,23 +2181,23 @@
     },
     {
       "path": "public/logos/06_crown.svg",
-      "size": 2723,
-      "sha256": "36f599f7f398609322dc721990277dbe69c283024c6e9d508e3c1bd1a5f8508a"
+      "size": 4323,
+      "sha256": "c0a03eeb13eee1ed03e680b6a9fe254ee4c3aa3243c9510d537e0c05eb13920e"
     },
     {
       "path": "public/logos/06_crown_icon.png",
-      "size": 53764,
-      "sha256": "99eb730a85da9799623039d482b95da7f4238221bfc4f36aea403744e4a61559"
+      "size": 87519,
+      "sha256": "ae4d9a483ed24f324fa8d67afd99a38308214b510f9f29ff04bc2c221c84e72c"
     },
     {
       "path": "public/logos/06_crown_icon.svg",
-      "size": 1586,
-      "sha256": "70f19ac318eb188b2735f09cba84d776b2dc32cab4f9a853f057ce88ccd8ce89"
+      "size": 3186,
+      "sha256": "b143f8e660b3a160f24a29293d324b53ab1c3f98a292bbdc63c6869bf7820a1e"
     },
     {
       "path": "public/logos/06_crown_light.svg",
-      "size": 2726,
-      "sha256": "aa0899b095828fb6be38ab8aece8001d7786e90cbc0ef0680a0a1c500a161d7c"
+      "size": 4334,
+      "sha256": "e6ef0b7a07f061dfd0fba715fe5b76dc4f601cfa3d9102b00e510ef4b8e03c2c"
     },
     {
       "path": "public/logos/06_crown_mono.svg",
@@ -1770,23 +2221,23 @@
     },
     {
       "path": "public/logos/07_prism.svg",
-      "size": 2207,
-      "sha256": "a5a849855c62fe4422d3cfc478dcc035c81b957c2fdc54b0091c95923ef41f20"
+      "size": 3799,
+      "sha256": "ab730590f8ea4a7d95d7f899732292bd1d52cb97b55d3b41a4001e5e15c7a356"
     },
     {
       "path": "public/logos/07_prism_icon.png",
-      "size": 55922,
-      "sha256": "ba3ad6461ae7ee9721857c98075260975febb02f90f397926f93a0621e7a5228"
+      "size": 97945,
+      "sha256": "5371214c5bbccb48f905b6a9ed44c1d54939d8dc5d02addbaf9a93bc2229d3cd"
     },
     {
       "path": "public/logos/07_prism_icon.svg",
-      "size": 1575,
-      "sha256": "4be9cbd4538cac46cf9a6489e244c2b12f89ed6e02a3f83d4cc1611148c61dd2"
+      "size": 3167,
+      "sha256": "233e5dce3bde5b0491cee45b26131b22a303a96611960f1b55317c3b8aaa7de8"
     },
     {
       "path": "public/logos/07_prism_light.svg",
-      "size": 2210,
-      "sha256": "e665f0f902ecb1d00dc975010763e091f5b165b7a6dea384d2886a084eee4333"
+      "size": 3810,
+      "sha256": "6007ee2214899eefca2c7c7ab888b6e2c048aec894c577fcad9f4a659bfd8790"
     },
     {
       "path": "public/logos/07_prism_mono.svg",
@@ -1810,23 +2261,23 @@
     },
     {
       "path": "public/logos/08_wave.svg",
-      "size": 2884,
-      "sha256": "8bc4a2432a7f57c8089cc40c84f5ac56ada0fdf37cfaa281d67819ce6e221567"
+      "size": 4792,
+      "sha256": "5c0dcf87b58e36a50fc79a6d45e82492724b629e37cb32c79888ee1b9855fb41"
     },
     {
       "path": "public/logos/08_wave_icon.png",
-      "size": 54960,
-      "sha256": "420d626954768629b3cb89d1321b8a9bf3e62674e33c67b3b4049d7143a1f765"
+      "size": 84766,
+      "sha256": "b777cfa54a8bcef13f061849e9cbc059917c86be886950cf59370f856b3282a7"
     },
     {
       "path": "public/logos/08_wave_icon.svg",
-      "size": 1815,
-      "sha256": "ec13374e3fd8bfa4cf7825ea8d1c0d1721f11aa2d2c2aaf457e97e6f8a2fd5fb"
+      "size": 3723,
+      "sha256": "cad8cd4195a075c4c43f89222951043efc74e0aef26276c6118ea74d56d71fa6"
     },
     {
       "path": "public/logos/08_wave_light.svg",
-      "size": 2887,
-      "sha256": "dfe10de027d1d6f03b39d28743977abc35eff9c01dc564b1da4592e53ca9d682"
+      "size": 4803,
+      "sha256": "cd34f50d1d6c39f13394cda91631df63d575b1a14023eef7de7bc66e7624caa0"
     },
     {
       "path": "public/logos/08_wave_mono.svg",
@@ -1850,23 +2301,23 @@
     },
     {
       "path": "public/logos/09_link.svg",
-      "size": 2793,
-      "sha256": "a29868c6bdf83e2a7e6146e2a997c35d9c090ef77058032c038ef01b217b6fd6"
+      "size": 4577,
+      "sha256": "b59d1f13b0ba5320327b7bf6aaf5c506c05d1c449bea15155ecb49dd60bd4b5c"
     },
     {
       "path": "public/logos/09_link_icon.png",
-      "size": 65266,
-      "sha256": "afe9433218524dfca2bcdbc5d5c66a452cb8a22161b430685e0cc42ab518badc"
+      "size": 104317,
+      "sha256": "6ca4ac6fd7964d156a6d7edd119f9d1a60ee88468532ebb2e2341ed2ebaab6ae"
     },
     {
       "path": "public/logos/09_link_icon.svg",
-      "size": 1724,
-      "sha256": "61cb80afda181c22dd9090d6e53a9aad602cd0ba1f2a472b93eca61fea0feb82"
+      "size": 3508,
+      "sha256": "ae31d8f59ca87a27616452cb10c4bf497a215ade15e6ce41385a85f2b1a957dd"
     },
     {
       "path": "public/logos/09_link_light.svg",
-      "size": 2796,
-      "sha256": "13a50a02b0f7c4b87beb4ab2470e8d5af5abc70bca802f38595ae11b70175b60"
+      "size": 4588,
+      "sha256": "9738c5d77cfb0acadfb4b7b3c3fdc861d2268f2a71ed3e2615c6750f0569591e"
     },
     {
       "path": "public/logos/09_link_mono.svg",
@@ -1889,24 +2340,64 @@
       "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
     },
     {
+      "path": "public/logos/100_studio_jewel.svg",
+      "size": 4504,
+      "sha256": "68a5ce7796a834fa3f141a29e6ab32cfc7344672f161e0e93125ca537a814217"
+    },
+    {
+      "path": "public/logos/100_studio_jewel_icon.png",
+      "size": 83212,
+      "sha256": "0792180ecd86ebab0251678e4b060134b297e20cf6b0bcf314950db9460d510e"
+    },
+    {
+      "path": "public/logos/100_studio_jewel_icon.svg",
+      "size": 3436,
+      "sha256": "8f628b845e21063f69ce40f392b3ffd64804b0893204e0d7e53532b2fe439760"
+    },
+    {
+      "path": "public/logos/100_studio_jewel_light.svg",
+      "size": 4515,
+      "sha256": "b58e124fa4add448b82fa1e8e4f3bdad1904b11ab71e6da175a21c1e9d81f7b8"
+    },
+    {
+      "path": "public/logos/100_studio_jewel_mono.svg",
+      "size": 1701,
+      "sha256": "a6c4dd9933d1fb267b965097de5f8836dd263ff5a2ecea37cfce3b2f08e9f20d"
+    },
+    {
+      "path": "public/logos/100_studio_jewel_mono_white.svg",
+      "size": 1701,
+      "sha256": "a33ceeddba933b4fff22e5e8a7b8a1ca1f0027be998a05179b026d251f7eed2c"
+    },
+    {
+      "path": "public/logos/100_studio_jewel_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/100_studio_jewel_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
       "path": "public/logos/10_spark.svg",
-      "size": 2655,
-      "sha256": "11351b35014261cdb182f394e5339cecf7f4d898712e3e2796d2d613799660db"
+      "size": 4255,
+      "sha256": "206c7a5b07a855243f6109b6453bd3cdc8a7bb7a2cfd7185a06cba98c7608874"
     },
     {
       "path": "public/logos/10_spark_icon.png",
-      "size": 50999,
-      "sha256": "050bce747e7d9e396ca3e6fe47fcf784a7cce92653136e9cfb3ff334653a9f19"
+      "size": 83500,
+      "sha256": "978afe8cdb5ed472afaf22c8c48e2fa8b1aa78e46a0f92c902df25b43b1d53da"
     },
     {
       "path": "public/logos/10_spark_icon.svg",
-      "size": 1586,
-      "sha256": "a8dd568e76611f4a1932cb0b68a2ae4d79f03665109da58bef2425be68070b5e"
+      "size": 3186,
+      "sha256": "642420f679db241719811ac1d6612cca816bb4242f38b129e568adabff4841fe"
     },
     {
       "path": "public/logos/10_spark_light.svg",
-      "size": 2658,
-      "sha256": "c876ec2306017ae4fa5e2f39f85d204c9669f0a3bbb275b371986ec99c119a97"
+      "size": 4266,
+      "sha256": "faea946a272a6276f569a75535dd76949e93f7da0f9a3069a835dca8b2e370c6"
     },
     {
       "path": "public/logos/10_spark_mono.svg",
@@ -1930,23 +2421,23 @@
     },
     {
       "path": "public/logos/11_layer.svg",
-      "size": 2277,
-      "sha256": "4d84fd9f57affcaa0fc34d934c16e60122c03a55ec9f82199b7cb0b605b17390"
+      "size": 3957,
+      "sha256": "8ec10dd6b0a706fc7f32929e7f31231586405bf244cfe871ba421100ee5d5024"
     },
     {
       "path": "public/logos/11_layer_icon.png",
-      "size": 62051,
-      "sha256": "7d9e14eb361dd0e60276d76c97469f7a0d88184b8234b743055636e78220a96d"
+      "size": 99169,
+      "sha256": "0fe7b5d9d716182938e273a740009f36c4ffc9d331de0506a3725a1f251c276d"
     },
     {
       "path": "public/logos/11_layer_icon.svg",
-      "size": 1645,
-      "sha256": "d6ff0647afe393ce1fabf637e04f50391f1b367372b8fc71b1ea896eda91856f"
+      "size": 3325,
+      "sha256": "05eb646049b2aaba73b8f4c2a3f721be396b71329c02164db2796cdbce525cc7"
     },
     {
       "path": "public/logos/11_layer_light.svg",
-      "size": 2280,
-      "sha256": "31f716630698e24f77d52641a9d0ce7aed8d27f325a03e4c68e83eb1c1aa61d5"
+      "size": 3968,
+      "sha256": "2cf2faafdb49a8452666250f2ee49970aba3996013627e2662a2b84ba250a593"
     },
     {
       "path": "public/logos/11_layer_mono.svg",
@@ -1970,23 +2461,23 @@
     },
     {
       "path": "public/logos/12_shield.svg",
-      "size": 2950,
-      "sha256": "d36d60282f51db72fbcd93af12a9520af14066df4e2ebc9bbac457a00d8bceac"
+      "size": 4946,
+      "sha256": "9363bb71a20b4f8d69f48277676f02ec8b02e2f357ebb360b0a1003f2541cd38"
     },
     {
       "path": "public/logos/12_shield_icon.png",
-      "size": 65803,
-      "sha256": "2099fb27e02cc8c54e395b60b6ca4c0912abe8ce4d1dec53a9281a0d7e6ab768"
+      "size": 107981,
+      "sha256": "b2a75f47f5591b6c334f199754dacaa4d7b377e2dba4581cb14116e3d55ca180"
     },
     {
       "path": "public/logos/12_shield_icon.svg",
-      "size": 1881,
-      "sha256": "080ddbff6b32adc8a16e506aecf126b17316598516c7196ba702f13ec248ad7c"
+      "size": 3877,
+      "sha256": "9703f6da5d68ce9c47369acf23ea0bdc216511984f146abc865d5e9aa5f17d7c"
     },
     {
       "path": "public/logos/12_shield_light.svg",
-      "size": 2953,
-      "sha256": "8d687596c9cba48ad875c2f9fdc78fe1be5dae0adee3fec6e43b28d4cfc30841"
+      "size": 4957,
+      "sha256": "55d94826369770e521afa3869dd022a773cd864b810f08fea52c06bfe4b4de8b"
     },
     {
       "path": "public/logos/12_shield_mono.svg",
@@ -2010,23 +2501,23 @@
     },
     {
       "path": "public/logos/13_apex.svg",
-      "size": 2097,
-      "sha256": "33d9cbee704a89109283d4abc3b9caf0e1bd41d8919a17f30b30831018cb1dcc"
+      "size": 3537,
+      "sha256": "4b46c2d16f4a392b7e99f5d4fac74b0897bb3e5321487b0bda9804a9bd863411"
     },
     {
       "path": "public/logos/13_apex_icon.png",
-      "size": 47798,
-      "sha256": "791537ec0051f68200c2cde0a049fc11a72020137e4de501f68e39e347040bef"
+      "size": 74280,
+      "sha256": "dc80426229bbec22d0a08a9e5981fc81032b32b20f59de9993af9dd64e1b1fe4"
     },
     {
       "path": "public/logos/13_apex_icon.svg",
-      "size": 1465,
-      "sha256": "66a69469492f3dfaba11d39aa0ec555c128352b364394df50cf817f46636b5be"
+      "size": 2905,
+      "sha256": "88f55e89f4a7365f87bfbc8b62aeccaf508b1bfd76b9ebee38b8cfd0d95e847c"
     },
     {
       "path": "public/logos/13_apex_light.svg",
-      "size": 2100,
-      "sha256": "ccde6ba968a688485020915886d51093122283a03ab9d3cd58ce4e4579738664"
+      "size": 3548,
+      "sha256": "a67e8e81895e57bf76e5491f1f18a17c61d48ecdc2f0753c2576fc7ed8702127"
     },
     {
       "path": "public/logos/13_apex_mono.svg",
@@ -2050,23 +2541,23 @@
     },
     {
       "path": "public/logos/14_diamond.svg",
-      "size": 2751,
-      "sha256": "05d53835ea52a1dfdf7e7e57a176d1b59ec59d9638db705585210822540e9a8c"
+      "size": 4479,
+      "sha256": "4e441ee787abe44602075c0eed0b49cffb8a9bb71265e9d7fdbadad628c061ee"
     },
     {
       "path": "public/logos/14_diamond_icon.png",
-      "size": 59798,
-      "sha256": "0f77053d836ffde58227889b029ab7e11702fd5757e00c261ae0f30c9923a817"
+      "size": 94399,
+      "sha256": "537f4a9230ba151eebe5e6fd1cff0e89fc5fb053d01e34cc2bec0d08cbdbb16d"
     },
     {
       "path": "public/logos/14_diamond_icon.svg",
-      "size": 1682,
-      "sha256": "f71faf5f4fbfad441721c48df1922af237fdbbd0d8a6541f746e969b9f31faad"
+      "size": 3410,
+      "sha256": "76bb4b7ec788a19f0082c7dd0a4bc8772552963c576fdfdf49046f2a687025fb"
     },
     {
       "path": "public/logos/14_diamond_light.svg",
-      "size": 2754,
-      "sha256": "883df404b215597523fc2e8629485d876a86e15bd4c181d9f23526d08e156665"
+      "size": 4490,
+      "sha256": "aa253b8cef1d9a96f5409662d0df7406b6404b4f473db9191bc76e631e3cf7e1"
     },
     {
       "path": "public/logos/14_diamond_mono.svg",
@@ -2090,23 +2581,23 @@
     },
     {
       "path": "public/logos/15_focus.svg",
-      "size": 2333,
-      "sha256": "f63889bc96f96dafb2321d230ecda24283e80817a77e63b754ddcba2f73b4b04"
+      "size": 4093,
+      "sha256": "fd2a416f6b3fd540bcabec1d992f5fbf162987be0eeb149642b41455618adae7"
     },
     {
       "path": "public/logos/15_focus_icon.png",
-      "size": 63750,
-      "sha256": "582f672a6c89e0e1d514cae99d1f89f9f98d000167312282f0d54dfea33fba43"
+      "size": 99087,
+      "sha256": "06466ab115bdaa409e761e672ed1b5f3cadfa1b16e17dc0771d81b92a2820c19"
     },
     {
       "path": "public/logos/15_focus_icon.svg",
-      "size": 1701,
-      "sha256": "a1e7ab2de611b24e94a9009ba8510efc654f13aa456a592cbcb7e26523a43236"
+      "size": 3461,
+      "sha256": "fa5cd4e95304ae41b1529db04d2d294a0db68b410c997db1bd39dd704e930b5c"
     },
     {
       "path": "public/logos/15_focus_light.svg",
-      "size": 2336,
-      "sha256": "69f86347d7232c02659c77929b8d88a5c1cc67acb623e05bb84ae1ff9a8cf97a"
+      "size": 4104,
+      "sha256": "c315a88da5f7647b6601d19328f4ee444813346602383a911bc604204f36e385"
     },
     {
       "path": "public/logos/15_focus_mono.svg",
@@ -2130,23 +2621,23 @@
     },
     {
       "path": "public/logos/16_flow.svg",
-      "size": 2896,
-      "sha256": "b6f2b35debeeae03fe00d84dde8efcf5b999303d4726037f8ea6fb54b0c38b37"
+      "size": 4824,
+      "sha256": "a4c4763a291a7ab9a84538232fc44eeea308dfb6b81b9b8b7618490d5b4e48fb"
     },
     {
       "path": "public/logos/16_flow_icon.png",
-      "size": 59867,
-      "sha256": "4d4d747d4ae540bc93c37dd9dc27b659574d6c0a81ccfb351354a9d22746aab3"
+      "size": 95958,
+      "sha256": "f3c65a92c8e8187653ff3250c0cf6f53ce15536f97474145d67410fdb4f2c074"
     },
     {
       "path": "public/logos/16_flow_icon.svg",
-      "size": 1827,
-      "sha256": "89f378e634cb0c0a81706414ea0017fcdb63f68d55ba36211994116309151120"
+      "size": 3755,
+      "sha256": "d2590c022aa770b839a2452599b9f70c68cd02573020b5717657cec7b81fe5ce"
     },
     {
       "path": "public/logos/16_flow_light.svg",
-      "size": 2899,
-      "sha256": "0451de95e65cd1694bf90ab0ade4dcca393519304ca27677cbc66216ad6df691"
+      "size": 4835,
+      "sha256": "4f48fc634b6692456944df6fab8efc967eb89b2fc7bca4ba83c8dd54a7d1a83f"
     },
     {
       "path": "public/logos/16_flow_mono.svg",
@@ -2170,23 +2661,23 @@
     },
     {
       "path": "public/logos/17_petal.svg",
-      "size": 3087,
-      "sha256": "fd09209a71f6afb280288429f274bb3dcb290c264d795f38eaf734c382133abf"
+      "size": 5263,
+      "sha256": "b7d1cb09a4c6a2241593abcc8bc2c5fa014883bf0086597bad01d5550689019c"
     },
     {
       "path": "public/logos/17_petal_icon.png",
-      "size": 65473,
-      "sha256": "904691cfcf009d15386347ee7a1de15d33e377cf4e3ed698c48df643e1055025"
+      "size": 95860,
+      "sha256": "5eaaf565a4c79105433fda795069aec4a6b1155b3d93c9299455b5db4d8ae779"
     },
     {
       "path": "public/logos/17_petal_icon.svg",
-      "size": 2018,
-      "sha256": "5208e1c2021575a986a7770c87e5d6063c3b48847f15c633caf2f62582f5cc77"
+      "size": 4194,
+      "sha256": "bf25cb2d042609e28fc4866f63944b5725e1a11a30922b2d5f7b6885f9dc6725"
     },
     {
       "path": "public/logos/17_petal_light.svg",
-      "size": 3090,
-      "sha256": "bb3ac4582e602a4d1376c222b716e62e95bbc57311eb2a4190b429056af976f7"
+      "size": 5274,
+      "sha256": "44d0e3860afe9ec4daf03bdcce77918735017be07abbed7fa96b0dd6c3e15ad6"
     },
     {
       "path": "public/logos/17_petal_mono.svg",
@@ -2210,23 +2701,23 @@
     },
     {
       "path": "public/logos/18_bridge.svg",
-      "size": 2557,
-      "sha256": "1c41576ba512384a2dbc39a34e1f9a08462997e7c9f8c759d1686a1375c68438"
+      "size": 4029,
+      "sha256": "12a1b86a89003f72db09162da2ad118565b5401cc148fe0123721727e612bb5f"
     },
     {
       "path": "public/logos/18_bridge_icon.png",
-      "size": 49448,
-      "sha256": "7826eb00259092c2fc739bd3479faab6f90ce00f62bdea8c645fc0184c6ee33e"
+      "size": 84890,
+      "sha256": "0e04267a789e471355a032ceb74802942bdcfda15583a3439833440fa29a5b88"
     },
     {
       "path": "public/logos/18_bridge_icon.svg",
-      "size": 1488,
-      "sha256": "904bc3c24255d1b9c2149d5b4d906066189960abb17c1a1baabda8fa9d0d5cae"
+      "size": 2960,
+      "sha256": "09cedd526c8262a65004c44364fb2ba10316ec601492862d94c3dfe0dbd0cf0c"
     },
     {
       "path": "public/logos/18_bridge_light.svg",
-      "size": 2560,
-      "sha256": "894873c9934077bfa003ea90f6af10c4edbea29cadf757cf965bb7598e9146cd"
+      "size": 4040,
+      "sha256": "1057bb436b14d92216a89b36224f9505e6c5f12044b4aa119e89e5c0a9172af0"
     },
     {
       "path": "public/logos/18_bridge_mono.svg",
@@ -2245,6 +2736,3246 @@
     },
     {
       "path": "public/logos/18_bridge_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/19_molar.svg",
+      "size": 4572,
+      "sha256": "11590cac39eea71c3b6ab3e993816c317e8fb726a45d8e90c7461cf3ae738c3f"
+    },
+    {
+      "path": "public/logos/19_molar_icon.png",
+      "size": 77473,
+      "sha256": "92f843541b002280a18e2de880e4e0d49bfdcb9538f0a7e48a4f5d8e98332151"
+    },
+    {
+      "path": "public/logos/19_molar_icon.svg",
+      "size": 3503,
+      "sha256": "52dcf6f953d1ce29de2ed39384eb86e50b5c293b3b725d278ded6826b9825e9a"
+    },
+    {
+      "path": "public/logos/19_molar_light.svg",
+      "size": 4583,
+      "sha256": "ca4febc8209208281c46404bc2fa1c067f4448901a0a220437394876889a9f13"
+    },
+    {
+      "path": "public/logos/19_molar_mono.svg",
+      "size": 1713,
+      "sha256": "432aa65ae8f258f13e09b51ef7fdef572037597bfa28fe03aa36f96fb605d921"
+    },
+    {
+      "path": "public/logos/19_molar_mono_white.svg",
+      "size": 1713,
+      "sha256": "0b1110da2307254a1686b700076ed3b70c3eb71022b4ef520ec45f51d6d18b11"
+    },
+    {
+      "path": "public/logos/19_molar_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/19_molar_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/20_incisor.svg",
+      "size": 3663,
+      "sha256": "8aa0624fc40e1cc671c4745cf769c5c9b9aa5c55722039808e0f5fd20cd7e1c1"
+    },
+    {
+      "path": "public/logos/20_incisor_icon.png",
+      "size": 74431,
+      "sha256": "bb66e1358301931d91aa2706fc34510e6174fce9df2551038c54fc0642948a2e"
+    },
+    {
+      "path": "public/logos/20_incisor_icon.svg",
+      "size": 3031,
+      "sha256": "2ba8c2cf642633f87d71bc57491901b66a3567491df034d350a507602dfff1d9"
+    },
+    {
+      "path": "public/logos/20_incisor_light.svg",
+      "size": 3674,
+      "sha256": "0e5f91974d110ff4cedaf64c8b9779a65418dbbc4355cf18530777891743235b"
+    },
+    {
+      "path": "public/logos/20_incisor_mono.svg",
+      "size": 1208,
+      "sha256": "4274f20c28f9532edf65abe9f6750c4b322b7b41e5cf5130efd9c2087a87d47e"
+    },
+    {
+      "path": "public/logos/20_incisor_mono_white.svg",
+      "size": 1208,
+      "sha256": "dedeeb41baa31caf90ab6332ccb143153c4ec595995d69e5f9328522f1c6cfec"
+    },
+    {
+      "path": "public/logos/20_incisor_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/20_incisor_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/21_canine.svg",
+      "size": 4115,
+      "sha256": "9c1d4e3f2f58f3596da04026ab86b54af6dcc7f1ec5f7d0a92cb3c09d752b0d7"
+    },
+    {
+      "path": "public/logos/21_canine_icon.png",
+      "size": 77725,
+      "sha256": "dbb8cd75c8dff056106d13393984af342c4a6ad089fae61b53601f7afc521bf8"
+    },
+    {
+      "path": "public/logos/21_canine_icon.svg",
+      "size": 3046,
+      "sha256": "64e2cdec6479857ebabfac3e1e3b3144409fea8fc2ac146783ddab68b58500aa"
+    },
+    {
+      "path": "public/logos/21_canine_light.svg",
+      "size": 4126,
+      "sha256": "8773cfb0edb1434721a3a16c20105ba13ba6bae8e3b453a45fd509d786942978"
+    },
+    {
+      "path": "public/logos/21_canine_mono.svg",
+      "size": 1647,
+      "sha256": "0deaa2e4d514ac29d8363520eeb282a9c4f5e27a25b97685ae1bc7b505886bfd"
+    },
+    {
+      "path": "public/logos/21_canine_mono_white.svg",
+      "size": 1647,
+      "sha256": "84a4fa23e6f5b6a10d860d0a9ee4f80f6e191a2d01b10c2e189a339dd8d70fbf"
+    },
+    {
+      "path": "public/logos/21_canine_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/21_canine_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/22_premolar.svg",
+      "size": 4330,
+      "sha256": "a6560d8ad2dc13549a808e9d006d1b803b23fd4a1e5e0ea06b4cc42b3cc7933e"
+    },
+    {
+      "path": "public/logos/22_premolar_icon.png",
+      "size": 84262,
+      "sha256": "b1ccead944669c7765f3909c6de7da3da032c7fc9a141d1046af6968b3e3068f"
+    },
+    {
+      "path": "public/logos/22_premolar_icon.svg",
+      "size": 3261,
+      "sha256": "c70fc46d6ce11fde0914c49c97d21458072a99fb5a732fdebc4a37d6f805bd50"
+    },
+    {
+      "path": "public/logos/22_premolar_light.svg",
+      "size": 4341,
+      "sha256": "2f89e646a17be97077f1222a559245b24d265075bf7f4c48beafe9a548671f79"
+    },
+    {
+      "path": "public/logos/22_premolar_mono.svg",
+      "size": 1678,
+      "sha256": "305c9a8cbe55a3b08cea014830aabca8b3382b2dc0157fa1a6dc15a973d2a890"
+    },
+    {
+      "path": "public/logos/22_premolar_mono_white.svg",
+      "size": 1678,
+      "sha256": "28e6569ff411bc887c6bcad77a279b749bcbc818a125fac1df78a3da502f1e81"
+    },
+    {
+      "path": "public/logos/22_premolar_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/22_premolar_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/23_root_pair.svg",
+      "size": 3712,
+      "sha256": "c5cd247323f8dbcf3c2f9a2d50e76babd962fe33e95551ea5e39fb2b6cc4b5ee"
+    },
+    {
+      "path": "public/logos/23_root_pair_icon.png",
+      "size": 81325,
+      "sha256": "46386979f082ead24d80107ae5e32c98c0d2f7bb6bbb13319c5bda1c715a3d63"
+    },
+    {
+      "path": "public/logos/23_root_pair_icon.svg",
+      "size": 3080,
+      "sha256": "3102f6ab1e5c5f4bf05994884ed51452a341bd4c0e811c97b885c6f256d67a59"
+    },
+    {
+      "path": "public/logos/23_root_pair_light.svg",
+      "size": 3723,
+      "sha256": "ec68ebcba0a094bdd979f878aef258b107134716590bf2d1248e1afa8e426e31"
+    },
+    {
+      "path": "public/logos/23_root_pair_mono.svg",
+      "size": 1215,
+      "sha256": "b6e7c6fdbd1f75dfb9bd144c0ca0a91de0c1542d42afe7a515dac1a104a2a8b3"
+    },
+    {
+      "path": "public/logos/23_root_pair_mono_white.svg",
+      "size": 1215,
+      "sha256": "f9942c131d2434fb7402fa45a33c223827bd23eb3f94663e943436e525062492"
+    },
+    {
+      "path": "public/logos/23_root_pair_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/23_root_pair_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/24_cusp_triad.svg",
+      "size": 4227,
+      "sha256": "5c857be77dd56da2d421d3ed78904544c841d98642bc2b2edd07476010c067fd"
+    },
+    {
+      "path": "public/logos/24_cusp_triad_icon.png",
+      "size": 86382,
+      "sha256": "abc76584fe4f1699880712213fda088a5bb5a1fa3167d5fcd0a11195a427bd0d"
+    },
+    {
+      "path": "public/logos/24_cusp_triad_icon.svg",
+      "size": 3158,
+      "sha256": "e560107963177fb9c2ff2684f3a134a104c1fcd5aab72170afb00db6fe1c3d35"
+    },
+    {
+      "path": "public/logos/24_cusp_triad_light.svg",
+      "size": 4238,
+      "sha256": "58a84e240a04f881f3b2f54b32757505a35bf26dbc990945eb655aba0412f94f"
+    },
+    {
+      "path": "public/logos/24_cusp_triad_mono.svg",
+      "size": 1663,
+      "sha256": "c4d29ffb2f6a18a2049517b672c1dedf39a01c78aafc2e1c1dfc59fbe7f5ec2b"
+    },
+    {
+      "path": "public/logos/24_cusp_triad_mono_white.svg",
+      "size": 1663,
+      "sha256": "0b57819661a121bd455e7b057da341e4d1d69b3330b7afc66183c322af2438bc"
+    },
+    {
+      "path": "public/logos/24_cusp_triad_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/24_cusp_triad_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/25_occlusal.svg",
+      "size": 4292,
+      "sha256": "c4ee3b930a1a109543223aa9c99329ddc368c89d36af19878acb7129202079b3"
+    },
+    {
+      "path": "public/logos/25_occlusal_icon.png",
+      "size": 79384,
+      "sha256": "b192a648732afdbb5dbc012ba5acfe61f8d5ddc07f67bf6bb8a73b6c2ca5d851"
+    },
+    {
+      "path": "public/logos/25_occlusal_icon.svg",
+      "size": 3223,
+      "sha256": "76dd3d8ed3862ef97b0609b5545c7d7bbd92d7bccad547ac7c55299039712ec3"
+    },
+    {
+      "path": "public/logos/25_occlusal_light.svg",
+      "size": 4303,
+      "sha256": "d924bb953fd9f5fbb00c881620bb8a2aa59a3356ce76a9e21c7c9e10fac9e482"
+    },
+    {
+      "path": "public/logos/25_occlusal_mono.svg",
+      "size": 1673,
+      "sha256": "d748e24d36785f5173dc55b05e7256cfab72c33fe0fb4f1a434ae6240255ec59"
+    },
+    {
+      "path": "public/logos/25_occlusal_mono_white.svg",
+      "size": 1673,
+      "sha256": "aed8f263adf932114b916af497b65ecb4b8bd9448dd266852a0cf506159c7a8c"
+    },
+    {
+      "path": "public/logos/25_occlusal_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/25_occlusal_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/26_enamel_drop.svg",
+      "size": 4421,
+      "sha256": "eb88e9d15837863475d4f60232278685dbbc3bfa38e2f256047dbe1b0f413598"
+    },
+    {
+      "path": "public/logos/26_enamel_drop_icon.png",
+      "size": 78054,
+      "sha256": "d9f5bf091b90659ac0e0d37d16cfec145522848922eac8d842209996e8575785"
+    },
+    {
+      "path": "public/logos/26_enamel_drop_icon.svg",
+      "size": 3352,
+      "sha256": "b0aaf597282a7dc990b7a775835fb251864b13a4a8eab60cda729dfd25e3e0a4"
+    },
+    {
+      "path": "public/logos/26_enamel_drop_light.svg",
+      "size": 4432,
+      "sha256": "8adb3e20e62fce03ef8da46bf843639c5dd94436c074875df89a7c979cf0ec40"
+    },
+    {
+      "path": "public/logos/26_enamel_drop_mono.svg",
+      "size": 1691,
+      "sha256": "7551925f254413a202db19098b34a9b3640698bc97dea75f9bc52e4e3f22c62a"
+    },
+    {
+      "path": "public/logos/26_enamel_drop_mono_white.svg",
+      "size": 1691,
+      "sha256": "94fb343beccf351cd7c6e5b05a3865ee0eb1211ed727ecd4d07817c70e3b00cd"
+    },
+    {
+      "path": "public/logos/26_enamel_drop_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/26_enamel_drop_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/27_gingival_arc.svg",
+      "size": 4463,
+      "sha256": "8c7caee314b701aea08d3bcf3b80b1593473eaf5a1fed6776d44b13a8eb9ff73"
+    },
+    {
+      "path": "public/logos/27_gingival_arc_icon.png",
+      "size": 88923,
+      "sha256": "b2c2a831e055124dd760a7a0ed457a2a0d425166a1a6a5c8524095064cd2fb7a"
+    },
+    {
+      "path": "public/logos/27_gingival_arc_icon.svg",
+      "size": 3326,
+      "sha256": "b324df4fa9ba933ba58a79d7f7f79cf326772eb53421a287e6c20bcc090e63ed"
+    },
+    {
+      "path": "public/logos/27_gingival_arc_light.svg",
+      "size": 4474,
+      "sha256": "06a3cecb46b5a3598df55a7a7a9a76f440adcd5674d3935cb0684c8ebd94e73e"
+    },
+    {
+      "path": "public/logos/27_gingival_arc_mono.svg",
+      "size": 1755,
+      "sha256": "24443de5728e3e63712d4d8e3c4df65f523d4bb6791b476cf08033695996a794"
+    },
+    {
+      "path": "public/logos/27_gingival_arc_mono_white.svg",
+      "size": 1755,
+      "sha256": "6acd0c66e452d5ba2121c468aedf793fdd4b075e8b1e7781088b191b633a9632"
+    },
+    {
+      "path": "public/logos/27_gingival_arc_word.svg",
+      "size": 1556,
+      "sha256": "296f95d37b5d30e563a45794c2abb6bb9f175e6b7cec0aa95ddf86f0cf7e17ee"
+    },
+    {
+      "path": "public/logos/27_gingival_arc_word_light.svg",
+      "size": 1556,
+      "sha256": "a0cb7d6e3e740bb3abe396d13ef7e295a4e03ef528d6bd61e4f9120350b538e1"
+    },
+    {
+      "path": "public/logos/28_arch_nodes.svg",
+      "size": 3904,
+      "sha256": "977488f6808a5deb6ef24dd9aa29d3f4b0ff7be0229368cefdbe8fc26e0d0e88"
+    },
+    {
+      "path": "public/logos/28_arch_nodes_icon.png",
+      "size": 84427,
+      "sha256": "9a59a62b7dfd6df3ca5745d8c4b8cb1e9358b55237eb9022c2f1f776660189ed"
+    },
+    {
+      "path": "public/logos/28_arch_nodes_icon.svg",
+      "size": 3272,
+      "sha256": "cc16ba0677cd986fd778b34b4cae739c1b403e15798adbfa4f56951e141d0245"
+    },
+    {
+      "path": "public/logos/28_arch_nodes_light.svg",
+      "size": 3915,
+      "sha256": "c15e5af4f85ac432a25d30f17721db053e9aa4c726af98701bcc7610f1dbb254"
+    },
+    {
+      "path": "public/logos/28_arch_nodes_mono.svg",
+      "size": 1243,
+      "sha256": "5e581d58f2f20a40dbfd1cd5b477d827f0194e2dbbcdc04a0a461a5bd04e157e"
+    },
+    {
+      "path": "public/logos/28_arch_nodes_mono_white.svg",
+      "size": 1243,
+      "sha256": "a7268ad8bf832bff33aff99d215e9dd6125a57e04d61f0718c589d1452d65f47"
+    },
+    {
+      "path": "public/logos/28_arch_nodes_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/28_arch_nodes_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/29_bite_pair.svg",
+      "size": 3663,
+      "sha256": "495e8b51a43ea024787849e6334dcc3dcd12a1c3ca061b434eec480cf94d0549"
+    },
+    {
+      "path": "public/logos/29_bite_pair_icon.png",
+      "size": 72219,
+      "sha256": "1d9239e0939a5b467125a54c5990aa5f4cfde86b8f7db10c3bbb64b19f0e31d9"
+    },
+    {
+      "path": "public/logos/29_bite_pair_icon.svg",
+      "size": 3031,
+      "sha256": "7bffbb21a038212872bd5915c6e2435945c4b00325cea3f462269ab9a58e8f82"
+    },
+    {
+      "path": "public/logos/29_bite_pair_light.svg",
+      "size": 3674,
+      "sha256": "942e3d8c777da5c79baded824ba6b8c470aadc6ea1074123890dc26a2cce337d"
+    },
+    {
+      "path": "public/logos/29_bite_pair_mono.svg",
+      "size": 1208,
+      "sha256": "f9a9c37f300a225ed32d384e98a00c1cc601dffb0bc2b09b533ecb6753760bb5"
+    },
+    {
+      "path": "public/logos/29_bite_pair_mono_white.svg",
+      "size": 1208,
+      "sha256": "deadae5f0913ecad5458ec6e5d5b1335c04a66e50442d9761d8468eedec37895"
+    },
+    {
+      "path": "public/logos/29_bite_pair_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/29_bite_pair_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/30_implant_thread.svg",
+      "size": 3992,
+      "sha256": "f4fda437c34a825066af45aef80c1d7e7f01fda339138d13ffbb9d99b5fe5332"
+    },
+    {
+      "path": "public/logos/30_implant_thread_icon.png",
+      "size": 78135,
+      "sha256": "08a9c6803f3c64644113ced7c022f84e6d97abcf755ebddda1618795f271ad88"
+    },
+    {
+      "path": "public/logos/30_implant_thread_icon.svg",
+      "size": 3360,
+      "sha256": "8d4e0b120fbf9629befc668ac5f991681bb1bc5138ae1d2788767e0c5241cbfc"
+    },
+    {
+      "path": "public/logos/30_implant_thread_light.svg",
+      "size": 4003,
+      "sha256": "bc7b7fc99b6e9ed04e162f2013910def3da9de2fcd8dd0f937c6f771c539db83"
+    },
+    {
+      "path": "public/logos/30_implant_thread_mono.svg",
+      "size": 1255,
+      "sha256": "0b85dfaff5241f3da9cabff8b97a88e175ee8a9b5a1d612fa880b555fa4db2b7"
+    },
+    {
+      "path": "public/logos/30_implant_thread_mono_white.svg",
+      "size": 1255,
+      "sha256": "e2e28e0a382f69140decb7526579f7f06a5d8a0298ef3028d306ebe8558c1d1f"
+    },
+    {
+      "path": "public/logos/30_implant_thread_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/30_implant_thread_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/31_implant_crown.svg",
+      "size": 4276,
+      "sha256": "11c000cc7355e9e52dea5a33fd8cfe1b7814044cc37f045c405526d93b3fcf56"
+    },
+    {
+      "path": "public/logos/31_implant_crown_icon.png",
+      "size": 72592,
+      "sha256": "dc072dbab0ba0496650afeb3f1b09d228331804f8a29ccba62c5bde7e24d3c13"
+    },
+    {
+      "path": "public/logos/31_implant_crown_icon.svg",
+      "size": 3207,
+      "sha256": "04bb347f8bce668d5eb1fae4488a7d1296ad7cd6dfffa1db2e132da809a7b42b"
+    },
+    {
+      "path": "public/logos/31_implant_crown_light.svg",
+      "size": 4287,
+      "sha256": "90cc06d53967a2db011378cf7ee8a9694c5b3d63afdbde3550cab0cc67e957ef"
+    },
+    {
+      "path": "public/logos/31_implant_crown_mono.svg",
+      "size": 1670,
+      "sha256": "23799cb3b4bd00cfd42b3ec04506cf878db22fec5b60aad40f3339fe8926161b"
+    },
+    {
+      "path": "public/logos/31_implant_crown_mono_white.svg",
+      "size": 1670,
+      "sha256": "72cfe08cb2af4ae9bd12b43c51225266faf257cda3534d6c7329a254fe43c2f0"
+    },
+    {
+      "path": "public/logos/31_implant_crown_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/31_implant_crown_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/32_abutment.svg",
+      "size": 3733,
+      "sha256": "f6065829ead771a647eb1184dc0cb048981a666badc1318bab61dfb5150daacc"
+    },
+    {
+      "path": "public/logos/32_abutment_icon.png",
+      "size": 72392,
+      "sha256": "fc269b2149c9380419d26905167c2e9962a21513c64359677f7a7cf75a0f2070"
+    },
+    {
+      "path": "public/logos/32_abutment_icon.svg",
+      "size": 3101,
+      "sha256": "c53e0f68abd58ae6bc493a26459f409a7984995e619065d4cd2093b926d6c347"
+    },
+    {
+      "path": "public/logos/32_abutment_light.svg",
+      "size": 3744,
+      "sha256": "bff832a8c2904dc86d8923a7cc2ac78a69b7ef2713ac6bce6aa991353a6e32e6"
+    },
+    {
+      "path": "public/logos/32_abutment_mono.svg",
+      "size": 1218,
+      "sha256": "17a996276d3e782f54bf7be44ce0d7faaf58d98a462849f9381f47d32bd84ee0"
+    },
+    {
+      "path": "public/logos/32_abutment_mono_white.svg",
+      "size": 1218,
+      "sha256": "473ef061ab3d004740fd447b48db7a4eb3d3d698a99529703441b70d9afa57ca"
+    },
+    {
+      "path": "public/logos/32_abutment_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/32_abutment_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/33_crown_section.svg",
+      "size": 4141,
+      "sha256": "2a5a47225c813f8c863ec34b30079eab40cdc79f761bf4ec4bf31082b59af0fc"
+    },
+    {
+      "path": "public/logos/33_crown_section_icon.png",
+      "size": 87597,
+      "sha256": "4f3b7fdd452c0c0bff6dd1f5115f2837d43652b49b4de0a6fca20147cb322adf"
+    },
+    {
+      "path": "public/logos/33_crown_section_icon.svg",
+      "size": 3072,
+      "sha256": "728724c85e5ce24246289ead6298a98463e98dfe1d8061a1a222f588d0e3e684"
+    },
+    {
+      "path": "public/logos/33_crown_section_light.svg",
+      "size": 4152,
+      "sha256": "38f23df6482e4429706f6363d6478a4b918386511dedb85e7416823a1f7c568d"
+    },
+    {
+      "path": "public/logos/33_crown_section_mono.svg",
+      "size": 1651,
+      "sha256": "662fd122bed5c89a9a55573d4ca612abc3a46a3c722c8393e389952175317bda"
+    },
+    {
+      "path": "public/logos/33_crown_section_mono_white.svg",
+      "size": 1651,
+      "sha256": "7e93f21bb1f2f7027225cb41e6c4c06033c6e80c9cd957611475b31c50b25067"
+    },
+    {
+      "path": "public/logos/33_crown_section_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/33_crown_section_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/34_veneer.svg",
+      "size": 4173,
+      "sha256": "b98c68c6eca886d5d7393e8f47985cace26999d589d53ac716b98fc49ada849d"
+    },
+    {
+      "path": "public/logos/34_veneer_icon.png",
+      "size": 85298,
+      "sha256": "c614af9a6147dd0913e055780fc43d3cd45989fc39c5ef1e3358526641426b14"
+    },
+    {
+      "path": "public/logos/34_veneer_icon.svg",
+      "size": 3104,
+      "sha256": "bb79107b78eb46c863b4a99a96b4dacf32b0b6bac1c485f212b3681698c06a55"
+    },
+    {
+      "path": "public/logos/34_veneer_light.svg",
+      "size": 4184,
+      "sha256": "b2699f0e3708f8cebe746fe881af5039becf191b3801499fc6ac52d21f33b293"
+    },
+    {
+      "path": "public/logos/34_veneer_mono.svg",
+      "size": 1656,
+      "sha256": "8832a25e4ff65002ee765d963c8cae03c9abc6be560b75bc43aba3f124521e84"
+    },
+    {
+      "path": "public/logos/34_veneer_mono_white.svg",
+      "size": 1656,
+      "sha256": "aba9eb764fc9fcb36935d8057ce8abdc759258d1df89000652ebd3c72ee077bc"
+    },
+    {
+      "path": "public/logos/34_veneer_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/34_veneer_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/35_arch_span.svg",
+      "size": 4323,
+      "sha256": "0c5947f0b29a85e36493a039f5ea90f4bee828c7c6aa5aa8adfa791a6935d570"
+    },
+    {
+      "path": "public/logos/35_arch_span_icon.png",
+      "size": 86167,
+      "sha256": "e64bc07bc2b84e5d026ea23c2561eed4a797cc65587b24e8a9733bc8bea2d56d"
+    },
+    {
+      "path": "public/logos/35_arch_span_icon.svg",
+      "size": 3186,
+      "sha256": "7783b3da48291bb0db981821748082ba9a0e799f77c597fa392831b1ecbbafd6"
+    },
+    {
+      "path": "public/logos/35_arch_span_light.svg",
+      "size": 4334,
+      "sha256": "020dbbc0d75afc945581a99841713c75f4c18407ac522d743f6fbdf7b8418f40"
+    },
+    {
+      "path": "public/logos/35_arch_span_mono.svg",
+      "size": 1735,
+      "sha256": "b1f05947c353ec805664847246743d63dc8d68e85a2f669fec6b0f9b9f14a989"
+    },
+    {
+      "path": "public/logos/35_arch_span_mono_white.svg",
+      "size": 1735,
+      "sha256": "321c12b1a9d6e16ad0e2a42e4d446e5d172acdf96f4d86cc96898a7a731b6c0a"
+    },
+    {
+      "path": "public/logos/35_arch_span_word.svg",
+      "size": 1556,
+      "sha256": "296f95d37b5d30e563a45794c2abb6bb9f175e6b7cec0aa95ddf86f0cf7e17ee"
+    },
+    {
+      "path": "public/logos/35_arch_span_word_light.svg",
+      "size": 1556,
+      "sha256": "a0cb7d6e3e740bb3abe396d13ef7e295a4e03ef528d6bd61e4f9120350b538e1"
+    },
+    {
+      "path": "public/logos/36_pontic.svg",
+      "size": 4463,
+      "sha256": "3f9de81b1082ed2799cc77859bb91c2507dcecdd6ccd49996903b2b2def08bb1"
+    },
+    {
+      "path": "public/logos/36_pontic_icon.png",
+      "size": 86972,
+      "sha256": "122e1a75710a741011b1d99769d73352df82c9c71cf92456c97d4a92e13ec0d6"
+    },
+    {
+      "path": "public/logos/36_pontic_icon.svg",
+      "size": 3394,
+      "sha256": "0f4cde446f6b8d0ee314efa26e20e2b00d0c7fa210c6705662503287cc87c37c"
+    },
+    {
+      "path": "public/logos/36_pontic_light.svg",
+      "size": 4474,
+      "sha256": "dafffa2bc1324af2f79605febc488fc0944791f9d6381ee8dba2268132b6d62d"
+    },
+    {
+      "path": "public/logos/36_pontic_mono.svg",
+      "size": 1697,
+      "sha256": "fbd3ccffd18e4aa88f300b3bb41eed5ae31bbc14d54565cda3bf2bbda0ac4bec"
+    },
+    {
+      "path": "public/logos/36_pontic_mono_white.svg",
+      "size": 1697,
+      "sha256": "a2aa1bfdca0f635ed528976909a999855aeb2ec0bdfdc1bd743140b4919f2543"
+    },
+    {
+      "path": "public/logos/36_pontic_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/36_pontic_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/37_margin_loop.svg",
+      "size": 4257,
+      "sha256": "30badb716721c831badab91cf8a5499c2fa9e148ac99a80c405dddad1128d92f"
+    },
+    {
+      "path": "public/logos/37_margin_loop_icon.png",
+      "size": 83735,
+      "sha256": "2a38e2ba50d2f2dcdb6e47396fc0519fe23410540e80d88aff7b08c51119d523"
+    },
+    {
+      "path": "public/logos/37_margin_loop_icon.svg",
+      "size": 3188,
+      "sha256": "2359d1e42e8db5455483d0419aecfa3084e5f07f9d2359d1a8766c407ef11dc0"
+    },
+    {
+      "path": "public/logos/37_margin_loop_light.svg",
+      "size": 4268,
+      "sha256": "12ce94fc815b70fdf8cd3d181fe6ebcc80d37c0480d565d247c2a58b969b5bd5"
+    },
+    {
+      "path": "public/logos/37_margin_loop_mono.svg",
+      "size": 1668,
+      "sha256": "f1a367760515d09aea92ac77d76b9d895940eb64e82ebda0cc448a2226ceaaa0"
+    },
+    {
+      "path": "public/logos/37_margin_loop_mono_white.svg",
+      "size": 1668,
+      "sha256": "2116143ee93ff324bf4af6017dfe6b2657171c509cccd5fb38949c3bc9a92983"
+    },
+    {
+      "path": "public/logos/37_margin_loop_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/37_margin_loop_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/38_finish_line.svg",
+      "size": 3761,
+      "sha256": "31482933bd4b1f57b2cd7d4de2c049a72da45ce97d4aa66002a8f5be06aa760f"
+    },
+    {
+      "path": "public/logos/38_finish_line_icon.png",
+      "size": 86693,
+      "sha256": "1c2b18dcfb5fb0b4e04aea14a7b690d401d083a205846f3b7ff97363f86d5938"
+    },
+    {
+      "path": "public/logos/38_finish_line_icon.svg",
+      "size": 3129,
+      "sha256": "22be2d4bd0587b591d98dc39b3e65b842c1976359ac7165a94a2397e62a5902d"
+    },
+    {
+      "path": "public/logos/38_finish_line_light.svg",
+      "size": 3772,
+      "sha256": "2abd933ffe2a5edd646c537fa3e08462f5677b589cc094c254cf14b215099edd"
+    },
+    {
+      "path": "public/logos/38_finish_line_mono.svg",
+      "size": 1222,
+      "sha256": "b12f502adf0807dcafc8b467adcb6a0deda9d4a27c267ca47699ea8e637b7555"
+    },
+    {
+      "path": "public/logos/38_finish_line_mono_white.svg",
+      "size": 1222,
+      "sha256": "e31797824d16ed70922043e9f522215f7e629c15daa750c9604e27576a197195"
+    },
+    {
+      "path": "public/logos/38_finish_line_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/38_finish_line_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/39_scan_halo.svg",
+      "size": 3837,
+      "sha256": "3685082399810040c55d4afd551cadb7824899949a3a8bc98576842b8f1a0893"
+    },
+    {
+      "path": "public/logos/39_scan_halo_icon.png",
+      "size": 88572,
+      "sha256": "54ea8b256b3e1783b1b055e006d5a0c1b74614a8848e7c8e7cf627483aa117b7"
+    },
+    {
+      "path": "public/logos/39_scan_halo_icon.svg",
+      "size": 3205,
+      "sha256": "6e88b317b3e50f2a44d96f2ff0724ee90864c602601de1072de009edfc68cfec"
+    },
+    {
+      "path": "public/logos/39_scan_halo_light.svg",
+      "size": 3848,
+      "sha256": "d63a8ab5487d5d61507ba0dc341220d5846fe49525b007a36f72008f51730da5"
+    },
+    {
+      "path": "public/logos/39_scan_halo_mono.svg",
+      "size": 1233,
+      "sha256": "2c18f5f776c9db33bce5448d9682033e7bafc96413a26e9419ffc230d4df89b2"
+    },
+    {
+      "path": "public/logos/39_scan_halo_mono_white.svg",
+      "size": 1233,
+      "sha256": "e239f3236ddacae9442135a1be67c6d03ee50605a9028b8e808e3d39268f4124"
+    },
+    {
+      "path": "public/logos/39_scan_halo_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/39_scan_halo_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/40_light_stripes.svg",
+      "size": 3782,
+      "sha256": "9b3368ce94f1d5936e34991aea02c765c99ef729bbd345786ea2fb78a780a0ab"
+    },
+    {
+      "path": "public/logos/40_light_stripes_icon.png",
+      "size": 92187,
+      "sha256": "49db95c6962f8bccd7d521ea262637b3a3a2aba81a5d6597c07daefa48e4571a"
+    },
+    {
+      "path": "public/logos/40_light_stripes_icon.svg",
+      "size": 3150,
+      "sha256": "2782e16b2064ffe18c163e189fde981789e28385ae1610264e85c16f86f7b022"
+    },
+    {
+      "path": "public/logos/40_light_stripes_light.svg",
+      "size": 3793,
+      "sha256": "31ed531be5a0c00f7f39f798f7cc1c1dc5b45c5548b57ef7d45989c5fdf6355f"
+    },
+    {
+      "path": "public/logos/40_light_stripes_mono.svg",
+      "size": 1225,
+      "sha256": "bf6867b5d1ca0f6cee5c19a30183dc3a4f4eea514ddc19de5baf21e1886bb800"
+    },
+    {
+      "path": "public/logos/40_light_stripes_mono_white.svg",
+      "size": 1225,
+      "sha256": "a5183eb6ff6f633a5872cdbfb6bbf609bd2c23e455b03df6738f9453f3269730"
+    },
+    {
+      "path": "public/logos/40_light_stripes_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/40_light_stripes_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/41_point_lattice.svg",
+      "size": 4154,
+      "sha256": "dd34a876aade99f61104f2dc106f755f24104e835d6a2e73367165de9b1eceda"
+    },
+    {
+      "path": "public/logos/41_point_lattice_icon.png",
+      "size": 86386,
+      "sha256": "eee2af7596e67af4a75c588fdd1425cf1ceac2b8e80d46f6ca5ee2e1556d007d"
+    },
+    {
+      "path": "public/logos/41_point_lattice_icon.svg",
+      "size": 3522,
+      "sha256": "8abbc5a309d03f4086d19a3132194fc2d15bdc208c117073e26fe3b55e00bf70"
+    },
+    {
+      "path": "public/logos/41_point_lattice_light.svg",
+      "size": 4165,
+      "sha256": "87f40dfd9ec507dad3d588bf994f3b9918068937787f319bb1502c79f7f3a944"
+    },
+    {
+      "path": "public/logos/41_point_lattice_mono.svg",
+      "size": 1278,
+      "sha256": "5057eca46c2e8aa35f334b3a01304d2c61af30ce77bc0bee30282fffcdb39d87"
+    },
+    {
+      "path": "public/logos/41_point_lattice_mono_white.svg",
+      "size": 1278,
+      "sha256": "1a1cc505ce39f9d51472bbc4cfef24b2a6ce7b0d5a5bb293c006839ef348974b"
+    },
+    {
+      "path": "public/logos/41_point_lattice_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/41_point_lattice_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/42_triangulated.svg",
+      "size": 4145,
+      "sha256": "79745a7de211eae2b6a37807f26116702f110a9ee79f1bb9933a09314378b446"
+    },
+    {
+      "path": "public/logos/42_triangulated_icon.png",
+      "size": 112354,
+      "sha256": "48ff7fbe0aad264654af5c05a1b17d0337fbc7ba7fac09cd80fdb3470964e9bc"
+    },
+    {
+      "path": "public/logos/42_triangulated_icon.svg",
+      "size": 3513,
+      "sha256": "f58beb4e8d08170dab6cca472780a8ba4490ace6bdfba8ab7924bea50634fa3d"
+    },
+    {
+      "path": "public/logos/42_triangulated_light.svg",
+      "size": 4156,
+      "sha256": "2bf4e7ca4e89e3e5ec2fb07d5caccd3c0897af6689592ee22831b941e4723bff"
+    },
+    {
+      "path": "public/logos/42_triangulated_mono.svg",
+      "size": 1277,
+      "sha256": "90605de5093aca0a468ff65af544364e2a2a3d1a4cd010105be4fc316a5bfcce"
+    },
+    {
+      "path": "public/logos/42_triangulated_mono_white.svg",
+      "size": 1277,
+      "sha256": "b736f2b827e88df78b678f639324537176b780d96b663205e103d15ca7b59917"
+    },
+    {
+      "path": "public/logos/42_triangulated_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/42_triangulated_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/43_voxel_tooth.svg",
+      "size": 3789,
+      "sha256": "de0ad55cf41507faa6755619b08c69ca1db3ddc1e4a0efaed838ca69514d74b2"
+    },
+    {
+      "path": "public/logos/43_voxel_tooth_icon.png",
+      "size": 74917,
+      "sha256": "fc8c91296c2ee2bcf938fb5618f9ecb3f30a635cf62152786918d3b886deb300"
+    },
+    {
+      "path": "public/logos/43_voxel_tooth_icon.svg",
+      "size": 3157,
+      "sha256": "740665b5184b9b8c621ee3296e0728afb975183a38aa20bcc614f4edbb5418e9"
+    },
+    {
+      "path": "public/logos/43_voxel_tooth_light.svg",
+      "size": 3800,
+      "sha256": "e6d5167af01a1be9759dbe9ae49396f72cb71ec50fe0a2a67f354e906595358f"
+    },
+    {
+      "path": "public/logos/43_voxel_tooth_mono.svg",
+      "size": 1226,
+      "sha256": "053b8d9d0868cda3522cb211d6980ca3b778b7eb69b375346198f9b10320ba8d"
+    },
+    {
+      "path": "public/logos/43_voxel_tooth_mono_white.svg",
+      "size": 1226,
+      "sha256": "c87e554e61e1c16aceccdc3a24847c0af4e6113cd7ae5fba9822536bc8e84359"
+    },
+    {
+      "path": "public/logos/43_voxel_tooth_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/43_voxel_tooth_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/44_mesh_hex.svg",
+      "size": 3799,
+      "sha256": "3dccefd5bee15dad096cc63870ea2f6d478d2617abd979fb546445fa3a4c515b"
+    },
+    {
+      "path": "public/logos/44_mesh_hex_icon.png",
+      "size": 88360,
+      "sha256": "6a347ff2831648ec766b680b0ed22237ff010265fdafabdaf5af68d0ebb3bc45"
+    },
+    {
+      "path": "public/logos/44_mesh_hex_icon.svg",
+      "size": 3167,
+      "sha256": "4659b2ce5ffcb831c174fe9f3131dc4584b67990db9b87656ceb3707dc0b0b53"
+    },
+    {
+      "path": "public/logos/44_mesh_hex_light.svg",
+      "size": 3810,
+      "sha256": "1324e22620aceb51aca4d817237d1a8c4362065bcdb6ac4de420c969a4018d19"
+    },
+    {
+      "path": "public/logos/44_mesh_hex_mono.svg",
+      "size": 1228,
+      "sha256": "4414ffd50ac11a1e58027b32e3d0d11ce9800c7c91eb602770fdd5d060514749"
+    },
+    {
+      "path": "public/logos/44_mesh_hex_mono_white.svg",
+      "size": 1228,
+      "sha256": "be0f69b4bda16fdb0ef4eaa852213ed332c0627b3640e738919d72b0e051ee26"
+    },
+    {
+      "path": "public/logos/44_mesh_hex_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/44_mesh_hex_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/45_coordinate.svg",
+      "size": 3852,
+      "sha256": "b36b4244f299aff674a0390acc4b4b9f511f99e6f57425af316c80ebd5937264"
+    },
+    {
+      "path": "public/logos/45_coordinate_icon.png",
+      "size": 86923,
+      "sha256": "ccd421be1c9f8ee37c42259dcd318f8de583ea08d788cdf83ee0436aadb01fa9"
+    },
+    {
+      "path": "public/logos/45_coordinate_icon.svg",
+      "size": 3220,
+      "sha256": "d8e39d9918da58e577a7d88ca04c6448752f119010c96e8f976cc6f28ac89f66"
+    },
+    {
+      "path": "public/logos/45_coordinate_light.svg",
+      "size": 3863,
+      "sha256": "dd0ca0366e12cface8b6a93e7878febd760d1fc68eaadd2f5d825b7bdcc523d5"
+    },
+    {
+      "path": "public/logos/45_coordinate_mono.svg",
+      "size": 1235,
+      "sha256": "5aed7b4ebcd812d329b5d9258c249024eca6476cace3cfc5fc0cb1828c36bd56"
+    },
+    {
+      "path": "public/logos/45_coordinate_mono_white.svg",
+      "size": 1235,
+      "sha256": "cf5d3768965405438a4bcd5dbf85e1312b1ebdd0f155eeb05a3499c21164da7d"
+    },
+    {
+      "path": "public/logos/45_coordinate_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/45_coordinate_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/46_caliper.svg",
+      "size": 3706,
+      "sha256": "bdc514381bd2dfff63309e3b308c4555bf1eabf98a23c786d860c06054ab5264"
+    },
+    {
+      "path": "public/logos/46_caliper_icon.png",
+      "size": 77016,
+      "sha256": "df1476e147ae65dfce690de37653f2e5475f91bb2db438f43714c2113fd92603"
+    },
+    {
+      "path": "public/logos/46_caliper_icon.svg",
+      "size": 3074,
+      "sha256": "dbd3d955ab989e6676aa154ada9fbf3e6ac004b56e716ad2528b26203c90ff0b"
+    },
+    {
+      "path": "public/logos/46_caliper_light.svg",
+      "size": 3717,
+      "sha256": "5249627f0febe629c718f08d70524aa0d8a1665a685b4987811dc596ba015d76"
+    },
+    {
+      "path": "public/logos/46_caliper_mono.svg",
+      "size": 1214,
+      "sha256": "df56cd55273a5bb0dc474cd39b7b5babc01bec226d3a3e87f9b530ceb9cf847a"
+    },
+    {
+      "path": "public/logos/46_caliper_mono_white.svg",
+      "size": 1214,
+      "sha256": "db240d1bf00b0b43e6946e5b2e860b8ad9087155d4fda3ce283c91afae4d4b30"
+    },
+    {
+      "path": "public/logos/46_caliper_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/46_caliper_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/47_tool_nib.svg",
+      "size": 3747,
+      "sha256": "1bfcd255542c1291b52f29b8f896d82b193b2eedb01eafbd356a9cb254834ce5"
+    },
+    {
+      "path": "public/logos/47_tool_nib_icon.png",
+      "size": 77572,
+      "sha256": "b18f5a85dcafe80712fdbde6730228ebbd5a166e6cfa4586b2921acdf0f600c9"
+    },
+    {
+      "path": "public/logos/47_tool_nib_icon.svg",
+      "size": 3115,
+      "sha256": "3788cbd613acbc636f5ee5c6275bc21a826d169dad72b30a780ca3b3eb380add"
+    },
+    {
+      "path": "public/logos/47_tool_nib_light.svg",
+      "size": 3758,
+      "sha256": "fc1605b7de6ea7230ce42eb1aa8068d0162822f6993fc33e04f2710098b68bba"
+    },
+    {
+      "path": "public/logos/47_tool_nib_mono.svg",
+      "size": 1220,
+      "sha256": "696c23e6b5cb7e2ade7c0a35adea0da4cbc2b67456093959af7e13cf00882ac8"
+    },
+    {
+      "path": "public/logos/47_tool_nib_mono_white.svg",
+      "size": 1220,
+      "sha256": "7271f832abad8d01693cfeb25fdd25db85f02ff0a1db98955b41a1b022259a9e"
+    },
+    {
+      "path": "public/logos/47_tool_nib_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/47_tool_nib_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/48_milling.svg",
+      "size": 3662,
+      "sha256": "d1dc01c5bb7ee01df00b19c77bdefd69ffeee6c8936bcc9fadb74a4d5f17554a"
+    },
+    {
+      "path": "public/logos/48_milling_icon.png",
+      "size": 78570,
+      "sha256": "9a11684aa4f3f0790e3362d6b860bcd388f413f1ec6b945c83cc5001c82cb04b"
+    },
+    {
+      "path": "public/logos/48_milling_icon.svg",
+      "size": 3030,
+      "sha256": "6451f810ccb4b9a9be5326d67ade9b3e8905080cd142dbdb3a867e17e59d1e21"
+    },
+    {
+      "path": "public/logos/48_milling_light.svg",
+      "size": 3673,
+      "sha256": "adf1eb63f9d284b287b4db99cb193951e14e39f2c81fdd7551e38a1eb13b88ec"
+    },
+    {
+      "path": "public/logos/48_milling_mono.svg",
+      "size": 1208,
+      "sha256": "571dea82add7a2356137e987d4d824690bc864236e192441dca42abf7de8bddd"
+    },
+    {
+      "path": "public/logos/48_milling_mono_white.svg",
+      "size": 1208,
+      "sha256": "1f94eac564d7096c70ac7edb0cdaae75f4c5b2f0ad0abc827d0dd2dfa6fe6b39"
+    },
+    {
+      "path": "public/logos/48_milling_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/48_milling_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/49_section_wedge.svg",
+      "size": 3663,
+      "sha256": "2f33e761fd0dcf56fdbf9f440dbb29bfb11dc98128077005b8b3166c39b3e0d8"
+    },
+    {
+      "path": "public/logos/49_section_wedge_icon.png",
+      "size": 94637,
+      "sha256": "b0377edf904b61a7a9d74b08087d4594f0936704fcf56ff5211691427f56f08c"
+    },
+    {
+      "path": "public/logos/49_section_wedge_icon.svg",
+      "size": 3031,
+      "sha256": "654a342ebc4b24a1bb6bd46416348760b4524181ad005190fc88f3c64e585168"
+    },
+    {
+      "path": "public/logos/49_section_wedge_light.svg",
+      "size": 3674,
+      "sha256": "db33d97718ec66bd3c9b999897d21cc4362899497951d9b4121bd6450a75d3bd"
+    },
+    {
+      "path": "public/logos/49_section_wedge_mono.svg",
+      "size": 1208,
+      "sha256": "e2850399f94781f10466748f47dfe51682087e14ceb08d2bb8e368bc7c0cd7f7"
+    },
+    {
+      "path": "public/logos/49_section_wedge_mono_white.svg",
+      "size": 1208,
+      "sha256": "d2b1bf544342440c5816ced2a6b3f3c390cea4b9ae2645f9b5a67c04931b8d12"
+    },
+    {
+      "path": "public/logos/49_section_wedge_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/49_section_wedge_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/50_contour_bands.svg",
+      "size": 4285,
+      "sha256": "662446d0c9cf8c430556bc96fdbc57927d8c84f148a19a0811842ebeca9d6f2d"
+    },
+    {
+      "path": "public/logos/50_contour_bands_icon.png",
+      "size": 91055,
+      "sha256": "4f6362bc379d7ed8c733bb48db8711fd2004e92f2c05d3435d3ad80f6d6041a8"
+    },
+    {
+      "path": "public/logos/50_contour_bands_icon.svg",
+      "size": 3216,
+      "sha256": "a1523b9da4b95f00f4a50432a80ae1fcf11c92823322163e7819f9036c16f2da"
+    },
+    {
+      "path": "public/logos/50_contour_bands_light.svg",
+      "size": 4296,
+      "sha256": "84a460604f0817680702111d887be8c45f269c7ed38b242eb4c6b0e3c91167f7"
+    },
+    {
+      "path": "public/logos/50_contour_bands_mono.svg",
+      "size": 1672,
+      "sha256": "7c89fd38c7887833f8a52c388d297c09b3b3a36d43444e2ab143eb2c813aea8d"
+    },
+    {
+      "path": "public/logos/50_contour_bands_mono_white.svg",
+      "size": 1672,
+      "sha256": "17f79658f9b32f8da976557c221b0b544bd313ae09e48a41ee8aa65085cda519"
+    },
+    {
+      "path": "public/logos/50_contour_bands_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/50_contour_bands_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/51_offset_shell.svg",
+      "size": 4108,
+      "sha256": "68abd9d8260e3b9e2fc73ebf9f07fbfeb2e5b4f3c633f03c63e2b030cc3e88d7"
+    },
+    {
+      "path": "public/logos/51_offset_shell_icon.png",
+      "size": 91009,
+      "sha256": "dd519074dc8e0f87b1f29d15646b3885c512f5abf84b2f7dc983ef0e4b89ee6f"
+    },
+    {
+      "path": "public/logos/51_offset_shell_icon.svg",
+      "size": 3039,
+      "sha256": "54b31981bc1c61e7cbc7729c3ec8733e3bb443dd3b7412d73fafb3891fadee7a"
+    },
+    {
+      "path": "public/logos/51_offset_shell_light.svg",
+      "size": 4119,
+      "sha256": "8e188988fdf2879f372bb41aee7ee34fab4dcd839844ac8c25d1fe693e7f3379"
+    },
+    {
+      "path": "public/logos/51_offset_shell_mono.svg",
+      "size": 1646,
+      "sha256": "f0bf2e97d9e22c26b7b934beeddd3a7c71aae5ad2baafb1c479a89d4e51c9495"
+    },
+    {
+      "path": "public/logos/51_offset_shell_mono_white.svg",
+      "size": 1646,
+      "sha256": "5f0aed97681ad086d2a16409def532807f5851805d28185085c05de351340400"
+    },
+    {
+      "path": "public/logos/51_offset_shell_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/51_offset_shell_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/52_contact_pair.svg",
+      "size": 4099,
+      "sha256": "e7e161e96f4512d96ef652c3cc39c3b23df27d1d5ce2a6b3534e150792d9f067"
+    },
+    {
+      "path": "public/logos/52_contact_pair_icon.png",
+      "size": 79542,
+      "sha256": "8194af60dd3eae3ec260ced4a30cd62b4dc04a4cf5fcdaf9c0c419a3cfb09140"
+    },
+    {
+      "path": "public/logos/52_contact_pair_icon.svg",
+      "size": 3030,
+      "sha256": "8866d27d7baf106ed3eee4599d08bb4a8d8b93954f1bebd428b1e3ac92de0857"
+    },
+    {
+      "path": "public/logos/52_contact_pair_light.svg",
+      "size": 4110,
+      "sha256": "c3a573b9adbd3865a541c5971a92ccc3569442e03aba3d43b42463fa6f037d37"
+    },
+    {
+      "path": "public/logos/52_contact_pair_mono.svg",
+      "size": 1645,
+      "sha256": "a70b039be714b75740588f4fdb9a54bea0d3ee0fc524dae5dbaada4c3f4c1bab"
+    },
+    {
+      "path": "public/logos/52_contact_pair_mono_white.svg",
+      "size": 1645,
+      "sha256": "48858b764330167222ca986a5d2cb2c6b21abf75294bf4956502983f8c64dd1c"
+    },
+    {
+      "path": "public/logos/52_contact_pair_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/52_contact_pair_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/53_clearance.svg",
+      "size": 3586,
+      "sha256": "c245c46cc13aaa8ead179d0017532b59315008c0013335de586b8456dbefa933"
+    },
+    {
+      "path": "public/logos/53_clearance_icon.png",
+      "size": 69301,
+      "sha256": "45cdce36c80bbca8ed2d2570447634f76fb4bfa9d45b9afca5d807a948b5e114"
+    },
+    {
+      "path": "public/logos/53_clearance_icon.svg",
+      "size": 2954,
+      "sha256": "059e46323cb03319937c149e40ad5de1df7942e7d3a91bdd4eb934508ec153b4"
+    },
+    {
+      "path": "public/logos/53_clearance_light.svg",
+      "size": 3597,
+      "sha256": "c7ab3b7e8db7999c37366d87c9dd33aa3fc5743b5e3f53eed402b17a56291389"
+    },
+    {
+      "path": "public/logos/53_clearance_mono.svg",
+      "size": 1197,
+      "sha256": "6ddf198b0098362361958a74e320b1348cf136f5e5931ae95ce7ba6dbeebe0a1"
+    },
+    {
+      "path": "public/logos/53_clearance_mono_white.svg",
+      "size": 1197,
+      "sha256": "92c0cde338b4c2d9d86e52f5dc2598a54ff7603c45dd013c0121e6c46e7385ff"
+    },
+    {
+      "path": "public/logos/53_clearance_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/53_clearance_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/54_insertion.svg",
+      "size": 3615,
+      "sha256": "d27c4998cdc5c1a9db46fe405ad5ccc88b158c34b49d3922e2d99d0e529b4bdb"
+    },
+    {
+      "path": "public/logos/54_insertion_icon.png",
+      "size": 70170,
+      "sha256": "e1b67f94326a30c1555b9a9bfee8bdf13d8d23ea75b6af5e1893090aeb4bd012"
+    },
+    {
+      "path": "public/logos/54_insertion_icon.svg",
+      "size": 2983,
+      "sha256": "e2ad139f561ae45e14aee14af7ffe4d4dd1c2bb6f46de6851e9272af95492bcc"
+    },
+    {
+      "path": "public/logos/54_insertion_light.svg",
+      "size": 3626,
+      "sha256": "926ca9b1df09940575f06e09cd162f2ed43ebe604914e93e3dc5f2b6e2fbd387"
+    },
+    {
+      "path": "public/logos/54_insertion_mono.svg",
+      "size": 1201,
+      "sha256": "af436b91240eca29ccfd47a337d133b1ad3fbc0ad981a595f3461fb8bc88d1cc"
+    },
+    {
+      "path": "public/logos/54_insertion_mono_white.svg",
+      "size": 1201,
+      "sha256": "ebc526cf7d4187a82cea250801ce961e19781734e4c3b6097a20a66c623b44bb"
+    },
+    {
+      "path": "public/logos/54_insertion_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/54_insertion_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/55_relief.svg",
+      "size": 4033,
+      "sha256": "62275a55701ff0ca6071c307aa0ab126a5e80f8ada76ea29be7040ea2a0438fd"
+    },
+    {
+      "path": "public/logos/55_relief_icon.png",
+      "size": 84062,
+      "sha256": "2b56ebbc80bcae31b11f0d4627368fc7bfe893a1eb1bed95b85a569be9638cc9"
+    },
+    {
+      "path": "public/logos/55_relief_icon.svg",
+      "size": 2964,
+      "sha256": "16c044a21a3e6963890982b2a2cae028ed6105fe3ee5fe4d24b1bd7f6a3a100b"
+    },
+    {
+      "path": "public/logos/55_relief_light.svg",
+      "size": 4044,
+      "sha256": "dab0e102e5396c22717d3cc67e6228f6d13faea3975941f77cda75513e5f61cc"
+    },
+    {
+      "path": "public/logos/55_relief_mono.svg",
+      "size": 1636,
+      "sha256": "e9d90a2ea67e892b73d85808ccbe427b3394f54b87ab22e9a2065f360f72d7b8"
+    },
+    {
+      "path": "public/logos/55_relief_mono_white.svg",
+      "size": 1636,
+      "sha256": "2f2ea102ef58fadce8c58d6bd79f88b338bffc3e9dbe9620196fd91e988a0cd6"
+    },
+    {
+      "path": "public/logos/55_relief_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/55_relief_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/56_thickness.svg",
+      "size": 3859,
+      "sha256": "c3bdb414bb9213606fb058bb0ecfccd8f6fc4461c500497e4afe0a6213f9eed7"
+    },
+    {
+      "path": "public/logos/56_thickness_icon.png",
+      "size": 98010,
+      "sha256": "eb37f6f284b4d79c6d3edfe6c5bd1a87e31f6582396e1022ba4aea1c5efd830d"
+    },
+    {
+      "path": "public/logos/56_thickness_icon.svg",
+      "size": 3227,
+      "sha256": "7f9d9820a85a7c61f573138e5346ffd3d2e66f6ae87fd01bb5908f986bd5d249"
+    },
+    {
+      "path": "public/logos/56_thickness_light.svg",
+      "size": 3870,
+      "sha256": "fff4242a93bb734a629c939c628e022b1a1c980ee57319bf8d0e73e2a12ea6bb"
+    },
+    {
+      "path": "public/logos/56_thickness_mono.svg",
+      "size": 1236,
+      "sha256": "bc9b5ebf5516ee6c9addff1ae5c5b3eade4a9b59306928673a4353422df75a43"
+    },
+    {
+      "path": "public/logos/56_thickness_mono_white.svg",
+      "size": 1236,
+      "sha256": "6f37b86bb141a896f4c3b8836ebd0e368ba6bf870d73f4328e7bd2dbea4970dd"
+    },
+    {
+      "path": "public/logos/56_thickness_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/56_thickness_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/57_spline.svg",
+      "size": 4351,
+      "sha256": "8d24d25b2b93aab3904a2ac5622f6b74675e6b33986743afd9233565940b45b2"
+    },
+    {
+      "path": "public/logos/57_spline_icon.png",
+      "size": 85322,
+      "sha256": "5ca745bc6afac56d0a9b9eb61d4038aad16a23d0ec918517d294ba36062eb44f"
+    },
+    {
+      "path": "public/logos/57_spline_icon.svg",
+      "size": 3282,
+      "sha256": "a8621f74f09304594fb8c263fc44e30c00eb2268b0df3001de75e3f8805bf293"
+    },
+    {
+      "path": "public/logos/57_spline_light.svg",
+      "size": 4362,
+      "sha256": "767babae2496b77893b90561f3efdfacfce6e347c801739ec259a460a36e9cb4"
+    },
+    {
+      "path": "public/logos/57_spline_mono.svg",
+      "size": 1681,
+      "sha256": "f036e822396d661245450c05b598a833a20f60149520a4132449faf51d1fc5e8"
+    },
+    {
+      "path": "public/logos/57_spline_mono_white.svg",
+      "size": 1681,
+      "sha256": "1798374904f1ed1a2c8d0fbd408c44c16bfa793de691dc86026989a586eef1b9"
+    },
+    {
+      "path": "public/logos/57_spline_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/57_spline_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/58_normals.svg",
+      "size": 3838,
+      "sha256": "94897f140b2c87720d74919f9c77fadddedefc98ef361d3c345b755f4c8c7902"
+    },
+    {
+      "path": "public/logos/58_normals_icon.png",
+      "size": 88213,
+      "sha256": "d9db9798747e8a8024f8698f488a99c5648f7bf14c773cd06e7768ce0f541a82"
+    },
+    {
+      "path": "public/logos/58_normals_icon.svg",
+      "size": 3206,
+      "sha256": "49ecddda9f8b1f511bf2e6ca0a98d67bb290271c0fdc950a65db23d60ab4f905"
+    },
+    {
+      "path": "public/logos/58_normals_light.svg",
+      "size": 3849,
+      "sha256": "68e16b56ea89bc5b3ac84ae116ff2cdc1423e08811fd73c4ad15a8c49b17b79e"
+    },
+    {
+      "path": "public/logos/58_normals_mono.svg",
+      "size": 1233,
+      "sha256": "328ae0d4be62d2dd49165429eef9a12f85753819afdd54fc2bdf6621f3840a66"
+    },
+    {
+      "path": "public/logos/58_normals_mono_white.svg",
+      "size": 1233,
+      "sha256": "4967231225b49ae712d895b14f786d5187760c0b20cd7593f49a2a28e2f0217f"
+    },
+    {
+      "path": "public/logos/58_normals_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/58_normals_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/59_control_knots.svg",
+      "size": 3944,
+      "sha256": "942b8514cbc09d22d6104abab41d8635c63716450b8d91609051ec31df8e4438"
+    },
+    {
+      "path": "public/logos/59_control_knots_icon.png",
+      "size": 80490,
+      "sha256": "ddefc663eaba4012af54d391e2d9646cf3ee175c6b66a0844c4dc57d9fce9090"
+    },
+    {
+      "path": "public/logos/59_control_knots_icon.svg",
+      "size": 3312,
+      "sha256": "630d5a84349da2004661ec6902101fce452f3499c96ab2c3d989c68d0f8edac7"
+    },
+    {
+      "path": "public/logos/59_control_knots_light.svg",
+      "size": 3955,
+      "sha256": "27867c3e3f7d92d8e89856865aea259abaa46943a53ee30ebcbb8055edfa5190"
+    },
+    {
+      "path": "public/logos/59_control_knots_mono.svg",
+      "size": 1248,
+      "sha256": "3cbd979bfa90bb50c149bab0d5d69ca052ab6d006be9135f0628c30bc38d6448"
+    },
+    {
+      "path": "public/logos/59_control_knots_mono_white.svg",
+      "size": 1248,
+      "sha256": "fafc0a3c6df24e6b03d5c9e3d173012da558b975b1442a3a0150149cf189c97b"
+    },
+    {
+      "path": "public/logos/59_control_knots_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/59_control_knots_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/60_construction_cube.svg",
+      "size": 3792,
+      "sha256": "e3b03b117d1119eff42e715d1e66f0ef4ee4e9d9a53792b167d8426b0a63b59c"
+    },
+    {
+      "path": "public/logos/60_construction_cube_icon.png",
+      "size": 93711,
+      "sha256": "b9eefc6260e11382ac5388cbf94f1ef7741d77ee9c394f7350865140c223c28a"
+    },
+    {
+      "path": "public/logos/60_construction_cube_icon.svg",
+      "size": 3160,
+      "sha256": "3582aef5d50c5b721e6b2d118ecd4703e592c383db14eb7c55f0c102c048f7bf"
+    },
+    {
+      "path": "public/logos/60_construction_cube_light.svg",
+      "size": 3803,
+      "sha256": "ad774dccfe4fe24956939272bace10c2905becddad5d6eb8dc23df36cf01fe60"
+    },
+    {
+      "path": "public/logos/60_construction_cube_mono.svg",
+      "size": 1227,
+      "sha256": "f3e0ab8ef8c90b9f0b850da5f1767dec4a58b0dac93769dda8ca25456f77b4cd"
+    },
+    {
+      "path": "public/logos/60_construction_cube_mono_white.svg",
+      "size": 1227,
+      "sha256": "b45b8354469ac95ed1b6997130ce846a55da54fc2f13350c99dd0f0e8fd2b88e"
+    },
+    {
+      "path": "public/logos/60_construction_cube_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/60_construction_cube_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/61_tetra.svg",
+      "size": 3516,
+      "sha256": "cbdda4d2cc3cb15a63f1e165489d2027ef329d0a0708792e08f9f0872280f643"
+    },
+    {
+      "path": "public/logos/61_tetra_icon.png",
+      "size": 83533,
+      "sha256": "ee3de1360dde67bed547b1f8e89f3bbad5ce91474ac138b631b06fa5785343a6"
+    },
+    {
+      "path": "public/logos/61_tetra_icon.svg",
+      "size": 2884,
+      "sha256": "af94afef47b763cff6360ef49968f9c23e823919a8b7fe5b6fb491b78e7817fe"
+    },
+    {
+      "path": "public/logos/61_tetra_light.svg",
+      "size": 3527,
+      "sha256": "cf17897fae5c67d3e85ea325e342ad075f92a1eff76851c916f7b0952c3ef38c"
+    },
+    {
+      "path": "public/logos/61_tetra_mono.svg",
+      "size": 1187,
+      "sha256": "18bdfca43558276afa7d275725bab1c3f40355c33b589e896648d0525c8f90df"
+    },
+    {
+      "path": "public/logos/61_tetra_mono_white.svg",
+      "size": 1187,
+      "sha256": "25c556750b522964470633285a8fa0bf291d8eb4fd7e0a276224f4cc90132340"
+    },
+    {
+      "path": "public/logos/61_tetra_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/61_tetra_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/62_octa.svg",
+      "size": 4262,
+      "sha256": "00f65742bb800b69ffc1ac6c49e45865ae20bec628d6604c564b30e3532e4e5e"
+    },
+    {
+      "path": "public/logos/62_octa_icon.png",
+      "size": 93319,
+      "sha256": "7c22b4324079c975e6cff230e4f44b44d14c8a4bd5091f3ae8eb84caa16de7f0"
+    },
+    {
+      "path": "public/logos/62_octa_icon.svg",
+      "size": 3193,
+      "sha256": "a6bd873c05fbc1c594699db7533cfe6edc521c2da4f48faba68d2064762f8f39"
+    },
+    {
+      "path": "public/logos/62_octa_light.svg",
+      "size": 4273,
+      "sha256": "e2b47df4bf3198a69c550ff0c438cf71f979421d45ddc4a1f0546350191b5c47"
+    },
+    {
+      "path": "public/logos/62_octa_mono.svg",
+      "size": 1668,
+      "sha256": "bbb001b3309cb40debd148caa9177060ad7e266c692f79bf370cfd2ad973517a"
+    },
+    {
+      "path": "public/logos/62_octa_mono_white.svg",
+      "size": 1668,
+      "sha256": "29448b5b5e437a6ba2ccc8a95777ce9b1ce3a561a76749036823a5ccdbce4233"
+    },
+    {
+      "path": "public/logos/62_octa_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/62_octa_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/63_folded_plane.svg",
+      "size": 3606,
+      "sha256": "140441872cd2163d415c688402a7486d23df25c86797d5ea1b2e2f8e2823e619"
+    },
+    {
+      "path": "public/logos/63_folded_plane_icon.png",
+      "size": 88992,
+      "sha256": "ba217bc4203b9006c4c29d7a23396e222eb61d0395970a987fd6ae734cf37a7b"
+    },
+    {
+      "path": "public/logos/63_folded_plane_icon.svg",
+      "size": 2974,
+      "sha256": "76dff423aa1d5e70b9e5924bf7ab13280f1d798c48584ce30dee794a7843c020"
+    },
+    {
+      "path": "public/logos/63_folded_plane_light.svg",
+      "size": 3617,
+      "sha256": "6cab7b73220cc4dcb6d1eb3ed1767a432a468cf05b7cbb97c8de3c9b2e99198e"
+    },
+    {
+      "path": "public/logos/63_folded_plane_mono.svg",
+      "size": 1200,
+      "sha256": "9fe387f6aec76e929f5103998216ff665bb81622124ee36ed2795df0e6108889"
+    },
+    {
+      "path": "public/logos/63_folded_plane_mono_white.svg",
+      "size": 1200,
+      "sha256": "b72eb508f145832dd42b2c755d956fbe002596426ad717676d21492df10a39f7"
+    },
+    {
+      "path": "public/logos/63_folded_plane_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/63_folded_plane_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/64_torque.svg",
+      "size": 3894,
+      "sha256": "901ea197121827d897e322efa97f036f20cd4baa110645191c9717ddfc602b59"
+    },
+    {
+      "path": "public/logos/64_torque_icon.png",
+      "size": 82630,
+      "sha256": "24f6677db0c100586d331e00bce2569605c957d0b4555c0808ea0a0b196339ce"
+    },
+    {
+      "path": "public/logos/64_torque_icon.svg",
+      "size": 3262,
+      "sha256": "e53a1d17d364b4361a29bc39efb928bc113a6d7f7fc87573dd4d811d88f5fb4e"
+    },
+    {
+      "path": "public/logos/64_torque_light.svg",
+      "size": 3905,
+      "sha256": "5f7d9bdbb303c4b788c8c43252e7a9b5b7491df6431c1575071069507c001412"
+    },
+    {
+      "path": "public/logos/64_torque_mono.svg",
+      "size": 1241,
+      "sha256": "91845426463b22217158aeb0aa2b85f71ee9a0175333e1b12c222e2aa247434c"
+    },
+    {
+      "path": "public/logos/64_torque_mono_white.svg",
+      "size": 1241,
+      "sha256": "5bce7454a745453329163505e797815a269c25a79813b881636de795d4fa3544"
+    },
+    {
+      "path": "public/logos/64_torque_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/64_torque_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/65_iso_arch.svg",
+      "size": 4159,
+      "sha256": "e04830a59c897e8e2c5124736d8e2463754a6dc434413845ef876fffe1286d99"
+    },
+    {
+      "path": "public/logos/65_iso_arch_icon.png",
+      "size": 90429,
+      "sha256": "e22dac1c67b8c53adef97d9d0697e7e78f4ee32c41a25717304f30af07e2c4a1"
+    },
+    {
+      "path": "public/logos/65_iso_arch_icon.svg",
+      "size": 3090,
+      "sha256": "cf5646dbe1e25ddc0091935f328566b6fd2cfc509a3ad03fe8aedd8ac89708cd"
+    },
+    {
+      "path": "public/logos/65_iso_arch_light.svg",
+      "size": 4170,
+      "sha256": "e4df4ef6a82fafa9a01bdef663ec7108eb97db845a0f4c6f1e246d341fd4e605"
+    },
+    {
+      "path": "public/logos/65_iso_arch_mono.svg",
+      "size": 1654,
+      "sha256": "bc2ae45178de4983d2a7c9e5d92a9a742e49aca666b6dbb06bfd20b763f4e64a"
+    },
+    {
+      "path": "public/logos/65_iso_arch_mono_white.svg",
+      "size": 1654,
+      "sha256": "bbba24c8ecc0245890f3954bc30d2bc52f57112ad7be1d501b10132f9c7bced0"
+    },
+    {
+      "path": "public/logos/65_iso_arch_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/65_iso_arch_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/66_hex_core.svg",
+      "size": 3790,
+      "sha256": "75cdc0563727699b8e46f62cc575d82d62938565ad5733e32d007bd7cfee85dd"
+    },
+    {
+      "path": "public/logos/66_hex_core_icon.png",
+      "size": 90294,
+      "sha256": "874c99bc72955006e50522b292190b8480f2755170886786cb87542dd364d79b"
+    },
+    {
+      "path": "public/logos/66_hex_core_icon.svg",
+      "size": 3158,
+      "sha256": "a860710bc16a1458b120b8b7f152fa041ba4c7efe6eaee28f623f0fb4d1639c7"
+    },
+    {
+      "path": "public/logos/66_hex_core_light.svg",
+      "size": 3801,
+      "sha256": "fad4e0c1058c7f5ca6a989f743abdccfaf1a9f44e66410b65f8710c458cb815d"
+    },
+    {
+      "path": "public/logos/66_hex_core_mono.svg",
+      "size": 1226,
+      "sha256": "051311fe0186e1628196d1360ffb1b1ca5c3f31fda5cafd4e1faf85764afd6c4"
+    },
+    {
+      "path": "public/logos/66_hex_core_mono_white.svg",
+      "size": 1226,
+      "sha256": "78c68b2650ece060e86ca4e12c34119c84e496fbd893dce79c730526269d33bb"
+    },
+    {
+      "path": "public/logos/66_hex_core_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/66_hex_core_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/67_prism_window.svg",
+      "size": 3746,
+      "sha256": "3b28802ae84da9466a691fc1a9bb3b047c1837bfa177ce502a8a9da4073003b5"
+    },
+    {
+      "path": "public/logos/67_prism_window_icon.png",
+      "size": 89341,
+      "sha256": "3bd5ce3bb96f625ac427bbf12380149b85b6b7b7301e47faa5ea87c1f4b51182"
+    },
+    {
+      "path": "public/logos/67_prism_window_icon.svg",
+      "size": 3114,
+      "sha256": "e381d42c6320e9c86aefec1b110808a47fc14a81862450d726da2b4f37567f3a"
+    },
+    {
+      "path": "public/logos/67_prism_window_light.svg",
+      "size": 3757,
+      "sha256": "2a1290b022c86cdd905f9a5635ad65e7d3a2d393cba1645c110b5c1fe152e3bc"
+    },
+    {
+      "path": "public/logos/67_prism_window_mono.svg",
+      "size": 1220,
+      "sha256": "60ad5c617d2927dcdd74845c87492f7151a4756e55e6d74dd7351a04f03715c8"
+    },
+    {
+      "path": "public/logos/67_prism_window_mono_white.svg",
+      "size": 1220,
+      "sha256": "442a0c190a4360aaee00dbc02bbe52eaacc2b73328635055d8c2e73905d69219"
+    },
+    {
+      "path": "public/logos/67_prism_window_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/67_prism_window_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/68_helix.svg",
+      "size": 4793,
+      "sha256": "6516800e058f356871ec0ec85caa70dfb1f601a67588f714a7e07f890e736c32"
+    },
+    {
+      "path": "public/logos/68_helix_icon.png",
+      "size": 87341,
+      "sha256": "7609bd820bbd5e842a105d776560f78ceaf37f6df243b1893c7926403c9e4450"
+    },
+    {
+      "path": "public/logos/68_helix_icon.svg",
+      "size": 3724,
+      "sha256": "02ecc8f392a0ee0694df41dbd613dc88d363c72a0db5848cd3f23ea9e28e9971"
+    },
+    {
+      "path": "public/logos/68_helix_light.svg",
+      "size": 4804,
+      "sha256": "ebc5459968d2dc249c91707e1b7797acfe7cdf65a25eba4025f6f1471783e93c"
+    },
+    {
+      "path": "public/logos/68_helix_mono.svg",
+      "size": 1744,
+      "sha256": "baa8e6616ff846e5781c5292d5e6f1901a158518a0f529f8fed5e20a248607f5"
+    },
+    {
+      "path": "public/logos/68_helix_mono_white.svg",
+      "size": 1744,
+      "sha256": "ecdc7b84a5a66620c4f230fa24ff00fedf0c2370ebe96533865f8e5c7374a6d1"
+    },
+    {
+      "path": "public/logos/68_helix_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/68_helix_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/69_ribbon_loop.svg",
+      "size": 4206,
+      "sha256": "d0fee63f5fd4205f7b4166c1c4d22d876c645de6ca6689f480529c37f2d31640"
+    },
+    {
+      "path": "public/logos/69_ribbon_loop_icon.png",
+      "size": 80704,
+      "sha256": "1b83667dacc36060bddcb0956710a2b991023d39aaaf27d6d50179e0f216a046"
+    },
+    {
+      "path": "public/logos/69_ribbon_loop_icon.svg",
+      "size": 3137,
+      "sha256": "303974b31e9627e885f09f6bd9654e8297c8017f11600b80354d0d6d7eb87fbb"
+    },
+    {
+      "path": "public/logos/69_ribbon_loop_light.svg",
+      "size": 4217,
+      "sha256": "a9fdf80d5c4f268d83c229e0ca62e1956463df48e79de7ead4239047d94942fd"
+    },
+    {
+      "path": "public/logos/69_ribbon_loop_mono.svg",
+      "size": 1660,
+      "sha256": "41fe92b5b1c4657e69e9e334dd388fbe1474c1eeb3f865fc48aa3be726ecbc69"
+    },
+    {
+      "path": "public/logos/69_ribbon_loop_mono_white.svg",
+      "size": 1660,
+      "sha256": "d72851149016781f0a9e87fcc94b5de4afdebf61208571758bb90ce13c21bb99"
+    },
+    {
+      "path": "public/logos/69_ribbon_loop_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/69_ribbon_loop_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/70_crown_lattice.svg",
+      "size": 3778,
+      "sha256": "b768b8d31d83983b06f1b419b3d96650880df08db370122c0a08a3ed7d8aa317"
+    },
+    {
+      "path": "public/logos/70_crown_lattice_icon.png",
+      "size": 88018,
+      "sha256": "c05dbaf0f7260bd7f7e8a5e2b9c6bb2153149e4bf2d2516cfc651df12a3d60bf"
+    },
+    {
+      "path": "public/logos/70_crown_lattice_icon.svg",
+      "size": 3146,
+      "sha256": "b95ac1d5f4bfb7a863a853c85f7ae77e71f0abdcb14570b3cefa21bb758f0a7a"
+    },
+    {
+      "path": "public/logos/70_crown_lattice_light.svg",
+      "size": 3789,
+      "sha256": "320c88b04b458e89b1269eae86a7ef7836d6716972aba6c9489dc51f2af4aaac"
+    },
+    {
+      "path": "public/logos/70_crown_lattice_mono.svg",
+      "size": 1225,
+      "sha256": "3a6846be05d2ccabc6a966c355ba7fe73a8a9a1c9f88121eeace2d44a97c3bd6"
+    },
+    {
+      "path": "public/logos/70_crown_lattice_mono_white.svg",
+      "size": 1225,
+      "sha256": "2e48a8c64437b7a16b6242e74d6a63ea03058ad2430108abc08e894aff2446f2"
+    },
+    {
+      "path": "public/logos/70_crown_lattice_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/70_crown_lattice_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/71_d_split.svg",
+      "size": 4267,
+      "sha256": "bf2ccc5a2126240dade5d93bdb1a1604831ef4e77dec0a96ba82f9745bc906f8"
+    },
+    {
+      "path": "public/logos/71_d_split_icon.png",
+      "size": 83348,
+      "sha256": "44a1b100209c70d12aca9cb2416557f8b7d7507f19b931ec610e703a923f9192"
+    },
+    {
+      "path": "public/logos/71_d_split_icon.svg",
+      "size": 3198,
+      "sha256": "9263bfb529e7757d88b538a46614749651d57c674fd85f0e79402846c6e170b0"
+    },
+    {
+      "path": "public/logos/71_d_split_light.svg",
+      "size": 4278,
+      "sha256": "262be6ed4554f3e7abc800a5155a04018dae2dc81c5d7396ddd8739b427ccaea"
+    },
+    {
+      "path": "public/logos/71_d_split_mono.svg",
+      "size": 1669,
+      "sha256": "369fd3b3c29ae35cae3852278ded7cdad395cca1c37af10b9887374c80aa1544"
+    },
+    {
+      "path": "public/logos/71_d_split_mono_white.svg",
+      "size": 1669,
+      "sha256": "30bb8fdb15973e5d3a6cc5e30e13939e6823e7e0017371c1994839ca1768a89a"
+    },
+    {
+      "path": "public/logos/71_d_split_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/71_d_split_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/72_d_chamfer.svg",
+      "size": 3621,
+      "sha256": "a5fad18d2019dddf5632f341e4989bca784dd0deb2b99cda86b3469b62b74976"
+    },
+    {
+      "path": "public/logos/72_d_chamfer_icon.png",
+      "size": 68703,
+      "sha256": "abf3984c96d8606c66ba4738d794ba11dc4c033af6d1c626eedde32a5e14ff5c"
+    },
+    {
+      "path": "public/logos/72_d_chamfer_icon.svg",
+      "size": 2989,
+      "sha256": "ea298cde4fa187fa14d509505307bdede337cb45034f620e6810a50fb87e1040"
+    },
+    {
+      "path": "public/logos/72_d_chamfer_light.svg",
+      "size": 3632,
+      "sha256": "fe5a34a5cbabfc413b44d227b4d32c701ed24bf18072b31199bcb6d981b1be1e"
+    },
+    {
+      "path": "public/logos/72_d_chamfer_mono.svg",
+      "size": 1202,
+      "sha256": "28a3d9ddf1e92a0e09479cba3e5dc9816f8c8ffdf738aaba28861a17345970ba"
+    },
+    {
+      "path": "public/logos/72_d_chamfer_mono_white.svg",
+      "size": 1202,
+      "sha256": "15846e6d4613c7c9edf3e90235ca36db40b2888e8b64b0a42b3ea967a1fea384"
+    },
+    {
+      "path": "public/logos/72_d_chamfer_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/72_d_chamfer_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/73_d_vault.svg",
+      "size": 4197,
+      "sha256": "8360da90e195716a9632d22dd1e3dc5343f348db4c32d32735756f4a94834264"
+    },
+    {
+      "path": "public/logos/73_d_vault_icon.png",
+      "size": 85541,
+      "sha256": "4a2d503da83faf283736f191171c6affd18d2f10ab79b809896a73ea2e96a20e"
+    },
+    {
+      "path": "public/logos/73_d_vault_icon.svg",
+      "size": 3060,
+      "sha256": "b00327a260b39f605948d2bd373d3045305e6772371b67545306fdd5f9cbb836"
+    },
+    {
+      "path": "public/logos/73_d_vault_light.svg",
+      "size": 4208,
+      "sha256": "437370dde47aa3eee922055bc52393a507146e2c13542fb7cd53ccb97055a6aa"
+    },
+    {
+      "path": "public/logos/73_d_vault_mono.svg",
+      "size": 1717,
+      "sha256": "1ef464dd2c1f30700b9fb652e704cec4ef639d5f7db4df650f9c0ec198ac5d65"
+    },
+    {
+      "path": "public/logos/73_d_vault_mono_white.svg",
+      "size": 1717,
+      "sha256": "397aee80ebce756ade876ec0d6eb96d20156e56cb833124357f534dfd0b37f69"
+    },
+    {
+      "path": "public/logos/73_d_vault_word.svg",
+      "size": 1556,
+      "sha256": "296f95d37b5d30e563a45794c2abb6bb9f175e6b7cec0aa95ddf86f0cf7e17ee"
+    },
+    {
+      "path": "public/logos/73_d_vault_word_light.svg",
+      "size": 1556,
+      "sha256": "a0cb7d6e3e740bb3abe396d13ef7e295a4e03ef528d6bd61e4f9120350b538e1"
+    },
+    {
+      "path": "public/logos/74_d_ribbon.svg",
+      "size": 4054,
+      "sha256": "f1b82795f9a46f38f71cc60d90b19f9cd7f64c9e8cdaceda70432b87ac843b77"
+    },
+    {
+      "path": "public/logos/74_d_ribbon_icon.png",
+      "size": 74014,
+      "sha256": "dc8c1a68a37dae9765b5a0a7fe06838fff555ff2326d584cd162925b5728c986"
+    },
+    {
+      "path": "public/logos/74_d_ribbon_icon.svg",
+      "size": 2985,
+      "sha256": "62877dacc486c0a9be0cd06611050a51b4faf34791bd0b7dc09d55a8750c07b2"
+    },
+    {
+      "path": "public/logos/74_d_ribbon_light.svg",
+      "size": 4065,
+      "sha256": "eb092719036f824565cdd600024a38bd38013e2972feacfb7f9ade2a71399ae4"
+    },
+    {
+      "path": "public/logos/74_d_ribbon_mono.svg",
+      "size": 1639,
+      "sha256": "717908f87394fe1957c874557a033e65410c50142f23084f4cb3658a304339cf"
+    },
+    {
+      "path": "public/logos/74_d_ribbon_mono_white.svg",
+      "size": 1639,
+      "sha256": "7638b8d241eaac11d6cb7cd1dbd8feffa8ef0cd5ab36475114db936895eff171"
+    },
+    {
+      "path": "public/logos/74_d_ribbon_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/74_d_ribbon_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/75_a_crown.svg",
+      "size": 4220,
+      "sha256": "1a699bfc44b75b3c9c53c0b7e02102f761b34465bc80417edb187110c63ba0be"
+    },
+    {
+      "path": "public/logos/75_a_crown_icon.png",
+      "size": 78677,
+      "sha256": "d0da57acea7c32773fb1bd7e0f1877e3ec48ad2ef57c9511cfd8acda79040c90"
+    },
+    {
+      "path": "public/logos/75_a_crown_icon.svg",
+      "size": 3151,
+      "sha256": "87c487cec31f7a7fc35c05680b151aae0a20e5c033f9e86a178aaff9bda76a22"
+    },
+    {
+      "path": "public/logos/75_a_crown_light.svg",
+      "size": 4231,
+      "sha256": "d3ffa1d27d1a5b29721c3e190587c0a1bbf9211b098aa3b4bf1d6b6fa1131b51"
+    },
+    {
+      "path": "public/logos/75_a_crown_mono.svg",
+      "size": 1662,
+      "sha256": "a6a94da4ae60ca4e0e6861e7c0b5cbd894cb7ba1ffd5997f20ea7da523cccca2"
+    },
+    {
+      "path": "public/logos/75_a_crown_mono_white.svg",
+      "size": 1662,
+      "sha256": "24b878d81ae0762fba1faa8f440cfd8ad956608243eb24a97359721486887410"
+    },
+    {
+      "path": "public/logos/75_a_crown_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/75_a_crown_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/76_a_vault.svg",
+      "size": 4020,
+      "sha256": "ee2e1e60aeaec20861ee2ded22fd3972b68a29c90ab0bb1d977b1e1b67e79552"
+    },
+    {
+      "path": "public/logos/76_a_vault_icon.png",
+      "size": 80837,
+      "sha256": "443ec114b585b51cc1fea7f734a19b44387824c19d2756c96a52e47e0f2e17df"
+    },
+    {
+      "path": "public/logos/76_a_vault_icon.svg",
+      "size": 2883,
+      "sha256": "3c8f7ee1dbff8a4f9530745632b668f095a877cf897126cb4132f8017ea71640"
+    },
+    {
+      "path": "public/logos/76_a_vault_light.svg",
+      "size": 4031,
+      "sha256": "5db7608275e3cf5550b4c6d7f8dd6327c5d0eb427f9a30d244e68ef04b53f9be"
+    },
+    {
+      "path": "public/logos/76_a_vault_mono.svg",
+      "size": 1692,
+      "sha256": "0b58a0d4caab015ec127d56993af9ac8e3b647fa377c8932e7eb953f9273255e"
+    },
+    {
+      "path": "public/logos/76_a_vault_mono_white.svg",
+      "size": 1692,
+      "sha256": "65a79d7b59da50c210b4f40974d279b3379d81fafeca17fbc6e585ad7e11b25e"
+    },
+    {
+      "path": "public/logos/76_a_vault_word.svg",
+      "size": 1556,
+      "sha256": "296f95d37b5d30e563a45794c2abb6bb9f175e6b7cec0aa95ddf86f0cf7e17ee"
+    },
+    {
+      "path": "public/logos/76_a_vault_word_light.svg",
+      "size": 1556,
+      "sha256": "a0cb7d6e3e740bb3abe396d13ef7e295a4e03ef528d6bd61e4f9120350b538e1"
+    },
+    {
+      "path": "public/logos/77_a_beam.svg",
+      "size": 3565,
+      "sha256": "94ed5f6113dcacb805e0a0c6f37c75ba1759c815cde0d8990ef071416fabdf30"
+    },
+    {
+      "path": "public/logos/77_a_beam_icon.png",
+      "size": 83512,
+      "sha256": "87462a40ccc7d7c794a115658188b0e149796b3d074187abfae5851e39bedeac"
+    },
+    {
+      "path": "public/logos/77_a_beam_icon.svg",
+      "size": 2933,
+      "sha256": "f0aa3c4816c2c18ea60a39500d9b2ee3778a875f7841c02cad65af49a90ba425"
+    },
+    {
+      "path": "public/logos/77_a_beam_light.svg",
+      "size": 3576,
+      "sha256": "2bff81bf06c3460ce5ee63c070ffc12ca49ff9eceae3b85015b989b4730538d9"
+    },
+    {
+      "path": "public/logos/77_a_beam_mono.svg",
+      "size": 1194,
+      "sha256": "388b9a25a4397163ba334ab7cedb694bcac8df78740c9f95b667b248e75d46a3"
+    },
+    {
+      "path": "public/logos/77_a_beam_mono_white.svg",
+      "size": 1194,
+      "sha256": "e827ae86698db2e996300ed5d80da1217455144fbd7ccb87f8353ac570b7a0d2"
+    },
+    {
+      "path": "public/logos/77_a_beam_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/77_a_beam_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/78_y_branch.svg",
+      "size": 3970,
+      "sha256": "d7b27e0ef7aa1262d3abec5b1108de1d94f9e3331666260f5c949cbcebe5b735"
+    },
+    {
+      "path": "public/logos/78_y_branch_icon.png",
+      "size": 75028,
+      "sha256": "8033158659de47313788187afcf9eeba7486a0308d8a62911c8d9e04296f2f5d"
+    },
+    {
+      "path": "public/logos/78_y_branch_icon.svg",
+      "size": 2901,
+      "sha256": "f0785e396b82e8f360871b07be19d9e7baec856c13d8339d5a26ca57859cf616"
+    },
+    {
+      "path": "public/logos/78_y_branch_light.svg",
+      "size": 3981,
+      "sha256": "7b4dc062fac535ed21bdc52fb51c3f045840a8a02e5b7d2113f186e874294810"
+    },
+    {
+      "path": "public/logos/78_y_branch_mono.svg",
+      "size": 1627,
+      "sha256": "6e815e467eecdc31c1466213b23e41d55c9e04b04cc9c76832574dbeb9ce0946"
+    },
+    {
+      "path": "public/logos/78_y_branch_mono_white.svg",
+      "size": 1627,
+      "sha256": "8be2e5026bd3aeff14a5f37957c88a20dd78e4df742b779dc4bd8ca2008e9593"
+    },
+    {
+      "path": "public/logos/78_y_branch_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/78_y_branch_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/79_ya_merge.svg",
+      "size": 4113,
+      "sha256": "d429481b3f4a67d4f11935f3780fe4b99a39903e20dc3329fb3a67e33b498b69"
+    },
+    {
+      "path": "public/logos/79_ya_merge_icon.png",
+      "size": 88636,
+      "sha256": "c586c3e0eec2811238631396e72a47e93fab527e1d3960b9864c10c50a90afe8"
+    },
+    {
+      "path": "public/logos/79_ya_merge_icon.svg",
+      "size": 3044,
+      "sha256": "8de8eced972b849dcc1aa42e22b065c4c518dacfbd08689e6d38069548d93546"
+    },
+    {
+      "path": "public/logos/79_ya_merge_light.svg",
+      "size": 4124,
+      "sha256": "3a5003852be2780e7cec89663c0138d1eb6016e039a13c48abd1dc68638457a5"
+    },
+    {
+      "path": "public/logos/79_ya_merge_mono.svg",
+      "size": 1647,
+      "sha256": "54a8c44242aa5c2bfe6183e2d454abaf06d21d8bbf020c158a60bc712c563366"
+    },
+    {
+      "path": "public/logos/79_ya_merge_mono_white.svg",
+      "size": 1647,
+      "sha256": "cef7336b995583e8eeb34d16f351cba528283c82def47b38cac1abf43c81447e"
+    },
+    {
+      "path": "public/logos/79_ya_merge_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/79_ya_merge_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/80_da_mirror.svg",
+      "size": 4262,
+      "sha256": "9934862e1303cbc18445adbce0341623e9b8c6ef789078014f4afd2ccd431795"
+    },
+    {
+      "path": "public/logos/80_da_mirror_icon.png",
+      "size": 105455,
+      "sha256": "1c749f48502b6b58416420be998bc61154abd1e3d2cbe981d3ef5f9b3738bcff"
+    },
+    {
+      "path": "public/logos/80_da_mirror_icon.svg",
+      "size": 3193,
+      "sha256": "aea5b2f7c7ff658efc978031e8178ab268c4f9c23c242b1fc82d76520bb221e7"
+    },
+    {
+      "path": "public/logos/80_da_mirror_light.svg",
+      "size": 4273,
+      "sha256": "2067b9d393964f54f052e4ab344f046991c82f4f1eda6134eb3db37ba33123c8"
+    },
+    {
+      "path": "public/logos/80_da_mirror_mono.svg",
+      "size": 1668,
+      "sha256": "76e3b0a9bcfd75636198bbd62aed8c8c732d5dd82ccd89a64e503e2ae998ff35"
+    },
+    {
+      "path": "public/logos/80_da_mirror_mono_white.svg",
+      "size": 1668,
+      "sha256": "1ceee511ae8ca327e086f73aa63d6ae4ce79e1710c2a0ad084c5d70682ea37c6"
+    },
+    {
+      "path": "public/logos/80_da_mirror_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/80_da_mirror_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/81_da_keystone.svg",
+      "size": 3663,
+      "sha256": "4d381caf366658a7956641c3ec118b106dffb284ce0e606d129ce8a2a63024e1"
+    },
+    {
+      "path": "public/logos/81_da_keystone_icon.png",
+      "size": 93276,
+      "sha256": "670997037567bc976ff266490f814e547f06823f88c34da5c794d243e554e361"
+    },
+    {
+      "path": "public/logos/81_da_keystone_icon.svg",
+      "size": 3031,
+      "sha256": "ddb1d187b1740feffe4cb67d06e52a2a83dd78b88d045f26dd45d4e4f5ee8c82"
+    },
+    {
+      "path": "public/logos/81_da_keystone_light.svg",
+      "size": 3674,
+      "sha256": "4ed33d643faba7a3f34c931fdd1269f1949adbe4711b4cdd6d1dbb53d1214047"
+    },
+    {
+      "path": "public/logos/81_da_keystone_mono.svg",
+      "size": 1208,
+      "sha256": "2aee0bdcc01fb15fcc0dd7e83bd0986ffa054decc5a012d00a97ed248133fb71"
+    },
+    {
+      "path": "public/logos/81_da_keystone_mono_white.svg",
+      "size": 1208,
+      "sha256": "a48b261817505192138070570d1c7fa246133907e058e7a081aa2d68edd96686"
+    },
+    {
+      "path": "public/logos/81_da_keystone_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/81_da_keystone_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/82_dy_link.svg",
+      "size": 4278,
+      "sha256": "51147197bb9611403200d6f454a16be6a7f8076be2c89bcd0aa28807ece89b37"
+    },
+    {
+      "path": "public/logos/82_dy_link_icon.png",
+      "size": 104541,
+      "sha256": "f64e952055b7494c04b1aff7941502e39fc10061793d15df446182803c1853ee"
+    },
+    {
+      "path": "public/logos/82_dy_link_icon.svg",
+      "size": 3209,
+      "sha256": "6b283498a127b0198a818d3a69586116e2f5bb55983bf435918327a6f012db5d"
+    },
+    {
+      "path": "public/logos/82_dy_link_light.svg",
+      "size": 4289,
+      "sha256": "24553b9e940ed8974122d0ddb1bba94686e91c0ece4d65cdaafd0d2e99b2e3b1"
+    },
+    {
+      "path": "public/logos/82_dy_link_mono.svg",
+      "size": 1671,
+      "sha256": "1d02646e9330ce35e1b7ac123f1f18a3b40b2324d6572564a8f0d885a4b6f598"
+    },
+    {
+      "path": "public/logos/82_dy_link_mono_white.svg",
+      "size": 1671,
+      "sha256": "dec7ee16c26ef397d5299b0283a64d954c1ab0fce7b4c72f91489478fb0b79cb"
+    },
+    {
+      "path": "public/logos/82_dy_link_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/82_dy_link_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/83_aya_nodes.svg",
+      "size": 3944,
+      "sha256": "87350b87a9549e9f2193eb14c6e738ae5ea580b22abe54340a06d06bad0869a3"
+    },
+    {
+      "path": "public/logos/83_aya_nodes_icon.png",
+      "size": 117316,
+      "sha256": "d3f5ebdba83d624bc8ae4f1edce8846a3a47aeef926cf4d660a90be5a5d8ab98"
+    },
+    {
+      "path": "public/logos/83_aya_nodes_icon.svg",
+      "size": 3312,
+      "sha256": "2db25fc35eddea61b34c3f7a85061c95cbc57344be6bbe83135131e1a51f3cb5"
+    },
+    {
+      "path": "public/logos/83_aya_nodes_light.svg",
+      "size": 3955,
+      "sha256": "fcfa579b291ea462746f518c97ca591111ffdc864dceb21ad294e73f9e0d32b1"
+    },
+    {
+      "path": "public/logos/83_aya_nodes_mono.svg",
+      "size": 1248,
+      "sha256": "60fd4781181cbe029dfae01196115893fcdb2d7eadf2f413786647a364bae496"
+    },
+    {
+      "path": "public/logos/83_aya_nodes_mono_white.svg",
+      "size": 1248,
+      "sha256": "f134addd1b0d9c4f892d4082aba073a72d24aaea36aeab58419b6063be64ee85"
+    },
+    {
+      "path": "public/logos/83_aya_nodes_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/83_aya_nodes_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/84_dental_d.svg",
+      "size": 4267,
+      "sha256": "c3819ff24677a5e561980e73702955dea12c331e9915bb6999a45b37816a8cc3"
+    },
+    {
+      "path": "public/logos/84_dental_d_icon.png",
+      "size": 82980,
+      "sha256": "4398a7f44f856f6edc5bd6cb368ea26cb4056af453db37dc8397b975ee3b6fcd"
+    },
+    {
+      "path": "public/logos/84_dental_d_icon.svg",
+      "size": 3198,
+      "sha256": "e9b2bf91d38e72ad5d8bfe6497fa00f39209c3bc05925663ce4659a4138efdfe"
+    },
+    {
+      "path": "public/logos/84_dental_d_light.svg",
+      "size": 4278,
+      "sha256": "fb9190086d078f97f2f95a48add33fa3317b08018c386f09eb4fb9c91372e3f9"
+    },
+    {
+      "path": "public/logos/84_dental_d_mono.svg",
+      "size": 1669,
+      "sha256": "0201bcef6e03f58e81aa5c669b20a495df05413ac52cbe4b5387dfe66464b3a6"
+    },
+    {
+      "path": "public/logos/84_dental_d_mono_white.svg",
+      "size": 1669,
+      "sha256": "06aacce5cc8effbc29e25aadab6c43c5ca49e82b067a052f6fa0241245ddd35f"
+    },
+    {
+      "path": "public/logos/84_dental_d_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/84_dental_d_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/85_d_aperture.svg",
+      "size": 3712,
+      "sha256": "58e555a6ad2691a313b61407e62c18e0456daba1f17a004053e5c72c6c118fa0"
+    },
+    {
+      "path": "public/logos/85_d_aperture_icon.png",
+      "size": 83107,
+      "sha256": "2529aa8ff0b933824afda3b6e4f212c1673413d0b237b153a6d39a5e2a86f550"
+    },
+    {
+      "path": "public/logos/85_d_aperture_icon.svg",
+      "size": 3080,
+      "sha256": "a8c3c81251719a30a2d7c345e978163156b73fb16a7ff82ad026ebc8cb3956cb"
+    },
+    {
+      "path": "public/logos/85_d_aperture_light.svg",
+      "size": 3723,
+      "sha256": "37ab808dd0eca19d7941a59b2fa8c58f61ce6ed9616523bbfaf752910cca95fc"
+    },
+    {
+      "path": "public/logos/85_d_aperture_mono.svg",
+      "size": 1215,
+      "sha256": "a09c8900675de2103284cd7033e06fcd09ca460ef6e4c88a67886e086a5c7141"
+    },
+    {
+      "path": "public/logos/85_d_aperture_mono_white.svg",
+      "size": 1215,
+      "sha256": "c4a8e6e372066d50519fe7fd6128358c7b30d04b9b869440b09864f4a77642f0"
+    },
+    {
+      "path": "public/logos/85_d_aperture_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/85_d_aperture_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/86_a_orbit.svg",
+      "size": 4185,
+      "sha256": "79063f041df0c6b7ebbe3100a56ac822aead4d336a3a8798e385c98d02bb5d3d"
+    },
+    {
+      "path": "public/logos/86_a_orbit_icon.png",
+      "size": 99418,
+      "sha256": "d89b07b4b5e4cf121c246a2c3d67d24906f423b58ff876e401b711491b8aedd4"
+    },
+    {
+      "path": "public/logos/86_a_orbit_icon.svg",
+      "size": 3116,
+      "sha256": "6ab4adcf180d103c3c104b7cc33a8eb3f3d63eb79af75309b54c620667aa1245"
+    },
+    {
+      "path": "public/logos/86_a_orbit_light.svg",
+      "size": 4196,
+      "sha256": "4a8d06fed97a556c1942f10b75294868dc6bd229c4966e8e1bc70b918a5e0c38"
+    },
+    {
+      "path": "public/logos/86_a_orbit_mono.svg",
+      "size": 1657,
+      "sha256": "2933f467a8162dd308eadc6eb848078f6af9e7300ba45139fd7ccf320cf9df9b"
+    },
+    {
+      "path": "public/logos/86_a_orbit_mono_white.svg",
+      "size": 1657,
+      "sha256": "01460a8a36dc676a00d893eda7000063c248a1f3d04dd30e61073d1796121822"
+    },
+    {
+      "path": "public/logos/86_a_orbit_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/86_a_orbit_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/87_y_arc.svg",
+      "size": 4383,
+      "sha256": "6c19107119488f7e3a8610ed6ab314fe0fb6a4bd039cc529a9af7ba01a323e01"
+    },
+    {
+      "path": "public/logos/87_y_arc_icon.png",
+      "size": 94336,
+      "sha256": "05ada00d62ab6a407a1990e301aae3a09b478988efe22609093080b346ef0aec"
+    },
+    {
+      "path": "public/logos/87_y_arc_icon.svg",
+      "size": 3314,
+      "sha256": "54a6ed860b6209337577de358057047fdc41d4997c63b752cfad07a07fcb5dbf"
+    },
+    {
+      "path": "public/logos/87_y_arc_light.svg",
+      "size": 4394,
+      "sha256": "c0b0217a38c9e28afd11b4e6d9996ef602dd82a12778bd853228576afba78fef"
+    },
+    {
+      "path": "public/logos/87_y_arc_mono.svg",
+      "size": 1686,
+      "sha256": "8e3e49f5265cd309ae7a17c86de3e10675b2a55d40924b9a60e53f29136fe353"
+    },
+    {
+      "path": "public/logos/87_y_arc_mono_white.svg",
+      "size": 1686,
+      "sha256": "bbc3775f9b8cf150026a85f9d070d67febaf0e29ae78a63dc4d61ec522bbe40b"
+    },
+    {
+      "path": "public/logos/87_y_arc_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/87_y_arc_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/88_da_ligature.svg",
+      "size": 4286,
+      "sha256": "04bdc182da5d869d4c4e9e3d1f749c76a5e75b511a2101a24e242eb8f1048973"
+    },
+    {
+      "path": "public/logos/88_da_ligature_icon.png",
+      "size": 106260,
+      "sha256": "37c1402bcbb351c1504c2ed875fde43c6af466daa217886a05e3882e7af86e22"
+    },
+    {
+      "path": "public/logos/88_da_ligature_icon.svg",
+      "size": 3149,
+      "sha256": "c94a5da10360a51c6be35fd1c6b12fba7696e84d46b4d999fd7b840d465ddd8a"
+    },
+    {
+      "path": "public/logos/88_da_ligature_light.svg",
+      "size": 4297,
+      "sha256": "b28e2bbfcc91c3868d7bfd3c9810a3970bb85e63b94688e6e29023228c4b3e9b"
+    },
+    {
+      "path": "public/logos/88_da_ligature_mono.svg",
+      "size": 1730,
+      "sha256": "16c68b38cff5be3f9238e56781ef0ef5d79141b6b04a029bda085b771c7afe2b"
+    },
+    {
+      "path": "public/logos/88_da_ligature_mono_white.svg",
+      "size": 1730,
+      "sha256": "a76f15292ab22146c24e3a8b506521b8ca999eec39bba87a70f438d0f8cd9998"
+    },
+    {
+      "path": "public/logos/88_da_ligature_word.svg",
+      "size": 1556,
+      "sha256": "296f95d37b5d30e563a45794c2abb6bb9f175e6b7cec0aa95ddf86f0cf7e17ee"
+    },
+    {
+      "path": "public/logos/88_da_ligature_word_light.svg",
+      "size": 1556,
+      "sha256": "a0cb7d6e3e740bb3abe396d13ef7e295a4e03ef528d6bd61e4f9120350b538e1"
+    },
+    {
+      "path": "public/logos/89_dental_ring.svg",
+      "size": 4555,
+      "sha256": "592d85c5e3cb2f01fad9d11ff9ee4f0e6e481034450a04d7c8e4957a46088eed"
+    },
+    {
+      "path": "public/logos/89_dental_ring_icon.png",
+      "size": 97564,
+      "sha256": "e70ca6d3d5b1f7b1114e1be6c800d8fd82dbefb377f7f1224c322e9442160406"
+    },
+    {
+      "path": "public/logos/89_dental_ring_icon.svg",
+      "size": 3486,
+      "sha256": "8b5ec74d40c7694f4f4223b87df80a1e01fd0cb22c7c1449b71b1fb0c24fe99c"
+    },
+    {
+      "path": "public/logos/89_dental_ring_light.svg",
+      "size": 4566,
+      "sha256": "dc8f4b5c46aeed03d8a73d9f75aad7dbc744de14eee4ac5b528c7cae5bb7a731"
+    },
+    {
+      "path": "public/logos/89_dental_ring_mono.svg",
+      "size": 1710,
+      "sha256": "f16597f478eaa5e8b6a72eb39b78fc7e87f3d1ff5b554695e0d35744af874a07"
+    },
+    {
+      "path": "public/logos/89_dental_ring_mono_white.svg",
+      "size": 1710,
+      "sha256": "4c4449b21248c1109bf81e5348c79f79898e4d0d301b0a6b5b53441239b7a1d0"
+    },
+    {
+      "path": "public/logos/89_dental_ring_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/89_dental_ring_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/90_laurel_molar.svg",
+      "size": 4470,
+      "sha256": "cd00a8944007280a143c982a9465f67447879389630fdb9dd7ce61d5def8826f"
+    },
+    {
+      "path": "public/logos/90_laurel_molar_icon.png",
+      "size": 93028,
+      "sha256": "25992d893b0ff5cf5eb6ca38bf6ed5ab4c87538e8ecbd34a102b8b98b88b4d0e"
+    },
+    {
+      "path": "public/logos/90_laurel_molar_icon.svg",
+      "size": 3333,
+      "sha256": "2d8694882cd4953c5b745449e97016f2e94fbd0c1c9f9748230433c9931dacb8"
+    },
+    {
+      "path": "public/logos/90_laurel_molar_light.svg",
+      "size": 4481,
+      "sha256": "09749841aef2dd54c6b6f9c276925bd0e51bcfc1ff61842c1d353e1b09ca6f31"
+    },
+    {
+      "path": "public/logos/90_laurel_molar_mono.svg",
+      "size": 1756,
+      "sha256": "1a2ecd96ad18542ccd1f858f994d45ba6077a1485dea63eb7bd58316b6dcb294"
+    },
+    {
+      "path": "public/logos/90_laurel_molar_mono_white.svg",
+      "size": 1756,
+      "sha256": "a4b559efd7bb237870bda14a3acf359936fb35d2ff2c676d79ee48e807e4ba01"
+    },
+    {
+      "path": "public/logos/90_laurel_molar_word.svg",
+      "size": 1556,
+      "sha256": "296f95d37b5d30e563a45794c2abb6bb9f175e6b7cec0aa95ddf86f0cf7e17ee"
+    },
+    {
+      "path": "public/logos/90_laurel_molar_word_light.svg",
+      "size": 1556,
+      "sha256": "a0cb7d6e3e740bb3abe396d13ef7e295a4e03ef528d6bd61e4f9120350b538e1"
+    },
+    {
+      "path": "public/logos/91_cusp_compass.svg",
+      "size": 4002,
+      "sha256": "72685d73289b0b00795891fc8e8abdead5289c78b88dab30ff14d2c44907e5f8"
+    },
+    {
+      "path": "public/logos/91_cusp_compass_icon.png",
+      "size": 79615,
+      "sha256": "c5d747aa83e16056f9f08ee6e5091423684eca9fa26e7f59b5305f0e6f15c827"
+    },
+    {
+      "path": "public/logos/91_cusp_compass_icon.svg",
+      "size": 3370,
+      "sha256": "71bb28c1e40e11ed1d0e06b90a8649f332d08d50e5b909a251b2c7beb17abfae"
+    },
+    {
+      "path": "public/logos/91_cusp_compass_light.svg",
+      "size": 4013,
+      "sha256": "a4a31ec09a4a8990e385d5e904c2e61fd5bd713c0a0cb8ec55bedaae190170fe"
+    },
+    {
+      "path": "public/logos/91_cusp_compass_mono.svg",
+      "size": 1257,
+      "sha256": "17621ca4d05da683b09dad8a899a4147f4657bd69772e94cd7c398bc1d8682eb"
+    },
+    {
+      "path": "public/logos/91_cusp_compass_mono_white.svg",
+      "size": 1257,
+      "sha256": "a177926dcbb7e8b15f2a0fab99419d353ecffd7efe215da0aab1070bf7768e26"
+    },
+    {
+      "path": "public/logos/91_cusp_compass_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/91_cusp_compass_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/92_dental_beacon.svg",
+      "size": 4505,
+      "sha256": "1e653041ddbc850bba5f8a06061a81541aa1ee73d5901b849f3e4e05c93a247e"
+    },
+    {
+      "path": "public/logos/92_dental_beacon_icon.png",
+      "size": 81887,
+      "sha256": "9daeb1574efb05bfcccc791fe3861f5856536b0fff563c8a852777e1c1673cd3"
+    },
+    {
+      "path": "public/logos/92_dental_beacon_icon.svg",
+      "size": 3436,
+      "sha256": "9cb9669f6c2c6cf903d527ee411a1ef9f35acc8b12b46420c1cd461157ce41c8"
+    },
+    {
+      "path": "public/logos/92_dental_beacon_light.svg",
+      "size": 4516,
+      "sha256": "a88fe4519cab0fa06fae6f4973aec1a4687dd00b08f8555fd9350fa8bf990984"
+    },
+    {
+      "path": "public/logos/92_dental_beacon_mono.svg",
+      "size": 1703,
+      "sha256": "914024c4922dcd956a0d40e40cd8d1d4ce1967d7fcfe2215de6aa2f20d73d6f4"
+    },
+    {
+      "path": "public/logos/92_dental_beacon_mono_white.svg",
+      "size": 1703,
+      "sha256": "f32faff349c85694254df69f8931176808c2f71acfc9484133123e9f820a0fb7"
+    },
+    {
+      "path": "public/logos/92_dental_beacon_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/92_dental_beacon_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/93_dental_pulse.svg",
+      "size": 3768,
+      "sha256": "4b38c80a6e4b8f330b3a9f113ff2ddbaa8773a425c38f5c21a7236d3da9b8bde"
+    },
+    {
+      "path": "public/logos/93_dental_pulse_icon.png",
+      "size": 87149,
+      "sha256": "08a567c23f4b2a19ab4a0d9d154f36385b2fd7938590539864fddfeb6c09f3f5"
+    },
+    {
+      "path": "public/logos/93_dental_pulse_icon.svg",
+      "size": 3136,
+      "sha256": "8d9c4510727cf47e6374c580587980d082211d30da3bcc3518edcdb43b095aff"
+    },
+    {
+      "path": "public/logos/93_dental_pulse_light.svg",
+      "size": 3779,
+      "sha256": "c48ef7207fa5d5a38bf91d293fe2e12f6bf2ede5f259ce7b93a9dd1530b0edc8"
+    },
+    {
+      "path": "public/logos/93_dental_pulse_mono.svg",
+      "size": 1223,
+      "sha256": "3cf1ce0c0c5319247d7f036296bf55049a76c1cb55e5c1daf46881fb20742e7e"
+    },
+    {
+      "path": "public/logos/93_dental_pulse_mono_white.svg",
+      "size": 1223,
+      "sha256": "35823285b7e80efe4ca88889b7dfabcc24f0600e536af449af2c9c512a5e6eeb"
+    },
+    {
+      "path": "public/logos/93_dental_pulse_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/93_dental_pulse_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/94_infinity_arch.svg",
+      "size": 4626,
+      "sha256": "1af73458551f9b975e6cf0494e60252f097056524920c076d4a31b303332f157"
+    },
+    {
+      "path": "public/logos/94_infinity_arch_icon.png",
+      "size": 86288,
+      "sha256": "a6015fe215311a3a9cb148873416fb39605b8c2b6bf6da0dee7adaf0d9cf60c3"
+    },
+    {
+      "path": "public/logos/94_infinity_arch_icon.svg",
+      "size": 3557,
+      "sha256": "1160cc2df09903859e252bc399e69fca30f94ba45a62c023437a2fdd8cee94c7"
+    },
+    {
+      "path": "public/logos/94_infinity_arch_light.svg",
+      "size": 4637,
+      "sha256": "426a714a300130131203f263cd9e597023ea518651dccd6bab5649290012b3c3"
+    },
+    {
+      "path": "public/logos/94_infinity_arch_mono.svg",
+      "size": 1720,
+      "sha256": "73f01acaa8a86131129d72bf6baed5d6bfac568a31ef9514297384713c134bd3"
+    },
+    {
+      "path": "public/logos/94_infinity_arch_mono_white.svg",
+      "size": 1720,
+      "sha256": "a7bf7a3cf02ae241d00d804752a9080a3c7c79f8c500f8ff84e49d17ac2fda7c"
+    },
+    {
+      "path": "public/logos/94_infinity_arch_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/94_infinity_arch_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/95_origami_crown.svg",
+      "size": 3827,
+      "sha256": "caa091ec2f79c26be4059cef9a91bee7efc99d61f565134746eca7df89975a4e"
+    },
+    {
+      "path": "public/logos/95_origami_crown_icon.png",
+      "size": 86897,
+      "sha256": "6bdf80e774906adf5242a1a727fb5d2f3dcb384211cfdffee6138f5d95eb14ca"
+    },
+    {
+      "path": "public/logos/95_origami_crown_icon.svg",
+      "size": 3195,
+      "sha256": "6e928a6555e6b648402a4bf46583ac275107d55a5ce8588748def02ad58e9c97"
+    },
+    {
+      "path": "public/logos/95_origami_crown_light.svg",
+      "size": 3838,
+      "sha256": "c25668f1af675bb2541928eef20e6acbf857cbf625c75e1f83d89ea9159956f9"
+    },
+    {
+      "path": "public/logos/95_origami_crown_mono.svg",
+      "size": 1232,
+      "sha256": "61c0fcc715e3f95837989c7202538e98a546c0a151a8bf76793079a73836f891"
+    },
+    {
+      "path": "public/logos/95_origami_crown_mono_white.svg",
+      "size": 1232,
+      "sha256": "f88b451d4f6dd1a7ecc2c78eb392b612c14ecb091322c1d52f011ade7f91f8c7"
+    },
+    {
+      "path": "public/logos/95_origami_crown_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/95_origami_crown_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/96_prism_arch.svg",
+      "size": 3789,
+      "sha256": "c7d8df2fc91251b898d02b539b34353230e12fd9f432f47e01a39c752906314c"
+    },
+    {
+      "path": "public/logos/96_prism_arch_icon.png",
+      "size": 97102,
+      "sha256": "7e45e358a8e00a98e76ac69029334bdfdbb72297b870a433eba83fe9c1b57510"
+    },
+    {
+      "path": "public/logos/96_prism_arch_icon.svg",
+      "size": 3157,
+      "sha256": "dd2cd85149f1219dd37db54b41aeaa206f2db82bcf61782ed3d4a10920da8a2f"
+    },
+    {
+      "path": "public/logos/96_prism_arch_light.svg",
+      "size": 3800,
+      "sha256": "ecc8f61014c16515f4cc7a25ed26a915920af27dc191cba1615ff3579b94808f"
+    },
+    {
+      "path": "public/logos/96_prism_arch_mono.svg",
+      "size": 1226,
+      "sha256": "caa044e4c9642f40d4c676e770c321eca3cb47e7edf182efd3022312ce20ff30"
+    },
+    {
+      "path": "public/logos/96_prism_arch_mono_white.svg",
+      "size": 1226,
+      "sha256": "b9c39330c28e67a1e318e3346369b4ce148bcf3e47955923b47bd1e1e642bec4"
+    },
+    {
+      "path": "public/logos/96_prism_arch_word.svg",
+      "size": 1059,
+      "sha256": "14566054b86b9f3128b647055e7e20334d5b9890b71b7bd48ba8ed2bc3ab4f10"
+    },
+    {
+      "path": "public/logos/96_prism_arch_word_light.svg",
+      "size": 1059,
+      "sha256": "d0f0e5a86ec5bba45dce9922eb8c5b97c8bfc7f645c8fdcf08f977aeb778b862"
+    },
+    {
+      "path": "public/logos/97_faceted_molar.svg",
+      "size": 4330,
+      "sha256": "920d3584b24309dd6f09c01df120c7ab921370b015124866bb6cfd9c33c54d94"
+    },
+    {
+      "path": "public/logos/97_faceted_molar_icon.png",
+      "size": 85414,
+      "sha256": "d5dec33edfece7359baf352c48fb634c11e713b35927cc44a00ada0b5637d58f"
+    },
+    {
+      "path": "public/logos/97_faceted_molar_icon.svg",
+      "size": 3261,
+      "sha256": "9ced68422672b3439c78b4d21aeb0d7bac6b4b6c3af43278647d1d32183e280a"
+    },
+    {
+      "path": "public/logos/97_faceted_molar_light.svg",
+      "size": 4341,
+      "sha256": "38ef5c8a78fa88c11aa61007ac5b9c7504f69cdee1367704b5d76961d2185beb"
+    },
+    {
+      "path": "public/logos/97_faceted_molar_mono.svg",
+      "size": 1678,
+      "sha256": "aa068082cb97905d0d50bf9a3cd11639bc1150641b908fd42d9bd9d9bd96aea9"
+    },
+    {
+      "path": "public/logos/97_faceted_molar_mono_white.svg",
+      "size": 1678,
+      "sha256": "d229cd73bf25a2d5807ae20e1531d91b332268d38b6af98f415c50f82cf8ace7"
+    },
+    {
+      "path": "public/logos/97_faceted_molar_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/97_faceted_molar_word_light.svg",
+      "size": 1488,
+      "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
+    },
+    {
+      "path": "public/logos/98_union_crest.svg",
+      "size": 4610,
+      "sha256": "d35314ef3d4be0c4db89354d6f81472cd99a761482422328a200c00c653f1b03"
+    },
+    {
+      "path": "public/logos/98_union_crest_icon.png",
+      "size": 86996,
+      "sha256": "1c8b088a26241c5f3d6b6cd2c4c1a1032d2f9e2bde10eb521d96e32a1dbe8e0a"
+    },
+    {
+      "path": "public/logos/98_union_crest_icon.svg",
+      "size": 3473,
+      "sha256": "7c5aabb1b4e883c0b7ab1258d5b6a968ba57b9a1f03e0d87230ba6d00cb965b7"
+    },
+    {
+      "path": "public/logos/98_union_crest_light.svg",
+      "size": 4621,
+      "sha256": "59def7393d3a65a30f9ce402b591008fc13212e855d7d5f4ec6f1ffe56a036c3"
+    },
+    {
+      "path": "public/logos/98_union_crest_mono.svg",
+      "size": 1776,
+      "sha256": "3ee8026debe4663616c5e0104acfbe4c28aad3981542706fe12971e5a6b5279b"
+    },
+    {
+      "path": "public/logos/98_union_crest_mono_white.svg",
+      "size": 1776,
+      "sha256": "c6d60db09f2dbc969c4fc26d91a1f86bc258bce9271684b16a3f6d7aeece516d"
+    },
+    {
+      "path": "public/logos/98_union_crest_word.svg",
+      "size": 1556,
+      "sha256": "296f95d37b5d30e563a45794c2abb6bb9f175e6b7cec0aa95ddf86f0cf7e17ee"
+    },
+    {
+      "path": "public/logos/98_union_crest_word_light.svg",
+      "size": 1556,
+      "sha256": "a0cb7d6e3e740bb3abe396d13ef7e295a4e03ef528d6bd61e4f9120350b538e1"
+    },
+    {
+      "path": "public/logos/99_horizon_d.svg",
+      "size": 4152,
+      "sha256": "c70b50d981b26f78aa59b077a1e5137cbf9db7a4e9ffbd6be80b05b516a1f65b"
+    },
+    {
+      "path": "public/logos/99_horizon_d_icon.png",
+      "size": 85514,
+      "sha256": "a89dfeafeac44341da2035c1ba85904430e24600a698f1ba4fff385418edf817"
+    },
+    {
+      "path": "public/logos/99_horizon_d_icon.svg",
+      "size": 3083,
+      "sha256": "b57638c3d041ebd50cc050502db69acbc7e6e362c062a70c1a38ccff6ab44af5"
+    },
+    {
+      "path": "public/logos/99_horizon_d_light.svg",
+      "size": 4163,
+      "sha256": "93908ce2ca847d1ed5d95216899e8f5c1313aebbf0c511fb772733c6b5a1f807"
+    },
+    {
+      "path": "public/logos/99_horizon_d_mono.svg",
+      "size": 1653,
+      "sha256": "43a9ed03b1133ec80e0d5a986c020a8c062982f070a01569dc78a53d39a94af1"
+    },
+    {
+      "path": "public/logos/99_horizon_d_mono_white.svg",
+      "size": 1653,
+      "sha256": "4352c56f1f7c3f9ffa4921cac9184f7a0d6d6644026c1d1db23b7fec813cf217"
+    },
+    {
+      "path": "public/logos/99_horizon_d_word.svg",
+      "size": 1488,
+      "sha256": "8012c4f134b3b2668ce486f20af85a269aa14c2f05e028802f8ef415afec3e88"
+    },
+    {
+      "path": "public/logos/99_horizon_d_word_light.svg",
       "size": 1488,
       "sha256": "7880cd3d95c2f78767eaace785c7654663a7e4e27dfc1e37a5933365e0638683"
     },
@@ -2485,8 +6216,8 @@
     },
     {
       "path": "scripts/brand-source/build-icons.py",
-      "size": 646,
-      "sha256": "72a376813214e2b6787ad57c6fa6378610374befb4becf1ee811af8a892780b0"
+      "size": 406,
+      "sha256": "dbd639cba4842052de4d1cd820bd0c9becb4ed79ba6f2ee32ad1eac28b8b9692"
     },
     {
       "path": "scripts/brand-source/letterforms.json",
@@ -2495,8 +6226,8 @@
     },
     {
       "path": "scripts/build-brand-assets.py",
-      "size": 12126,
-      "sha256": "c13385ad232018caf05ee46cf366c36b3d86e2fd2990a92b0cd268d267bc0d56"
+      "size": 9988,
+      "sha256": "4d45bc1dc4e1e1f30704e5e88ab7443c2db9f718a47fce099974e88d853be1f6"
     },
     {
       "path": "scripts/build-community-setup.mjs",
@@ -2575,8 +6306,8 @@
     },
     {
       "path": "scripts/render-brand-assets.mjs",
-      "size": 1082,
-      "sha256": "58284ab7ae6cbfedeec218f1eec8a05022072c6ba04515bdd70b50aad1851627"
+      "size": 2630,
+      "sha256": "9151f4216d92637a4fba4ef7aa24bd3feb1eec64ee17841c2bbabc82acc09411"
     },
     {
       "path": "scripts/render-morphology-catalog.py",
@@ -2605,13 +6336,13 @@
     },
     {
       "path": "scripts/verify-aya-agent.cjs",
-      "size": 6609,
-      "sha256": "d2008d61cec043c5a40280689bcc8f5c0d211a45d1c5aa51b7ae4a9ec2b3094a"
+      "size": 12572,
+      "sha256": "015af6342e0c168ff7655a8080d3b57e52b56af463e57dc68f9fd68955d6e765"
     },
     {
       "path": "scripts/verify-aya-cad-agent.ts",
-      "size": 4940,
-      "sha256": "c47a88c7c940817e069a1475c0091d712c2afbbb4a2ee89fdd25aa3d63899c29"
+      "size": 5769,
+      "sha256": "df81ba7698a1c4872dc0dae4507b6916310daaec09e54d89eab6b2c2cf6924ea"
     },
     {
       "path": "scripts/verify-aya-cad-dialogue.cjs",
@@ -2630,8 +6361,8 @@
     },
     {
       "path": "scripts/verify-aya-conversation-browser.mjs",
-      "size": 19810,
-      "sha256": "e9dd9dd4411e7d283bcf91c8c1db3b83e0da1ab9d5873a1aee8b725108f1aacd"
+      "size": 20803,
+      "sha256": "9c393ba498df8d47ba5a0a7b175ad70d27c1bfd53b41cdb480bca3ac5a33fc93"
     },
     {
       "path": "scripts/verify-aya-conversation.ts",
@@ -2640,8 +6371,8 @@
     },
     {
       "path": "scripts/verify-aya-core.cjs",
-      "size": 4240,
-      "sha256": "275a988bae670cf6b86eddd6ea6e8be46fc7f1b876b6ac1e9189430482fc3c35"
+      "size": 7709,
+      "sha256": "37fbd5e9ccd7bf17681b1de3ff73721bf4ab2af1f3174471e4ff97fac979577e"
     },
     {
       "path": "scripts/verify-aya-dialogue.cjs",
@@ -2660,8 +6391,8 @@
     },
     {
       "path": "scripts/verify-aya-managed.cjs",
-      "size": 8180,
-      "sha256": "2502647fa88d567b5ebb609de4bbf78053acae692c5a85f9e32ad1f958dacfea"
+      "size": 10468,
+      "sha256": "9bb03110f35155a1e1d21800450105425101e83aa4df61a1edfb13b57858a20e"
     },
     {
       "path": "scripts/verify-aya-memory.cjs",
@@ -2670,13 +6401,18 @@
     },
     {
       "path": "scripts/verify-aya-native-grammar.cjs",
-      "size": 5855,
-      "sha256": "66c53d9a35433973f7d580178cb62f406733b40024e58f799a60e885311b6b21"
+      "size": 7074,
+      "sha256": "70573bd7e2bc2dc1906873b3dee7fc3a188b25a66d6f55cd2705f2b38e523a30"
     },
     {
       "path": "scripts/verify-aya-native.cjs",
-      "size": 6842,
-      "sha256": "c0c65d3ab054bb69a6ce47f34d6c320e8b2a5bf63946ca44cfb93b3313b96d31"
+      "size": 8463,
+      "sha256": "c4736db7cf5c7bab0bbacd38beb0f99cfc468b206e9b40ffa245be17c7fca618"
+    },
+    {
+      "path": "scripts/verify-aya-references.ts",
+      "size": 2966,
+      "sha256": "a02738d81f254108447c7146ecc57e62fba1db32065eca2022eebb24580f4a3c"
     },
     {
       "path": "scripts/verify-aya-request.ts",
@@ -2705,13 +6441,13 @@
     },
     {
       "path": "scripts/verify-brand-assets.mjs",
-      "size": 4363,
-      "sha256": "6f1779e6404746f6211b7fe9206b8e99a64de7d1a33ef9dc102e6e293adf87f8"
+      "size": 5469,
+      "sha256": "ecfd779f69bc4eb35918ef6d1718d0945ab97b63277fe56a78a614656fa08088"
     },
     {
       "path": "scripts/verify-brand-browser.mjs",
-      "size": 12715,
-      "sha256": "e57fafab641907ec93724671503ee56a50fdc2f7148a41169f3f9f126f52ffd6"
+      "size": 13907,
+      "sha256": "e55bbfc9acd320b6d485705a37d2292f3bf0363b31bfae7b59374eac58a486c2"
     },
     {
       "path": "scripts/verify-bundled-languages.mjs",
@@ -2725,8 +6461,8 @@
     },
     {
       "path": "scripts/verify-cad-daily-browser.mjs",
-      "size": 46062,
-      "sha256": "329508bc3a13cf7245ee89780eb0600055123786ede99809290e3d13413c65b6"
+      "size": 46317,
+      "sha256": "e645ef12bf3fb8fbba3b452385ed2bbe703d34510bcedec9fdd5b6c49acbcf54"
     },
     {
       "path": "scripts/verify-cad-daily.ts",
@@ -2752,6 +6488,16 @@
       "path": "scripts/verify-cad-guided.ts",
       "size": 7417,
       "sha256": "3a25fae5a3bc750d7696f2ddec4a540076fae632cc504c3e76e2e037030d953a"
+    },
+    {
+      "path": "scripts/verify-cad-inspection-browser.mjs",
+      "size": 24778,
+      "sha256": "c93a85f024509ca62afdd8f87a54f46ed1bac5436f4599ba1532ed871493677b"
+    },
+    {
+      "path": "scripts/verify-cad-inspection.ts",
+      "size": 8197,
+      "sha256": "8b7022bb1d40cb93e32f31d6047d954ee3573efc7bb2883d30399aefa458a2a2"
     },
     {
       "path": "scripts/verify-cad-interaction.mjs",
@@ -2795,13 +6541,13 @@
     },
     {
       "path": "scripts/verify-dental-facts.ts",
-      "size": 6585,
-      "sha256": "0a1965cee8eac008dbddfd86b67e58619377f4b9bc82894ac6c87e1dd6c31fdc"
+      "size": 8060,
+      "sha256": "7d35d8a8df7e3a8bfc3b4b10042d51fa31ac8238e92974ad1f3caf83970f7d05"
     },
     {
       "path": "scripts/verify-desktop-brand.cjs",
-      "size": 1844,
-      "sha256": "b3ced6f5f609dfe2c69288b738c1c596adc5b994052c7efd2f473b1239fca7b8"
+      "size": 1846,
+      "sha256": "d2cd594aeca95535bcf7e6c268ae02a4062a9101f0f4162869e09715a92024f0"
     },
     {
       "path": "scripts/verify-desktop-language.cjs",
@@ -2845,8 +6591,8 @@
     },
     {
       "path": "scripts/verify-loading-play.ts",
-      "size": 5407,
-      "sha256": "d794fbf3898071143c5694ffaa51383d495606a9619a8bf8be9bda501a5df80f"
+      "size": 5545,
+      "sha256": "c45229ef74c2ddbcdc51c63581bc54545ac4cddc19694999aa28062dbac44e41"
     },
     {
       "path": "scripts/verify-loading-reading-browser.mjs",
@@ -2855,8 +6601,8 @@
     },
     {
       "path": "scripts/verify-local-aya.cjs",
-      "size": 6097,
-      "sha256": "ee9e92ca519f8ffa87ad6cb1e4b5e8417161e324fc6721e3b4de9279cab8bfa9"
+      "size": 8873,
+      "sha256": "b9a39b82b8422243824e87179304ff9f8f8a7606dcb2eaed72ba6231a9530b40"
     },
     {
       "path": "scripts/verify-localization.ts",
@@ -2971,7 +6717,7 @@
     {
       "path": "scripts/verify-ui-browser.mjs",
       "size": 31850,
-      "sha256": "f032902045ad741f4e5a9016fd8570ae825c13792ca6513095b7e9a34574de74"
+      "sha256": "b317f7957fa0ee799bdb03be45012be9f0201eed1c7a437f38df6eda36a6b76d"
     },
     {
       "path": "scripts/verify-validation-browser.mjs",
@@ -3010,8 +6756,8 @@
     },
     {
       "path": "src/app/BrandLogo.tsx",
-      "size": 6492,
-      "sha256": "a906ca03003a412cb8f926ccdc51ba5b7ced67b0319a194f409c14d53fd31ce0"
+      "size": 4596,
+      "sha256": "ca630376332bb66a25a6448a585a6efda56a44fceb18ff4e036ba611e328adee"
     },
     {
       "path": "src/app/ConnectionStatus.tsx",
@@ -3085,8 +6831,8 @@
     },
     {
       "path": "src/app/LogoPicker.tsx",
-      "size": 4234,
-      "sha256": "65f5b4b757f73e214f8bf64206d065a6e1f7c83a8c6920521a0c97f751ff3f3e"
+      "size": 4348,
+      "sha256": "537ca328d18e145b745927e0c4178203a5a6a0610ac7c5dee64b8616e0449158"
     },
     {
       "path": "src/app/ModuleNavigation.tsx",
@@ -3145,8 +6891,8 @@
     },
     {
       "path": "src/app/ai/AyaChat.tsx",
-      "size": 20374,
-      "sha256": "bfd3bf7e85a75549b657d40fc004bb23bb8757c2a842ffb4837d0477aa1f88e4"
+      "size": 20340,
+      "sha256": "f2923453e2970a19a23f7b1a8b1f503803dfb07e8f5128dcde68e9eecd6ed8a9"
     },
     {
       "path": "src/app/ai/AyaConnection.tsx",
@@ -3189,6 +6935,11 @@
       "sha256": "5905cc19a9c4096cf8e769c04f7d2f83ac0e3ea7107fc58264f077e0cfba5a94"
     },
     {
+      "path": "src/app/ai/AyaSources.tsx",
+      "size": 1590,
+      "sha256": "f2494bb2589531b05c4b4b445e3cc1263107733b0d4e87a0e6bcd1deffd5e944"
+    },
+    {
       "path": "src/app/ai/AyaWorkingMemoryPanel.tsx",
       "size": 3700,
       "sha256": "19533c8e544c97544c29c7f76171b38a812b62df11d4df0403061dd3e92f329b"
@@ -3202,6 +6953,11 @@
       "path": "src/app/ai/aya-catalog.css",
       "size": 12258,
       "sha256": "e8f6a47ec5d5fc0bc0d08dcd03d5b23fab2594ac3653580a15635f6348b88ac8"
+    },
+    {
+      "path": "src/app/ai/aya-sources.css",
+      "size": 925,
+      "sha256": "da6c83b89b5ea263770f70ab75f51e4b7f53bbc2fa204c44c29ab18179b57ab1"
     },
     {
       "path": "src/app/ai/page.tsx",
@@ -3320,8 +7076,8 @@
     },
     {
       "path": "src/app/design/CadAyaPanel.tsx",
-      "size": 15604,
-      "sha256": "3e68701538d34f25cee38487a22b807ecbe17c07c18b91167cbbe06372d0e5b4"
+      "size": 15795,
+      "sha256": "dcba3fd7e543729bb123fd0653228552e8ba6cd4fd9d095a3dc2fbcdaa774bd2"
     },
     {
       "path": "src/app/design/CadBrushPresets.tsx",
@@ -3340,8 +7096,13 @@
     },
     {
       "path": "src/app/design/CadIcon.tsx",
-      "size": 8264,
-      "sha256": "a97a660625bf20b9e6cbcd83ba46bd1daf2f6ee7ebe4cda8d5227d893186b2d6"
+      "size": 8426,
+      "sha256": "a5f484e98e21626f902e87671e140707cf2b2f1a54b901f250f39992b1ed896c"
+    },
+    {
+      "path": "src/app/design/CadInspectionPanel.tsx",
+      "size": 6927,
+      "sha256": "d58c04e3a927bc62f85382b0f5e8c13deb22f4ea24b1d0f1e30c286bfd609755"
     },
     {
       "path": "src/app/design/CadJobSetupPanel.tsx",
@@ -3370,18 +7131,18 @@
     },
     {
       "path": "src/app/design/DesignStudioClient.tsx",
-      "size": 172194,
-      "sha256": "ea7419842646d79a14f46d1dd9ec60686dbe7fa45587751a274c7cea6de903a5"
+      "size": 175387,
+      "sha256": "7e9137cdca8fbf4a5e6f3cf7d47621d3917fb455c1171f97916e83b4462e8ea6"
     },
     {
       "path": "src/app/design/DesignViewport.tsx",
-      "size": 131014,
-      "sha256": "70c6959ff662e4c8406e287405d2506e021d5aadd7eff93892b1952ffb2c37d0"
+      "size": 142558,
+      "sha256": "191555fa122abd0952619325535173ec640520a51f8aa6963e1f1cec74310c85"
     },
     {
       "path": "src/app/design/cad-workspace.css",
-      "size": 53543,
-      "sha256": "d3e8d1abbf3d27ac3d5392517c689b0576f69d5c3e494be2af19a675ac496853"
+      "size": 56927,
+      "sha256": "802afe76476e06298681e17cd45ff27cb6ab779a04500ebbabb9cc9abfdc5a31"
     },
     {
       "path": "src/app/design/page.tsx",
@@ -3635,13 +7396,13 @@
     },
     {
       "path": "src/lib/aya-cad-agent.ts",
-      "size": 4910,
-      "sha256": "a4403c9fd12efcbebfd17707d5056a0a7bda8f281537ebc45c3642dbd87281bd"
+      "size": 5041,
+      "sha256": "949f70bfb6dc4ad3ee47ff7b5150a94d681f360fb3078acd1dcb1d433f0b9a4b"
     },
     {
       "path": "src/lib/aya-cad-assistance.ts",
-      "size": 3269,
-      "sha256": "711a29d73a2db44049661446ae6256e5267f62b6c9bc557061a4df888cf63580"
+      "size": 3346,
+      "sha256": "a7dad34617744adc546e2be96d44f19bf1ca85b4e297d51f8a6e6264e4820735"
     },
     {
       "path": "src/lib/aya-command-engine.ts",
@@ -3650,8 +7411,8 @@
     },
     {
       "path": "src/lib/aya-conversation.ts",
-      "size": 5135,
-      "sha256": "0d449f3de193715790e6f06035385417ac715efcad9c89f52eb7cc819db54e08"
+      "size": 5212,
+      "sha256": "422e30537174146e79b48193801c50a90bfb1708a1365c8f87b05bdd8e324e6e"
     },
     {
       "path": "src/lib/aya-download-status.ts",
@@ -3680,13 +7441,23 @@
     },
     {
       "path": "src/lib/aya-local-state.ts",
-      "size": 4211,
-      "sha256": "33d4cd5c71519d456f57090d43d3f64b99d9ab6bf2b54214cadcdc3dfd509937"
+      "size": 4036,
+      "sha256": "9173f2be46dd11d6fc88a1b7061e5de57af942540fd62474bb4ec7ab518d3b89"
     },
     {
       "path": "src/lib/aya-platform-copilot.ts",
       "size": 9231,
       "sha256": "143564e87ffdd41d1a88635e54e94392ca9ecfce7b5c3b7f92ce32db166eff53"
+    },
+    {
+      "path": "src/lib/aya-references.ts",
+      "size": 1338,
+      "sha256": "fc62fbbac2819722f000d7d958189cae5eb91ee900bdb40c568de4b1727762ff"
+    },
+    {
+      "path": "src/lib/brand-catalog.ts",
+      "size": 701,
+      "sha256": "f8fe123f6b76428888816ee133fa61cffee413ce6ba2fb518e314e12486628d0"
     },
     {
       "path": "src/lib/cad-camera-motion.ts",
@@ -3727,6 +7498,11 @@
       "path": "src/lib/cad-freeform-engine.ts",
       "size": 2385,
       "sha256": "415070e104a5360ea418af7402d405b00064cacc15c90ab706045ce4513b1a13"
+    },
+    {
+      "path": "src/lib/cad-inspection.ts",
+      "size": 7646,
+      "sha256": "e4f24306376e1be95c1c06c5d25b97e424225ec031888b05f7ce0ce4f730fd2c"
     },
     {
       "path": "src/lib/cad-internal-fit-engine.ts",
@@ -3840,8 +7616,8 @@
     },
     {
       "path": "src/lib/dentaya-cad-tool-matrix.ts",
-      "size": 48336,
-      "sha256": "d772b6bbd9b401b97534f66a143db981971926ab23857cf1ed38e37400a28aa3"
+      "size": 52346,
+      "sha256": "bec68cecfbba2b1e9baffa1edb00c8898341e3142fe7adb8305aba01f354f95e"
     },
     {
       "path": "src/lib/dentaya-errors.ts",
@@ -3910,8 +7686,8 @@
     },
     {
       "path": "src/lib/i18n/aya-agent.ts",
-      "size": 6188,
-      "sha256": "df733be45a3e000239495aa072331324ffb3c2c50ee19c12d56e58ff2eaf1214"
+      "size": 6438,
+      "sha256": "fde82b6744029e806ef4fb9cdfad0b703ddc8e63bc7e297a3b254b4b09c99cdf"
     },
     {
       "path": "src/lib/i18n/aya-catalog.ts",
@@ -3920,18 +7696,23 @@
     },
     {
       "path": "src/lib/i18n/aya-experience.ts",
-      "size": 6710,
-      "sha256": "423c8ca20fc4d91260fa58d873320b92fded6296de7845daed2a0c25fb9c62e9"
+      "size": 6899,
+      "sha256": "acd260b04c191929cbc66447870f55e0c65afbaf35905b72f5fce56e3a1a9613"
     },
     {
       "path": "src/lib/i18n/brand.ts",
-      "size": 3619,
-      "sha256": "adb40ef8ed3c5945f18c8f2d517ec52adfdb1170028f1bb8164e4b6d42a69b10"
+      "size": 1474,
+      "sha256": "d4ecec8dbb237f5511d9c8516438be13d480333b0526ffdb547856d623137f30"
     },
     {
       "path": "src/lib/i18n/bundled.ts",
       "size": 1794,
       "sha256": "0bf515b9b47c3594dd1cb7920143b08a264e98d4a1cb25101e53b19bfeec72af"
+    },
+    {
+      "path": "src/lib/i18n/cad-inspection.ts",
+      "size": 2486,
+      "sha256": "96df7e44ee4ffc69c1dadc9f7ab667c751864c8f23731ed69b9dce11acebb407"
     },
     {
       "path": "src/lib/i18n/catalog-extra.tsv",
@@ -3950,8 +7731,8 @@
     },
     {
       "path": "src/lib/i18n/dental-facts.json",
-      "size": 58525,
-      "sha256": "bc031d1c294477301802658d91466c6070b8218c2c11963668caa0883ba55c39"
+      "size": 326731,
+      "sha256": "e28894f0b55e3c733dc1b9558d5f67e8ba21a05c4f1a611de2e6b56dfd781eae"
     },
     {
       "path": "src/lib/i18n/dental-glossary.tsv",
@@ -4461,7 +8242,7 @@
     {
       "path": "src/lib/release.ts",
       "size": 418,
-      "sha256": "b998a22ed4241d393984784b87b6d88510de633a97e30415e05f7d48c61b4766"
+      "sha256": "e6dadfd4c6640fe937eba572334cc50f6cf0f5582af7202dc98defcc6726bdda"
     },
     {
       "path": "src/lib/retry.ts",
@@ -4496,7 +8277,7 @@
     {
       "path": "src/lib/supabase.ts",
       "size": 1108,
-      "sha256": "4684d1a4d9cf690e8aa6a7b87c587ecbaee359545559af8e92ff81dbc3ac51b4"
+      "sha256": "deab228a90f7ea06c2a16982a5122617e09d0d84a4ce7ebfc95695ed54776c1d"
     },
     {
       "path": "src/lib/system-messages.ts",
@@ -5622,6 +9403,271 @@
       "path": "verification/RC52/verify.txt",
       "size": 36030,
       "sha256": "df2ccde9a3c95f69f7daf557196bf889570f940db45509c1cfa26e804ce7398b"
+    },
+    {
+      "path": "verification/RC53/RC53_appearance_palette-desktop.png",
+      "size": 27882,
+      "sha256": "93aa6525569f85315ac47fb247011f829000321c72eddfdcd761d09a714dd015"
+    },
+    {
+      "path": "verification/RC53/RC53_appearance_palette-mobile.png",
+      "size": 24265,
+      "sha256": "dfd49749d85dc140a8b701874b02721c17cb02165d1b2ffe6b12b105ef1c534c"
+    },
+    {
+      "path": "verification/RC53/RC53_aya-conversation_AYA_RC49_basic_dialogue.png",
+      "size": 82698,
+      "sha256": "8a7514cc6c38af546bb764a22e343bd9229837dfa5fb33be07b25012ca241dc1"
+    },
+    {
+      "path": "verification/RC53/RC53_aya-conversation_AYA_RC49_identity.png",
+      "size": 69172,
+      "sha256": "8898a778be8e4393edbe0963a6e3b064decd2b9b387b45fe0726ff277e7e3a57"
+    },
+    {
+      "path": "verification/RC53/RC53_aya-conversation_AYA_conversation_desktop.png",
+      "size": 63106,
+      "sha256": "9f02dd4af5370de9d021288a8d387a11e13c7d6681c8a386f2e26c3cbd31b015"
+    },
+    {
+      "path": "verification/RC53/RC53_aya-conversation_RC46_AYA_mobile.png",
+      "size": 60030,
+      "sha256": "0c5b83591e0bc56cf8b4064af2493683d6ea82318872cd192649912305809e00"
+    },
+    {
+      "path": "verification/RC53/RC53_aya-work_AYA_RC50_memory_and_multistep.png",
+      "size": 80019,
+      "sha256": "8e84d975f0620b9bc643eb0a5fdccb459d34b9c27545f4bab443f2e6f601dbc3"
+    },
+    {
+      "path": "verification/RC53/RC53_aya-work_AYA_RC50_model_receives_explicit_memory.png",
+      "size": 69789,
+      "sha256": "cbcd175a36b51d73ec43195563cff19860b319f25c39b40c468956972cf3f60b"
+    },
+    {
+      "path": "verification/RC53/RC53_aya-work_AYA_RC50_offline_place_proposal.png",
+      "size": 93137,
+      "sha256": "8ad49e310647796b67f70bb723cf09d18026dd241656d2c9b9cded9fad7eba6f"
+    },
+    {
+      "path": "verification/RC53/RC53_brand_DentAYA_Premium_logos_desktop.png",
+      "size": 386674,
+      "sha256": "f6130bbe4232c233caf0f665a471fbfb215e06d52d60e4afb03e391d40e824ed"
+    },
+    {
+      "path": "verification/RC53/RC53_brand_DentAYA_Premium_logos_mobile.png",
+      "size": 100547,
+      "sha256": "3149ecbd5341905932e372485f55d3126bb0620260911168bc66a605ec9ff510"
+    },
+    {
+      "path": "verification/RC53/RC53_brand_DentAYA_Premium_main_logo.png",
+      "size": 9609,
+      "sha256": "331ee22cc76aac18add50f331f34982f1590cb3499d5216c2cc8c27f20a0868e"
+    },
+    {
+      "path": "verification/RC53/RC53_cad-daily_RC40_CAD_AYA.png",
+      "size": 228417,
+      "sha256": "5a875c7c20d00aa65b8bbc777b08b705fc7f7088c8dbd60f4cefb136849300fd"
+    },
+    {
+      "path": "verification/RC53/RC53_cad-daily_RC51_CAD_daily.png",
+      "size": 215158,
+      "sha256": "95bf09558921bc3c3fbbe404f53c03cd879bc56b3d46414b42933906f4f586be"
+    },
+    {
+      "path": "verification/RC53/RC53_cad-inspection_CAD_Inspection_Desktop.png",
+      "size": 440163,
+      "sha256": "56a7dce22ab7d8801c150165301fde67af1b7408957902e1201e6036ab3de313"
+    },
+    {
+      "path": "verification/RC53/RC53_cad-inspection_CAD_Inspection_Mobile.png",
+      "size": 118010,
+      "sha256": "5d4c025d8de8a3af263e45b7a403da42a73f0f580bbbf74061a6b1f62f151f65"
+    },
+    {
+      "path": "verification/RC53/RC53_cad-library_RC41_CAD_daily.png",
+      "size": 252564,
+      "sha256": "0bc9f6854f07ca37e1102171423b5c0c626582d00ea44ec2087bb787d7f83511"
+    },
+    {
+      "path": "verification/RC53/RC53_cad-library_RC52_CAD_Library.png",
+      "size": 233461,
+      "sha256": "657ebab7a64d214c4d543a4fbe010abd5a69765065d78d0768095f4e5d994bfd"
+    },
+    {
+      "path": "verification/RC53/RC53_desktop-shell_desktop-ai-1366.png",
+      "size": 106459,
+      "sha256": "0528ec9c9b43a12dbc82ab028a130cf9559a3d0afd570a777b05355b51294993"
+    },
+    {
+      "path": "verification/RC53/RC53_desktop-shell_desktop-ai-1440.png",
+      "size": 131567,
+      "sha256": "0d7143d7d37081cd35074e8e6acf1669344e2519b3303503d992f1c800c446a7"
+    },
+    {
+      "path": "verification/RC53/RC53_desktop-shell_desktop-ai-390.png",
+      "size": 45431,
+      "sha256": "6fa7159549a8f055ed309a82f0bb24f98d20c8380db8d0df9fe277000d39ced4"
+    },
+    {
+      "path": "verification/RC53/RC53_desktop-shell_desktop-appointments-1366.png",
+      "size": 122707,
+      "sha256": "2a263824a7a8f3c9bc224fa3a08a14f32e542a3e9bfc59619c06e848a9b55ec4"
+    },
+    {
+      "path": "verification/RC53/RC53_desktop-shell_desktop-appointments-1440.png",
+      "size": 142180,
+      "sha256": "5fc1382339c875c9307bba3c99553f98f88d214f375002ad62b90961c8b63ce5"
+    },
+    {
+      "path": "verification/RC53/RC53_desktop-shell_desktop-appointments-390.png",
+      "size": 47761,
+      "sha256": "b01dbabc7198b7e0d14094173457c8a9254e26b31d33fa4e68762c9ce9126f2d"
+    },
+    {
+      "path": "verification/RC53/RC53_desktop-shell_desktop-finance-1366.png",
+      "size": 150615,
+      "sha256": "b48d438b7cf264f73f37c41c171cb0a2b3ce4752a44fa106825d2771f4b9d259"
+    },
+    {
+      "path": "verification/RC53/RC53_desktop-shell_desktop-finance-1440.png",
+      "size": 181560,
+      "sha256": "9ff5b94471fefb73f826b56cc88b1fc032047fd96eb981d0600c829a3f2e32c4"
+    },
+    {
+      "path": "verification/RC53/RC53_desktop-shell_desktop-finance-390.png",
+      "size": 54671,
+      "sha256": "c2a131860caa26d8f8ee9f11ea583e611668dda812490ad7eb1c859bb4ef38d3"
+    },
+    {
+      "path": "verification/RC53/RC53_desktop-shell_desktop-messages-1366.png",
+      "size": 146761,
+      "sha256": "715df185f9d077e5514553b2f18692dd0836ca310251f7271e645f17fa9f9e1a"
+    },
+    {
+      "path": "verification/RC53/RC53_desktop-shell_desktop-messages-1440.png",
+      "size": 190163,
+      "sha256": "afabd7b20306ca4b2dc5d74f238e1e1b89a8a9b52aa19a6d314ad15f9228dddb"
+    },
+    {
+      "path": "verification/RC53/RC53_desktop-shell_desktop-messages-390.png",
+      "size": 62351,
+      "sha256": "64db2ded030aeb5aa80860935afde9b7cc14df101c2ad2da08f431b5b993f919"
+    },
+    {
+      "path": "verification/RC53/RC53_desktop-shell_desktop-patients-1366.png",
+      "size": 106451,
+      "sha256": "e1af4964a2f878288d868218b803ec4bd320bab11943f0fd3d933764fb6df26c"
+    },
+    {
+      "path": "verification/RC53/RC53_desktop-shell_desktop-patients-1440.png",
+      "size": 119221,
+      "sha256": "dbedabbce1da1d07e871eb0f0f526445571c78717c650cdb60fe1eb09bcbe156"
+    },
+    {
+      "path": "verification/RC53/RC53_desktop-shell_desktop-patients-390.png",
+      "size": 44831,
+      "sha256": "9135142962c22e77893ff63555145501b9c86c1ac207788571a818b556838d3a"
+    },
+    {
+      "path": "verification/RC53/RC53_desktop-shell_desktop-workspace-1366.png",
+      "size": 134591,
+      "sha256": "3b13be8b3e8f01b0d09e15ffe316c845d22adca04def258079f6057a03242f51"
+    },
+    {
+      "path": "verification/RC53/RC53_desktop-shell_desktop-workspace-1440.png",
+      "size": 148412,
+      "sha256": "2d2c81da9d25b9b54a74c8eb101411bbdf69f5e4d7091b3c7373f1b5bf09f2c6"
+    },
+    {
+      "path": "verification/RC53/RC53_desktop-shell_desktop-workspace-390.png",
+      "size": 55326,
+      "sha256": "1321130bbef970507dfdbe678e580a779340535fa24b25cd0acdaa617b930e69"
+    },
+    {
+      "path": "verification/RC53/RC53_loading-reading_loading-ready-mobile.png",
+      "size": 22478,
+      "sha256": "249867be60dfcd54415c12f364abcd1eba4b3e2f8dd8cd4e443da57aebd841b9"
+    },
+    {
+      "path": "verification/RC53/appearance-browser.txt",
+      "size": 975,
+      "sha256": "c248e34d5da883a783da2accba7fad6bb8db8a0a645dcac8ea7723b234cefeaa"
+    },
+    {
+      "path": "verification/RC53/aya-conversation-browser.txt",
+      "size": 765,
+      "sha256": "3f1a8448e2c4824cb79df83fb7b1839071fcfb6cd918e9d1b904fb10cefdcd17"
+    },
+    {
+      "path": "verification/RC53/aya-work-browser.txt",
+      "size": 1020,
+      "sha256": "eadebf12ba9bff3d0a824cf8bc5972e0295b47ad21f24c8e0fba9e50ad33d624"
+    },
+    {
+      "path": "verification/RC53/brand-browser.txt",
+      "size": 524,
+      "sha256": "449f7c767936bc9d346f97560cdb2d41cb307c63be00e56411cf0f98480515d9"
+    },
+    {
+      "path": "verification/RC53/browser-results.json",
+      "size": 37647,
+      "sha256": "7727b807ab14f440f5dcf81309b4edf95dcb19a9db206eca5ebf6ef75e164bab"
+    },
+    {
+      "path": "verification/RC53/cad-daily-browser.txt",
+      "size": 2285,
+      "sha256": "d230727703c6174f4d2bcb9295a9322b7b47e33dc425b8e3862c854d38dc4b2d"
+    },
+    {
+      "path": "verification/RC53/cad-inspection-browser.txt",
+      "size": 949,
+      "sha256": "a5e8e0fbf3957fcc8ef51cd4cfc9f2a863baabca484440881de23ad94fae876d"
+    },
+    {
+      "path": "verification/RC53/cad-library-browser.txt",
+      "size": 1833,
+      "sha256": "d3398c32ca71de75d4ab4c38790a3d825c34e1db8c7196150c6e3f28bf46428b"
+    },
+    {
+      "path": "verification/RC53/desktop-shell-browser-report.json",
+      "size": 25693,
+      "sha256": "bad9dad3dae83a69de946f2d8396570e4c74235702db6067e6edcba54ee7adc9"
+    },
+    {
+      "path": "verification/RC53/desktop-shell-browser.txt",
+      "size": 1335,
+      "sha256": "e17b206238bd83818c2600352359f3e145bfd677bc746619c8200671effa43b4"
+    },
+    {
+      "path": "verification/RC53/loading-reading-browser.txt",
+      "size": 721,
+      "sha256": "0e879a21698dc087543123b44a58b5be5cd598acf348b42231cde07260059984"
+    },
+    {
+      "path": "verification/RC53/native-feasibility-report.json",
+      "size": 1687,
+      "sha256": "ded3225ef8a96a8610cf7883365479201f5db7e7e0006e9d609a8a9cf2ab16ab"
+    },
+    {
+      "path": "verification/RC53/native-grammar-report.json",
+      "size": 3235,
+      "sha256": "3187aca8d30a0fd4beec782f0d672832ba151f878e6f55600657e93f173bf13a"
+    },
+    {
+      "path": "verification/RC53/native-inference-report.json",
+      "size": 1277,
+      "sha256": "1fea758b92fd9457b5d5116a8c7666f29b5701d7479c6c8eb511fa7d3b5112f2"
+    },
+    {
+      "path": "verification/RC53/source-verification.json",
+      "size": 26780,
+      "sha256": "292b4e218351cac72908d6da0d48bb92b8263fbcb802f5791e23fdb378438447"
+    },
+    {
+      "path": "verification/RC53/verify.txt",
+      "size": 37396,
+      "sha256": "38972abb740eef6fb54b83b9fb3ff83374aa95671050e02cd0a634550bc37d86"
     },
     {
       "path": "verification/professional/aya.json",

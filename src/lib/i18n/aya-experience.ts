@@ -1,5 +1,6 @@
 // AYA's conversation shell keeps existing language packs and uses English for new copy outside Turkish.
 const tr = {
+ selectedSources:'Seçilen kaynaklar',externalSource:'Dış kaynak, yeni sekmede açılır',
  title:'AYA',subtitle:'Çalışma asistanınız',back:'Çalışma alanı',newChat:'Yeni sohbet',settings:'Sohbet ayarları',close:'Kapat',
  conversation:'AYA sohbeti',checking:'Bağlantı kontrol ediliyor',answering:'Yanıt hazırlanıyor',coreStatus:'Core · çevrimdışı rehber',modelReady:'Yerel model hazır',modelVerified:'Yerel model · yanıt alındı',modelFailed:'Son istek tamamlanamadı',
  localNote:'Mesajlarınız bu bilgisayarda işlenir.',coreNote:'Bilgi rehberi ve çalışma araçları kullanıma hazır.',browserNote:'Tarayıcıda Core rehberi açıktır. Açık uçlu sohbet için masaüstünde yerel model kurabilirsiniz.',
@@ -16,6 +17,7 @@ const tr = {
  modelError:'Yerel model yanıt veremedi. Sohbet ayarlarından motoru ve model seçimini kontrol edin.',statusError:'Yerel motor kontrol edilemedi.',storageError:'Sohbet bu cihazda saklanamadı.',modelStorageError:'Model tercihi bu cihazda kaydedilemedi.',
 };
 const en: typeof tr = {
+ selectedSources:'Selected references',externalSource:'External reference, opens in a new tab',
  title:'AYA',subtitle:'Your work assistant',back:'Workspace',newChat:'New conversation',settings:'Conversation settings',close:'Close',
  conversation:'AYA conversation',checking:'Checking connection',answering:'Preparing a reply',coreStatus:'Core · offline guide',modelReady:'Local model ready',modelVerified:'Local model · response received',modelFailed:'Last request could not complete',
  localNote:'Messages are processed on this computer.',coreNote:'The information guide and work tools are ready.',browserNote:'Core guidance is available in the browser. Install a local model in the desktop app for open-ended conversation.',

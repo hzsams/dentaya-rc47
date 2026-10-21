@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const LOGOS = ['01_dental_form','02_dental_arch','03_cad_geometry','04_scan','05_orbit','06_crown','07_prism','08_wave','09_link','10_spark','11_layer','12_shield','13_apex','14_diamond','15_focus','16_flow','17_petal','18_bridge'];
+const LOGOS = require('./brand-catalog.json').logos.map(logo => logo.file);
 function updateDesktopIcon({app,shell,logo,platform=process.platform,executable=process.execPath}) {
   if (platform !== 'win32' || !app.isPackaged) return {ok:false,message:'Masaüstü simgesi kurulu Windows uygulamasında değiştirilebilir.'};
   if (!LOGOS.includes(logo)) return {ok:false,message:'Bu logo desteklenmiyor.'};

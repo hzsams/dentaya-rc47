@@ -9,6 +9,7 @@ import {ayaDocumentGuide} from './aya-guide';
 import {ayaCadHelp,type AyaCadContext} from './aya-cad-assistance';
 import {normalizeMemory,type AyaWorkingMemory,type AyaProposal} from '../../electron/aya/agent.cjs';
 import type {AyaMessage,AyaOptions} from './aya-local-state';
+import {normalizeAyaReferences} from './aya-references';
 
 type ModelResult={ok:boolean;output?:string;error?:string;references?:AyaMessage['references'];workingMemory?:AyaWorkingMemory;proposals?:AyaProposal[]};
 export type AyaReply={ok:true;output:string;engine:'model'|'guide'|'core';references:NonNullable<AyaMessage['references']>;warning?:string;cancelled?:boolean;workingMemory?:AyaWorkingMemory;proposals?:AyaProposal[]};
@@ -32,7 +33,7 @@ export async function resolveAyaReply(input:Input,{t=s=>s,callModel}:{t?:(s:stri
  if(callModel){
   try{
    const result=await callModel();
-   if(result.ok&&typeof result.output==='string'&&result.output.trim())return {ok:true,engine:'model',output:result.output,references:result.references??[],workingMemory:result.workingMemory?normalizeMemory(result.workingMemory):undefined,proposals:result.proposals??[]};
+   if(result.ok&&typeof result.output==='string'&&result.output.trim())return {ok:true,engine:'model',output:result.output,references:normalizeAyaReferences(result.references),workingMemory:result.workingMemory?normalizeMemory(result.workingMemory):undefined,proposals:result.proposals??[]};
    const error=result.error||'LOCAL_EMPTY_RESPONSE';
    return modelFailure(error);
   }catch(error){return modelFailure(error instanceof Error&&(error.name==='AbortError'||error.message==='LOCAL_CANCELLED')?'LOCAL_CANCELLED':'LOCAL_ERROR');}

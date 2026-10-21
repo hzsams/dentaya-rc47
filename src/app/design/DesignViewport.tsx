@@ -9,6 +9,7 @@ import { toothSurface, useToothAppearance } from '@/lib/tooth-appearance';
 import { useCadWorkspace } from '@/lib/cad-workspace-preferences';
 import { experienceDuration } from '@/lib/experience-preferences';
 import { createCameraMotion, sampleCameraMotion } from '@/lib/cad-camera-motion';
+import {normalizeCadInspection, cadSectionPlane, createCadNormalLines, cadCameraQuarterTurn, cadInspectionGeometryFingerprint, type CadInspectionSettings} from '@/lib/cad-inspection';
 import { playExperienceCue } from '@/lib/experience-audio';
 import * as THREE from "three";
 import {workingJaw,oppositeJaw,cadScanColor,jawOpening,antagonistAutoHidden,unitDisplayState,EMPTY_CAD_SCENE,type CadSceneState} from '@/lib/cad-view-state';
@@ -46,7 +47,7 @@ export type CadMeasurement = {
     b: CadPoint;
     distance: number;
 };
-export type CadSettings = CadColorSettings & {
+export type CadSettings = CadColorSettings & Partial<CadInspectionSettings> & {
     auto_hide_antagonist?:boolean;jaw_opening_mm?:number;layer_opacity_memory?:Partial<Record<'upper'|'lower'|'scan'|'design',number>>;unit_visibility?:Record<string,{visible?:boolean;opacity?:number}>;
     cad_library_assets?:Record<string,CadLibraryForm>;
     cad_workspace?: CadWorkspaceRecord;
@@ -98,6 +99,7 @@ export type CadSettings = CadColorSettings & {
     section_offset_mm: number;
     section_axis?: "insertion" | "x" | "y" | "z";
     section_inverted?: boolean;
+    section_centered?: boolean;
     margin_smoothing: number;
     margin_projection_strength: number;
     margin_zone_gap_mm: number;
@@ -175,6 +177,8 @@ export type DesignViewportHandle = {
     undo: () => boolean;
     redo: () => boolean;
     fit: () => void;
+    focusRestoration: () => boolean;
+    rotateView: (direction: 'left' | 'right') => void;
     resetDesign: () => void;
     setInsertionFromView: () => CadPoint | null;
     smoothMargin: () => CadPoint[];
@@ -293,6 +297,13 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
     const cameraMotionRef = useRef<ReturnType<typeof createCameraMotion> | null>(null);
     const controlsRef = useRef<OrbitControls | null>(null);
     const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+    const flashlightRef = useRef<THREE.SpotLight | null>(null);
+    const flashlightPointerRef = useRef<THREE.Vector2 | null>(null);
+    const inspectionOverlayRef = useRef<{mesh:THREE.Mesh|null;edgeKey:string;normalKey:string;edges:THREE.LineSegments|null;normals:THREE.LineSegments|null}>({mesh:null,edgeKey:'',normalKey:'',edges:null,normals:null});
+    const inspectionDiagnosticsRef = useRef('');
+    const inspectionAimRef = useRef<{key:string;point:THREE.Vector3}|null>(null);
+    const inspectionBoundsVersionsRef = useRef(new WeakMap<THREE.BufferGeometry,number>());
+    const inspectionFingerprintsRef = useRef(new WeakMap<THREE.BufferGeometry,{key:string;hash:string}>());
     const sourceMeshRef = useRef<THREE.Mesh | null>(null);
     const sourceSpatialHashRef = useRef<Map<string, THREE.Vector3[]>>(new Map());
     const sourceSpatialCellRef = useRef(0.75);
@@ -488,6 +499,18 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
         },
         fit() {
             fitCamera(true);
+        },
+        focusRestoration() {
+            if (!(shellMeshRef.current ?? designMeshRef.current)) return false;
+            focusRestoration(true);
+            return true;
+        },
+        rotateView(direction) {
+            const camera=cameraRef.current,controls=controlsRef.current;
+            if(!camera||!controls)return;
+            const next=cadCameraQuarterTurn(camera.position,controls.target,camera.up,direction);
+            moveCamera(next.position,controls.target.clone(),true);
+            playExperienceCue('view');
         },
         viewOcclusion(){
             applyLayerDisplay();const bounds=new THREE.Box3();for(const mesh of [sourceMeshRef.current,...Object.values(referenceMeshesRef.current)])if(mesh)bounds.expandByObject(mesh);const target=bounds.isEmpty()?new THREE.Vector3():bounds.getCenter(new THREE.Vector3()),radius=Math.max(8,bounds.isEmpty()?radiusRef.current:bounds.getSize(new THREE.Vector3()).length()/2),axis=insertionAxisVector(settingsRef.current),side=new THREE.Vector3(0,-1,0).addScaledVector(axis,axis.y);if(side.lengthSq()<.01)side.set(1,0,0).addScaledVector(axis,-axis.x);side.normalize();moveCamera(target.clone().addScaledVector(side,radius*2.8).addScaledVector(axis,radius*.15),target,true);
@@ -849,6 +872,11 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
         const fill = new THREE.DirectionalLight(0xffffff, .75);
         fill.position.set(0, -5, 3);
         scene.add(fill);
+        const flashlight = new THREE.SpotLight(0xffffff, 2.4, 0, THREE.MathUtils.degToRad(26), .35, 0);
+        flashlight.name = 'DentAYA inspection flashlight';
+        flashlight.visible = false;
+        flashlightRef.current = flashlight;
+        scene.add(flashlight, flashlight.target);
         const grid = new THREE.GridHelper(120, 24, new THREE.Color(readThemeColor("--dy-border", "#254657")), new THREE.Color(readThemeColor("--dy-surface2", "#132733")));
         grid.position.y = -13;
         scene.add(grid);
@@ -1291,6 +1319,8 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
             }
         }
         function handlePointerMove(event: PointerEvent) {
+            const rect=renderer.domElement.getBoundingClientRect();
+            flashlightPointerRef.current=new THREE.Vector2((event.clientX-rect.left)/rect.width*2-1,-(event.clientY-rect.top)/rect.height*2+1);
             if (contextStart && Math.hypot(event.clientX - contextStart.x, event.clientY - contextStart.y) >= 5)
                 contextStart = null;
             modifierInvert = event.altKey || event.shiftKey;
@@ -1345,6 +1375,7 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
             stopSculptStroke(event.pointerId);
         }
         function handlePointerLeave() {
+            flashlightPointerRef.current=null;
             hasHoverPoint = false;
             if (activeStrokePointerId === null) {
                 brushCursor.visible = false;
@@ -1454,6 +1485,7 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
             else
                 controls.update();
             applyLayerDisplay();
+            syncInspectionRendering();
             renderer.render(scene, camera);
             frame = requestAnimationFrame(animate);
         }
@@ -1510,6 +1542,11 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
             brushCursorRef.current = null;
             mirrorBrushCursorRef.current = null;
             clearReferences();clearFrozenUnits();
+            clearInspectionOverlays();
+            scene.remove(flashlight,flashlight.target);
+            flashlight.dispose();
+            flashlightRef.current=null;
+            flashlightPointerRef.current=null;
             grid.geometry.dispose();
             grid.material.dispose();
             axes.geometry.dispose();
@@ -1852,9 +1889,99 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
         if(notify){if(anchorRef.current.placed)focusRestoration(true);onGeometryCommit?.('unit:'+live.id);}
     }
     function focusRestoration(animated:boolean){
-        const mesh=designMeshRef.current,camera=cameraRef.current,controls=controlsRef.current;if(!mesh||!camera||!controls)return;
-        const target=mesh.position.clone(),distance=Math.max(18,(mesh.geometry.boundingSphere?.radius??5)*5);
+        const mesh=shellMeshRef.current??designMeshRef.current,camera=cameraRef.current,controls=controlsRef.current;if(!mesh||!camera||!controls)return;
+        mesh.updateMatrixWorld(true);
+        const bounds=inspectionBounds(mesh),target=bounds.getCenter(new THREE.Vector3()),radius=bounds.getSize(new THREE.Vector3()).length()/2;
+        const vertical=THREE.MathUtils.degToRad(camera.fov/2),halfAngle=Math.min(vertical,Math.atan(Math.tan(vertical)*Math.max(.1,camera.aspect)));
+        const distance=Math.max(8,radius/Math.sin(halfAngle)*1.2);
         const offset=camera.position.clone().sub(controls.target).normalize().multiplyScalar(distance);moveCamera(target.clone().add(offset),target,animated);
+    }
+    function clearInspectionOverlays(){
+        const cache=inspectionOverlayRef.current;
+        for(const line of [cache.edges,cache.normals])if(line){sceneRef.current?.remove(line);line.geometry.dispose();(line.material as THREE.Material).dispose();}
+        inspectionOverlayRef.current={mesh:null,edgeKey:'',normalKey:'',edges:null,normals:null};
+    }
+    function inspectionCenter(){
+        const mesh=shellMeshRef.current??designMeshRef.current;
+        if(!mesh)return new THREE.Vector3();
+        return inspectionBounds(mesh).getCenter(new THREE.Vector3());
+    }
+    function inspectionBounds(mesh:THREE.Mesh){
+        const geometry=mesh.geometry,position=geometry.getAttribute('position'),version=position instanceof THREE.BufferAttribute?position.version:position.data.version;
+        if(!geometry.boundingBox||inspectionBoundsVersionsRef.current.get(geometry)!==version){geometry.computeBoundingBox();inspectionBoundsVersionsRef.current.set(geometry,version);}
+        mesh.updateMatrixWorld(true);
+        return geometry.boundingBox!.clone().applyMatrix4(mesh.matrixWorld);
+    }
+    function inspectionGeometryFingerprint(mesh:THREE.Mesh){
+        const geometry=mesh.geometry,position=geometry.getAttribute('position'),index=geometry.index;
+        const key=[position instanceof THREE.BufferAttribute?position.version:position.data.version,position.count,index?.version,index?.count].join('|');
+        let cached=inspectionFingerprintsRef.current.get(geometry);
+        if(!cached||cached.key!==key){cached={key,hash:cadInspectionGeometryFingerprint(geometry)};inspectionFingerprintsRef.current.set(geometry,cached);}
+        return cached.hash;
+    }
+    function syncInspectionRendering(){
+        const scene=sceneRef.current,camera=cameraRef.current,controls=controlsRef.current,renderer=rendererRef.current;
+        if(!scene||!camera||!controls||!renderer)return;
+        const active=settingsRef.current,config=normalizeCadInspection(active),mesh=shellMeshRef.current??designMeshRef.current;
+        renderer.toneMappingExposure=config.inspection_exposure;
+        const plane=clippingPlaneRef.current,section=viewModeRef.current==='section';
+        if(section)plane.copy(cadSectionPlane({axis:active.section_axis??'insertion',insertionAxis:insertionAxisVector(active),inverted:active.section_inverted??false,offsetMm:active.section_offset_mm,center:active.section_centered?inspectionCenter():undefined}));
+        for(const restoration of [designMeshRef.current,shellMeshRef.current])if(restoration?.material instanceof THREE.MeshStandardMaterial){
+            const material=restoration.material,side=section||config.inspection_interior?THREE.DoubleSide:THREE.FrontSide;
+            if(material.flatShading!==config.inspection_faceted||material.side!==side){material.flatShading=config.inspection_faceted;material.side=side;material.needsUpdate=true;}
+        }
+        // Context meshes share the same world-space cut; geometry and saved positions stay intact.
+        for(const context of [sourceMeshRef.current,...Object.values(referenceMeshesRef.current),...[...frozenUnitsRef.current.values()].map(value=>value.mesh)]){
+            if(context?.material instanceof THREE.MeshStandardMaterial){const material=context.material,hasCut=material.clippingPlanes?.length===1;if(hasCut!==section){material.clippingPlanes=section?[plane]:[];material.needsUpdate=true;}}
+        }
+        const flashlight=flashlightRef.current;
+        if(flashlight){
+            flashlight.visible=config.inspection_flashlight;
+            flashlight.intensity=config.inspection_flashlight_intensity;
+            flashlight.angle=THREE.MathUtils.degToRad(config.inspection_flashlight_cone_deg);
+            flashlight.position.copy(camera.position);
+            flashlight.target.position.copy(controls.target);
+            const pointer=flashlightPointerRef.current;
+            if(config.inspection_flashlight&&config.inspection_flashlight_target==='pointer'&&pointer){
+                camera.updateMatrixWorld(true);
+                const targets=[mesh,sourceMeshRef.current,...Object.values(referenceMeshesRef.current)].filter(visibleCadTarget) as THREE.Mesh[];
+                const targetKey=targets.map(target=>{target.updateMatrixWorld(true);const positions=target.geometry.getAttribute('position');return [target.id,target.geometry.id,positions instanceof THREE.BufferAttribute?positions.version:positions.data.version,...target.matrixWorld.elements].join(',');}).join(';');
+                const key=[pointer.x,pointer.y,...camera.matrixWorld.elements,...camera.projectionMatrix.elements,...controls.target.toArray(),targetKey,section,...plane.normal.toArray(),plane.constant].join('|');
+                let aim=inspectionAimRef.current;
+                if(!aim||aim.key!==key){
+                    const raycaster=new THREE.Raycaster();raycaster.setFromCamera(pointer,camera);
+                    const hit=raycaster.intersectObjects(targets,false).find(value=>!section||plane.distanceToPoint(value.point)>=-1e-6);
+                    aim={key,point:hit?.point.clone()??raycaster.ray.at(camera.position.distanceTo(controls.target),new THREE.Vector3())};
+                    inspectionAimRef.current=aim;
+                }
+                flashlight.target.position.copy(aim.point);
+            }
+            flashlight.target.updateMatrixWorld();
+        }
+        let cache=inspectionOverlayRef.current;
+        if(cache.mesh!==mesh){clearInspectionOverlays();cache=inspectionOverlayRef.current;cache.mesh=mesh;}
+        if(mesh){
+            mesh.updateMatrixWorld(true);
+            const position=mesh.geometry.getAttribute('position'),version=position instanceof THREE.BufferAttribute?position.version:position.data.version;
+            const geometryKey=[mesh.geometry.id,version,position.count].join('|');
+            if(config.inspection_edges&&cache.edgeKey!==geometryKey){
+                if(cache.edges){scene.remove(cache.edges);cache.edges.geometry.dispose();(cache.edges.material as THREE.Material).dispose();}
+                cache.edges=new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry,18),new THREE.LineBasicMaterial({color:0x30203e,transparent:true,opacity:.82,depthWrite:false}));
+                cache.edges.name='DentAYA restoration edges';cache.edges.matrixAutoUpdate=false;cache.edges.renderOrder=2;scene.add(cache.edges);cache.edgeKey=geometryKey;
+            }
+            const normalKey=geometryKey+'|'+mesh.matrixWorld.elements.join('|');
+            if(config.inspection_normals&&cache.normalKey!==normalKey){
+                if(cache.normals){scene.remove(cache.normals);cache.normals.geometry.dispose();(cache.normals.material as THREE.Material).dispose();}
+                cache.normals=new THREE.LineSegments(createCadNormalLines(mesh.geometry,{maxSamples:240,lengthMm:.8,matrixWorld:mesh.matrixWorld}),new THREE.LineBasicMaterial({color:0x69d7ed,depthWrite:false}));
+                cache.normals.name='DentAYA sampled vertex normals';cache.normals.renderOrder=3;scene.add(cache.normals);cache.normalKey=normalKey;
+            }
+            if(cache.edges){cache.edges.matrix.copy(mesh.matrixWorld);cache.edges.matrixWorldNeedsUpdate=true;}
+            for(const [line,enabled] of [[cache.edges,config.inspection_edges],[cache.normals,config.inspection_normals]] as const)if(line){line.visible=enabled&&mesh.visible;const material=line.material as THREE.LineBasicMaterial;const hasCut=material.clippingPlanes?.length===1;if(hasCut!==section){material.clippingPlanes=section?[plane]:[];material.needsUpdate=true;}}
+        }
+        // Diagnostics are read from the actual scene objects by the WebGL regression fixture.
+        const material=mesh?.material instanceof THREE.MeshStandardMaterial?mesh.material:null;
+        const diagnostics=JSON.stringify({flashlight:flashlight?{visible:flashlight.visible,intensity:flashlight.intensity,angle:flashlight.angle,position:flashlight.position.toArray(),target:flashlight.target.position.toArray()}:null,edges:cache.edges?.visible?(cache.edges.geometry.getAttribute('position')?.count??0)/2:0,normals:cache.normals?.visible?(cache.normals.geometry.getAttribute('position')?.count??0)/2:0,faceted:material?.flatShading??false,side:material?.side,exposure:renderer.toneMappingExposure,section:section?{normal:plane.normal.toArray(),constant:plane.constant}:null,restorationCenter:mesh?inspectionCenter().toArray():null,camera:{position:camera.position.toArray(),target:controls.target.toArray(),up:camera.up.toArray()},geometry:{id:mesh?.geometry.id,vertices:mesh?.geometry.getAttribute('position')?.count,hash:mesh?inspectionGeometryFingerprint(mesh):null,sourceHash:sourceMeshRef.current?inspectionGeometryFingerprint(sourceMeshRef.current):null},history:{undo:undoRef.current.length,redo:redoRef.current.length}});
+        if(diagnostics!==inspectionDiagnosticsRef.current){inspectionDiagnosticsRef.current=diagnostics;if(hostRef.current)hostRef.current.dataset.cadInspectionState=diagnostics;}
     }
     function marginKey(){
         let hash=2166136261;for(const p of marginRef.current)for(const value of [p.x,p.y,p.z]){hash^=Math.round(value*10000);hash=Math.imul(hash,16777619);}
@@ -2033,13 +2160,7 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
         if (mode === "section") {
             designMaterial.side = THREE.DoubleSide;
             const plane = clippingPlaneRef.current;
-            const sectionAxis = settingsRef.current.section_axis;
-            plane.normal.copy(sectionAxis === 'x' ? new THREE.Vector3(1, 0, 0) : sectionAxis === 'y' ? new THREE.Vector3(0, 1, 0) : sectionAxis === 'z' ? new THREE.Vector3(0, 0, 1) : axis);
-            plane.constant =
-                -settingsRef.current
-                    .section_offset_mm;
-            if (settingsRef.current.section_inverted)
-                plane.negate();
+            plane.copy(cadSectionPlane({axis:settingsRef.current.section_axis??'insertion',insertionAxis:axis,inverted:settingsRef.current.section_inverted??false,offsetMm:settingsRef.current.section_offset_mm,center:settingsRef.current.section_centered?inspectionCenter():undefined}));
             designMaterial.clippingPlanes =
                 [plane];
             if (sourceMaterial instanceof

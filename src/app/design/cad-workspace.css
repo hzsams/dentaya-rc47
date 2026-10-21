@@ -14,6 +14,7 @@
 
 /* Continuous document toolbar and task sequence. */
 .cad-professional .cad-main-header{position:absolute;z-index:60;top:0;right:0;bottom:var(--cad-status-height);display:flex;flex-direction:column;align-items:stretch;gap:3px;width:var(--cad-command-width);padding:8px 5px;border:0;border-left:1px solid #1d1b23;background:linear-gradient(90deg,#29272f,#333039);color:#f4f2f8;box-shadow:inset 1px 0 #ffffff0a;overflow-y:auto;scrollbar-width:none}
+.cad-professional .cad-main-header:has(.cad-chrome-menu[open]){z-index:90}
 .cad-professional .cad-hub-link{display:grid;place-items:center;order:8;width:100%;height:35px;min-height:35px;padding:0;border:0;background:transparent;color:#ddd7e6}
 .cad-professional .cad-hub-link:hover{background:var(--cad-accent-soft);color:var(--cad-accent)}
 .cad-professional .cad-product{display:flex;order:9;align-items:center;justify-content:center;margin-top:auto;padding:5px 0 2px;border:0}
@@ -455,3 +456,27 @@
  .cad-professional .cad-product{display:none}
  .cad-professional .cad-object-panel{--cad-object-height:150px}
 }
+
+/* Expert inspection is an optional light window; the manual tool palette stays intact. */
+.cad-professional .cad-main-header>.cad-inspection-command{order:8}
+.cad-professional .cad-inspection-panel{position:absolute;z-index:43;top:56px;left:calc(var(--cad-left-width) + 12px);display:flex;flex-direction:column;width:304px;max-width:calc(100% - var(--cad-command-width) - 24px);max-height:calc(100% - 100px);overflow:hidden;border:1px solid var(--cad-line);border-radius:5px;background:var(--cad-surface);color:var(--cad-ink);box-shadow:0 8px 26px #21192c40}
+.cad-professional .cad-inspection-panel>header{display:flex;align-items:center;gap:8px;min-height:35px;padding:3px 8px;background:var(--cad-chrome);color:var(--cad-on-chrome)}
+.cad-professional .cad-inspection-panel>header strong{flex:1;font-size:12px}
+.cad-professional .cad-inspection-panel>header button{color:var(--cad-on-chrome)}
+.cad-professional .cad-inspection-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-bottom:1px solid var(--cad-line);background:var(--cad-surface2)}
+.cad-professional .cad-inspection-tabs button{min-width:0;min-height:34px;padding:5px 2px;border:0;border-bottom:2px solid transparent;background:transparent;font-size:11px}
+.cad-professional .cad-inspection-tabs button[aria-selected=true]{border-bottom-color:var(--cad-accent);background:var(--cad-accent-soft);color:var(--cad-accent);font-weight:650}
+.cad-professional .cad-inspection-panel>fieldset{display:block;min-width:0;margin:0;padding:8px 12px 12px;border:0;overflow:auto;scrollbar-width:thin;overscroll-behavior:contain}
+.cad-professional .cad-inspection-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:36px;padding:5px 0;border-bottom:1px solid var(--cad-line);font-size:12px}
+.cad-professional .cad-inspection-range{display:block;margin-top:14px;font-size:12px}
+.cad-professional .cad-inspection-range>span{display:flex;justify-content:space-between;gap:8px}
+.cad-professional .cad-inspection-range output{color:var(--cad-muted);font-variant-numeric:tabular-nums}
+.cad-professional .cad-inspection-range input{width:100%;margin:8px 0 0}
+.cad-professional .cad-inspection-select{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0;font-size:12px}
+.cad-professional .cad-inspection-select select{min-width:0;max-width:160px;padding:5px;border:1px solid var(--cad-line);border-radius:3px;background:var(--cad-surface2);color:var(--cad-ink)}
+.cad-professional .cad-inspection-panel p{margin:10px 0 5px;color:var(--cad-muted);font-size:11px;line-height:1.55}
+.cad-professional .cad-inspection-actions{display:grid;gap:7px;margin-top:12px}
+.cad-professional .cad-inspection-actions button,.cad-professional .cad-inspection-panel>footer button{display:flex;align-items:center;justify-content:center;gap:7px;min-height:32px;padding:5px 8px;border:1px solid var(--cad-line);border-radius:3px;background:var(--cad-button-face);font-size:11px;box-shadow:var(--cad-bevel)}
+.cad-professional .cad-inspection-panel>footer{flex:none;padding:8px;border-top:1px solid var(--cad-line);background:var(--cad-surface2)}
+.cad-professional .cad-inspection-panel>footer button{width:100%}
+@media(max-width:1000px){.cad-professional .cad-inspection-panel{left:8px;top:56px}}

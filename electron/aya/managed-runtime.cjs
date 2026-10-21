@@ -91,7 +91,7 @@ function createManagedAya({directory,fetchImpl=fetch,spawnImpl=spawn,platform=pr
    stop();stopping=false;const token=crypto.randomBytes(32).toString('hex');
    const port=await new Promise((resolve,reject)=>{const socket=net.createServer();socket.once('error',reject);socket.listen(0,'127.0.0.1',()=>{const port=socket.address().port;socket.close(()=>resolve(port));});});
    const origin='http://127.0.0.1:'+port,modelFile=path.join(modelsDir,record.file);
-   const proc=spawnImpl(binary(),['-m',modelFile,'--host','127.0.0.1','--port',String(port),'--api-key',token,'--alias','aya-local','--ctx-size','8192','--parallel','1','--threads',String(Math.max(1,Math.min(8,(os.availableParallelism?.()||os.cpus().length)-1))),'--n-gpu-layers','0','--jinja','--no-webui'],{cwd:path.dirname(binary()),windowsHide:true,shell:false,stdio:['ignore','ignore','pipe']});
+   const proc=spawnImpl(binary(),['-m',modelFile,'--host','127.0.0.1','--port',String(port),'--api-key',token,'--alias','aya-local','--ctx-size','8192','--parallel','1','--threads',String(Math.max(1,Math.min(8,(os.availableParallelism?.()||os.cpus().length)-1))),'--n-gpu-layers','0','--jinja','--no-webui','--no-context-shift'],{cwd:path.dirname(binary()),windowsHide:true,shell:false,stdio:['ignore','ignore','pipe']});
    child=proc;let bootError=false;proc.once('error',()=>{bootError=true;});proc.once('exit',()=>{if(child===proc){child=null;base='';activeModel='';key='';}});proc.stderr?.on('data',()=>{});
    const deadline=Date.now()+120000;
    while(Date.now()<deadline){if(signal?.aborted){stop();throw signal.reason;}if(stopping||bootError||child!==proc)throw Error('AYA_ENGINE_START_FAILED');
@@ -101,26 +101,30 @@ function createManagedAya({directory,fetchImpl=fetch,spawnImpl=spawn,platform=pr
    stop();throw Error('LOCAL_TIMEOUT');
   })();startPromise=task;try{await task;}finally{if(startPromise===task)startPromise=null;}
  }
- async function chat({model,messages,options,responseSchema,signal,onToken=()=>{}}){
+ async function chat({model,messages,options,responseSchema,signal,onToken=()=>{},onContext=()=>{}}){
   await ensureStarted(model,signal);
+  // b9380 passes the response schema to its chat template as well as its grammar.
+  // Budget the exact same template settings that the completion will receive.
+  const templateOptions={chat_template_kwargs:{enable_thinking:false},...(responseSchema?{response_format:{type:'json_object',schema:responseSchema}}:{})};
   // Count with the selected model's actual template/tokenizer before reserving output space.
   async function localJson(endpoint,body){signal?.throwIfAborted();const r=await fetchImpl(base+endpoint,{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},redirect:'error',signal,body:JSON.stringify(body)});if(!r.ok)throw Error('LOCAL_REQUEST_FAILED');return r.json();}
   messages=await fitMessagesToBudget(messages,{maxTokens:options.maxTokens,countTokens:async candidate=>{
-   const rendered=await localJson('/apply-template',{messages:candidate,add_generation_prompt:true,chat_template_kwargs:{enable_thinking:false}});
+   const rendered=await localJson('/apply-template',{messages:candidate,add_generation_prompt:true,...templateOptions});
    if(typeof rendered.prompt!=='string')throw Error('LOCAL_REQUEST_FAILED');
-   const encoded=await localJson('/tokenize',{content:rendered.prompt,add_special:true});
+   const encoded=await localJson('/tokenize',{content:rendered.prompt,add_special:true,parse_special:true});
    if(!Array.isArray(encoded.tokens))throw Error('LOCAL_REQUEST_FAILED');
    return encoded.tokens.length;
   }});
   signal?.throwIfAborted();
-  const started=Date.now();const response=await fetchImpl(base+'/v1/chat/completions',{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},redirect:'error',signal,body:JSON.stringify({model:'aya-local',messages,stream:true,stream_options:{include_usage:true},...(responseSchema?{response_format:{type:'json_object',schema:responseSchema}}:{}),temperature:responseSchema?Math.min(.2,options.creativity):options.creativity,max_tokens:options.maxTokens,chat_template_kwargs:{enable_thinking:false}})});
+  onContext(messages);
+  const started=Date.now();const response=await fetchImpl(base+'/v1/chat/completions',{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},redirect:'error',signal,body:JSON.stringify({model:'aya-local',messages,stream:true,stream_options:{include_usage:true},...templateOptions,temperature:responseSchema?Math.min(.2,options.creativity):options.creativity,max_tokens:options.maxTokens})});
   if(!response.ok||!response.body)throw Error('LOCAL_REQUEST_FAILED');
   const reader=response.body.getReader(),decoder=new TextDecoder();let pending='',output='',done=false,tokens=0,finishReason='';
   function line(value){if(!value.startsWith('data:'))return;const data=value.slice(5).trim();if(!data)return;if(data==='[DONE]'){done=true;return;}const event=JSON.parse(data);if(event.error)throw Error('LOCAL_REQUEST_FAILED');if(Number.isSafeInteger(event.usage?.completion_tokens)&&event.usage.completion_tokens>=0)tokens=event.usage.completion_tokens;const chunk=event.choices?.[0]?.delta?.content;if(typeof chunk==='string'&&chunk){output+=chunk;if(output.length>64000)throw Error('LOCAL_RESPONSE_TOO_LARGE');onToken(output);}if(event.choices?.[0]?.finish_reason){finishReason=event.choices[0].finish_reason;done=true;}}
   try{while(true){signal?.throwIfAborted();const r=await reader.read();if(r.done)break;pending+=decoder.decode(r.value,{stream:true});if(pending.length>128000)throw Error('LOCAL_RESPONSE_TOO_LARGE');const lines=pending.split('\n');pending=lines.pop();for(const value of lines)line(value.trim());}if(pending.trim())line(pending.trim());}
   finally{await reader.cancel().catch(()=>{});}
   signal?.throwIfAborted();
-  if(responseSchema&&finishReason==='length')throw Error('LOCAL_INVALID_PLAN');
+  if(responseSchema&&finishReason!=='stop')throw Error('LOCAL_INVALID_PLAN');
   if(!done||!output.trim())throw Error('LOCAL_EMPTY_RESPONSE');return {output:output.trim(),metrics:{milliseconds:Date.now()-started,tokens}};
  }
  return {status,installAll,cancelInstall,importModel,chat,stop,dispose:()=>{install?.controller.abort();stop();},isBusy:()=>Boolean(install||startPromise)};

@@ -21,6 +21,18 @@ const t = (
 ): CadToolMatrixItem => ({ id, category, group, label, description, availability, activation });
 
 export const DENTAYA_CAD_TOOL_MATRIX: CadToolMatrixItem[] = [
+  // Expert inspection: real renderer and camera controls, separate from manual geometry tools.
+  t('expert-inspection', 'İnceleme', 'Görünüm', 'Uzman İnceleme Penceresi', 'Işık, yüzey, kesit ve kamera kontrollerini ayrı inceleme penceresinde açar.', 'live', 'inspection:open'),
+  t('inspection-flashlight', 'İnceleme', 'Işık', 'El Feneri', 'Kameradan gerçek SpotLight tutar; güç, ışın açısı ve işaretçi hedefi inceleme penceresinde ayarlanır.', 'live', 'inspection:flashlight'),
+  t('inspection-exposure', 'İnceleme', 'Işık', 'Sahne Pozlaması', 'Renderer pozlamasını inceleme penceresinden ayarlar.', 'live', 'inspection:exposure'),
+  t('inspection-edges', 'İnceleme', 'Yüzey', 'Restorasyon Kenarları', 'Aktif restorasyonun keskin ve açık kenarlarını çizgi katmanıyla gösterir.', 'live', 'inspection:edges'),
+  t('inspection-normals', 'İnceleme', 'Yüzey', 'Örnek Yüzey Normalleri', 'Aktif restorasyonda en çok 240 vertex normalini dünya uzayında gösterir.', 'live', 'inspection:normals'),
+  t('inspection-faceted', 'İnceleme', 'Yüzey', 'Düz Yüzey Gölgeleme', 'Aktif restorasyonda üçgen yüzey gölgelemesini açar.', 'live', 'inspection:faceted'),
+  t('inspection-interior', 'İnceleme', 'Yüzey', 'İç Yüzey İncelemesi', 'Aktif restorasyon yüzeylerini iki taraftan görünür kılar.', 'live', 'inspection:interior'),
+  t('inspection-section', 'İnceleme', 'Kesit', 'Kesit Yönü ve Merkezi', 'X/Y/Z veya giriş ekseninde kesit, taraf çevirme ve restorasyon merkezine alma kontrollerini açar.', 'live', 'inspection:section'),
+  t('inspection-focus', 'İnceleme', 'Kamera', 'Aktif Restorasyona Odaklan', 'Kamerayı aktif restorasyonun gerçek dünya sınırlarına odaklar.', 'live', 'inspection:focus'),
+  t('inspection-turn-left', 'İnceleme', 'Kamera', 'Görünümü 90° Sola Çevir', 'Kamerayı mevcut hedef çevresinde 90 derece döndürür.', 'live', 'inspection:rotate-left'),
+  t('inspection-turn-right', 'İnceleme', 'Kamera', 'Görünümü 90° Sağa Çevir', 'Kamerayı mevcut hedef çevresinde ters yönde 90 derece döndürür.', 'live', 'inspection:rotate-right'),
   // Core / case setup
   t("job-setup", "Restorasyon", "Case Setup", "İş Tanımı / Restorasyon Setup", "CAD başlamadan önce diş bazlı monolitik, coping, cutback, geçici, teleskop, pontic ve attachment planını tanımlar.", "live", "command:job-setup"),
   t("anatomic-crown", "Restorasyon", "Crown / Coping", "Anatomik Kron", "Tam kontur kron çalışma tipi.", "preview", "stage:design"),
@@ -474,4 +486,24 @@ export function cadAvailabilityLabel(value: CadToolAvailability) {
   if (value === "preview") return "TEKNİK ÖNİZLEME";
   if (value === "kernel") return "GEOMETRİ ÇEKİRDEĞİ";
   return "YOL HARİTASI";
+}
+
+/** New expert commands use English outside Turkish until translated catalog packs exist. */
+export function cadInspectionCatalogCopy(item:CadToolMatrixItem,locale:string):CadToolMatrixItem{
+  if(locale==='tr'||!item.activation?.startsWith('inspection:'))return item;
+  const copy:Record<string,[string,string]>={
+    'expert-inspection':['Expert inspection window','Open separate light, surface, section and camera controls.'],
+    'inspection-flashlight':['Flashlight','Toggle the actual camera SpotLight; adjust power, beam angle and pointer aiming in the inspection window.'],
+    'inspection-exposure':['Scene exposure','Adjust renderer exposure in the inspection window.'],
+    'inspection-edges':['Restoration edges','Show sharp and open edges on the active restoration.'],
+    'inspection-normals':['Sampled surface normals','Show up to 240 world-space vertex normals on the active restoration.'],
+    'inspection-faceted':['Faceted shading','Use triangle face shading on the active restoration.'],
+    'inspection-interior':['Interior inspection','Show both sides of the active restoration surface.'],
+    'inspection-section':['Section direction and center','Open X/Y/Z or insertion-axis section controls, inversion and restoration centering.'],
+    'inspection-focus':['Focus active restoration','Frame the actual world bounds of the active restoration.'],
+    'inspection-turn-left':['Turn view 90° left','Orbit the camera a quarter turn around the current target.'],
+    'inspection-turn-right':['Turn view 90° right','Orbit the camera a quarter turn in the opposite direction.']
+  };
+  const row=copy[item.id];
+  return row?{...item,category:'Inspection',group:({'Görünüm':'Display','Işık':'Light','Yüzey':'Surface','Kesit':'Section','Kamera':'Camera'} as Record<string,string>)[item.group]??item.group,label:row[0],description:row[1]}:item;
 }

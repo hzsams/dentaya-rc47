@@ -6,13 +6,14 @@ import { useLocale } from "@/lib/i18n";
 import { premiumBrandCopy } from "@/lib/i18n/brand";
 import { BRAND_ASSET_VERSION, BrandLogo, LOGO_OPTIONS, chooseBrandLogo, logoFiles, useBrandLogo } from "./BrandLogo";
 export default function LogoPicker() {
-    const copy = premiumBrandCopy(useLocale());
+    const locale = useLocale(), copy = premiumBrandCopy(locale);
     const selected = useBrandLogo();
     const [query, setQuery] = useState("");
     const [message, setMessage] = useState("");
     const [desktopBusy, setDesktopBusy] = useState(false);
     const options = LOGO_OPTIONS.map(option => ({...option, name:copy.names[option.id], description:copy.descriptions[option.id], material:copy.materials[option.material]}));
-    const filtered = options.filter(option => `${option.name} ${option.description} ${option.material}`.toLocaleLowerCase("tr").includes(query.trim().toLocaleLowerCase("tr")));
+    const searchLocale = locale === "tr" ? "tr" : "en";
+    const filtered = options.filter(option => `${option.name} ${option.description} ${option.material}`.toLocaleLowerCase(searchLocale).includes(query.trim().toLocaleLowerCase(searchLocale)));
     return <>
     <UiNode as="div" className="brand-premium-collection">
       <UiNode as="div" className="brand-premium-heading"><UiNode as="span" translateChildren={false}>{copy.atelier}</UiNode><UiNode as="span" translateChildren={false}>{copy.collection}</UiNode></UiNode>
@@ -41,7 +42,7 @@ export default function LogoPicker() {
     <UiNode as="label" className="logo-search">DentAYA logo seçenekleri<UiNode as="input" type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Diş, tarama, geometri…"/></UiNode>
     <UiNode as="p" className="brand-premium-result-count" role="status" aria-live="polite">{filtered.length} / {LOGO_OPTIONS.length}</UiNode>
     <UiNode as="div" className="logo-choice-grid" role="group" aria-label="DentAYA logo seçenekleri">
-      {filtered.map(option => <UiNode as="button" key={option.id} type="button" className="logo-choice brand-premium-choice" aria-pressed={selected === option.id} onClick={() => {
+      {filtered.map(option => <UiNode as="button" key={option.id} data-logo-id={option.id} type="button" className="logo-choice brand-premium-choice" aria-pressed={selected === option.id} onClick={() => {
                 const saved = chooseBrandLogo(option.id);
                 setMessage(saved ? `${option.name} uygulandı ve kaydedildi.` : `${option.name} uygulandı. Cihaz kaydı kullanılamıyor; yeniden açılışta tekrar seçmeniz gerekebilir.`);
             }}>

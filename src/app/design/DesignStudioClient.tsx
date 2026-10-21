@@ -15,6 +15,7 @@ import {cadStateToken,summarizeAyaReport,availableAyaTools,createAyaActionDispat
 import type {AyaCadContext,AyaCadEvidence} from '@/lib/aya-cad-assistance';
 import type {AyaProposal,AyaCadTool} from '../../../electron/aya/agent.cjs';
 import {ayaAgentText} from '@/lib/i18n/aya-agent';
+import {cadInspectionText} from '@/lib/i18n/cad-inspection';
 import CadWorkbench from "./CadWorkbench";
 import CadSceneControls from "./CadSceneControls";
 import {allCadVisible,viewDefaults,workingJaw,EMPTY_CAD_SCENE,type CadSceneState} from '@/lib/cad-view-state';
@@ -23,6 +24,8 @@ import CadContextMenu from "./CadContextMenu";
 import CadBrushPresets from "./CadBrushPresets";
 import CadIcon, { type CadIconName } from "./CadIcon";
 import CadToolPalette from "./CadToolPalette";
+import CadInspectionPanel from './CadInspectionPanel';
+import {CAD_INSPECTION_DEFAULTS,normalizeCadInspection} from '@/lib/cad-inspection';
 import "./cad-workspace.css";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode, } from "react";
 import Link from "@/lib/i18n/UiLink";
@@ -35,7 +38,7 @@ import {encodeCadWorkspace,sameCadJson} from '@/lib/cad-project-state';
 import { supabase } from "@/lib/supabase";
 import { dy, useDentayaThemeRuntime, } from "@/app/dentaya-theme";
 import ConnectionStatus from "@/app/ConnectionStatus";
-import { DENTAYA_CAD_TOOL_CATEGORIES, DENTAYA_CAD_TOOL_MATRIX, cadAvailabilityLabel, type CadToolMatrixItem, } from "@/lib/dentaya-cad-tool-matrix";
+import { DENTAYA_CAD_TOOL_MATRIX, cadAvailabilityLabel, cadInspectionCatalogCopy, type CadToolMatrixItem, } from "@/lib/dentaya-cad-tool-matrix";
 import CadJobSetupPanel from "./CadJobSetupPanel";
 import CadLibraryDialog from "../cad-library/CadLibraryDialog";
 import type {CadLibraryForm} from "@/lib/cad-form-library";
@@ -168,6 +171,7 @@ function sanitizeCadShortcutBindings(input: Partial<CadShortcutBindings>): CadSh
     return next;
 }
 export const DEFAULT_SETTINGS: CadSettings = {
+    ...CAD_INSPECTION_DEFAULTS,
     job_setup: buildDefaultCadJobSetup([]),
     render_palette:'technical',auto_hide_antagonist:false,jaw_opening_mm:0,
     cement_gap_mm: 0.06,
@@ -268,6 +272,7 @@ const STEPS: StepDefinition[] = [
 ];
 export default function DesignStudioClient() {
     const { t: uiText, intlLocale, locale } = useTranslation();
+    const inspectionCopy=cadInspectionText(locale);
     const desktopCopy = desktopShellText(locale);
     const cadCopy=ayaAgentText(locale);
     useDentayaThemeRuntime();
@@ -323,6 +328,8 @@ export default function DesignStudioClient() {
         return () => window.removeEventListener('keydown', key);
     }, []);
     const [toolLibraryOpen, setToolLibraryOpen] = useState(false);
+    const [inspectionOpen,setInspectionOpen] = useState(false);
+    const [inspectionTab,setInspectionTab] = useState<'light'|'surface'|'section'|'camera'>('light');
     const [shortcutHelpOpen, setShortcutHelpOpen] = useState(false);
     const [shortcutEditOpen, setShortcutEditOpen] = useState(false);
     const [shortcutBindings, setShortcutBindings] = useState<CadShortcutBindings>(DEFAULT_CAD_SHORTCUT_BINDINGS);
@@ -468,10 +475,10 @@ export default function DesignStudioClient() {
     const activeTools = stagePolicy.tools;
     const activeViews = useMemo(()=>cadViewsForScene(stagePolicy.views,sceneState.antagonistReady),[stagePolicy.views,sceneState.antagonistReady]);
     const visiblePanelTabs = stagePolicy.tabs.flatMap(id => CAD_PANEL_TABS.filter(tab => tab.id === id));
-    const availableCommands = useMemo(() => uniqueCadCommands(DENTAYA_CAD_TOOL_MATRIX).map(item => {
+    const availableCommands = useMemo(() => uniqueCadCommands(DENTAYA_CAD_TOOL_MATRIX).map(item => cadInspectionCatalogCopy(item,locale)).map(item => {
         const step = item.activation?.startsWith('stage:') ? STEPS.find(step => step.id === item.activation?.slice(6)) : null;
         return step ? { ...item, label: step.label, description: step.description } : item;
-    }).filter(item => cadActivationAllowed(item.activation, activeStep.id, workspaceMode, hasBridge, panelTab)&&(!item.activation?.startsWith('view:')||activeViews.includes(item.activation.slice(5) as CadViewMode))), [activeStep.id, workspaceMode, hasBridge, panelTab,activeViews]);
+    }).filter(item => cadActivationAllowed(item.activation, activeStep.id, workspaceMode, hasBridge, panelTab)&&(!item.activation?.startsWith('view:')||activeViews.includes(item.activation.slice(5) as CadViewMode))), [activeStep.id, workspaceMode, hasBridge, panelTab,activeViews,locale]);
     const filteredToolMatrix = useMemo(() => {
         const query = toolSearch.trim().toLocaleLowerCase(intlLocale());
         return availableCommands.filter((item) => {
@@ -509,6 +516,7 @@ export default function DesignStudioClient() {
                 return;
             }
             if (event.key === "Escape") {
+                setInspectionOpen(false);
                 if (toolLibraryOpen)
                     setToolLibraryOpen(false);
                 if (shortcutHelpOpen)
@@ -1507,6 +1515,20 @@ export default function DesignStudioClient() {
             setStatus(`${item.label}: bu araç tam geometri çekirdeği gerektiriyor. Tool Suite içinde şartname olarak hazır.`);
             return;
         }
+        if(activation.startsWith('inspection:')){
+            if(workspaceMode!=='expert')return;
+            const command=activation.slice(11);
+            if(command==='focus')viewportRef.current?.focusRestoration();
+            else if(command==='rotate-left'||command==='rotate-right')viewportRef.current?.rotateView(command==='rotate-left'?'left':'right');
+            else {
+                setInspectionOpen(true);
+                setInspectionTab(command==='section'?'section':['edges','normals','faceted','interior'].includes(command)?'surface':'light');
+                const toggles={flashlight:'inspection_flashlight',edges:'inspection_edges',normals:'inspection_normals',faceted:'inspection_faceted',interior:'inspection_interior'} as const;
+                if(command in toggles){const key=toggles[command as keyof typeof toggles];setSettings(current=>({...current,[key]:!current[key]}));}
+            }
+            setToolLibraryOpen(false);
+            return;
+        }
         if (activation === "command:job-setup") {
             setSetupOpen(true);
             setToolLibraryOpen(false);
@@ -1686,7 +1708,9 @@ export default function DesignStudioClient() {
     // Asset buffers and saved workspace geometry must never be re-hashed on every UI render.
     const ayaSettings=Object.fromEntries(Object.entries(settings).filter(([key])=>!['cad_library_assets','cad_workspace','unit_margins','source_margins','unit_workflow','unit_parameters'].includes(key)));
     const ayaDataToken=cadStateToken([ayaScope,geometryRevision,ayaSettings,marginPoints,sceneState.upperReady,sceneState.lowerReady,sceneState.antagonistReady]);
+    const inspectionContext=normalizeCadInspection(settings);
     const ayaContext:AyaCadContext={
+        inspectionFlashlight:inspectionContext.inspection_flashlight,inspectionFlashlightTarget:inspectionContext.inspection_flashlight_target,
         scope:ayaScope,dataToken:ayaDataToken,snapshot:cadStateToken([ayaDataToken,ayaEpoch,activeStepId,panelTab,tool,viewMode,historyState,saving,exiting,submitting,contextLoading,cadReady,sceneState]),
         unit:activeJobUnit?.tooth_code??'',restoration:activeJobUnit?cadRestorationLabel(activeJobUnit.design_type):'',
         stage:activeStepId,task:panelTab,upperReady:sceneState.upperReady,lowerReady:sceneState.lowerReady,antagonistReady:sceneState.antagonistReady,openingMm:sceneState.openingMm,
@@ -1697,7 +1721,7 @@ export default function DesignStudioClient() {
         measurementsMm:measurements.map(m=>m.distance).slice(-8),designSettings:{cementGapMm:settings.cement_gap_mm,minimumThicknessMm:settings.minimum_thickness_mm,brushRadiusMm:settings.brush_radius_mm},
         report:ayaEvidence?.dataToken===ayaDataToken?ayaEvidence:null
     };
-    ayaContext.availableTools=availableAyaTools(ayaContext,{tools:activeTools,views:activeViews,internalFit:cadActivationAllowed('command:internal-fit',activeStepId,workspaceMode,hasBridge,panelTab),canNext:activeTaskIndex<CAD_GUIDED_TASKS.length-1&&jobSetup.complete&&Boolean(activeSource)&&marginPoints.length>=3});
+    ayaContext.availableTools=availableAyaTools(ayaContext,{inspection:workspaceMode==='expert',tools:activeTools,views:activeViews,internalFit:cadActivationAllowed('command:internal-fit',activeStepId,workspaceMode,hasBridge,panelTab),canNext:activeTaskIndex<CAD_GUIDED_TASKS.length-1&&jobSetup.complete&&Boolean(activeSource)&&marginPoints.length>=3});
     useLayoutEffect(()=>{ayaContextRef.current=ayaContext;});
     async function runAyaAction(proposal:AyaProposal):Promise<AyaActionResult>{
         const current=ayaContextRef.current,copy=ayaAgentText(locale);
@@ -1711,6 +1735,9 @@ export default function DesignStudioClient() {
             save:async()=>{const ok=await saveProject(true);return {ok,message:ok?copy.saved:copy.saveFailed};},
             'save-exit':async()=>{const ok=await saveAndExit();return {ok,message:ok?copy.saved:copy.saveFailed};},
             undo:()=>{const ok=viewportRef.current?.undo()===true;return {ok,message:ok?copy.activated:copy.unavailable};},redo:()=>{const ok=viewportRef.current?.redo()===true;return {ok,message:ok?copy.activated:copy.unavailable};},
+            inspection:()=>{if(workspaceMode!=='expert'||!cadReady)return {ok:false,message:copy.unavailable};setInspectionTab('light');setInspectionOpen(true);return {ok:true,message:copy.opened};},
+            'flashlight-on':()=>{if(workspaceMode!=='expert'||!cadReady)return {ok:false,message:copy.unavailable};setSettings(s=>({...s,inspection_flashlight:true}));return ready();},
+            'flashlight-off':()=>{if(workspaceMode!=='expert'||!cadReady)return {ok:false,message:copy.unavailable};setSettings(s=>({...s,inspection_flashlight:false}));return ready();},
             'fit-camera':()=>{const viewport=viewportRef.current;if(!viewport)return {ok:false,message:copy.unavailable};viewport.fit();return ready();},
             'show-all':()=>{restoreVisibility();return ready();},
             isolate:()=>{setSettings(s=>({...s,show_design:true,opacity:1,show_scan:false,show_upper:false,show_lower:false}));return ready();},
@@ -1764,6 +1791,7 @@ export default function DesignStudioClient() {
         <UiNode as="button" type="button" className="cad-button" aria-label="Kaydet ve çık" title="Kaydet ve çık" disabled={saving||exiting||!cadReady} onClick={()=>void saveAndExit()}><CadIcon name="export" size={18}/><UiNode as="span">Kaydet ve çık</UiNode></UiNode>
         <UiNode as="button" type="button" className="cad-button" aria-label="Form kütüphanesi" title="Form kütüphanesi" onClick={()=>setLibraryTarget('')}><CadIcon name="file" size={18}/><UiNode as="span">Form kütüphanesi</UiNode></UiNode>
         <UiNode as="button" type="button" className="cad-button cad-aya-toggle" aria-label="AYA" aria-pressed={ayaOpen} onClick={()=>setAyaOpen(v=>!v)}><CadIcon name="help" size={18}/>AYA</UiNode>
+        {workspaceMode==='expert'&&<UiNode as="button" type="button" className="cad-button cad-inspection-command" data-cad-command="inspection" aria-label={inspectionCopy.title} aria-pressed={inspectionOpen} disabled={!cadReady} onClick={()=>setInspectionOpen(value=>!value)}><CadIcon name="flashlight" size={26}/><UiNode as="span" translateChildren={false}>{inspectionCopy.launcher}</UiNode></UiNode>}
       </UiNode>
       {contextLoadError&&<UiNode as="div" role="alert" className="cad-context-error"><UserText>{contextLoadError}</UserText><UiNode as="button" type="button" onClick={()=>{if(selectedCase&&org&&user){setContextLoadError('');void loadCaseContext(selectedCase,org,user);}}}>Tekrar dene</UiNode><UiNode as="button" type="button" onClick={()=>setContextLoadError('')}>Kapat</UiNode></UiNode>}
       <UiNode as="section" className="cad-shell" aria-label="Üç boyutlu CAD çalışma alanı">
@@ -2162,6 +2190,7 @@ export default function DesignStudioClient() {
         <UiNode as="footer" className="cad-panel-footer"><UiNode as="button" type="button" disabled={!project || (workspaceMode === 'wizard' ? activeTaskIndex : activeStepIndex) <= 0} onClick={() => void moveStep(-1)}><CadIcon name="back" size={16}/>Geri</UiNode><UiNode as="span">{workspaceMode === 'wizard' ? `${activeTaskIndex + 1} / ${CAD_GUIDED_TASKS.length}` : `${activeStep.index} / ${STEPS.length}`}</UiNode><UiNode as="button" type="button" className="cad-next-step" disabled={!cadReady||!project||exiting} onClick={()=>activeStepId==='review'?void saveAndExit():void moveStep(1)}>{activeStepId==='review'?'Kaydet ve çık':'Sonraki'}<CadIcon name="next" size={16}/></UiNode></UiNode>
       </CadFloatingPanel>
           <DesignViewport ref={viewportRef} projectId={project?.id} source={displaySource} referenceSources={referenceSources} onContextMenuRequest={setContextPoint} toothCodes={selectedCase?.tooth_codes ?? []} settings={settings} tool={tool} viewMode={viewMode} marginPoints={marginPoints} measurements={measurements} onMarginPointsChange={changeMargin} onMeasurementsChange={setMeasurements} onConnectorsChange={connectors => patchSetting('connectors', connectors)} onBrushRadiusChange={value => patchSetting('brush_radius_mm', value)} onBrushStrengthChange={value => patchSetting('brush_strength_mm', value)} onGeometryCommit={() => setGeometryRevision(v => v + 1)} onReadyChange={setCadReady} onHistoryChange={setHistoryState} onPerformanceInfo={setPerformanceInfo} onSceneStateChange={setSceneState} onInsertionAxisChange={axis => setSettings(current => ({ ...current, insertion_axis_x: axis.x, insertion_axis_y: axis.y, insertion_axis_z: axis.z }))} onStatus={setStatus}/>
+          {workspaceMode==='expert'&&inspectionOpen&&<CadInspectionPanel key={inspectionTab} initialTab={inspectionTab} settings={settings} patch={value=>setSettings(current=>({...current,...value}))} viewMode={viewMode} onView={value=>{selectViewMode(value);}} onClose={()=>setInspectionOpen(false)} onFocus={()=>{viewportRef.current?.focusRestoration();}} onRotate={direction=>viewportRef.current?.rotateView(direction)} onFit={()=>viewportRef.current?.fit()} ready={cadReady}/>}
           {!focusMode && <UiNode as="aside" className={`cad-object-panel${objectPanelCollapsed ? ' cad-object-panel--collapsed' : ''}`} aria-label="Nesne yöneticisi">
             <UiNode as="div" className="cad-object-panel-title"><CadIcon name="layers" size={18}/>{!objectPanelCollapsed && <UiNode as="strong">Sahne</UiNode>}<CadCommand label={objectPanelCollapsed ? 'Nesne panelini aç' : 'Nesne panelini daralt'} icon={objectPanelCollapsed ? 'layers' : 'collapse'} onClick={() => setObjectPanelCollapsed(v => !v)}/></UiNode>
             {!objectPanelCollapsed && <>
@@ -2242,7 +2271,7 @@ export default function DesignStudioClient() {
             <UiNode as="div" style={ui.toolLibraryControls}>
               <UiNode as="input" value={toolSearch} onChange={(event) => setToolSearch(event.target.value)} aria-label="CAD aracı ara" placeholder="Araç ara: marjin, ölçüm, bağlantı…" style={ui.toolLibrarySearch}/>
               <UiNode as="div" style={ui.toolCategoryRow}>
-                {["Tümü", ...DENTAYA_CAD_TOOL_CATEGORIES.filter(category => availableCommands.some(item => item.category === category))].map((category) => (<UiNode as="button" key={category} type="button" className="cad-action" onClick={() => setToolCategory(category)} style={{
+                {["Tümü", ...Array.from(new Set(availableCommands.map(item=>item.category)))].map((category) => (<UiNode as="button" key={category} type="button" className="cad-action" onClick={() => setToolCategory(category)} style={{
                     ...ui.categoryButton,
                     ...(toolCategory === category ? ui.categoryButtonActive : {}),
                 }}>

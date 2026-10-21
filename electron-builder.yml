@@ -8,6 +8,7 @@ directories:
 files:
   - electron/**/*
   - package.json
+  - src/lib/i18n/dental-facts.json
 
 # Kritik: Next standalone'in node_modules klasorunu Windows paketine
 # symlink yerine gercek dosya olarak kopyalar.

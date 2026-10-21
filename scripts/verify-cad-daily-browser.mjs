@@ -182,6 +182,9 @@ try {
  await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();
  const aya=page.getByRole('dialog',{name:'AYA çalışma asistanı',exact:true});
  await page.setViewportSize({width:1366,height:768});await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).waitFor();const composerBox=await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).boundingBox();assert.ok(composerBox&&composerBox.y+composerBox.height<768,'The composer remains reachable on a laptop screen');
+ // The knowledge notebook also contains a textarea. Opening during autosave
+ // must focus the message composer after it becomes enabled.
+ await page.waitForFunction(()=>document.activeElement===document.querySelector('.cad-aya-panel > form textarea'));
  await page.keyboard.press('Escape');assert.equal(await aya.count(),0);assert.equal(await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).evaluate(button=>document.activeElement===button),true,'Closing the sidebar restores keyboard focus');await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();await page.setViewportSize({width:1600,height:1000});
  const ask=async text=>{await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).fill(text);await aya.getByRole('button',{name:'Gönder',exact:true}).click();await aya.getByRole('button',{name:'Gönder',exact:true}).waitFor();};
  // RC50 uses the scoped CAD dialogue for explicit current-workspace reviews.

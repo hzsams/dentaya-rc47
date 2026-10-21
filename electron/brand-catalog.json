@@ -1,0 +1,1624 @@
+{
+  "version": "premium-3",
+  "wordmark": "DENTAYA",
+  "materials": {
+    "emerald": {
+      "tr": "Zümrüt",
+      "en": "Emerald"
+    },
+    "jade": {
+      "tr": "Yeşim",
+      "en": "Jade"
+    },
+    "titanium": {
+      "tr": "Titanyum",
+      "en": "Titanium"
+    },
+    "champagne": {
+      "tr": "Şampanya",
+      "en": "Champagne"
+    }
+  },
+  "logos": [
+    {
+      "id": "01",
+      "file": "01_dental_form",
+      "name": {
+        "tr": "DENTAYA",
+        "en": "DENTAYA"
+      },
+      "description": {
+        "tr": "İşlenmiş zümrüt yüzey ve şampanya kenar",
+        "en": "Crafted emerald surface with champagne edges"
+      },
+      "style": "Atelier",
+      "family": "premium",
+      "material": "emerald",
+      "path": "M18 14H44C68 14 82 27 82 48S68 82 44 82H18ZM34 30V66H44C58 66 66 59 66 48S58 30 44 30Z"
+    },
+    {
+      "id": "02",
+      "file": "02_dental_arch",
+      "name": {
+        "tr": "Dental Arch",
+        "en": "Dental Arch"
+      },
+      "description": {
+        "tr": "Diş arkı ve yumuşak yeşim yansımaları",
+        "en": "Dental arch with soft jade reflections"
+      },
+      "style": "Arch",
+      "family": "premium",
+      "material": "jade",
+      "path": "M16 78V44C16 25 28 14 48 14S80 25 80 44V78H65V44C65 34 59 29 48 29S31 34 31 44V78Z"
+    },
+    {
+      "id": "03",
+      "file": "03_cad_geometry",
+      "name": {
+        "tr": "CAD Geometry",
+        "en": "CAD Geometry"
+      },
+      "description": {
+        "tr": "Hassas geometri ve titanyum yüzey",
+        "en": "Precise geometry with a titanium finish"
+      },
+      "style": "Precision",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M18 14H57L82 39V57L57 82H18ZM34 30V66H51L66 51V45L51 30Z"
+    },
+    {
+      "id": "04",
+      "file": "04_scan",
+      "name": {
+        "tr": "Scan",
+        "en": "Scan"
+      },
+      "description": {
+        "tr": "Tarama çerçevesi ve merkez kristali",
+        "en": "Scan frame with a crystal centre"
+      },
+      "style": "Scan",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M12 35V14H33V22H20V35ZM63 14H84V35H76V22H63ZM84 61V82H63V74H76V61ZM33 82H12V61H20V74H33ZM48 26L70 48L48 70L26 48ZM48 38L38 48L48 58L58 48Z"
+    },
+    {
+      "id": "05",
+      "file": "05_orbit",
+      "name": {
+        "tr": "Yörünge",
+        "en": "Orbit"
+      },
+      "description": {
+        "tr": "Eksenler etrafında dengeli bağlantı",
+        "en": "Balanced connections around shared axes"
+      },
+      "style": "Orbit",
+      "family": "premium",
+      "material": "emerald",
+      "path": "M48 12C69 12 82 28 82 48S69 84 48 84S14 68 14 48S27 12 48 12ZM48 22C33 22 24 34 24 48S33 74 48 74S72 62 72 48S63 22 48 22ZM8 44H88V52H8ZM44 8H52V88H44Z"
+    },
+    {
+      "id": "06",
+      "file": "06_crown",
+      "name": {
+        "tr": "Crown",
+        "en": "Crown"
+      },
+      "description": {
+        "tr": "Restorasyon tacı ve sıcak metal tonları",
+        "en": "Restoration crown in warm metal tones"
+      },
+      "style": "Heritage",
+      "family": "serif",
+      "material": "champagne",
+      "path": "M12 27L32 42L48 17L64 42L84 27L72 72H24ZM27 43L32 61H64L69 43L61 49L48 30L35 49ZM25 79H71V86H25Z"
+    },
+    {
+      "id": "07",
+      "file": "07_prism",
+      "name": {
+        "tr": "Prizma",
+        "en": "Prism"
+      },
+      "description": {
+        "tr": "Üç yüzeyli hacim ve derinlik",
+        "en": "Three-dimensional prism with distinct faces"
+      },
+      "style": "Prism",
+      "family": "sans",
+      "material": "jade",
+      "path": "M48 10L82 30V69L48 89L14 69V30ZM24 35V63L43 74V46ZM53 46V74L72 63V35ZM48 21L29 32L48 43L67 32Z"
+    },
+    {
+      "id": "08",
+      "file": "08_wave",
+      "name": {
+        "tr": "Dalga",
+        "en": "Wave"
+      },
+      "description": {
+        "tr": "Kesintisiz dental form akışı",
+        "en": "Continuous flow inspired by dental form"
+      },
+      "style": "Wave",
+      "family": "premium",
+      "material": "emerald",
+      "path": "M11 61C11 37 23 18 43 18C59 18 63 43 75 43C81 43 85 38 87 30V53C84 58 79 61 72 61C53 61 52 34 40 34C30 34 26 47 26 61V79H11ZM35 78V64C35 47 43 44 48 47C52 50 52 58 48 62V78Z"
+    },
+    {
+      "id": "09",
+      "file": "09_link",
+      "name": {
+        "tr": "Bağ",
+        "en": "Link"
+      },
+      "description": {
+        "tr": "Klinik ve laboratuvar için DA monogramı",
+        "en": "DA monogram connecting clinic and laboratory"
+      },
+      "style": "Monogram",
+      "family": "premium",
+      "material": "champagne",
+      "path": "M9 16H29C49 16 61 28 61 48S49 80 29 80H9ZM21 28V68H28C41 68 49 61 49 48S41 28 28 28ZM44 80L64 16H77L97 80H85L81 66H60L56 80ZM63 55H78L70.5 30Z"
+    },
+    {
+      "id": "10",
+      "file": "10_spark",
+      "name": {
+        "tr": "Işık",
+        "en": "Lumen"
+      },
+      "description": {
+        "tr": "Çok yönlü ışık ve simetrik odak",
+        "en": "Multidirectional light and symmetric focus"
+      },
+      "style": "Lumen",
+      "family": "premium",
+      "material": "champagne",
+      "path": "M48 8L58 34L85 24L70 48L88 68L60 64L48 88L36 64L8 68L26 48L11 24L38 34ZM48 32L38 48L48 64L58 48Z"
+    },
+    {
+      "id": "11",
+      "file": "11_layer",
+      "name": {
+        "tr": "Katman",
+        "en": "Layer"
+      },
+      "description": {
+        "tr": "Üst üste işlenmiş üç yüzey",
+        "en": "Three precisely stacked surfaces"
+      },
+      "style": "Layer",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M48 9L88 29L48 49L8 29ZM27 29L48 39L69 29L48 19ZM12 44L48 62L84 44V55L48 74L12 55ZM12 64L48 82L84 64V75L48 94L12 75Z"
+    },
+    {
+      "id": "12",
+      "file": "12_shield",
+      "name": {
+        "tr": "Kalkan",
+        "en": "Shield"
+      },
+      "description": {
+        "tr": "DENTAYA imzalı koruyucu amblem",
+        "en": "Protective emblem with the DENTAYA signature"
+      },
+      "style": "Seal",
+      "family": "premium",
+      "material": "emerald",
+      "path": "M48 9L82 22V49C82 68 67 81 48 89C29 81 14 68 14 49V22ZM48 19L24 28V49C24 61 34 72 48 79C62 72 72 61 72 49V28ZM34 31H46C60 31 65 38 65 49S60 67 46 67H34ZM43 40V58H46C53 58 56 55 56 49S53 40 46 40Z"
+    },
+    {
+      "id": "13",
+      "file": "13_apex",
+      "name": {
+        "tr": "Zirve",
+        "en": "Apex"
+      },
+      "description": {
+        "tr": "Keskin A monogramı ve metal kenarlar",
+        "en": "Sharp A monogram with metallic edges"
+      },
+      "style": "Apex",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M12 82L39 14H57L84 82H68L62 66H34L28 82ZM39 52H57L48 28Z"
+    },
+    {
+      "id": "14",
+      "file": "14_diamond",
+      "name": {
+        "tr": "Kristal",
+        "en": "Crystal"
+      },
+      "description": {
+        "tr": "Fasetli elmas ve şampanya ışığı",
+        "en": "Faceted diamond in champagne light"
+      },
+      "style": "Crystal",
+      "family": "premium",
+      "material": "champagne",
+      "path": "M28 14H68L90 40L48 86L6 40ZM33 24L23 36H40L44 24ZM52 24L56 36H73L63 24ZM24 46L42 66L39 46ZM49 46L48 64L47 46ZM57 46L54 66L72 46Z"
+    },
+    {
+      "id": "15",
+      "file": "15_focus",
+      "name": {
+        "tr": "Odak",
+        "en": "Focus"
+      },
+      "description": {
+        "tr": "Halka içinde hassas merkez",
+        "en": "A precise centre within a balanced ring"
+      },
+      "style": "Focus",
+      "family": "sans",
+      "material": "jade",
+      "path": "M48 10A38 38 0 1 1 48 86A38 38 0 1 1 48 10ZM48 20A28 28 0 1 0 48 76A28 28 0 1 0 48 20ZM48 30L66 48L48 66L30 48ZM48 42L42 48L48 54L54 48Z"
+    },
+    {
+      "id": "16",
+      "file": "16_flow",
+      "name": {
+        "tr": "Akış",
+        "en": "Flow"
+      },
+      "description": {
+        "tr": "Karşılıklı hareket ve iş birliği",
+        "en": "Reciprocal movement and collaboration"
+      },
+      "style": "Flow",
+      "family": "premium",
+      "material": "jade",
+      "path": "M12 65C12 47 26 37 46 37H68L57 26L67 16L89 39L67 62L57 52L68 41H47C33 41 25 49 25 65V80H12ZM7 57L29 34L39 44L28 55H49C63 55 71 47 71 31V16H84V31C84 49 70 59 50 59H28L39 70L29 80Z"
+    },
+    {
+      "id": "17",
+      "file": "17_petal",
+      "name": {
+        "tr": "Lotus",
+        "en": "Lotus"
+      },
+      "description": {
+        "tr": "Doğal yapraklar ve dengeli oranlar",
+        "en": "Natural petals and balanced proportions"
+      },
+      "style": "Lotus",
+      "family": "premium",
+      "material": "champagne",
+      "path": "M48 8C61 23 64 33 59 43C69 36 79 35 90 37C87 61 70 76 48 86C26 76 9 61 6 37C17 35 27 36 37 43C32 33 35 23 48 8ZM48 25C41 36 40 43 48 53C56 43 55 36 48 25ZM19 48C24 59 32 65 42 70C38 58 30 52 19 48ZM77 48C66 52 58 58 54 70C64 65 72 59 77 48Z"
+    },
+    {
+      "id": "18",
+      "file": "18_bridge",
+      "name": {
+        "tr": "Köprü",
+        "en": "Bridge"
+      },
+      "description": {
+        "tr": "Birbirine bağlı birimler ve ortak zemin",
+        "en": "Connected units on shared foundations"
+      },
+      "style": "Bridge",
+      "family": "premium",
+      "material": "emerald",
+      "path": "M13 20H83V35H13ZM13 40H29V76H13ZM40 40H56V76H40ZM67 40H83V76H67Z"
+    },
+    {
+      "id": "19",
+      "file": "19_molar",
+      "name": {
+        "tr": "Molar",
+        "en": "Molar"
+      },
+      "description": {
+        "tr": "İki köklü molar ve parlak mine yüzeyi",
+        "en": "Twin-root molar with polished enamel"
+      },
+      "style": "Molar",
+      "family": "premium",
+      "material": "jade",
+      "path": "M23 14C33 8 41 17 48 17S63 8 73 14C89 23 79 42 76 52L67 82C63 94 55 85 54 73L51 59Q48 53 45 59L42 73C41 85 33 94 29 82L20 52C17 42 7 23 23 14Z"
+    },
+    {
+      "id": "20",
+      "file": "20_incisor",
+      "name": {
+        "tr": "Kesici",
+        "en": "Incisor"
+      },
+      "description": {
+        "tr": "Kesici kenar ve uzun kök geometrisi",
+        "en": "Broad incisal edge and a tapered root"
+      },
+      "style": "Incisor",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M20 12H76L73 43L60 57L55 83Q48 95 41 83L36 57L23 43ZM31 24L33 37H63L65 24Z"
+    },
+    {
+      "id": "21",
+      "file": "21_canine",
+      "name": {
+        "tr": "Kanin",
+        "en": "Canine"
+      },
+      "description": {
+        "tr": "Tek tüberkül ve elmas biçimli kök",
+        "en": "Single cusp over a diamond-shaped root"
+      },
+      "style": "Canine",
+      "family": "premium",
+      "material": "champagne",
+      "path": "M48 8L76 29L72 54L54 86Q48 95 42 86L24 54L20 29ZM48 24L33 35L37 49H59L63 35Z"
+    },
+    {
+      "id": "22",
+      "file": "22_premolar",
+      "name": {
+        "tr": "Premolar",
+        "en": "Premolar"
+      },
+      "description": {
+        "tr": "Çift tepe ve dengeli premolar hacmi",
+        "en": "Twin cusps and a balanced premolar volume"
+      },
+      "style": "Premolar",
+      "family": "premium",
+      "material": "emerald",
+      "path": "M17 28L32 10L48 23L64 10L79 28L73 55L61 84H52L48 64L44 84H35L23 55ZM31 32L35 45H61L65 32L59 26L48 36L37 26Z"
+    },
+    {
+      "id": "23",
+      "file": "23_root_pair",
+      "name": {
+        "tr": "Kök İkilisi",
+        "en": "Root Pair"
+      },
+      "description": {
+        "tr": "Ayrışan kökler ve ortak boyun",
+        "en": "Diverging roots beneath a shared collar"
+      },
+      "style": "Root Pair",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M17 12H79V28H17ZM23 36H44V59L36 85Q32 94 28 84ZM52 36H73L68 84Q64 94 60 85L52 59Z"
+    },
+    {
+      "id": "24",
+      "file": "24_cusp_triad",
+      "name": {
+        "tr": "Tüberkül",
+        "en": "Cusp Triad"
+      },
+      "description": {
+        "tr": "Üç yükselen tüberkülün yüzey ritmi",
+        "en": "Three raised cusps in a sculpted rhythm"
+      },
+      "style": "Cusp Triad",
+      "family": "premium",
+      "material": "champagne",
+      "path": "M10 63L29 19L43 44L48 12L58 44L73 19L88 63L71 83H27ZM28 61L35 70H61L69 61L62 55L49 64L36 55Z"
+    },
+    {
+      "id": "25",
+      "file": "25_occlusal",
+      "name": {
+        "tr": "Oklüzal",
+        "en": "Occlusal"
+      },
+      "description": {
+        "tr": "Dört loblu oklüzal kesit",
+        "en": "Four-lobed occlusal section"
+      },
+      "style": "Occlusal",
+      "family": "premium",
+      "material": "jade",
+      "path": "M48 17C63 4 86 17 79 38C95 51 78 80 60 76C46 94 18 80 21 62C3 46 15 18 35 21ZM48 34L34 48L48 63L62 48Z"
+    },
+    {
+      "id": "26",
+      "file": "26_enamel_drop",
+      "name": {
+        "tr": "Mine Damlası",
+        "en": "Enamel Drop"
+      },
+      "description": {
+        "tr": "Mineyi çağrıştıran iç içe damla",
+        "en": "Nested droplet inspired by dental enamel"
+      },
+      "style": "Enamel Drop",
+      "family": "premium",
+      "material": "emerald",
+      "path": "M48 7C39 26 17 43 17 61A31 31 0 0 0 79 61C79 43 57 26 48 7ZM48 33C41 44 31 53 31 62A17 17 0 0 0 65 62C65 53 55 44 48 33Z"
+    },
+    {
+      "id": "27",
+      "file": "27_gingival_arc",
+      "name": {
+        "tr": "Gingival Yay",
+        "en": "Gingival Arc"
+      },
+      "description": {
+        "tr": "Gingival hat üzerinde yükselen üç ünite",
+        "en": "Three units resting on a gingival arc"
+      },
+      "style": "Gingival Arc",
+      "family": "serif",
+      "material": "champagne",
+      "path": "M12 29Q48 61 84 29V47Q48 77 12 47ZM18 12H32V27H18ZM41 18H55V36H41ZM64 12H78V27H64ZM22 66Q48 83 74 66V78Q48 93 22 78Z"
+    },
+    {
+      "id": "28",
+      "file": "28_arch_nodes",
+      "name": {
+        "tr": "Ark Noktaları",
+        "en": "Arch Nodes"
+      },
+      "description": {
+        "tr": "Beş birimle kurulan dental ark",
+        "en": "Five connected units defining a dental arch"
+      },
+      "style": "Arch Nodes",
+      "family": "sans",
+      "material": "jade",
+      "path": "M9 64L15 34L33 13H63L81 34L87 64H74L69 39L57 26H39L27 39L22 64ZM9 73H23V87H9ZM73 73H87V87H73ZM41 41H55V55H41Z"
+    },
+    {
+      "id": "29",
+      "file": "29_bite_pair",
+      "name": {
+        "tr": "Kapanış",
+        "en": "Bite Pair"
+      },
+      "description": {
+        "tr": "Birbirini karşılayan iki oklüzal yüzey",
+        "en": "Two complementary occlusal surfaces"
+      },
+      "style": "Bite Pair",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M12 17H84V34L66 44L48 34L30 44L12 34ZM12 62L30 52L48 62L66 52L84 62V79H12Z"
+    },
+    {
+      "id": "30",
+      "file": "30_implant_thread",
+      "name": {
+        "tr": "İmplant",
+        "en": "Implant"
+      },
+      "description": {
+        "tr": "Vida gövdesi ve belirgin implant platformu",
+        "en": "Threaded body beneath an implant platform"
+      },
+      "style": "Implant",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M27 9H69V23H27ZM34 29H62V37L72 33V43L62 47V52L72 48V58L62 62V67L70 64V74L48 90L31 77V69L23 72V62L34 58V53L24 57V47L34 43Z"
+    },
+    {
+      "id": "31",
+      "file": "31_implant_crown",
+      "name": {
+        "tr": "İmplant Taç",
+        "en": "Implant Crown"
+      },
+      "description": {
+        "tr": "Restorasyon ile implantın birleşimi",
+        "en": "Restoration crown meeting an implant body"
+      },
+      "style": "Implant Crown",
+      "family": "premium",
+      "material": "champagne",
+      "path": "M19 18Q30 9 48 17Q66 9 77 18L70 44H26ZM36 51H60V58L68 55V65L60 68V75L48 88L36 75V71L28 74V64L36 61Z"
+    },
+    {
+      "id": "32",
+      "file": "32_abutment",
+      "name": {
+        "tr": "Dayanak",
+        "en": "Abutment"
+      },
+      "description": {
+        "tr": "Konik dayanak ve altıgen platform",
+        "en": "Tapered abutment with a hexagonal platform"
+      },
+      "style": "Abutment",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M35 10H61L67 42H29ZM22 49H74L85 64L74 79H22L11 64ZM32 60L28 64L32 68H64L68 64L64 60Z"
+    },
+    {
+      "id": "33",
+      "file": "33_crown_section",
+      "name": {
+        "tr": "Taç Kesiti",
+        "en": "Crown Section"
+      },
+      "description": {
+        "tr": "Kesitte açık kalan restorasyon kabuğu",
+        "en": "Open cross-section of a restoration shell"
+      },
+      "style": "Crown Section",
+      "family": "premium",
+      "material": "emerald",
+      "path": "M15 76V36L30 13H66L81 36V76H60V60H67V40L58 29H38L29 40V60H36V76ZM41 48H55V84H41Z"
+    },
+    {
+      "id": "34",
+      "file": "34_veneer",
+      "name": {
+        "tr": "Laminate",
+        "en": "Veneer"
+      },
+      "description": {
+        "tr": "İnce kabuğun kıvrımlı hacmi",
+        "en": "Curved volume of a slender veneer shell"
+      },
+      "style": "Veneer",
+      "family": "premium",
+      "material": "jade",
+      "path": "M21 14Q48 4 75 14L70 63Q48 89 26 79L17 40ZM32 26L31 64Q47 71 57 59L61 26Q47 21 32 26Z"
+    },
+    {
+      "id": "35",
+      "file": "35_arch_span",
+      "name": {
+        "tr": "Ark Köprüsü",
+        "en": "Arch Span"
+      },
+      "description": {
+        "tr": "İki ayağı birleştiren yükseltilmiş kemer",
+        "en": "Raised arch joining two supports"
+      },
+      "style": "Arch Span",
+      "family": "serif",
+      "material": "champagne",
+      "path": "M9 78V44C9 22 26 10 48 10S87 22 87 44V78H70V44C70 33 62 27 48 27S26 33 26 44V78ZM35 61H61V78H35Z"
+    },
+    {
+      "id": "36",
+      "file": "36_pontic",
+      "name": {
+        "tr": "Gövde Bağı",
+        "en": "Pontic Link"
+      },
+      "description": {
+        "tr": "Üç restorasyonu birleştiren yumuşak bağ",
+        "en": "Soft connection between three restorations"
+      },
+      "style": "Pontic Link",
+      "family": "premium",
+      "material": "emerald",
+      "path": "M9 25Q19 14 29 25L33 40H39L43 20H53L57 40H63L67 25Q77 14 87 25L84 67Q77 79 70 67L66 54H57L53 78H43L39 54H30L26 67Q19 79 12 67Z"
+    },
+    {
+      "id": "37",
+      "file": "37_margin_loop",
+      "name": {
+        "tr": "Marjin",
+        "en": "Margin Loop"
+      },
+      "description": {
+        "tr": "Asimetrik diş çevresinde izlenen marjin",
+        "en": "Margin loop around an asymmetric dental form"
+      },
+      "style": "Margin Loop",
+      "family": "premium",
+      "material": "jade",
+      "path": "M20 20L43 9L70 15L86 37L81 66L62 85L32 81L12 57ZM28 31L24 54L38 68L58 71L69 59L73 40L61 27L44 23Z"
+    },
+    {
+      "id": "38",
+      "file": "38_finish_line",
+      "name": {
+        "tr": "Bitiş Hattı",
+        "en": "Finish Line"
+      },
+      "description": {
+        "tr": "Basamak ve yuvarlak omzun birlikteliği",
+        "en": "Stepped finish line with a rounded shoulder"
+      },
+      "style": "Finish Line",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M13 16H47V29H26V62H40V75H13ZM83 16V75H56V62H70V29H56V16ZM36 38H60V51H36ZM32 82H64V91H32Z"
+    },
+    {
+      "id": "39",
+      "file": "39_scan_halo",
+      "name": {
+        "tr": "Tarama Halesi",
+        "en": "Scan Halo"
+      },
+      "description": {
+        "tr": "Açık tarama halkası içinde diş profili",
+        "en": "Dental profile within an open scan halo"
+      },
+      "style": "Scan Halo",
+      "family": "sans",
+      "material": "emerald",
+      "path": "M48 7A41 41 0 1 1 9 61L22 57A27 27 0 1 0 48 21ZM34 35Q41 28 48 35Q55 28 62 35L59 56L53 70H43L37 56Z"
+    },
+    {
+      "id": "40",
+      "file": "40_light_stripes",
+      "name": {
+        "tr": "Işık Taraması",
+        "en": "Light Stripes"
+      },
+      "description": {
+        "tr": "Eğimli şeritlerle hacim kazanan tarama",
+        "en": "Inclined scan bands describing a volume"
+      },
+      "style": "Light Stripes",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M15 25L66 10L81 22L30 37ZM15 44L81 25V39L15 58ZM15 64L81 45V59L15 78ZM30 84L81 68V78L48 89Z"
+    },
+    {
+      "id": "41",
+      "file": "41_point_lattice",
+      "name": {
+        "tr": "Nokta Ağı",
+        "en": "Point Lattice"
+      },
+      "description": {
+        "tr": "Bağlı düğümlerden oluşan tarama yüzeyi",
+        "en": "Connected nodes forming a scan surface"
+      },
+      "style": "Point Lattice",
+      "family": "sans",
+      "material": "champagne",
+      "path": "M12 13H28V29H12ZM40 13H56V29H40ZM68 13H84V29H68ZM26 38H42V54H26ZM54 38H70V54H54ZM12 63H28V79H12ZM40 63H56V79H40ZM68 63H84V79H68ZM30 83H66V91H30Z"
+    },
+    {
+      "id": "42",
+      "file": "42_triangulated",
+      "name": {
+        "tr": "Üçgen Ağ",
+        "en": "Triangulated"
+      },
+      "description": {
+        "tr": "Üçgensel yüzeylerle kurulan molar",
+        "en": "Molar assembled from triangular faces"
+      },
+      "style": "Triangulated",
+      "family": "sans",
+      "material": "emerald",
+      "path": "M18 17L45 11L29 40ZM51 11L78 17L67 40ZM18 25L25 48L15 61ZM78 25L81 61L71 48ZM34 44L48 20L62 44ZM29 53H45L35 84ZM51 53H67L61 84ZM40 49H56L48 65Z"
+    },
+    {
+      "id": "43",
+      "file": "43_voxel_tooth",
+      "name": {
+        "tr": "Voksel Diş",
+        "en": "Voxel Tooth"
+      },
+      "description": {
+        "tr": "Kademeli bloklarla şekillenen diş",
+        "en": "Dental silhouette formed by stepped blocks"
+      },
+      "style": "Voxel Tooth",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M20 12H38V20H58V12H76V30H84V48H76V66H66V84H54V66H42V84H30V66H20V48H12V30H20ZM32 32V46H64V32Z"
+    },
+    {
+      "id": "44",
+      "file": "44_mesh_hex",
+      "name": {
+        "tr": "Altıgen Ağ",
+        "en": "Hex Mesh"
+      },
+      "description": {
+        "tr": "Altıgen ağın içindeki dental boşluk",
+        "en": "Dental aperture within a hexagonal mesh"
+      },
+      "style": "Hex Mesh",
+      "family": "sans",
+      "material": "jade",
+      "path": "M48 7L84 28V70L48 91L12 70V28ZM48 22L26 35V62L38 69L42 53H54L58 69L70 62V35L60 29L48 37L36 29Z"
+    },
+    {
+      "id": "45",
+      "file": "45_coordinate",
+      "name": {
+        "tr": "Koordinat",
+        "en": "Coordinate"
+      },
+      "description": {
+        "tr": "Üç eksende yükselen hassas yönler",
+        "en": "Precise directions along three spatial axes"
+      },
+      "style": "Coordinate",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M42 11H54V43L80 28L86 39L60 54L86 69L80 80L48 61L16 80L10 69L36 54L10 39L16 28L42 43ZM42 67H54V89H42Z"
+    },
+    {
+      "id": "46",
+      "file": "46_caliper",
+      "name": {
+        "tr": "Kumpas",
+        "en": "Caliper"
+      },
+      "description": {
+        "tr": "Paralel çeneler ve ölçüm köprüsü",
+        "en": "Parallel jaws joined by a measurement beam"
+      },
+      "style": "Caliper",
+      "family": "sans",
+      "material": "champagne",
+      "path": "M14 10H27V24H69V10H82V52H69V37H54V77H64V88H32V77H42V37H27V52H14ZM42 45H54V52H42Z"
+    },
+    {
+      "id": "47",
+      "file": "47_tool_nib",
+      "name": {
+        "tr": "Modelaj Ucu",
+        "en": "Sculpting Nib"
+      },
+      "description": {
+        "tr": "Eğimli modelaj ucunda keskin yüzey",
+        "en": "Bevelled tip of a sculpting tool"
+      },
+      "style": "Sculpting Nib",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M20 11H49L80 42L69 53L49 35L36 48L54 68L43 79L12 48V19ZM58 59L68 49L87 68L69 87L50 68Z"
+    },
+    {
+      "id": "48",
+      "file": "48_milling",
+      "name": {
+        "tr": "Freze",
+        "en": "Milling"
+      },
+      "description": {
+        "tr": "Freze mili ve katmanlı kesici ağız",
+        "en": "Milling spindle with layered cutting edges"
+      },
+      "style": "Milling",
+      "family": "sans",
+      "material": "emerald",
+      "path": "M33 8H63V29H33ZM39 35H57V52L69 58V68L27 57V47L39 50ZM27 64L69 75V85L27 74Z"
+    },
+    {
+      "id": "49",
+      "file": "49_section_wedge",
+      "name": {
+        "tr": "Kesit Dilimi",
+        "en": "Section Wedge"
+      },
+      "description": {
+        "tr": "Silindirik hacimden açılan kesit",
+        "en": "Open wedge through a cylindrical volume"
+      },
+      "style": "Section Wedge",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M45 10A39 39 0 1 0 84 49H45ZM32 29V62H65A25 25 0 1 1 32 29ZM54 8L87 41H54Z"
+    },
+    {
+      "id": "50",
+      "file": "50_contour_bands",
+      "name": {
+        "tr": "Kontur",
+        "en": "Contour Bands"
+      },
+      "description": {
+        "tr": "Üç farklı kesit boyunca yüzey akışı",
+        "en": "Surface flow through three distinct sections"
+      },
+      "style": "Contour Bands",
+      "family": "premium",
+      "material": "jade",
+      "path": "M12 31Q48 0 84 31V42Q48 17 12 42ZM18 50Q48 24 78 50V61Q48 41 18 61ZM25 70Q48 49 71 70V82Q48 66 25 82Z"
+    },
+    {
+      "id": "51",
+      "file": "51_offset_shell",
+      "name": {
+        "tr": "Kabuk",
+        "en": "Offset Shell"
+      },
+      "description": {
+        "tr": "Dış ve iç yüzey arasındaki ölçülü kabuk",
+        "en": "Measured shell between outer and inner surfaces"
+      },
+      "style": "Offset Shell",
+      "family": "premium",
+      "material": "champagne",
+      "path": "M17 13H79V69L48 88L17 69ZM30 26V61L48 72L66 61V26ZM38 35H58V52L48 59L38 52Z"
+    },
+    {
+      "id": "52",
+      "file": "52_contact_pair",
+      "name": {
+        "tr": "Temas",
+        "en": "Contact Pair"
+      },
+      "description": {
+        "tr": "Merkezde buluşan karşılıklı temas yüzeyleri",
+        "en": "Opposing contact surfaces meeting at the centre"
+      },
+      "style": "Contact Pair",
+      "family": "premium",
+      "material": "emerald",
+      "path": "M14 14H39V34L47 48L39 62V82H14L23 48ZM82 14H57V34L49 48L57 62V82H82L73 48Z"
+    },
+    {
+      "id": "53",
+      "file": "53_clearance",
+      "name": {
+        "tr": "Aralık",
+        "en": "Clearance"
+      },
+      "description": {
+        "tr": "İki sınır arasında kontrollü mesafe",
+        "en": "Controlled distance between two boundaries"
+      },
+      "style": "Clearance",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M10 15H86V27H10ZM10 69H86V81H10ZM42 32H54V42H65L48 60L31 42H42Z"
+    },
+    {
+      "id": "54",
+      "file": "54_insertion",
+      "name": {
+        "tr": "Giriş Yönü",
+        "en": "Insertion Axis"
+      },
+      "description": {
+        "tr": "Yön oku ve konik yerleşim yatağı",
+        "en": "Directional arrow above a tapered seat"
+      },
+      "style": "Insertion Axis",
+      "family": "sans",
+      "material": "champagne",
+      "path": "M42 7H54V26H66L48 45L30 26H42ZM24 44L36 56V72H60V56L72 44L82 84H14Z"
+    },
+    {
+      "id": "55",
+      "file": "55_relief",
+      "name": {
+        "tr": "Rölyef",
+        "en": "Relief"
+      },
+      "description": {
+        "tr": "Girinti boşluğu çevresinde yönlendirilmiş yüzey",
+        "en": "Directed surface surrounding a relief pocket"
+      },
+      "style": "Relief",
+      "family": "premium",
+      "material": "jade",
+      "path": "M12 15H83V30H44L31 43V66H56V52H45V39H71V80H17V37ZM78 43H89V80H78Z"
+    },
+    {
+      "id": "56",
+      "file": "56_thickness",
+      "name": {
+        "tr": "Kalınlık",
+        "en": "Thickness"
+      },
+      "description": {
+        "tr": "Kesintili katmanlarla duvar kalınlığı",
+        "en": "Wall thickness described by interrupted layers"
+      },
+      "style": "Thickness",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M48 9A39 39 0 1 1 9 48H21A27 27 0 1 0 48 21ZM48 30A18 18 0 1 1 30 48H41A7 7 0 1 0 48 41ZM8 14H23V29H8Z"
+    },
+    {
+      "id": "57",
+      "file": "57_spline",
+      "name": {
+        "tr": "Spline",
+        "en": "Spline"
+      },
+      "description": {
+        "tr": "İki kontrol noktası arasında sürekli eğri",
+        "en": "Continuous curve between two control points"
+      },
+      "style": "Spline",
+      "family": "premium",
+      "material": "emerald",
+      "path": "M9 65C34 65 19 18 49 18C75 18 63 66 87 66V80C49 80 62 32 49 32C36 32 49 79 9 79ZM9 10H23V24H9ZM73 10H87V24H73Z"
+    },
+    {
+      "id": "58",
+      "file": "58_normals",
+      "name": {
+        "tr": "Yüzey Normali",
+        "en": "Surface Normals"
+      },
+      "description": {
+        "tr": "Bir yaydan yükselen üç yüzey normali",
+        "en": "Three surface normals rising from a shared arc"
+      },
+      "style": "Surface Normals",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M15 66Q48 84 81 66V81Q48 98 15 81ZM13 24L25 17L43 52L32 58ZM42 7H54V49H42ZM71 17L83 24L64 58L53 52Z"
+    },
+    {
+      "id": "59",
+      "file": "59_control_knots",
+      "name": {
+        "tr": "Kontrol Düğümleri",
+        "en": "Control Knots"
+      },
+      "description": {
+        "tr": "Çapraz kirişle bağlı dört kontrol düğümü",
+        "en": "Four control knots linked by a diagonal beam"
+      },
+      "style": "Control Knots",
+      "family": "sans",
+      "material": "champagne",
+      "path": "M10 10H30V30H10ZM66 10H86V30H66ZM10 66H30V86H10ZM66 66H86V86H66ZM35 27L69 61L61 69L27 35ZM36 66L66 36L74 44L44 74Z"
+    },
+    {
+      "id": "60",
+      "file": "60_construction_cube",
+      "name": {
+        "tr": "Yapı Küpü",
+        "en": "Construction Cube"
+      },
+      "description": {
+        "tr": "Açık köşeli izometrik konstrüksiyon",
+        "en": "Isometric construction with open corners"
+      },
+      "style": "Construction Cube",
+      "family": "sans",
+      "material": "jade",
+      "path": "M48 8L84 29V70L48 91L12 70V29ZM48 23L29 34L48 45L67 34ZM25 44V62L41 71V53ZM55 53V71L71 62V44Z"
+    },
+    {
+      "id": "61",
+      "file": "61_tetra",
+      "name": {
+        "tr": "Tetra",
+        "en": "Tetra"
+      },
+      "description": {
+        "tr": "Dört yüzlü geometrinin ayrılmış yüzeyleri",
+        "en": "Separated faces of a tetrahedral geometry"
+      },
+      "style": "Tetra",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M46 9L10 75L41 59ZM54 15L87 75L54 59ZM17 83H79L48 67Z"
+    },
+    {
+      "id": "62",
+      "file": "62_octa",
+      "name": {
+        "tr": "Okta",
+        "en": "Octa"
+      },
+      "description": {
+        "tr": "Sekiz yüzlü hacimde ışık kırılması",
+        "en": "Light breaking across an octahedral volume"
+      },
+      "style": "Octa",
+      "family": "premium",
+      "material": "champagne",
+      "path": "M45 7L9 45L42 35ZM53 7L86 45L55 35ZM9 53L45 89L42 61ZM55 61L53 89L86 53ZM48 42L38 48L48 55L58 48Z"
+    },
+    {
+      "id": "63",
+      "file": "63_folded_plane",
+      "name": {
+        "tr": "Katlı Yüzey",
+        "en": "Folded Plane"
+      },
+      "description": {
+        "tr": "Birbirini izleyen üç katlanmış düzlem",
+        "en": "Three folded planes in sequence"
+      },
+      "style": "Folded Plane",
+      "family": "sans",
+      "material": "emerald",
+      "path": "M10 18L36 32V75L10 61ZM43 32L68 17V60L43 75ZM75 17L87 25V68L75 60Z"
+    },
+    {
+      "id": "64",
+      "file": "64_torque",
+      "name": {
+        "tr": "Tork",
+        "en": "Torque"
+      },
+      "description": {
+        "tr": "Bir merkez çevresinde dönen üç kol",
+        "en": "Three arms turning around a shared centre"
+      },
+      "style": "Torque",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M44 10H75V24H58L47 43L35 36ZM81 39L92 57L77 83L65 76L75 59L54 58V44ZM49 84H23L8 59L20 51L30 69L41 50L53 57Z"
+    },
+    {
+      "id": "65",
+      "file": "65_iso_arch",
+      "name": {
+        "tr": "İzometrik Ark",
+        "en": "Isometric Arch"
+      },
+      "description": {
+        "tr": "Yükselen dental kemerin perspektif hacmi",
+        "en": "Perspective volume of a rising dental arch"
+      },
+      "style": "Isometric Arch",
+      "family": "premium",
+      "material": "jade",
+      "path": "M10 44L43 10L85 27V78L71 84V37L46 27L25 49V76L10 70ZM37 50L57 40V80L44 87V61L37 65Z"
+    },
+    {
+      "id": "66",
+      "file": "66_hex_core",
+      "name": {
+        "tr": "Altıgen Çekirdek",
+        "en": "Hex Core"
+      },
+      "description": {
+        "tr": "Altıgen kılıf içinde yükseltilmiş çekirdek",
+        "en": "Raised core inside a hexagonal casing"
+      },
+      "style": "Hex Core",
+      "family": "sans",
+      "material": "champagne",
+      "path": "M48 8L83 28V68L48 88L13 68V28ZM48 22L25 35V61L48 74L71 61V35ZM48 34L60 41V55L48 62L36 55V41Z"
+    },
+    {
+      "id": "67",
+      "file": "67_prism_window",
+      "name": {
+        "tr": "Prizma Penceresi",
+        "en": "Prism Window"
+      },
+      "description": {
+        "tr": "Eğimli prizma içinde açık pencere",
+        "en": "Open window inside an inclined prism"
+      },
+      "style": "Prism Window",
+      "family": "sans",
+      "material": "emerald",
+      "path": "M13 24L63 9L83 26V72L33 87L13 70ZM27 34V59L39 69L69 60V36L57 26ZM40 39L58 34V53L40 58Z"
+    },
+    {
+      "id": "68",
+      "file": "68_helix",
+      "name": {
+        "tr": "Sarmal",
+        "en": "Helix"
+      },
+      "description": {
+        "tr": "İki yükselen sarmalın karşılıklı ritmi",
+        "en": "Reciprocal rhythm of two rising helices"
+      },
+      "style": "Helix",
+      "family": "premium",
+      "material": "titanium",
+      "path": "M20 9H34C34 31 76 29 76 49S34 69 34 88H20C20 61 62 65 62 49S20 36 20 9ZM62 9H76C76 21 64 29 53 33L42 25C54 21 62 17 62 9ZM43 65L54 73C44 77 34 81 34 88H20C20 76 31 69 43 65Z"
+    },
+    {
+      "id": "69",
+      "file": "69_ribbon_loop",
+      "name": {
+        "tr": "Şerit Döngüsü",
+        "en": "Ribbon Loop"
+      },
+      "description": {
+        "tr": "Kesişmeden birbirine dönen hacimli şeritler",
+        "en": "Dimensional ribbons turning around each other"
+      },
+      "style": "Ribbon Loop",
+      "family": "premium",
+      "material": "champagne",
+      "path": "M13 18H67L85 36L67 54H48L35 41H61L66 36L61 31H26V60L39 73H69V86H33L13 66ZM48 42H61V64H48Z"
+    },
+    {
+      "id": "70",
+      "file": "70_crown_lattice",
+      "name": {
+        "tr": "Taç Kafesi",
+        "en": "Crown Lattice"
+      },
+      "description": {
+        "tr": "Ayrık kirişlerden kurulan restorasyon tacı",
+        "en": "Restoration crown built from separated beams"
+      },
+      "style": "Crown Lattice",
+      "family": "sans",
+      "material": "jade",
+      "path": "M10 23L28 38L42 14V39L25 57ZM54 14L68 38L86 23L71 57L54 39ZM26 64H70V78H26ZM38 44H58V57H38Z"
+    },
+    {
+      "id": "71",
+      "file": "71_d_split",
+      "name": {
+        "tr": "Bölünmüş D",
+        "en": "Split D"
+      },
+      "description": {
+        "tr": "İki yüzeye ayrılan D monogramı",
+        "en": "D monogram divided into two surfaces"
+      },
+      "style": "Split D",
+      "family": "premium",
+      "material": "emerald",
+      "path": "M14 12H35V84H14ZM43 12H48C73 12 86 27 86 48S73 84 48 84H43V69H48C63 69 70 62 70 48S63 27 48 27H43Z"
+    },
+    {
+      "id": "72",
+      "file": "72_d_chamfer",
+      "name": {
+        "tr": "Pahlı D",
+        "en": "Chamfer D"
+      },
+      "description": {
+        "tr": "Kesilmiş köşelerle geometrik D imzası",
+        "en": "Geometric D signature with chamfered corners"
+      },
+      "style": "Chamfer D",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M12 25L25 12H63L84 33V63L63 84H25L12 71ZM29 29V67H56L67 56V40L56 29Z"
+    },
+    {
+      "id": "73",
+      "file": "73_d_vault",
+      "name": {
+        "tr": "Kemer D",
+        "en": "Vault D"
+      },
+      "description": {
+        "tr": "Kemerle birleşen yumuşak D gövdesi",
+        "en": "Soft D body meeting an internal vault"
+      },
+      "style": "Vault D",
+      "family": "serif",
+      "material": "champagne",
+      "path": "M15 12H46Q84 12 84 48T46 84H15ZM32 29V67H46Q67 67 67 48T46 29ZM39 39H51V57H39Z"
+    },
+    {
+      "id": "74",
+      "file": "74_d_ribbon",
+      "name": {
+        "tr": "Şerit D",
+        "en": "Ribbon D"
+      },
+      "description": {
+        "tr": "Açık köşeleri olan şeritsel monogram",
+        "en": "Ribbon monogram with open corners"
+      },
+      "style": "Ribbon D",
+      "family": "premium",
+      "material": "jade",
+      "path": "M12 12H55L84 41V61L61 84H36V68H54L68 54V48L48 28H12ZM12 36H28V84H12Z"
+    },
+    {
+      "id": "75",
+      "file": "75_a_crown",
+      "name": {
+        "tr": "Taç A",
+        "en": "Crowned A"
+      },
+      "description": {
+        "tr": "Üç tepeli taçtan yükselen A imzası",
+        "en": "A signature rising from a three-point crown"
+      },
+      "style": "Crowned A",
+      "family": "premium",
+      "material": "champagne",
+      "path": "M12 26L28 37L48 8L68 37L84 26L74 54H61L48 32L35 54H22ZM26 62H70L79 85H64L59 74H37L32 85H17Z"
+    },
+    {
+      "id": "76",
+      "file": "76_a_vault",
+      "name": {
+        "tr": "Tonoz A",
+        "en": "Vault A"
+      },
+      "description": {
+        "tr": "Tonoz boşluğu çevresinde iki yükselen ayak",
+        "en": "Two rising supports around a vaulted aperture"
+      },
+      "style": "Vault A",
+      "family": "serif",
+      "material": "emerald",
+      "path": "M10 84L34 12H62L86 84H68L48 27L28 84ZM36 53H60V67H36Z"
+    },
+    {
+      "id": "77",
+      "file": "77_a_beam",
+      "name": {
+        "tr": "Kiriş A",
+        "en": "Beam A"
+      },
+      "description": {
+        "tr": "Ayrık çapraz kirişle kurulan A",
+        "en": "A assembled with a separated crossbeam"
+      },
+      "style": "Beam A",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M10 84L38 12H50L26 84ZM58 12L86 84H69L49 33ZM36 58H61V72H36Z"
+    },
+    {
+      "id": "78",
+      "file": "78_y_branch",
+      "name": {
+        "tr": "Dallanma Y",
+        "en": "Branch Y"
+      },
+      "description": {
+        "tr": "Üç yöne açılan Y monogramı",
+        "en": "Y monogram opening in three directions"
+      },
+      "style": "Branch Y",
+      "family": "premium",
+      "material": "jade",
+      "path": "M11 14H31L48 39L65 14H85L57 56V84H39V56ZM41 11H55V25H41Z"
+    },
+    {
+      "id": "79",
+      "file": "79_ya_merge",
+      "name": {
+        "tr": "YA Birleşimi",
+        "en": "YA Merge"
+      },
+      "description": {
+        "tr": "Y yönü ile A ayağının ortak çizgisi",
+        "en": "Shared stroke between Y direction and A support"
+      },
+      "style": "YA Merge",
+      "family": "premium",
+      "material": "emerald",
+      "path": "M5 14H22L36 38L50 14H65L44 53V84H28V53ZM55 84L69 38H79L94 84H80L74 61L68 84Z"
+    },
+    {
+      "id": "80",
+      "file": "80_da_mirror",
+      "name": {
+        "tr": "DA Yansıma",
+        "en": "DA Mirror"
+      },
+      "description": {
+        "tr": "D ve A için karşılıklı iki cephe",
+        "en": "Opposing faces forming D and A"
+      },
+      "style": "DA Mirror",
+      "family": "premium",
+      "material": "champagne",
+      "path": "M7 14H24Q47 14 47 48T24 82H7ZM19 28V68H24Q34 68 34 48T24 28ZM48 82L65 14H78L95 82H81L71 36L61 82Z"
+    },
+    {
+      "id": "81",
+      "file": "81_da_keystone",
+      "name": {
+        "tr": "Kilit Taşı",
+        "en": "DA Keystone"
+      },
+      "description": {
+        "tr": "DA monogramında kilit taşı boşluğu",
+        "en": "Keystone aperture inside a DA monogram"
+      },
+      "style": "DA Keystone",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M11 12H56L85 41V82H67V48L49 29H28V82H11ZM36 42H50L65 82H51L43 60L35 82H23Z"
+    },
+    {
+      "id": "82",
+      "file": "82_dy_link",
+      "name": {
+        "tr": "DY Bağı",
+        "en": "DY Link"
+      },
+      "description": {
+        "tr": "D çevrimi ve ayrık Y kolu",
+        "en": "D loop paired with a separated Y branch"
+      },
+      "style": "DY Link",
+      "family": "premium",
+      "material": "jade",
+      "path": "M8 14H28Q49 14 49 48T28 82H8ZM21 28V68H28Q36 68 36 48T28 28ZM51 14H64L73 35L82 14H95L80 52V82H66V52Z"
+    },
+    {
+      "id": "83",
+      "file": "83_aya_nodes",
+      "name": {
+        "tr": "AYA Düğümü",
+        "en": "AYA Nodes"
+      },
+      "description": {
+        "tr": "AYA harflerini bir araya getiren üçlü yapı",
+        "en": "Three-part geometry joining the letters AYA"
+      },
+      "style": "AYA Nodes",
+      "family": "sans",
+      "material": "champagne",
+      "path": "M4 80L17 17H27L40 80H28L22 42L16 80ZM36 17H48L53 34L58 17H70L59 50V80H47V50ZM64 80L77 17H87L100 80H88L82 42L76 80Z"
+    },
+    {
+      "id": "84",
+      "file": "84_dental_d",
+      "name": {
+        "tr": "Dental D",
+        "en": "Dental D"
+      },
+      "description": {
+        "tr": "D gövdesindeki molar biçimli negatif alan",
+        "en": "Molar-shaped negative space inside a D body"
+      },
+      "style": "Dental D",
+      "family": "premium",
+      "material": "emerald",
+      "path": "M12 11H48Q86 11 86 48T48 85H12ZM30 30L31 50L38 69H44L48 56L52 69H58L65 50L66 30L55 26L48 32L41 26Z"
+    },
+    {
+      "id": "85",
+      "file": "85_d_aperture",
+      "name": {
+        "tr": "D Açıklığı",
+        "en": "D Aperture"
+      },
+      "description": {
+        "tr": "D biçiminde çerçeve içinde açık diyafram",
+        "en": "Open diaphragm inside a D-shaped frame"
+      },
+      "style": "D Aperture",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M13 11H52L84 35V61L52 85H13ZM28 27V69H47L68 53V43L47 27ZM35 36H48L58 48L48 60H35Z"
+    },
+    {
+      "id": "86",
+      "file": "86_a_orbit",
+      "name": {
+        "tr": "A Yörüngesi",
+        "en": "A Orbit"
+      },
+      "description": {
+        "tr": "A çevresinde yükselen yarım yörünge",
+        "en": "Ascending half orbit surrounding an A"
+      },
+      "style": "A Orbit",
+      "family": "premium",
+      "material": "champagne",
+      "path": "M25 75L43 23H55L73 75H58L49 45L40 75ZM13 52A37 37 0 1 1 78 75L70 65A25 25 0 1 0 26 52Z"
+    },
+    {
+      "id": "87",
+      "file": "87_y_arc",
+      "name": {
+        "tr": "Y Yayı",
+        "en": "Y Arc"
+      },
+      "description": {
+        "tr": "Açık yay ve merkezde Y birleşimi",
+        "en": "Open arc joined by a central Y"
+      },
+      "style": "Y Arc",
+      "family": "premium",
+      "material": "jade",
+      "path": "M11 16H25V38Q25 58 41 63V48L28 26H43L48 36L53 26H68L55 48V63Q71 58 71 38V16H85V38Q85 72 55 78V89H41V78Q11 72 11 38Z"
+    },
+    {
+      "id": "88",
+      "file": "88_da_ligature",
+      "name": {
+        "tr": "DA Ligatür",
+        "en": "DA Ligature"
+      },
+      "description": {
+        "tr": "Ortak dikey kiriş üzerinde DA imzası",
+        "en": "DA signature joined by a shared vertical beam"
+      },
+      "style": "DA Ligature",
+      "family": "serif",
+      "material": "emerald",
+      "path": "M8 14H25Q48 14 48 47T25 80H8ZM21 28V66H25Q35 66 35 47T25 28ZM49 80V14H65L88 80H73L57 34V80Z"
+    },
+    {
+      "id": "89",
+      "file": "89_dental_ring",
+      "name": {
+        "tr": "Dental Halka",
+        "en": "Dental Ring"
+      },
+      "description": {
+        "tr": "Dental formu çevreleyen kesintisiz halka",
+        "en": "Continuous ring surrounding a dental form"
+      },
+      "style": "Dental Ring",
+      "family": "premium",
+      "material": "titanium",
+      "path": "M48 7A41 41 0 1 1 48 89A41 41 0 1 1 48 7ZM48 20A28 28 0 1 0 48 76A28 28 0 1 0 48 20ZM33 36L43 32L48 37L53 32L63 36L58 62H51L48 53L45 62H38Z"
+    },
+    {
+      "id": "90",
+      "file": "90_laurel_molar",
+      "name": {
+        "tr": "Defne Molar",
+        "en": "Laurel Molar"
+      },
+      "description": {
+        "tr": "Dental çekirdeği çevreleyen iki yaprak",
+        "en": "Two leaves framing a dental core"
+      },
+      "style": "Laurel Molar",
+      "family": "serif",
+      "material": "champagne",
+      "path": "M13 20Q39 40 33 78Q10 64 13 20ZM83 20Q86 64 63 78Q57 40 83 20ZM35 16L48 22L61 16L65 36L56 58H50L48 47L46 58H40L31 36Z"
+    },
+    {
+      "id": "91",
+      "file": "91_cusp_compass",
+      "name": {
+        "tr": "Tüberkül Pusulası",
+        "en": "Cusp Compass"
+      },
+      "description": {
+        "tr": "Dört yönde uzanan oklüzal pusula",
+        "en": "Occlusal compass extending in four directions"
+      },
+      "style": "Cusp Compass",
+      "family": "sans",
+      "material": "jade",
+      "path": "M48 6L57 31L48 42L39 31ZM90 48L65 57L54 48L65 39ZM48 90L39 65L48 54L57 65ZM6 48L31 39L42 48L31 57ZM48 36L60 48L48 60L36 48Z"
+    },
+    {
+      "id": "92",
+      "file": "92_dental_beacon",
+      "name": {
+        "tr": "Dental Işın",
+        "en": "Dental Beacon"
+      },
+      "description": {
+        "tr": "Diş formunun üstünde yükselen ışınlar",
+        "en": "Rays rising above a dental silhouette"
+      },
+      "style": "Dental Beacon",
+      "family": "premium",
+      "material": "emerald",
+      "path": "M28 39L40 34L48 40L56 34L68 39L65 60L57 82H51L48 66L45 82H39L31 60ZM42 7H54V26H42ZM14 18L25 12L34 28L23 34ZM71 12L82 18L73 34L62 28Z"
+    },
+    {
+      "id": "93",
+      "file": "93_dental_pulse",
+      "name": {
+        "tr": "Dental Nabız",
+        "en": "Dental Pulse"
+      },
+      "description": {
+        "tr": "Dental hacim içinde sürekli nabız çizgisi",
+        "en": "Continuous pulse within a dental volume"
+      },
+      "style": "Dental Pulse",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M15 15H81V37H68V28H28V68H39V81H15ZM46 81V54H37L46 34L56 57L63 45H86V58H70L54 78L52 64V81Z"
+    },
+    {
+      "id": "94",
+      "file": "94_infinity_arch",
+      "name": {
+        "tr": "Sonsuz Ark",
+        "en": "Infinity Arch"
+      },
+      "description": {
+        "tr": "İki dental arkın kesintisiz ortak akışı",
+        "en": "Continuous shared flow of two dental arches"
+      },
+      "style": "Infinity Arch",
+      "family": "premium",
+      "material": "champagne",
+      "path": "M6 48C6 20 31 14 48 34C65 14 90 20 90 48S65 82 48 62C31 82 6 76 6 48ZM20 48C20 63 31 62 40 48C31 34 20 33 20 48ZM56 48C65 62 76 63 76 48S65 34 56 48Z"
+    },
+    {
+      "id": "95",
+      "file": "95_origami_crown",
+      "name": {
+        "tr": "Origami Taç",
+        "en": "Origami Crown"
+      },
+      "description": {
+        "tr": "Katlanmış kâğıt ritminde restorasyon tacı",
+        "en": "Restoration crown in a folded-paper rhythm"
+      },
+      "style": "Origami Crown",
+      "family": "sans",
+      "material": "jade",
+      "path": "M8 20L36 35L48 12L60 35L88 20L73 68L48 84L23 68ZM27 43L33 59L43 65L37 49ZM59 49L53 65L63 59L69 43Z"
+    },
+    {
+      "id": "96",
+      "file": "96_prism_arch",
+      "name": {
+        "tr": "Prizma Ark",
+        "en": "Prism Arch"
+      },
+      "description": {
+        "tr": "İki prizmanın oluşturduğu açık ark",
+        "en": "Open arch formed by two prisms"
+      },
+      "style": "Prism Arch",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M10 35L36 12L46 24V84L31 73V40L24 46V79L10 68ZM50 24L60 12L86 35V68L72 79V46L65 40V73L50 84Z"
+    },
+    {
+      "id": "97",
+      "file": "97_faceted_molar",
+      "name": {
+        "tr": "Fasetli Molar",
+        "en": "Faceted Molar"
+      },
+      "description": {
+        "tr": "Keskin yüzeylere ayrılan dental hacim",
+        "en": "Dental volume divided into crisp facets"
+      },
+      "style": "Faceted Molar",
+      "family": "premium",
+      "material": "emerald",
+      "path": "M18 17L37 10L48 19L59 10L78 17L73 48L62 84H54L48 60L42 84H34L23 48ZM31 28L35 46H61L65 28L57 26L48 33L39 26Z"
+    },
+    {
+      "id": "98",
+      "file": "98_union_crest",
+      "name": {
+        "tr": "Birlik Arması",
+        "en": "Union Crest"
+      },
+      "description": {
+        "tr": "Ortak merkezde birleşen dört kemer",
+        "en": "Four arches meeting around a shared centre"
+      },
+      "style": "Union Crest",
+      "family": "serif",
+      "material": "champagne",
+      "path": "M26 10H70V26H57V35H39V26H26ZM86 26V70H70V57H61V39H70V26ZM70 86H26V70H39V61H57V70H70ZM10 70V26H26V39H35V57H26V70ZM48 39L57 48L48 57L39 48Z"
+    },
+    {
+      "id": "99",
+      "file": "99_horizon_d",
+      "name": {
+        "tr": "Ufuk D",
+        "en": "Horizon D"
+      },
+      "description": {
+        "tr": "Yatay ufuk üzerinde yükselen D çevrimi",
+        "en": "Rising D loop above a horizontal horizon"
+      },
+      "style": "Horizon D",
+      "family": "premium",
+      "material": "jade",
+      "path": "M12 14H48Q84 14 84 48V53H67V48Q67 31 48 31H29V53H12ZM8 61H88V74H8ZM24 81H72V90H24Z"
+    },
+    {
+      "id": "100",
+      "file": "100_studio_jewel",
+      "name": {
+        "tr": "Stüdyo Mücevheri",
+        "en": "Studio Jewel"
+      },
+      "description": {
+        "tr": "Dental çekirdekli çok yüzlü stüdyo mührü",
+        "en": "Multifaceted studio seal with a dental core"
+      },
+      "style": "Studio Jewel",
+      "family": "premium",
+      "material": "champagne",
+      "path": "M30 8H66L88 30V66L66 88H30L8 66V30ZM36 22L22 36V60L36 74H60L74 60V36L60 22ZM34 36L43 32L48 37L53 32L62 36L58 59H51L48 51L45 59H38Z"
+    }
+  ]
+}

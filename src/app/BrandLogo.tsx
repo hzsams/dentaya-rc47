@@ -3,36 +3,15 @@ import UiNode from "@/lib/i18n/UiNode";
 import Image from "next/image";
 import { useCustomization } from "./customization";
 import { useEffect, useSyncExternalStore } from "react";
-import { brandLogoDescription } from "@/lib/i18n/brand";
-export const LOGO_OPTIONS = [
-    { id: "01", name: "DENTAYA", description: brandLogoDescription("01"), material: "Zümrüt" },
-    { id: "02", name: "Dental Arch", description: brandLogoDescription("02"), material: "Yeşim" },
-    { id: "03", name: "CAD Geometry", description: brandLogoDescription("03"), material: "Titanyum" },
-    { id: "04", name: "Scan", description: brandLogoDescription("04"), material: "Titanyum" },
-    { id: "05", name: "Yörünge", description: brandLogoDescription("05"), material: "Zümrüt" },
-    { id: "06", name: "Crown", description: brandLogoDescription("06"), material: "Şampanya" },
-    { id: "07", name: "Prizma", description: brandLogoDescription("07"), material: "Yeşim" },
-    { id: "08", name: "Dalga", description: brandLogoDescription("08"), material: "Zümrüt" },
-    { id: "09", name: "Bağ", description: brandLogoDescription("09"), material: "Şampanya" },
-    { id: "10", name: "Işık", description: brandLogoDescription("10"), material: "Şampanya" },
-    { id: "11", name: "Katman", description: brandLogoDescription("11"), material: "Titanyum" },
-    { id: "12", name: "Kalkan", description: brandLogoDescription("12"), material: "Zümrüt" },
-    { id: "13", name: "Zirve", description: brandLogoDescription("13"), material: "Titanyum" },
-    { id: "14", name: "Kristal", description: brandLogoDescription("14"), material: "Şampanya" },
-    { id: "15", name: "Odak", description: brandLogoDescription("15"), material: "Yeşim" },
-    { id: "16", name: "Akış", description: brandLogoDescription("16"), material: "Yeşim" },
-    { id: "17", name: "Lotus", description: brandLogoDescription("17"), material: "Şampanya" },
-    { id: "18", name: "Köprü", description: brandLogoDescription("18"), material: "Zümrüt" },
-] as const;
-export type LogoId = (typeof LOGO_OPTIONS)[number]["id"];
-export const BRAND_ASSET_VERSION = "premium-2";
+import { BRAND_LOGOS, BRAND_MATERIALS, BRAND_ASSET_VERSION, type BrandLogoId } from "@/lib/brand-catalog";
+export { BRAND_ASSET_VERSION };
+export type LogoId = BrandLogoId;
+export const LOGO_OPTIONS = BRAND_LOGOS.map(logo => ({
+    id: logo.id, name: logo.name.tr, description: logo.description.tr,
+    material: BRAND_MATERIALS[logo.material].tr,
+}));
 const STORAGE_KEY = "dentaya-logo-choice";
-export const logoFiles: Record<LogoId, string> = {
-    "01": "01_dental_form", "02": "02_dental_arch", "03": "03_cad_geometry",
-    "04": "04_scan", "05": "05_orbit", "06": "06_crown", "07": "07_prism", "08": "08_wave",
-    "09": "09_link", "10": "10_spark", "11": "11_layer", "12": "12_shield", "13": "13_apex",
-    "14": "14_diamond", "15": "15_focus", "16": "16_flow", "17": "17_petal", "18": "18_bridge",
-};
+export const logoFiles = Object.fromEntries(BRAND_LOGOS.map(logo => [logo.id, logo.file])) as Record<LogoId, string>;
 let currentLogo: LogoId = "01";
 let initialized = false;
 let storageFailed = false;

@@ -1,9 +1,10 @@
 import type { SVGProps } from 'react';
 
 /** Original 24 px CAD glyphs. Tonal faces distinguish volumes from active edges. */
-export type CadIconName = 'orbit' | 'add' | 'reduce' | 'smooth' | 'flatten' | 'margin' | 'measure' | 'connector' | 'scan' | 'design' | 'contacts' | 'thickness' | 'review' | 'eye' | 'eye-off' | 'isolate' | 'layers' | 'undo' | 'redo' | 'fit' | 'save' | 'export' | 'tools' | 'settings' | 'close' | 'collapse' | 'expand' | 'grip' | 'back' | 'next' | 'help' | 'section' | 'wireframe' | 'natural' | 'undercut' | 'top' | 'bottom' | 'front' | 'rear' | 'left' | 'right' | 'iso' | 'round' | 'pointed' | 'flat' | 'symmetry' | 'lock' | 'check' | 'file' | 'camera' | 'reset';
+export type CadIconName = 'orbit' | 'add' | 'reduce' | 'smooth' | 'flatten' | 'margin' | 'measure' | 'connector' | 'scan' | 'design' | 'contacts' | 'thickness' | 'review' | 'eye' | 'eye-off' | 'isolate' | 'layers' | 'undo' | 'redo' | 'fit' | 'save' | 'export' | 'tools' | 'settings' | 'close' | 'collapse' | 'expand' | 'grip' | 'back' | 'next' | 'help' | 'section' | 'wireframe' | 'natural' | 'undercut' | 'top' | 'bottom' | 'front' | 'rear' | 'left' | 'right' | 'iso' | 'round' | 'pointed' | 'flat' | 'symmetry' | 'lock' | 'check' | 'file' | 'camera' | 'reset' | 'flashlight';
 
 const paths: Record<CadIconName, React.ReactNode> = {
+  flashlight: <><path d="m6 4 6 2 3 3-5 5-3-3ZM10 14l4 4-4 4-4-4 1-7M16 3l1-2M20 7l3-1M19 11l3 2"/><path d="m12 6 7-4 3 8-7-1" opacity=".55"/></>,
   orbit: <><path d="m8 8 4-2 4 2v7l-4 2-4-2ZM8 8l4 2 4-2M12 10v7"/><path d="M5.3 5.4C1 8.9 2.2 15.7 7 19c4.5 3.1 10.6 1.9 13.2-2.4M18 12l2.7 4.6-5.1.7"/></>,
   add: <><path d="M3 17c2.5 0 3.2-7 7-7s4.4 5 7 5c1.7 0 2.6-1.1 4-2M3 21h18"/><path d="M17 2v6M14 5h6"/><path d="M6 18c1.3-1.2 1.9-3.6 4-4.2" opacity=".55"/></>,
   reduce: <><path d="M3 12c3 0 3.4 5 7 5s4.5-7 7-7c1.5 0 2.8 1 4 2M3 21h18M14 5h6"/><path d="M5 17c1.2 1.6 2.7 2.2 5 2.2" opacity=".55"/></>,

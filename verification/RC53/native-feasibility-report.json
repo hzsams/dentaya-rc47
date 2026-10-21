@@ -1,0 +1,39 @@
+{
+  "checkedAtUTC": "2026-10-21T03:44:29.455Z",
+  "nativeInference": false,
+  "mock": false,
+  "engine": {
+    "version": "b9380 (d205df681)",
+    "officialArchive": "https://github.com/ggml-org/llama.cpp/releases/download/b9380/llama-b9380-bin-ubuntu-x64.tar.gz",
+    "bytes": 14479416,
+    "sha256": "b12c76fe1c830c645b805dcd2eb67aad582da4488eb0133d55cc176be529d50d",
+    "archiveVerified": true,
+    "serverBinarySHA256": "f26a542c95f00b1dbbf21074e7cf0b41c7d822a0c2cc1b47d89bca022f61491a",
+    "serverVersionExecuted": true
+  },
+  "model": {
+    "url": "https://huggingface.co/Qwen/Qwen3-1.7B-GGUF/resolve/90862c4b9d2787eaed51d12237eafdfe7c5f6077/Qwen3-1.7B-Q8_0.gguf",
+    "bytes": 1834426016,
+    "sha256": "061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+    "available": false,
+    "downloadVerified": false,
+    "applicationDownloader": {
+      "attempted": true,
+      "error": "fetch failed",
+      "cause": "getaddrinfo EAI_AGAIN huggingface.co",
+      "code": "EAI_AGAIN"
+    },
+    "proxyRequest": {
+      "attempted": true,
+      "error": "CONNECT tunnel failed, response 403"
+    },
+    "alternatePublicDistributionRequests": {
+      "hf.co": "CONNECT 403",
+      "modelscope.cn": "CONNECT 403",
+      "registry.ollama.ai": "CONNECT 403"
+    }
+  },
+  "grammarReport": "/workspace/dentaya-intelligence-validation/rc53-native-grammar-report.json",
+  "nativeReport": "/workspace/dentaya-intelligence-validation/rc53-native-inference-report.json",
+  "limitation": "The official engine and native grammar were exercised, but no model weights were available and zero inference cases ran. Mock transport checks are separate. No semantic model quality claim."
+}

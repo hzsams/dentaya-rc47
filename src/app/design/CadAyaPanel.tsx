@@ -16,6 +16,7 @@ import {cadChecklist,nextCadAction} from '../../../electron/aya/assistant.cjs';
 import {readAyaKnowledge} from '@/lib/aya-knowledge';
 import {readAyaState,type AyaMessage} from '@/lib/aya-local-state';
 import AyaKnowledgePanel from '../ai/AyaKnowledgePanel';
+import AyaSources from '../ai/AyaSources';
 type Message=AyaMessage&{proposals?:AyaProposal[]};
 type Event={tool:AyaCadTool;ok:boolean;result:string};
 type Session={messages:Message[];memory:AyaWorkingMemory;events:Event[]};
@@ -36,6 +37,7 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
  const [busy,setBusy]=useState(false),[model,setModel]=useState(''),[error,setError]=useState(''),[models,setModels]=useState<{name:string;size:number;label?:string}[]>([]);
  const live=useRef(true),lock=useRef(false),request=useRef(''),contextRef=useRef(context),inputRef=useRef<HTMLTextAreaElement|null>(null),logRef=useRef<HTMLDivElement|null>(null),followBottom=useRef(true);
  const cancelPending=useRef<((reason:string)=>void)|null>(null),requestSnapshot=useRef('');
+ const initialFocusPending=useRef(true);
  // Publish committed context before a click; render must never mutate a shared ref.
  useLayoutEffect(()=>{contextRef.current=context;if(request.current&&requestSnapshot.current!==context.snapshot)cancelPending.current?.('LOCAL_CONTEXT_CHANGED');},[context]);
  function cancel(){cancelPending.current?.('LOCAL_CANCELLED');void window.dentayaDesktop?.localAyaCancel?.();}
@@ -48,11 +50,15 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
   return()=>{listeners.delete(update);if(!listeners.size)sessionListeners.delete(scope);};
  },[scope]);
  useEffect(()=>{const log=logRef.current;if(log&&followBottom.current)log.scrollTop=log.scrollHeight;},[messages,busy]);
- useEffect(()=>{
+ useLayoutEffect(()=>{
+  initialFocusPending.current=true;
   const previous=document.activeElement;
-  const frame=requestAnimationFrame(()=>inputRef.current?.focus());
-  return()=>{cancelAnimationFrame(frame);if(previous instanceof HTMLElement&&previous.isConnected)previous.focus();};
+  return()=>{if(previous instanceof HTMLElement&&previous.isConnected)previous.focus();};
  },[]);
+ useLayoutEffect(()=>{
+  if(!initialFocusPending.current||context.isSaving||!inputRef.current||inputRef.current.disabled)return;
+  inputRef.current.focus();initialFocusPending.current=false;
+ },[context.isSaving]);
  async function refreshModels(){
   try{const result=await window.dentayaDesktop?.localAyaStatus?.();if(live.current&&result?.ok){setModels(result.models);setModel(current=>result.models.some(m=>m.name===current)?current:result.models[0]?.name??'');}}catch{}
  }
@@ -118,7 +124,7 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
   </UiNode></UiNode>
   {models.length>0&&<UiNode as="label">Kurulu yerel model<UiNode as="select" value={model} disabled={busy} onChange={e=>setModel(e.target.value)} aria-label="Kurulu yerel model">{models.map(m=><UiNode as="option" key={m.name} value={m.name} translateChildren={false}>{m.label??m.name}</UiNode>)}</UiNode></UiNode>}
   <UiNode as="div" role="log" ref={logRef} onScroll={e=>{const log=e.currentTarget;followBottom.current=log.scrollHeight-log.scrollTop-log.clientHeight<40;}} className="cad-aya-messages" aria-live="polite">
-   {messages.map((m,i)=><UiNode as="article" key={i}><UiNode as="strong">{m.role==='user'?'Siz':m.engine==='model'?'AYA · yerel':m.engine==='core'?'AYA Core':'Uygulama rehberi · belge metni'}</UiNode><UserText>{m.content}</UserText>{m.references?.map(r=><UiNode as="small" key={r.id}><UserText>{r.title}</UserText></UiNode>)}
+   {messages.map((m,i)=><UiNode as="article" key={i}><UiNode as="strong">{m.role==='user'?'Siz':m.engine==='model'?'AYA · yerel':m.engine==='core'?'AYA Core':'Uygulama rehberi · belge metni'}</UiNode><UserText>{m.content}</UserText><AyaSources references={m.references}/>
     {Boolean(m.proposals?.length)&&<UiNode as="div" className="aya-proposals" translateChildren={false}><UiNode as="strong">{copy.actions}</UiNode>{m.proposals!.map(p=>{const stale=ayaProposalBlock(p,context)!==null;return <UiNode as="div" key={p.tool} data-proposal-tool={p.tool}><UiNode as="strong">{copy.tools[p.tool]}</UiNode><UserText>{p.reason}</UserText><UiNode as="button" type="button" disabled={busy||stale||!onRun} onClick={()=>void apply(p)}>{stale?copy.stale:copy.apply}</UiNode></UiNode>;})}</UiNode>}
     {m.role==='assistant'&&<CopyAyaResponse text={m.content}/>}</UiNode>)}
    {busy&&<UiNode as="p" role="status" translateChildren={false}>{copy.planning}</UiNode>}

@@ -67,7 +67,7 @@ try{
     if(state.mode==='error')return {ok:false,error:state.error};
     if(state.mode==='pending')return new Promise(resolve=>{state.pending=resolve;});
     const workingMemory=input.workingMemory?.goal?input.workingMemory:{goal:'Cuma teslimine hazırlan',decisions:['Önce prova kontrolü'],openQuestions:['Kurye saati?']};
-    return {ok:true,output:'Yerel model test cevabı',references:[],workingMemory};
+    return {ok:true,output:'Yerel model test cevabı',references:[{id:'fact:synthetic',title:'Kaynaklı yüzey kontrolü',href:'HTTPS://threejs.org/docs/#api/en/core/BufferGeometry'},{id:'unsafe',title:'Unsafe',href:'javascript:alert(1)'}],workingMemory};
    },
    localAyaCancel:async()=>{if(!state.cancelAcknowledges)return new Promise(()=>{});state.pending?.({ok:false,error:'LOCAL_CANCELLED'});state.pending=null;return {ok:true};}
   };
@@ -76,6 +76,13 @@ try{
  const modelMain=modelPage.locator('#main-test'),modelText=modelMain.locator('#aya-local-message');
  async function askModel(prompt){const count=await modelMain.locator('.aya-message--assistant').count();await modelText.fill(prompt);await modelMain.locator('form button[type=submit]').click();await modelMain.locator('.aya-message--assistant').nth(count).waitFor();await modelPage.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);return modelMain.locator('.aya-message--assistant').last();}
  assert.match(await (await askModel('Dentin nedir')).textContent(),/Yerel model test cevabı/);
+ const refs=modelMain.locator('.aya-message--assistant').last().locator('.aya-sources');
+ assert.equal(await refs.locator('a').count(),1,'Unsafe references are rejected before rendering');
+ assert.equal(await refs.evaluate(node=>node.open),false,'References remain collapsed until requested');
+ await refs.locator('summary').click();
+ assert.equal(await refs.locator('a').getAttribute('href'),'HTTPS://threejs.org/docs/#api/en/core/BufferGeometry');
+ assert.equal(await refs.locator('a').getAttribute('target'),'_blank');
+ assert.match(await refs.locator('a').getAttribute('rel'),/noopener/);
  assert.equal(await modelPage.evaluate(()=>window.rc46Model.calls.length),1,'Definitions reach the ready model');
  assert.deepEqual(await modelPage.evaluate(()=>{const x=window.rc46Model.calls[0];return {agent:x.agent,prompt:x.prompt,memory:x.workingMemory};}),{agent:true,prompt:'Dentin nedir',memory:{goal:'',decisions:[],openQuestions:[]}});
  await askModel('Bunu cuma teslim planımızı düşünerek iki adıma indir');
@@ -92,6 +99,7 @@ try{
  await modelPage.evaluate(()=>window.rc46Fixture.saveAyaOptions({saveHistory:true}));
  await modelPage.waitForFunction(()=>window.rc46Fixture.readAyaState().sessions[0]?.workingMemory?.goal==='Cuma teslimine hazırlan');
  await modelPage.reload();await modelMain.locator('.aya-message--assistant').last().waitFor();await modelPage.waitForFunction(()=>document.querySelector('.aya-status--model'));
+ assert.equal(await modelMain.locator('.aya-message--assistant').last().locator('.aya-sources a').getAttribute('href'),'HTTPS://threejs.org/docs/#api/en/core/BufferGeometry','Safe source links survive opted-in history reload');
  await askModel('Önceki kararımız neydi');assert.equal(await modelPage.evaluate(()=>window.rc46Model.calls.at(-1).workingMemory.goal),'Cuma teslimine hazırlan');
  assert.match(await (await askModel('Adın ne ve amacın ne?')).textContent(),/Yerel model test cevabı/);assert.equal(await modelPage.evaluate(()=>window.rc46Model.calls.at(-1).prompt),'Adın ne ve amacın ne?','Identity and purpose still reach a ready model');
  await modelPage.evaluate(()=>window.rc46Fixture.saveAyaOptions({saveHistory:false}));assert.equal(await modelPage.evaluate(()=>window.rc46Fixture.readAyaState().sessions.length),0);

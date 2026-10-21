@@ -1,6 +1,10 @@
 # Diş bilgisi kataloğu — içerik ve kapasite kaydı
 
-Tarih: 19 Ekim 2026.
+Güncel RC53 durumu — 21 Ekim 2026: **500 farklı TR/EN kart, 60 kaynak grubu**. Eski 220 kart korunarak 280 kaynaklı teknik özet eklenmiştir. Yeni içerik; mesh, tarama verisi, hizalama, uzaklık sorguları, dosya aktarımı ve görüntülemeyi kapsar. Kaynak pasajları, sabit sürüm bağlantıları ve tam MIT bildirimleri [RC53 kaynak kaydındadır](BILGI_KARTLARI_RC53_KAYNAKLAR.md). Klinik inceleme durumu `not-recorded` olarak kalır. 30.000 gerçek içerik hedefi için **29.500 ek içerik** gerekir. AYA’nın ayrı 1008 soru-cevap kataloğu bu sayıya eklenmez.
+
+`verify:dental-facts` güncel 500 kaydı, 60 kaynağı, ilk 220 kaydın değişmemiş hashini ve yeni 280 kaydın pasaj/lisans metadatasını kontrol eder; `verify:loading-play` 500 kartın üç tekrarsız döngüsünü sınar. 30.000 sentetik kapasite kaydı yalnız testte üretilir. Bu kayıtlar uygulamaya eklenmez.
+
+Aşağıdaki 19 Ekim 2026 tarihli bölüm, ilk 220 kartın kaynak araştırmasının tarihsel kaydıdır. Sayılar bu önceki aşamaya aittir.
 
 Uygulamada **220 farklı TR/EN bilgi kartı, 28 kaynak grubu** bulunur. İstenen **30.000 gerçek bilgi henüz sağlanmamıştır**. Uygulamanın sayacı yalnız teslim edilen kayıtları sayar. Test verileri, dil çevirileri, sayı değişiklikleri, olgu/radyografi cevapları veya aynı cümlenin varyasyonları bilgi sayısına eklenmez.
 

@@ -12,13 +12,14 @@ export function summarizeAyaReport(report:CadKernelReport,dataToken:string,antag
  const mesh=report.mesh,contact=antagonistReady?report.contact:null,margin=report.margin,shell=report.crownShell;
  return {dataToken,triangles:mesh?.triangleCount,boundaryEdges:mesh?.boundaryEdges,nonManifoldEdges:mesh?.nonManifoldEdges,components:mesh?.connectedComponents,degenerateTriangles:mesh?.degenerateTriangles,watertight:mesh?.watertight,collisionSamples:contact?.collisionCount,contactSamples:contact?.contactCount,samples:contact?.sampleCount,minimumSignedDistanceMm:contact?.minimumSignedDistanceMm,minimumWallEstimateMm:shell?.minimumWallEstimateMm,targetWallMm,undercutRatio:report.undercut?.undercutRatio,marginPoints:margin?.pointCount,marginClosureGapMm:margin?.closureGapMm,marginProjectedRatio:margin?.projectedRatio,connectors:report.connectorCount,connectorWarnings:report.connectorWarnings.length,warnings:[...(mesh?.warnings??[]),...report.connectorWarnings,...(shell?.warnings??[])].slice(0,8),contactReference:contact?'antagonist':'unavailable',wallMethod:'shell-offset-estimate'};
 }
-export function availableAyaTools(context:AyaCadContext,policy:{tools:readonly string[];views:readonly string[];internalFit:boolean;canNext:boolean}):AyaCadTool[]{
+export function availableAyaTools(context:AyaCadContext,policy:{tools:readonly string[];views:readonly string[];internalFit:boolean;canNext:boolean;inspection?:boolean}):AyaCadTool[]{
  if(context.isSaving||!context.scope)return [];
  const result:AyaCadTool[]=['setup'];
  if(context.unit)result.push('library');
  if(context.sourceReady)result.push('save','save-exit');
  if(!context.modelReady)return result;
  result.push('inspect','fit-camera','show-all','isolate');
+ if(policy.inspection)result.push('inspection',context.inspectionFlashlight?'flashlight-off':'flashlight-on');
  if(context.upperReady&&context.lowerReady)result.push('recorded-bite');
  if(context.setupComplete&&context.marginPoints>=3&&!context.placed)result.push('place');
  if((context.undoCount??0)>0)result.push('undo');

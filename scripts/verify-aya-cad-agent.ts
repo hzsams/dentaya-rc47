@@ -9,6 +9,14 @@ const policy={tools:['add','measure'],views:['natural','contact','thickness'],in
 assert.ok(!availableAyaTools(context,policy).includes('view-contact'),'Both jaw flags alone do not establish an antagonist');
 assert.ok(availableAyaTools({...context,antagonistReady:true},policy).includes('view-contact'));
 assert.deepEqual(availableAyaTools({...context,isSaving:true},policy),[]);
+assert.ok(!availableAyaTools(context,policy).includes('inspection'),'Guided policy does not expose expert inspection');
+assert.ok(availableAyaTools(context,{...policy,inspection:true}).includes('inspection'));
+assert.ok(availableAyaTools({...context,inspectionFlashlight:false},{...policy,inspection:true}).includes('flashlight-on'));
+assert.ok(!availableAyaTools({...context,inspectionFlashlight:false},{...policy,inspection:true}).includes('flashlight-off'));
+assert.ok(availableAyaTools({...context,inspectionFlashlight:true},{...policy,inspection:true}).includes('flashlight-off'));
+assert.ok(!availableAyaTools({...context,inspectionFlashlight:true},{...policy,inspection:true}).includes('flashlight-on'));
+assert.ok(!availableAyaTools({...context,modelReady:false},{...policy,inspection:true}).includes('flashlight-on'));
+
 assert.deepEqual(availableAyaTools({...context,scope:''},policy),[]);
 assert.equal(ayaProposalBlock(proposal,context),null);
 for(const changed of [{scope:'other:source:46'},{scope:'project:other:46'},{scope:'project:source:47'},{snapshot:'geometry:2'}])assert.equal(ayaProposalBlock(proposal,{...context,...changed}),'stale');
