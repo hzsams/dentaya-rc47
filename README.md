@@ -1,16 +1,22 @@
-# DentAYA RC54
+# DentAYA RC55
 
-Sürüm `1.0.0-rc.54`, AYA Core `0.10.0`. RC54, aydınlık panelleri ve erik moru başlıklarıyla DentAYA Studio düzenini korur. CAD; nesneler ve parametreler solda, mevcut komutlar koyu sağ araç şeridinde, geniş 3B alan ortada olacak şekilde düzenlenir. Ortak uygulama başlığı CAD'de gösterilmez. Özgün DentAYA varlıkları kullanılır; exocad/3Shape çalışma ergonomisi referanstır.
+Sürüm `1.0.0-rc.55`, AYA Core `0.11.0`. RC55, aydınlık panelleri ve erik moru başlıklarıyla DentAYA Studio düzenini korur. CAD; nesneler ve parametreler solda, mevcut komutlar koyu sağ araç şeridinde, geniş 3B alan ortada olacak şekilde düzenlenir. Ortak uygulama başlığı CAD'de gösterilmez. Özgün DentAYA varlıkları kullanılır; exocad/3Shape çalışma ergonomisi referanstır.
 
 Uygulama giriş adresi doğrudan İş yöneticisini açar. CAD dışındaki ekranlarda kompakt başlık, simgeli etkinlik şeridi ve durum çubuğu kullanılır. İş yöneticisi mevcut iş kayıtlarını tek ana tabloda toplar; seçili kaydın ayrıntıları bağlama göre açılır. Ayarlar kategori listesi ve araç odaklı ayar alanlarıyla çalışır. Yeni CAD oturumlarında düz Studio arka planı kullanılır; ızgara ve eksenler kapalı başlar. Önceden açıkça seçilmiş sahne arka planları, ızgara ve eksen tercihleri korunur.
 
 Zorunlu 5 saniyelik yükleme/okuma beklemesi kaldırılmıştır. Yükleme görünümü yalnız gerçek işlem sürerken kalır; hazır ekran bilgi kartı veya mini oyun için bekletilmez. Bilgi kartları ve oyunlar mevcut isteğe bağlı kontrollerden açılabilir.
 
+RC55, kuron ve kapşonu seçilen ham tarama modelindeki koleye yerleştirir. Hedef kole belirlenmeden sahne merkezinde başlangıç kuronu gösterilmez. İlk kuron yüksekliği seçili ham preparasyonun örneklenen dış yüksekliğini hesaba katar; kole tabanı yukarı taşınmaz ve başka bir restorasyon hedef alınmaz. Servikal kayıt, eğik yerleştirme ekseni ve tüberkül yüksekliği değişiminde sabit kalır. Bu başlangıç dış zarfı iç uyum veya üretim onayı değildir.
+
+Altı mevcut form için diş grubuna göre insizal kenar, tüberkül, fissür ve fossa içeren deterministik başlangıç anatomisi kullanılır. Doğal görünümde kuron/kapşon daha yumuşak mine benzeri yüzey kullanır; teknik görünüm ve açıkça seçilmiş malzeme tercihleri korunur. Bunlar taramadan elde edilmiş hasta anatomileri değildir. Elle şekillendirilmiş eski işler, üretilmiş shell ve kişisel form kütüphanesi otomatik yeniden modellenmez.
+
+AYA Core, anatomik formu, yüzey görünümünü ve koleye kaydı ayrı değerlendirir. Yalnız mevcut araçları önerir; “yerleşti” durumunu preparasyon/iç uyum onayı diye sunmaz. Yeni CAD işlemleri yine kullanıcı Uygula düğmesiyle başlar.
+
 RC54, hedef/karar/açık soruların ayrı güncellenmesini, çakışma gösteren bellek editörünü, güvenli eşzamanlı not içe aktarmayı ve güncel CAD kanıtını ekler. Yarım model kurulumu mevcut yerel Ollama modellerini gizlemez; geç gelen motor durumu hazır modeli ezemez. Bunlar model ve çalışma belleği entegrasyonu iyileştirmeleridir; model eğitimi değildir.
 
 AYA'nın RC50 çalışma belleği, desteklenen çok adımlı görevleri ve güncel CAD bağlamına dayalı önerileri korunur. Yerel model normal konuşmada önceliklidir; manuel CAD deterministik ve modelden bağımsız kalır. CAD işlemi mevcut kapılar ve kullanıcı tıklamasıyla başlar. RC49 kimlik/amaç, isim hatırlama ve kısa takip davranışları sürer.
 
-Kaydetme yanıtını bekleme, kayıt hatasında CAD'de kalma, yerel kurtarma ve ünite bazında çalışma mevcut akışları kullanır. Bu arayüz değişikliği CAD kernel algoritmalarını değiştirmez. Finans, mesajlaşma, randevu, ekip, lojistik ve vaka işlemlerinin erişim, taslak ve eşzamanlı değişiklik kontrolleri korunacak regresyon kapsamındadır.
+Kaydetme yanıtını bekleme, kayıt hatasında CAD'de kalma, yerel kurtarma ve ünite bazında çalışma mevcut akışları kullanır. CAD çekirdeği deterministik kalır. Finans, mesajlaşma, randevu, ekip, lojistik ve vaka işlemlerinin erişim, taslak ve eşzamanlı değişiklik kontrolleri korunacak regresyon kapsamındadır.
 
 RC53, kaynaklı 500 TR/EN bilgi kartını AYA bağlamına ekler. Kısa takip soruları önceki konuyla ilişkilendirilir; yeni konu önceki hedefe zorlanmaz. Boş model alanları çalışma hedefini ve kararları kendiliğinden silmez. Bellek düzeltme ve sıfırlama açık işlem olarak ele alınır. Kaynak bağlantıları sohbetten açılır ve yalnız geçmiş saklama tercihi açıkken oturumla korunur. Bu iyileştirmeler model eğitimi veya her ifadeyi anlama garantisi değildir.
 
@@ -18,7 +24,7 @@ CAD uzman modunda İnceleme paneli; kamera/imleç hedefli gerçek fener, ışık
 
 Ayarlar'da 100 özgün logo bulunur; hacim, metalik yüzey, kenar ışığı ve gölge SVG katmanlarıyla üretilir. Her seçeneğin açık/koyu, simge ve yazı biçimleri ile Windows ICO varlığı vardır. Bunlar hacim etkili çizimlerdir; 3B mesh dosyaları değildir. İlk 18 logo kimliği, tercih aktarımı ve masaüstü simgesi akışı korunur.
 
-Başlangıç: [KURULUM.txt](KURULUM.txt). Kullanım: [RC54_KULLANIM.md](RC54_KULLANIM.md). Güncel test durumu ve sınırlar: [RC54_KONTROL_RAPORU.md](RC54_KONTROL_RAPORU.md). RC53 ve önceki raporlar tarihsel kayıttır. RC54 üzerinde dört ilgili tarayıcı regresyonu, tam verify, sıfır uyarılı lint, tip kontrolü, üretim derlemesi ve standalone yükleme kontrolü geçti. Native b9380 grammar 22/22; gerçek model çıkarımı ağırlık indirme engeli nedeniyle doğrulanmadı.
+Başlangıç: [KURULUM.txt](KURULUM.txt). Kullanım: [RC55_KULLANIM.md](RC55_KULLANIM.md). Güncel kontroller ve sınırlar: [RC55_KONTROL_RAPORU.md](RC55_KONTROL_RAPORU.md). Önceki RC raporları tarihsel kayıttır; yeni sürümün doğrulaması sayılmaz.
 
 [100 logonun görünümü](public/brand/DentAYA_Premium_Atelier.webp). Bilgi kartı sayısı **500**, kaynak grubu **60**; ayrı AYA soru kataloğu **1008** kayıttır. [Yeni kartların kaynakları](BILGI_KARTLARI_RC53_KAYNAKLAR.md) ve [katalog/30.000 hedefi](DENTAL_BILGI_KATALOGU_RAPORU.md). 30.000 gerçek içerik hedefi tamamlanmadı; kapasite testinin sentetik verileri ürüne eklenmez.
 

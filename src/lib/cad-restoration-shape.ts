@@ -1,8 +1,7 @@
 import * as THREE from 'three';
-import {mergeVertices} from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import type {CadToothForm,CadMorphologyStyle,CadRestorationDesignType} from './cad-job-setup';
 
-// Original RC37 starting geometry. The later 24-family generator is removed.
+// The six existing technician forms remain; cancelled RC38 families are not used.
 export function toothProfileFromFdi(code: string | undefined) {
     const normalized = String(code ?? "");
     const quadrant = Number(normalized[0]);
@@ -68,110 +67,115 @@ function toothFormFactors(form: CadToothForm) {
         worn: { width: 1.03, depth: 1.02, height: 0.92, cervical: 1.02, cusp: 0.48, ridge: 0.52, flatten: 0.09 },
     }[form] ?? { width: 1, depth: 1, height: 1, cervical: 1, cusp: 1, ridge: 1, flatten: 0 };
 }
+/** Crown-only anatomy: +Z runs from its flat cervical rim to the occlusal surface.
+ * The explicit shared rings avoid a sphere pole at the margin and a single dome
+ * where real teeth need several cusps, fossae and a bounded incisal edge.
+ * This is a deterministic starting form, not patient-specific clinical anatomy.
+ */
 export function createRestorationGeometry(radius: number, anatomyCode: string | undefined, designType: CadRestorationDesignType, toothForm: CadToothForm, morphologyStyle: CadMorphologyStyle) {
-    const profile = toothProfileFromFdi(anatomyCode);
-    const form = toothFormFactors(toothForm);
-    const geometry = new THREE.SphereGeometry(1, 84, 64);
-    geometry.deleteAttribute("uv");
-    const position = geometry.getAttribute("position") as THREE.BufferAttribute;
-    const baseSize = THREE.MathUtils.clamp(radius * 0.48, 3.2, 8.4);
-    const styleFactor = morphologyStyle === "soft" ? 0.72 :
-        morphologyStyle === "strong" ? 1.22 : 1;
-    const coping = designType === "coping";
-    const cutback = designType === "cutback_crown";
-    const reducedPontic = designType === "reduced_pontic";
-    const framework = designType === "framework";
-    const telescope = designType === "primary_telescope" || designType === "secondary_telescope";
-    const secondaryTelescope = designType === "secondary_telescope";
-    const temporary = designType === "temporary_crown" || designType === "temporary_pontic";
-    const pontic = designType === "anatomic_pontic" || reducedPontic || designType === "temporary_pontic";
-    const veneer = designType === "veneer";
-    const inlay = designType === "inlay_onlay";
-    for (let i = 0; i < position.count; i++) {
-        const sx = position.getX(i);
-        const sy = position.getY(i);
-        const sz = position.getZ(i);
-        let x = sx;
-        let y = sy;
-        let z = sz;
-        const theta = Math.atan2(y, x);
-        const normalizedZ = THREE.MathUtils.clamp((z + 1) * 0.5, 0, 1);
-        const cervicalBlend = THREE.MathUtils.smoothstep(normalizedZ, 0.02, 0.55);
-        const cervical = THREE.MathUtils.lerp(0.80 * form.cervical, 0.985, cervicalBlend);
-        const occlusalInfluence = Math.max(0, z) ** 1.28;
-        const cuspWave = Math.cos(theta * Math.max(1, profile.cusps)) *
-            profile.cusp * styleFactor * form.cusp * occlusalInfluence;
-        const ridgeWave = Math.sin(theta * 2) *
-            profile.ridge * styleFactor * form.ridge * occlusalInfluence;
-        if (telescope) {
-            const taper = 0.80 + normalizedZ * 0.16;
-            x *= baseSize * profile.width * form.width * taper * (secondaryTelescope ? 1.06 : 1);
-            y *= baseSize * profile.depth * form.depth * taper * (secondaryTelescope ? 1.06 : 1);
-            z *= baseSize * profile.height * form.height * (secondaryTelescope ? 0.90 : 0.86);
-        }
-        else {
-            x *= baseSize * profile.width * form.width * cervical * (1 + cuspWave * 0.34);
-            y *= baseSize * profile.depth * form.depth * cervical * (1 - cuspWave * 0.16);
-            z *= baseSize * profile.height * form.height * (1 + cuspWave + ridgeWave);
-            const digit = Number(anatomyCode?.slice(-1));
-            if (digit <= 3 && z > baseSize * 0.20) {
-                y += Math.sin(theta) * baseSize * 0.044 * styleFactor * form.ridge;
+    const profile=toothProfileFromFdi(anatomyCode),form=toothFormFactors(toothForm);
+    const digit=Number(anatomyCode?.slice(-1))||6,quadrant=Number(anatomyCode?.[0])||4;
+    const upper=quadrant===1||quadrant===2||quadrant===5||quadrant===6;
+    const anterior=digit<=3,canine=digit===3,premolar=digit===4||digit===5;
+    const mirror=quadrant===2||quadrant===3||quadrant===6||quadrant===7?-1:1;
+    const baseSize=THREE.MathUtils.clamp((Number.isFinite(radius)?radius:6)*.48,3.2,6.4);
+    const style=morphologyStyle==='soft'?.72:morphologyStyle==='strong'?1.22:1;
+    const coping=designType==='coping',framework=designType==='framework';
+    const cutback=designType==='cutback_crown'||designType==='reduced_pontic';
+    const telescope=designType==='primary_telescope'||designType==='secondary_telescope';
+    const secondary=designType==='secondary_telescope';
+    const temporary=designType==='temporary_crown'||designType==='temporary_pontic';
+    const veneer=designType==='veneer',inlay=designType==='inlay_onlay';
+    const widthScale=coping?.90:framework?.84:cutback?.89:secondary?1.06:1;
+    const heightScale=coping?.80:framework?.82:cutback?.87:telescope?(secondary?.90:.86):inlay?.48:temporary?.985:1;
+    const halfWidth=baseSize*profile.width*form.width*widthScale*(temporary?1.012:1)*(inlay?.88:1);
+    const halfDepth=baseSize*profile.depth*form.depth*widthScale*(temporary?1.012:1)*(inlay?.88:1);
+    const height=baseSize*profile.height*form.height*1.15*heightScale;
+    const relief=style*form.cusp*(coping?.34:framework?.28:cutback?.68:1);
+    const gaussian=(x:number,y:number,cx:number,cy:number,sx:number,sy=sx)=>Math.exp(-.5*((x-cx)**2/sx**2+(y-cy)**2/sy**2));
+    function surface(x:number,y:number){
+        x*=mirror;
+        const radial=Math.hypot(x,y);
+        if(telescope)return .94+.035*(1-radial*radial);
+        let z:number;
+        if(canine){
+            z=.66+relief*(.31*gaussian(x,y,0,-.08,.43,.37)+.045*gaussian(x,y,0,.53,.33,.22));
+        }else if(anterior){
+            // An incisal edge spans mesial/distal; it is never a central cone.
+            const edge=Math.exp(-.5*((y+.08)/.24)**2)*(1-.16*x*x);
+            z=.65+relief*(.31*edge+.045*gaussian(x,y,0,.57,.36,.21));
+            z+=.009*relief*Math.cos(x*Math.PI*3)*edge;
+        }else{
+            z=.72+.06*Math.exp(-.5*((radial-.84)/.14)**2);
+            if(premolar){
+                z+=relief*.27*gaussian(x,y,0,-.47,.28,.25);
+                if(!upper&&digit===5){
+                    z+=relief*.205*(gaussian(x,y,-.31,.43,.22,.25)+gaussian(x,y,.31,.43,.22,.25));
+                }else z+=relief*(upper?.24:.15)*gaussian(x,y,0,.47,.29,.25);
+                z-=relief*.045*gaussian(x,y,0,0,.57,.09);
+            }else if(!upper&&digit===6){
+                // Mandibular first molar: three buccal and two lingual cusps.
+                for(const cx of [-.57,0,.57])z+=relief*.225*gaussian(x,y,cx,-.46,.205,.24);
+                for(const cx of [-.38,.38])z+=relief*.265*gaussian(x,y,cx,.46,.25,.25);
+                z-=relief*.042*gaussian(x,y,0,0,.63,.085);
+            }else{
+                for(const cx of [-.48,.48])for(const cy of [-.46,.46])z+=relief*(cy>0?.265:.235)*gaussian(x,y,cx,cy,.255,.255);
+                z-=relief*.035*(gaussian(x,y,0,0,.65,.085)+gaussian(x,y,0,0,.085,.65));
             }
-            if (form.flatten > 0 && z > baseSize * 0.28) {
-                const cap = baseSize * profile.height * form.height * (0.70 - form.flatten);
-                z = THREE.MathUtils.lerp(z, Math.min(z, cap), Math.min(1, form.flatten * 6));
-            }
+            z-=relief*.035*gaussian(x,y,0,0,.24,.24);
         }
-        if (coping) {
-            const axial = THREE.MathUtils.lerp(0.82, 0.90, normalizedZ);
-            x *= axial;
-            y *= axial;
-            z *= 0.80;
-            if (z > baseSize * 0.30)
-                z *= 0.92;
-        }
-        else if (cutback || reducedPontic) {
-            x *= 0.89;
-            y *= 0.89;
-            z *= 0.87;
-        }
-        else if (framework) {
-            x *= 0.84;
-            y *= 0.84;
-            z *= 0.82;
-        }
-        if (temporary) {
-            x *= 1.012;
-            y *= 1.012;
-            z *= 0.985;
-        }
-        if (pontic) {
-            const basal = THREE.MathUtils.smoothstep(-sz, 0.10, 0.82);
-            y *= 0.93 + basal * 0.07;
-            if (z < -baseSize * 0.24)
-                z = THREE.MathUtils.lerp(z, -baseSize * 0.24, 0.72);
-        }
-        if (veneer) {
-            y *= sy > 0 ? 0.52 : 0.28;
-            x *= 0.98;
-            z *= 1.01;
-        }
-        if (inlay) {
-            z = z * 0.48 + baseSize * 0.20;
-            x *= 0.88;
-            y *= 0.88;
-        }
-        position.setXYZ(i, x, y, z);
+        // Rounded ridge/cusp heights are bounded even for the strong/youthful form.
+        z=THREE.MathUtils.clamp(z,.53,1.06);
+        if(form.flatten>0)z=THREE.MathUtils.lerp(z,Math.min(z,.84-form.flatten),Math.min(.7,form.flatten*5));
+        return z;
     }
-    position.needsUpdate = true;
-    geometry.deleteAttribute("normal");
-    geometry.deleteAttribute("uv"); // UV seams otherwise prevent position welding.
-    // A closed/welded topology is essential for "solid wax" sculpting.
-    // The design remains one watertight surface while Add/Reduce moves shared vertices.
-    const welded = mergeVertices(geometry, 1e-5);
-    geometry.dispose();
-    welded.computeVertexNormals();
-    welded.computeBoundingSphere();
-    welded.computeBoundingBox();
-    return welded;
+    const segments=84,wallRows=20,tableRows=32;
+    const positions:number[]=[0,0,0],indices:number[]=[];
+    function addRing(radial:number,u:number|null){
+        for(let j=0;j<segments;j++){
+            const theta=j/segments*Math.PI*2,cos=Math.cos(theta),sin=Math.sin(theta);
+            const exponent=anterior?.94:.83;
+            let x=Math.sign(cos)*Math.abs(cos)**exponent*radial;
+            let y=Math.sign(sin)*Math.abs(sin)**exponent*radial;
+            if(!anterior&&upper&&!premolar)x+=.075*mirror*y;
+            const z=(u===null?surface(cos*radial,sin*radial):u*surface(cos,sin))*height;
+            if(veneer)y*=sin>0?.52:.28;
+            positions.push(x*halfWidth,y*halfDepth,z);
+        }
+    }
+    const cervical=THREE.MathUtils.clamp(.79*form.cervical,.68,.87);
+    // One flat neck ring + a single center fan cap; no radial cap rows can be
+    // collapsed onto the margin by cervical registration.
+    for(let row=0;row<=wallRows;row++){
+        const u=row/wallRows;
+        const r=telescope?THREE.MathUtils.lerp(.80,.94,u):cervical+(.985-cervical)*Math.sin(u*Math.PI*.82);
+        addRing(r,u);
+    }
+    const shoulder=telescope?.94:cervical+(.985-cervical)*Math.sin(Math.PI*.82);
+    // Continue the same boundary rather than duplicating vertices at its seam.
+    for(let row=1;row<tableRows;row++){
+        const r=shoulder*(1-row/tableRows);
+        // Surface coordinates stay in the common 0..1 occlusal-table domain.
+        for(let j=0;j<segments;j++){
+            const theta=j/segments*Math.PI*2,cos=Math.cos(theta),sin=Math.sin(theta),t=r/shoulder;
+            const exponent=anterior?.94:.83;
+            let x=Math.sign(cos)*Math.abs(cos)**exponent*r,y=Math.sign(sin)*Math.abs(sin)**exponent*r;
+            if(!anterior&&upper&&!premolar)x+=.075*mirror*y;
+            if(veneer)y*=sin>0?.52:.28;
+            positions.push(x*halfWidth,y*halfDepth,surface(cos*t,sin*t)*height);
+        }
+    }
+    const rings=wallRows+tableRows,top=positions.length/3;
+    positions.push(0,0,surface(0,0)*height);
+    for(let j=0;j<segments;j++)indices.push(0,1+(j+1)%segments,1+j);
+    for(let ring=0;ring<rings-1;ring++)for(let j=0;j<segments;j++){
+        const a=1+ring*segments+j,b=1+ring*segments+(j+1)%segments,c=a+segments,d=b+segments;
+        indices.push(a,b,c,b,d,c);
+    }
+    const last=1+(rings-1)*segments;
+    for(let j=0;j<segments;j++)indices.push(last+j,last+(j+1)%segments,top);
+    const geometry=new THREE.BufferGeometry();
+    geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setIndex(indices);
+    geometry.computeVertexNormals();geometry.computeBoundingBox();geometry.computeBoundingSphere();
+    return geometry;
 }

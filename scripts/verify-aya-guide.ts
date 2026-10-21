@@ -8,6 +8,7 @@ assert.match(ayaCadHelp('Koleyı çizdim diş gelmiyor',context,t)!,/Koleye yerl
 assert.match(ayaCadHelp('implant üstü diş gelmiyor',{...context,marginPoints:0},t)!,/Geçerli bir kole çizgisi çizin/);
 assert.match(ayaCadHelp('margin',{...context,modelReady:false},t)!,/Modelin yüklenmesini bekleyin/);
 assert.match(ayaCadHelp('tooth',{...context,placed:true,visible:false},t)!,/Tümünü göster/);
+assert.match(ayaCadHelp('tooth',{...context,placed:false,visible:false},t)!,/Koleye yerleştir/,'An unplaced starter stays hidden until placed on the model; showing all is not a placement action.');
 assert.match(ayaCadHelp('save and exit',{...context,saveFailed:true},t)!,/Yerel kaydet ve çık/);
 assert.match(ayaCadHelp('kaydet',{...context,unsaved:false},t)!,/CAD projesi kaydedildi/);
 assert.equal(ayaCadHelp('implant torque dose',context,t),null);

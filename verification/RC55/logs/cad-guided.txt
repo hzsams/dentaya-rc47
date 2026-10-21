@@ -1,0 +1,43 @@
+PASS: real puzzle, reverse moves, complete solution, hints, offline play, unique facts, pause, saved record and mobile bounds.
+PASS: real CAD loading fact and nonmodal game; the working screen is available as soon as the data is ready.
+PASS: real WebGL technical colors, zero-opacity restore, all-hide, temporary Alt peek, antagonist opening and registered bite.
+PASS: actual scan drawing creates a contour accepted for crown placement.
+PASS: delayed autosave acknowledgement preserves the technician’s current task.
+{
+  "pass": true,
+  "realWebGL": true,
+  "storedStages": 6,
+  "guidedTasks": 8,
+  "initialStage": "scan",
+  "noGuidedTabs": true,
+  "taskSequenceMenu": true,
+  "objectPanelVisible": true,
+  "technicalColors": true,
+  "cadColourGroups": 6,
+  "customRoleColoursSaveAndReload": true,
+  "ayaLiveChecklist": true,
+  "ayaUnitConversion": true,
+  "opacityAndHide": true,
+  "registeredBite": true,
+  "utilityMenusOnDemand": true,
+  "oneExpandedParameterSection": true,
+  "connectorParametersOnDemand": true,
+  "savedTaskResume": true,
+  "futureStepsLocked": true,
+  "realMarginDrawing": true,
+  "blockedNextPreservesPanel": true,
+  "keyboardCannotBypassStages": true,
+  "contextMenuFollowsStages": true,
+  "onlyStageParameterTabs": true,
+  "explicitExpertOnly": true,
+  "onePrimaryToolPalette": true,
+  "reviewOnlySubmit": true,
+  "reviewStatusRemainsWorkingUntilSubmission": true,
+  "scenePreserved": true,
+  "marginSaved": true,
+  "catalogCommandsUnique": true,
+  "labNavigationUnique": true,
+  "homeNavigationUnique": true,
+  "hiddenSidebarFallback": true,
+  "backend": "intercepted fixture, no production data"
+}

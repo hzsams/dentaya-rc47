@@ -1,0 +1,216 @@
+{
+  "release": "1.0.0-rc.55",
+  "status": "pass",
+  "checkedAt": "2026-10-21T22:39:49+03:00",
+  "nativeModelInferenceVerified": false,
+  "windowsInstallerProduced": false,
+  "liveOrganizationBackendVerified": false,
+  "runs": [
+    {
+      "name": "cad-restoration",
+      "command": "node --import tsx scripts/verify-cad-restoration-browser.mjs",
+      "exitCode": 0,
+      "seconds": 213.87,
+      "log": "logs/cad-restoration.txt",
+      "sha256": "b680fda83844a3928af4f2ba7ccac78255020769aaffc93170146a2b81655b28"
+    },
+    {
+      "name": "cad-daily",
+      "command": "node --import tsx scripts/verify-cad-daily-browser.mjs",
+      "exitCode": 0,
+      "seconds": 197.47,
+      "log": "logs/cad-daily.txt",
+      "sha256": "d230727703c6174f4d2bcb9295a9322b7b47e33dc425b8e3862c854d38dc4b2d"
+    },
+    {
+      "name": "cad-library",
+      "command": "node --import tsx scripts/verify-cad-library-browser.mjs",
+      "exitCode": 0,
+      "seconds": 119.73,
+      "log": "logs/cad-library.txt",
+      "sha256": "d3398c32ca71de75d4ab4c38790a3d825c34e1db8c7196150c6e3f28bf46428b"
+    },
+    {
+      "name": "cad-inspection",
+      "command": "node scripts/verify-cad-inspection-browser.mjs",
+      "exitCode": 0,
+      "seconds": 355.1,
+      "log": "logs/cad-inspection.txt",
+      "sha256": "a5e8e0fbf3957fcc8ef51cd4cfc9f2a863baabca484440881de23ad94fae876d"
+    },
+    {
+      "name": "cad-guided",
+      "command": "node --import tsx scripts/verify-cad-guided-browser.mjs",
+      "exitCode": 0,
+      "seconds": 340.86,
+      "log": "logs/cad-guided.txt",
+      "sha256": "22a0cef77390e3688e8e60b501f998c69b9de16e9a57d480cac87dcd1b69056d"
+    },
+    {
+      "name": "aya-work",
+      "command": "node scripts/verify-aya-work-browser.mjs",
+      "exitCode": 0,
+      "seconds": 18.08,
+      "log": "logs/aya-work.txt",
+      "sha256": "d107e5ae184cbf45c696342850430c9f877af9b6b07d25005233d3de2864872b"
+    },
+    {
+      "name": "aya-conversation",
+      "command": "node scripts/verify-aya-conversation-browser.mjs",
+      "exitCode": 0,
+      "seconds": 25.07,
+      "log": "logs/aya-conversation.txt",
+      "sha256": "3f1a8448e2c4824cb79df83fb7b1839071fcfb6cd918e9d1b904fb10cefdcd17"
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "screenshots/AYA_RC49_basic_dialogue.png",
+      "size": 82698,
+      "sha256": "8a7514cc6c38af546bb764a22e343bd9229837dfa5fb33be07b25012ca241dc1"
+    },
+    {
+      "path": "screenshots/AYA_RC49_identity.png",
+      "size": 69172,
+      "sha256": "8898a778be8e4393edbe0963a6e3b064decd2b9b387b45fe0726ff277e7e3a57"
+    },
+    {
+      "path": "screenshots/AYA_RC50_callback_failure_and_stale_proposal.png",
+      "size": 128548,
+      "sha256": "209564f2bae9e9106f9f35142db69a27f0349ad07922f65b4567f5019abb0cc8"
+    },
+    {
+      "path": "screenshots/AYA_RC50_memory_and_multistep.png",
+      "size": 80019,
+      "sha256": "8e84d975f0620b9bc643eb0a5fdccb459d34b9c27545f4bab443f2e6f601dbc3"
+    },
+    {
+      "path": "screenshots/AYA_RC50_model_receives_explicit_memory.png",
+      "size": 69789,
+      "sha256": "cbcd175a36b51d73ec43195563cff19860b319f25c39b40c468956972cf3f60b"
+    },
+    {
+      "path": "screenshots/AYA_RC50_offline_place_proposal.png",
+      "size": 93137,
+      "sha256": "8ad49e310647796b67f70bb723cf09d18026dd241656d2c9b9cded9fad7eba6f"
+    },
+    {
+      "path": "screenshots/AYA_conversation_desktop.png",
+      "size": 63106,
+      "sha256": "9f02dd4af5370de9d021288a8d387a11e13c7d6681c8a386f2e26c3cbd31b015"
+    },
+    {
+      "path": "screenshots/CAD_Inspection_Desktop.png",
+      "size": 815349,
+      "sha256": "04e516342c5f5c45ef5ead4feea7d13d65d9b8d7fb077048f8a88d957968c8e5"
+    },
+    {
+      "path": "screenshots/CAD_Inspection_Mobile.png",
+      "size": 125021,
+      "sha256": "6aee6fa2d85dd477fafea6d3f812b20c9aa911311dc350833dc2ff1b790a3b6a"
+    },
+    {
+      "path": "screenshots/DentAYA_RC36_CAD_Sekillendirme.png",
+      "size": 676560,
+      "sha256": "9a085c5b02f4b3581b32a527381318e09a698ce716e1bf46914e7ecd25d8b519"
+    },
+    {
+      "path": "screenshots/DentAYA_RC36_CAD_Tarama.png",
+      "size": 426239,
+      "sha256": "4d31a7573564bcd33e82e83bd8a286804a659b1b21544df6332b77ea1e2815bf"
+    },
+    {
+      "path": "screenshots/RC40_CAD_AYA.png",
+      "size": 240662,
+      "sha256": "3d075d0af2fbf04b472ae6c63d4a06fb4c79040149d194688a57189980e8a14a"
+    },
+    {
+      "path": "screenshots/RC41_CAD_daily.png",
+      "size": 253073,
+      "sha256": "b02f1075836ca272acaab98255152537c6f9ae9e5008705319c704bc831d4b0e"
+    },
+    {
+      "path": "screenshots/RC44_CAD_AYA.png",
+      "size": 681988,
+      "sha256": "c4513bf6a737b7092a4dbc7eb80c232ce9d268967ee85933456d3d9f13376041"
+    },
+    {
+      "path": "screenshots/RC44_Kusp_Desktop.png",
+      "size": 129093,
+      "sha256": "611b560ab19e55b758fe4b6f660efa7b57cb52854318bbd83155f7f7335315df"
+    },
+    {
+      "path": "screenshots/RC44_Kusp_Mobile.png",
+      "size": 97398,
+      "sha256": "d1101c5d8c64500245e4a9747f6c74b797c8741143d16118bdd5aacd3828a705"
+    },
+    {
+      "path": "screenshots/RC46_AYA_mobile.png",
+      "size": 60030,
+      "sha256": "0c5b83591e0bc56cf8b4064af2493683d6ea82318872cd192649912305809e00"
+    },
+    {
+      "path": "screenshots/RC51_CAD_daily.png",
+      "size": 223097,
+      "sha256": "876dbae6b7f51167f6d5bbbcd73b7acf351911b4629ab0337ede00cc8742dbd0"
+    },
+    {
+      "path": "screenshots/RC52_CAD_Library.png",
+      "size": 233737,
+      "sha256": "92a2ea920d368bcf44bd6c6d795804d22b8877e603b89c032b9925280bc80770"
+    },
+    {
+      "path": "screenshots/RC55_16_anatomic_crown_occlusal.png",
+      "size": 299758,
+      "sha256": "2fc756cfdf01da716663b8efdf6b7fa4eb25649a1ae368f330823c8f11aa36d1"
+    },
+    {
+      "path": "screenshots/RC55_16_anatomic_crown_placed.png",
+      "size": 193522,
+      "sha256": "6ab7b46de2b2c10869de16bc37480673efa2fcd0665c4210b323cc20fae6b68c"
+    },
+    {
+      "path": "screenshots/RC55_46_anatomic_crown_occlusal.png",
+      "size": 276177,
+      "sha256": "f04a279f30ae1aa9c274582db4ca1dbfd57c2d23b38c8719ba32a74eb9fb1ab5"
+    },
+    {
+      "path": "screenshots/RC55_46_anatomic_crown_placed.png",
+      "size": 214197,
+      "sha256": "ebc2c1a7fbbb2a8597f6f369f294992a21a0b3077defa1bb81864c4f291d0bdd"
+    },
+    {
+      "path": "screenshots/RC55_47_coping_occlusal.png",
+      "size": 277865,
+      "sha256": "2f8207e08eb1431a0d30298b6285c3d65de63b83929bd230cfff2f1820b09ff4"
+    },
+    {
+      "path": "screenshots/RC55_47_coping_placed.png",
+      "size": 222292,
+      "sha256": "3ab0c88dea517521aceccf1bf0a562c490dff96b55310e69919d56222e84319f"
+    },
+    {
+      "path": "screenshots/RC55_AYA_placement_guidance.png",
+      "size": 256796,
+      "sha256": "cbc1dffdd8b5f994b557b8f1a30aba212a0899e4b6460f0cdc0f48ff493ed4d0"
+    },
+    {
+      "path": "screenshots/RC55_raw_model_before_margin.png",
+      "size": 137132,
+      "sha256": "6f70be17e91e34cfb3d893b588d4b6209f87862f1c4d0029a7876984f5e693ed"
+    },
+    {
+      "path": "screenshots/loading-ready-mobile.png",
+      "size": 22478,
+      "sha256": "249867be60dfcd54415c12f364abcd1eba4b3e2f8dd8cd4e443da57aebd841b9"
+    }
+  ],
+  "scope": {
+    "modelCalls": "mock",
+    "ayaCadCallbacks": "synthetic",
+    "cadDailyGeometry": "real WebGL/kernel with synthetic backend",
+    "cadRestorationGeometry": "actual rendered cervical neck on synthetic prepared stumps; not intaglio fit",
+    "desktopWindows": "not run",
+    "brand": "unchanged; old browser history is not RC55 verification"
+  }
+}

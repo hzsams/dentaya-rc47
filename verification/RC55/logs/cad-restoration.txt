@@ -1,0 +1,76 @@
+PASS: actual rendered 46 anatomic_crown stays on its selected preparation through height changes.
+PASS: actual rendered 47 coping stays on its selected preparation through height changes.
+PASS: actual rendered 16 anatomic_crown stays on its selected preparation through height changes.
+{
+  "pass": true,
+  "realWebGL": true,
+  "syntheticPreparedStumps": true,
+  "syntheticBackend": true,
+  "crownAndCoping": true,
+  "offsetTiltedAndOppositeAxes": true,
+  "actualRenderedNeckRegistration": true,
+  "cuspHeightPreservesMargin": true,
+  "naturalFinishAndTechnicalPalette": true,
+  "cosmeticChangesPreserveGeometry": true,
+  "ayaRestorationGuidanceAndNoAutomaticActions": true,
+  "perUnitSaveReopen": true,
+  "failedLegacyUpgradeRetainsSavedSurface": true,
+  "rawModelBeforeTarget": true,
+  "noFloatingSecondCrown": true,
+  "hiddenStarterGuidance": true,
+  "modelInference": false,
+  "measurements": [
+    {
+      "unit": "46",
+      "type": "anatomic_crown",
+      "height": 0.84,
+      "cervicalCenterGapMm": 0.019999999999999858,
+      "maxMarginGapMm": 0.020000000000301832
+    },
+    {
+      "unit": "46",
+      "type": "anatomic_crown",
+      "height": 1.2,
+      "cervicalCenterGapMm": 0.019999999999999858,
+      "maxMarginGapMm": 0.020000000000301724
+    },
+    {
+      "unit": "47",
+      "type": "coping",
+      "height": 0.84,
+      "cervicalCenterGapMm": 0.020000000000000018,
+      "maxMarginGapMm": 0.02000000000037131
+    },
+    {
+      "unit": "47",
+      "type": "coping",
+      "height": 1.2,
+      "cervicalCenterGapMm": 0.020000000000000018,
+      "maxMarginGapMm": 0.02000000000037131
+    },
+    {
+      "unit": "16",
+      "type": "anatomic_crown",
+      "height": 0.84,
+      "cervicalCenterGapMm": 0.020000000000000018,
+      "maxMarginGapMm": 0.02000000000024999
+    },
+    {
+      "unit": "16",
+      "type": "anatomic_crown",
+      "height": 1.2,
+      "cervicalCenterGapMm": 0.020000000000000018,
+      "maxMarginGapMm": 0.02000000000024999
+    }
+  ],
+  "screenshots": [
+    "/workspace/dentaya-rc55-validation/RC55_46_anatomic_crown_occlusal.png",
+    "/workspace/dentaya-rc55-validation/RC55_46_anatomic_crown_placed.png",
+    "/workspace/dentaya-rc55-validation/RC55_47_coping_occlusal.png",
+    "/workspace/dentaya-rc55-validation/RC55_47_coping_placed.png",
+    "/workspace/dentaya-rc55-validation/RC55_16_anatomic_crown_occlusal.png",
+    "/workspace/dentaya-rc55-validation/RC55_16_anatomic_crown_placed.png",
+    "/workspace/dentaya-rc55-validation/RC55_AYA_placement_guidance.png",
+    "/workspace/dentaya-rc55-validation/RC55_raw_model_before_margin.png"
+  ]
+}

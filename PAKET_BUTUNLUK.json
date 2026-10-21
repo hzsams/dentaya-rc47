@@ -1,9 +1,9 @@
 {
-  "release": "1.0.0-rc.54",
+  "release": "1.0.0-rc.55",
   "status": "source-release-candidate",
   "date": "2026-10-21",
-  "baseRelease": "1.0.0-rc.53",
-  "baseCommit": "1755830274949b0357638ad6ce8d1e998eda4672",
+  "baseRelease": "1.0.0-rc.54",
+  "baseCommit": "2fd54030f62eadccafbb6e71dc61b65a7e29abdb",
   "nativeModelInferenceVerified": false,
   "windowsInstallerProduced": false,
   "liveOrganizationBackendVerified": false,
@@ -16,8 +16,8 @@
   "nativeGrammarChecks": 22,
   "nativeModelWeightsAvailable": false,
   "nativeModelInferenceStatus": "blocked-model-weights",
-  "verification": "RC54_KONTROL_RAPORU.md",
-  "sourceVerification": "verification/RC54/source-verification.json",
+  "verification": "RC55_KONTROL_RAPORU.md",
+  "sourceVerification": "verification/RC55/source-verification.json",
   "files": [
     {
       "path": ".env.example",
@@ -27,7 +27,7 @@
     {
       "path": ".env.release.example",
       "size": 407,
-      "sha256": "651fcf7c74fc9ed065b7c20e85fdda6ee14caf5120cf22128317d68fd2443c68"
+      "sha256": "ef8f866613c7efe7cb32791137d3bb1d6759f0fdf73ad42601d723ed1051affe"
     },
     {
       "path": ".gitignore",
@@ -41,8 +41,8 @@
     },
     {
       "path": "AGENTS.md",
-      "size": 3643,
-      "sha256": "7e5ecaa01a57e5bc73a6511f7b6d93ca65278ee9bc74b54c7988bfcdd7c69fc9"
+      "size": 4743,
+      "sha256": "fc7f725cdd8192b02d6c1d44696428213fc8cc49fa48a9e4780757a4e34037d6"
     },
     {
       "path": "AYA_ACTIONS_QA.md",
@@ -166,8 +166,8 @@
     },
     {
       "path": "DENTAYA_GUNCELLE_DERLE.cmd",
-      "size": 3140,
-      "sha256": "73a5a220641b14d371f4e64c51920c227ad29cdb5cdfa03388154556be24a4cb"
+      "size": 3138,
+      "sha256": "029d77e4544572d7479fd7b1d31fc091a6b83b1d3e7acc1921a272887c993d8f"
     },
     {
       "path": "DentAYA_CAD_Degisiklikler.txt",
@@ -206,8 +206,8 @@
     },
     {
       "path": "KURULUM.txt",
-      "size": 3592,
-      "sha256": "6999cb74c1fd17e6f226ef0e7d8db3a74559cfdaeb10bc01fa93ebd1fcb2fbc3"
+      "size": 3987,
+      "sha256": "5de80b9a855c96a0c47855750c1bc20467dd19b7e1cd0161e2beac93c0006c15"
     },
     {
       "path": "LOGO_GUNCELLEME.txt",
@@ -660,6 +660,21 @@
       "sha256": "8f6279bbd6fdf801a1d873100ea8d5bba6d5fc66a15350a26f30f081f5e99916"
     },
     {
+      "path": "RC55_AYA_1008_SORU_CEVAP.json",
+      "size": 365775,
+      "sha256": "e5aa5027016a3a514b59421e64dd40e662ad4811120032a9f7152e9aae2f1805"
+    },
+    {
+      "path": "RC55_KONTROL_RAPORU.md",
+      "size": 6681,
+      "sha256": "2ca6c6fd710e9f3babace640105b819e2de4f30aa0a631baaffa286c6c8d8360"
+    },
+    {
+      "path": "RC55_KULLANIM.md",
+      "size": 3249,
+      "sha256": "ab3a9e136f1e61779b1b303f6269a3083c639ab5fd5bb130d8ee06165e760a8f"
+    },
+    {
       "path": "RC6_CHANGELOG.md",
       "size": 805,
       "sha256": "3da664df997388f7c74588f417e0676b263ac4aa225fced31091f5f197b6a03f"
@@ -676,8 +691,8 @@
     },
     {
       "path": "README.md",
-      "size": 5773,
-      "sha256": "24ff23022de585378e4bbc35be3c28d755c919ae62cdf86b9c37275630cc351e"
+      "size": 6730,
+      "sha256": "0e499417b976423459a38182ffa85de209b48f359fe475c4ef55d6249137840e"
     },
     {
       "path": "README_BUILD_FIX_01.md",
@@ -936,8 +951,8 @@
     },
     {
       "path": "electron/aya/agent.cjs",
-      "size": 17767,
-      "sha256": "5e1b79bf6846f6786ea3580f99b597ca8f9cc7828ddb54d1f8a1c22a5d5db733"
+      "size": 17856,
+      "sha256": "bb1ccd9e2697a0e0d4379ef27473f0d23cb9e39ab45371dfa7fa5bf669bda7e9"
     },
     {
       "path": "electron/aya/agent.d.cts",
@@ -947,7 +962,7 @@
     {
       "path": "electron/aya/assistant.cjs",
       "size": 9981,
-      "sha256": "99018a784955f86eea5783773080f656d161940388f44487e8ee9913177c3251"
+      "sha256": "c33a819f5aeae1f82154ef0788896d94725e4edd56ac929a5c304bc63a7ba8ee"
     },
     {
       "path": "electron/aya/assistant.d.cts",
@@ -956,8 +971,8 @@
     },
     {
       "path": "electron/aya/cad-dialogue.cjs",
-      "size": 21621,
-      "sha256": "22f32b0c91b5bce567875ef19c221e70d50370626973aa02468876081be3764d"
+      "size": 28442,
+      "sha256": "9e268891e402efd2bb32e978fca958939ebeb4e56d6a4e584aa3d79eea9d2f7f"
     },
     {
       "path": "electron/aya/cad-dialogue.d.cts",
@@ -1316,8 +1331,8 @@
     },
     {
       "path": "electron/aya/work-tools.cjs",
-      "size": 4550,
-      "sha256": "a6532f0247088bb589adc746eb3f741630f53564d92bf2a0372da861caa9132a"
+      "size": 4560,
+      "sha256": "67b07821ea7671218b9946ccd4cdc7ca7a548f65dfdb789f7b0cb5c165f9bd97"
     },
     {
       "path": "electron/brand-catalog.json",
@@ -1862,12 +1877,12 @@
     {
       "path": "package-lock.json",
       "size": 354831,
-      "sha256": "f74ce228f2f4732694a4fc142260e2cee70dbe7569c141258760dc42a648dbb8"
+      "sha256": "9c8a7c5e133d9646c62a1817f4db49181763293360a26025652e132b194a604d"
     },
     {
       "path": "package.json",
-      "size": 9225,
-      "sha256": "4c2c7b3380c2e1774f2303581189cb4670c1291c229e1e3765254c8c48494d73"
+      "size": 9694,
+      "sha256": "1830039c539f81da646122854a11c1d921c1a66995b8fc05a0da9d80aa5bfeff"
     },
     {
       "path": "public/aya/aya-alert.png",
@@ -6351,8 +6366,8 @@
     },
     {
       "path": "scripts/verify-aya-agent.cjs",
-      "size": 15211,
-      "sha256": "1ab21041fdefcce7c20eda31d65c12e68e7a76bd52ac39f62ee630f96b1169dc"
+      "size": 15659,
+      "sha256": "06ecac13800825135f06b0ea808bf8840c7c1f13ba63c1f00483e5f0ae19a864"
     },
     {
       "path": "scripts/verify-aya-cad-agent.ts",
@@ -6361,8 +6376,8 @@
     },
     {
       "path": "scripts/verify-aya-cad-dialogue.cjs",
-      "size": 20053,
-      "sha256": "b918bef321981605100dfd4a6a8606fe38c9855e6a7ed49111dbcf4fcc3285d4"
+      "size": 27190,
+      "sha256": "3921189cf4a9c9d60f12900998cc5150159d905c6a7298417872be6ae512a4d4"
     },
     {
       "path": "scripts/verify-aya-catalog.cjs",
@@ -6396,8 +6411,8 @@
     },
     {
       "path": "scripts/verify-aya-guide.ts",
-      "size": 2133,
-      "sha256": "7586409f0b45b5f369ba97c2efa706a38513986b79a0b1a0c7741a05ba548051"
+      "size": 2332,
+      "sha256": "dde4d39d764bcb619324ebf5d36122d9d9b4034682451cfd259585cd9feae87a"
     },
     {
       "path": "scripts/verify-aya-launch.ts",
@@ -6521,8 +6536,8 @@
     },
     {
       "path": "scripts/verify-cad-inspection-browser.mjs",
-      "size": 24778,
-      "sha256": "c93a85f024509ca62afdd8f87a54f46ed1bac5436f4599ba1532ed871493677b"
+      "size": 25218,
+      "sha256": "127b0ece6c27c8c9ba6040cbdb8b849ca0cc99c0b3b373dbec40dcf01a3d8ac1"
     },
     {
       "path": "scripts/verify-cad-inspection.ts",
@@ -6550,9 +6565,34 @@
       "sha256": "3f78a730a36a9b4f1a6b6e6778c2ec0fd54f5eadece8afd97054ed743a47f8ba"
     },
     {
+      "path": "scripts/verify-cad-margin-placement.ts",
+      "size": 6026,
+      "sha256": "3d857502a41129dc7630a5a3acec5ac5569ee98a28d343a4a6fc57fb17257d82"
+    },
+    {
       "path": "scripts/verify-cad-panel.mjs",
       "size": 2797,
       "sha256": "ed8f418451deab24406cc5b6836b62f7394a3d0b9d121fe44abf20bf3472a596"
+    },
+    {
+      "path": "scripts/verify-cad-preparation-envelope.ts",
+      "size": 4037,
+      "sha256": "784f1214e6c5301f1e805626569ae80d08538b9f33fc362649155abbe8676af4"
+    },
+    {
+      "path": "scripts/verify-cad-restoration-browser.mjs",
+      "size": 19707,
+      "sha256": "6446e550db429332bac6e2c50e4deea2a606c9a7d2f6b5f6ea468dfaad1cb273"
+    },
+    {
+      "path": "scripts/verify-cad-restoration-surface.ts",
+      "size": 1924,
+      "sha256": "fd12c437b570aa3f6b12afbfec66a71eeb6d5a87811477db284972781bf61c3e"
+    },
+    {
+      "path": "scripts/verify-cad-restoration-version.ts",
+      "size": 3081,
+      "sha256": "83f83387661d60a0f9d5520c36779750a05f3fc62f4f42daf8c98cce668a8251"
     },
     {
       "path": "scripts/verify-cad-view-state.ts",
@@ -6568,6 +6608,11 @@
       "path": "scripts/verify-community.ts",
       "size": 9185,
       "sha256": "24954bf5aa0d84e381ae08f4adabb7b3efbcc8f9a6b5a784741ede88f8baaa9f"
+    },
+    {
+      "path": "scripts/verify-crown-anatomy.ts",
+      "size": 6393,
+      "sha256": "85984037471eee4027eca26aa8dfac0ea213f16dfc111f266dde272ed3da8a9b"
     },
     {
       "path": "scripts/verify-dental-facts.ts",
@@ -6616,8 +6661,8 @@
     },
     {
       "path": "scripts/verify-legacy-forms.ts",
-      "size": 2160,
-      "sha256": "71935bf4cebe7b77e9e68acb6ebba0ab6ff35acc64d2968e1c6218bf23a03e0c"
+      "size": 2085,
+      "sha256": "8a7ec49abd3b3944543b6de0c14cd5183a10c030e1de59513770d87f686832fc"
     },
     {
       "path": "scripts/verify-loading-play.ts",
@@ -7166,8 +7211,8 @@
     },
     {
       "path": "src/app/design/DesignViewport.tsx",
-      "size": 142558,
-      "sha256": "191555fa122abd0952619325535173ec640520a51f8aa6963e1f1cec74310c85"
+      "size": 146569,
+      "sha256": "30aa94fcb9d36b51f1a987099d1fd506affecdc942d3475eb637a39d009c0d4d"
     },
     {
       "path": "src/app/design/cad-workspace.css",
@@ -7431,8 +7476,8 @@
     },
     {
       "path": "src/lib/aya-cad-assistance.ts",
-      "size": 3447,
-      "sha256": "48f81858f14bda4b31c8524eafd451d952fea023bbc80052ad2a8ae789d30f7e"
+      "size": 3463,
+      "sha256": "7af80553a57544b59279442fb5bacb46ded597247faf4b1dcabc50df56516391"
     },
     {
       "path": "src/lib/aya-command-engine.ts",
@@ -7561,8 +7606,8 @@
     },
     {
       "path": "src/lib/cad-margin-placement.ts",
-      "size": 3461,
-      "sha256": "437db2f2e5514eff23b8a4ace01bc62d1a128e443c2f548b33203c9624186a56"
+      "size": 5455,
+      "sha256": "17181afa73fc01dcc747605c74b9cd8a3e7d1766e9f872b250f424c91f36097c"
     },
     {
       "path": "src/lib/cad-mesh-bvh.ts",
@@ -7585,6 +7630,11 @@
       "sha256": "006ff01d58417d1a27bb890203496aecbf144873e7ff09fe8fdd2b3ab002d28b"
     },
     {
+      "path": "src/lib/cad-preparation-envelope.ts",
+      "size": 3322,
+      "sha256": "3d959ff9c78328249a3568cc93122dd7aec79427ee720e5ae2ee68fc4a5e2c10"
+    },
+    {
       "path": "src/lib/cad-project-state.ts",
       "size": 9881,
       "sha256": "c0fc87dcac5b46d935782bc286353bbc733e8b2492b29e7dabb688b653b6ded0"
@@ -7596,8 +7646,23 @@
     },
     {
       "path": "src/lib/cad-restoration-shape.ts",
-      "size": 8466,
-      "sha256": "c8d2a28e39213767a1cdfa9954d231b1d9da067e589832503f552437a97b377a"
+      "size": 10360,
+      "sha256": "994104a61235b97d07432e3ce118b9941dfbdda0c579ea51b7dc1d8b5219624d"
+    },
+    {
+      "path": "src/lib/cad-restoration-surface.ts",
+      "size": 577,
+      "sha256": "b68cfddbd200e204d7bacdcc6b72abfbcde2d1981af7aeb205462bc9aea8c219"
+    },
+    {
+      "path": "src/lib/cad-restoration-transform.ts",
+      "size": 3166,
+      "sha256": "616e010d7d3a8157a7938b65f5327c91650ad60150bca599138df550418ddaf7"
+    },
+    {
+      "path": "src/lib/cad-restoration-version.ts",
+      "size": 1208,
+      "sha256": "076b724d7b40ccb74179eac839e77b62175ebaa0009ddf1c370380a328ee8124"
     },
     {
       "path": "src/lib/cad-sculpt-brush.ts",
@@ -8282,7 +8347,7 @@
     {
       "path": "src/lib/release.ts",
       "size": 418,
-      "sha256": "1b1471a3dda6fe8c219cddd961381eab83c2d9f2cb398a676c4b7df26e69cffa"
+      "sha256": "c01bf809a02a0cd2ae2621e3fdaada2b1a3bde7493dd24276ca65702a30d86b7"
     },
     {
       "path": "src/lib/retry.ts",
@@ -8317,7 +8382,7 @@
     {
       "path": "src/lib/supabase.ts",
       "size": 1108,
-      "sha256": "c73b2833c29abae050483ce159388500c7ac983e81aa447b5b3efc05686f6172"
+      "sha256": "1b3c66d57ff05fe772a4935b6663ecedcf8dfe86fdaac58abb754a1fea9265bb"
     },
     {
       "path": "src/lib/system-messages.ts",
@@ -9828,6 +9893,216 @@
       "path": "verification/RC54/source-verification.json",
       "size": 1810,
       "sha256": "41107cfb81a2a509138567fdb3f7198daf0cc0a9a9e2c64349dff0cea5b3efd4"
+    },
+    {
+      "path": "verification/RC55/browser-results.json",
+      "size": 7494,
+      "sha256": "88f21ac01ff1bf2e4c104dcc643f552839c48aee1f63c3a604adcd026942560d"
+    },
+    {
+      "path": "verification/RC55/logs/aya-conversation.txt",
+      "size": 765,
+      "sha256": "3f1a8448e2c4824cb79df83fb7b1839071fcfb6cd918e9d1b904fb10cefdcd17"
+    },
+    {
+      "path": "verification/RC55/logs/aya-work.txt",
+      "size": 1037,
+      "sha256": "d107e5ae184cbf45c696342850430c9f877af9b6b07d25005233d3de2864872b"
+    },
+    {
+      "path": "verification/RC55/logs/cad-daily.txt",
+      "size": 2285,
+      "sha256": "d230727703c6174f4d2bcb9295a9322b7b47e33dc425b8e3862c854d38dc4b2d"
+    },
+    {
+      "path": "verification/RC55/logs/cad-guided.txt",
+      "size": 1628,
+      "sha256": "22a0cef77390e3688e8e60b501f998c69b9de16e9a57d480cac87dcd1b69056d"
+    },
+    {
+      "path": "verification/RC55/logs/cad-inspection.txt",
+      "size": 949,
+      "sha256": "a5e8e0fbf3957fcc8ef51cd4cfc9f2a863baabca484440881de23ad94fae876d"
+    },
+    {
+      "path": "verification/RC55/logs/cad-library.txt",
+      "size": 1833,
+      "sha256": "d3398c32ca71de75d4ab4c38790a3d825c34e1db8c7196150c6e3f28bf46428b"
+    },
+    {
+      "path": "verification/RC55/logs/cad-restoration.txt",
+      "size": 2596,
+      "sha256": "b680fda83844a3928af4f2ba7ccac78255020769aaffc93170146a2b81655b28"
+    },
+    {
+      "path": "verification/RC55/logs/full-verify.txt",
+      "size": 40043,
+      "sha256": "6807a344e75343f529ed01201c1f8f1e1f6b92b64d77678a2b385fd6d4e7069c"
+    },
+    {
+      "path": "verification/RC55/logs/loading-reading.txt",
+      "size": 721,
+      "sha256": "231ff84c437b13ba76d53256b5ffebac34c091a799a4554fec32b017bb6b1861"
+    },
+    {
+      "path": "verification/RC55/model-access-report.json",
+      "size": 697,
+      "sha256": "865efcdda35b5b81e5ad1c99b1a694dc67b409cc18d83bf92c528f16c7b31710"
+    },
+    {
+      "path": "verification/RC55/native-grammar-report.json",
+      "size": 3991,
+      "sha256": "c3057b8310e4523339301004f84d615a829649185a7303113a40b1cc80f9d8dc"
+    },
+    {
+      "path": "verification/RC55/native-inference-report.json",
+      "size": 1277,
+      "sha256": "1fea758b92fd9457b5d5116a8c7666f29b5701d7479c6c8eb511fa7d3b5112f2"
+    },
+    {
+      "path": "verification/RC55/screenshots/AYA_RC49_basic_dialogue.png",
+      "size": 82698,
+      "sha256": "8a7514cc6c38af546bb764a22e343bd9229837dfa5fb33be07b25012ca241dc1"
+    },
+    {
+      "path": "verification/RC55/screenshots/AYA_RC49_identity.png",
+      "size": 69172,
+      "sha256": "8898a778be8e4393edbe0963a6e3b064decd2b9b387b45fe0726ff277e7e3a57"
+    },
+    {
+      "path": "verification/RC55/screenshots/AYA_RC50_callback_failure_and_stale_proposal.png",
+      "size": 128548,
+      "sha256": "209564f2bae9e9106f9f35142db69a27f0349ad07922f65b4567f5019abb0cc8"
+    },
+    {
+      "path": "verification/RC55/screenshots/AYA_RC50_memory_and_multistep.png",
+      "size": 80019,
+      "sha256": "8e84d975f0620b9bc643eb0a5fdccb459d34b9c27545f4bab443f2e6f601dbc3"
+    },
+    {
+      "path": "verification/RC55/screenshots/AYA_RC50_model_receives_explicit_memory.png",
+      "size": 69789,
+      "sha256": "cbcd175a36b51d73ec43195563cff19860b319f25c39b40c468956972cf3f60b"
+    },
+    {
+      "path": "verification/RC55/screenshots/AYA_RC50_offline_place_proposal.png",
+      "size": 93137,
+      "sha256": "8ad49e310647796b67f70bb723cf09d18026dd241656d2c9b9cded9fad7eba6f"
+    },
+    {
+      "path": "verification/RC55/screenshots/AYA_conversation_desktop.png",
+      "size": 63106,
+      "sha256": "9f02dd4af5370de9d021288a8d387a11e13c7d6681c8a386f2e26c3cbd31b015"
+    },
+    {
+      "path": "verification/RC55/screenshots/CAD_Inspection_Desktop.png",
+      "size": 815349,
+      "sha256": "04e516342c5f5c45ef5ead4feea7d13d65d9b8d7fb077048f8a88d957968c8e5"
+    },
+    {
+      "path": "verification/RC55/screenshots/CAD_Inspection_Mobile.png",
+      "size": 125021,
+      "sha256": "6aee6fa2d85dd477fafea6d3f812b20c9aa911311dc350833dc2ff1b790a3b6a"
+    },
+    {
+      "path": "verification/RC55/screenshots/DentAYA_RC36_CAD_Sekillendirme.png",
+      "size": 676560,
+      "sha256": "9a085c5b02f4b3581b32a527381318e09a698ce716e1bf46914e7ecd25d8b519"
+    },
+    {
+      "path": "verification/RC55/screenshots/DentAYA_RC36_CAD_Tarama.png",
+      "size": 426239,
+      "sha256": "4d31a7573564bcd33e82e83bd8a286804a659b1b21544df6332b77ea1e2815bf"
+    },
+    {
+      "path": "verification/RC55/screenshots/RC40_CAD_AYA.png",
+      "size": 240662,
+      "sha256": "3d075d0af2fbf04b472ae6c63d4a06fb4c79040149d194688a57189980e8a14a"
+    },
+    {
+      "path": "verification/RC55/screenshots/RC41_CAD_daily.png",
+      "size": 253073,
+      "sha256": "b02f1075836ca272acaab98255152537c6f9ae9e5008705319c704bc831d4b0e"
+    },
+    {
+      "path": "verification/RC55/screenshots/RC44_CAD_AYA.png",
+      "size": 681988,
+      "sha256": "c4513bf6a737b7092a4dbc7eb80c232ce9d268967ee85933456d3d9f13376041"
+    },
+    {
+      "path": "verification/RC55/screenshots/RC44_Kusp_Desktop.png",
+      "size": 129093,
+      "sha256": "611b560ab19e55b758fe4b6f660efa7b57cb52854318bbd83155f7f7335315df"
+    },
+    {
+      "path": "verification/RC55/screenshots/RC44_Kusp_Mobile.png",
+      "size": 97398,
+      "sha256": "d1101c5d8c64500245e4a9747f6c74b797c8741143d16118bdd5aacd3828a705"
+    },
+    {
+      "path": "verification/RC55/screenshots/RC46_AYA_mobile.png",
+      "size": 60030,
+      "sha256": "0c5b83591e0bc56cf8b4064af2493683d6ea82318872cd192649912305809e00"
+    },
+    {
+      "path": "verification/RC55/screenshots/RC51_CAD_daily.png",
+      "size": 223097,
+      "sha256": "876dbae6b7f51167f6d5bbbcd73b7acf351911b4629ab0337ede00cc8742dbd0"
+    },
+    {
+      "path": "verification/RC55/screenshots/RC52_CAD_Library.png",
+      "size": 233737,
+      "sha256": "92a2ea920d368bcf44bd6c6d795804d22b8877e603b89c032b9925280bc80770"
+    },
+    {
+      "path": "verification/RC55/screenshots/RC55_16_anatomic_crown_occlusal.png",
+      "size": 299758,
+      "sha256": "2fc756cfdf01da716663b8efdf6b7fa4eb25649a1ae368f330823c8f11aa36d1"
+    },
+    {
+      "path": "verification/RC55/screenshots/RC55_16_anatomic_crown_placed.png",
+      "size": 193522,
+      "sha256": "6ab7b46de2b2c10869de16bc37480673efa2fcd0665c4210b323cc20fae6b68c"
+    },
+    {
+      "path": "verification/RC55/screenshots/RC55_46_anatomic_crown_occlusal.png",
+      "size": 276177,
+      "sha256": "f04a279f30ae1aa9c274582db4ca1dbfd57c2d23b38c8719ba32a74eb9fb1ab5"
+    },
+    {
+      "path": "verification/RC55/screenshots/RC55_46_anatomic_crown_placed.png",
+      "size": 214197,
+      "sha256": "ebc2c1a7fbbb2a8597f6f369f294992a21a0b3077defa1bb81864c4f291d0bdd"
+    },
+    {
+      "path": "verification/RC55/screenshots/RC55_47_coping_occlusal.png",
+      "size": 277865,
+      "sha256": "2f8207e08eb1431a0d30298b6285c3d65de63b83929bd230cfff2f1820b09ff4"
+    },
+    {
+      "path": "verification/RC55/screenshots/RC55_47_coping_placed.png",
+      "size": 222292,
+      "sha256": "3ab0c88dea517521aceccf1bf0a562c490dff96b55310e69919d56222e84319f"
+    },
+    {
+      "path": "verification/RC55/screenshots/RC55_AYA_placement_guidance.png",
+      "size": 256796,
+      "sha256": "cbc1dffdd8b5f994b557b8f1a30aba212a0899e4b6460f0cdc0f48ff493ed4d0"
+    },
+    {
+      "path": "verification/RC55/screenshots/RC55_raw_model_before_margin.png",
+      "size": 137132,
+      "sha256": "6f70be17e91e34cfb3d893b588d4b6209f87862f1c4d0029a7876984f5e693ed"
+    },
+    {
+      "path": "verification/RC55/screenshots/loading-ready-mobile.png",
+      "size": 22478,
+      "sha256": "249867be60dfcd54415c12f364abcd1eba4b3e2f8dd8cd4e443da57aebd841b9"
+    },
+    {
+      "path": "verification/RC55/source-verification.json",
+      "size": 1811,
+      "sha256": "f4cadaa1599eb0dc450de0e3182b5da73e2b15cb86c8adc370aad7d84c20ff5f"
     },
     {
       "path": "verification/professional/aya.json",

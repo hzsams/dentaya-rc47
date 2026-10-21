@@ -17,7 +17,7 @@ export function ayaCadHelp(question:string,context:AyaCadContext,t:(s:string)=>s
  else if(!context.sourceReady)rows.push(t('Kaynak seçilmedi'));
  else if(!context.modelReady)rows.push(t('Modelin yüklenmesini bekleyin.'));
  else if(context.marginPoints<3)rows.push(t('Geçerli bir kole çizgisi çizin.'));
- else if(!context.visible)rows.push(t('Tümünü göster'));
+ else if(context.placed&&!context.visible)rows.push(t('Tümünü göster'));
  else rows.push(t(context.placed?'Model üzerinde basılı tutup sürükleyin. Shift ile ekleme / çıkarma yönünü ters çevirin.':'Koleye yerleştir'));
  return rows.join('\n');
 }

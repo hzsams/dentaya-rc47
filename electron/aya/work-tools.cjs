@@ -18,7 +18,7 @@ function cadChecklist(c,t=s=>s){if(!c)return [];const item=(id,ready,message,pen
  item('bite',c.upperReady&&c.lowerReady,'Antagonist ve kapanış verisini kontrol et'),
  item('save',!c.unsaved&&!c.saveFailed&&!c.isSaving,c.isSaving?'Kaydediliyor…':c.saveFailed?'CAD projesi kaydedilemedi.':'Kaydet ve çık',c.isSaving)
  ];}
-function nextCadAction(c){if(!c||c.isSaving)return '';if(c.saveFailed)return 'save';if(!c.setupComplete)return 'setup';if(!c.sourceReady||!c.modelReady)return '';if(!c.visible)return 'show';if(c.marginPoints<3)return c.task==='files'?'next':'';if(!c.placed)return 'place';if(c.task==='contacts'&&!(c.upperReady&&c.lowerReady))return '';if(c.unsaved&&c.task==='review')return 'save';return c.task==='review'?'save':'next';}
+function nextCadAction(c){if(!c||c.isSaving)return '';if(c.saveFailed)return 'save';if(!c.setupComplete)return 'setup';if(!c.sourceReady||!c.modelReady)return '';if(!c.visible&&c.placed)return 'show';if(c.marginPoints<3)return c.task==='files'?'next':'';if(!c.placed)return 'place';if(c.task==='contacts'&&!(c.upperReady&&c.lowerReady))return '';if(c.unsaved&&c.task==='review')return 'save';return c.task==='review'?'save':'next';}
 function toolAnswer(prompt,{cadContext=null,locale='tr'}={},t=s=>s){
  const q=fold(prompt),en=locale!=='tr',conversion=convertLength(prompt);if(conversion)return `${conversion.value} ${conversion.from} = ${conversion.result} ${conversion.to}`;
  const percent=percentage(prompt);if(percent)return `${percent.amount} × ${percent.percent} / 100 = ${percent.result}`;

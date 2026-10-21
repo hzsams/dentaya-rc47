@@ -1,0 +1,21 @@
+{
+  "checkedAtUTC": "2026-10-21T14:59:21.715161+00:00",
+  "nativeInference": false,
+  "model": {
+    "id": "aya-local:qwen3-1.7b-q8",
+    "name": "Qwen3-1.7B-Q8_0.gguf",
+    "label": "AYA Local \u00b7 Qwen3 1.7B",
+    "url": "https://huggingface.co/Qwen/Qwen3-1.7B-GGUF/resolve/90862c4b9d2787eaed51d12237eafdfe7c5f6077/Qwen3-1.7B-Q8_0.gguf",
+    "sha256": "061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+    "bytes": 1834426016,
+    "available": false
+  },
+  "officialURLCheck": {
+    "method": "HEAD",
+    "exitCode": 56,
+    "httpStatus": "000",
+    "error": "curl: (56) CONNECT tunnel failed, response 403",
+    "alternateMirrorsUsed": false,
+    "pinsChanged": false
+  }
+}

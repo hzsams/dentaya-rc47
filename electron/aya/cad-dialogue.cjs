@@ -6,6 +6,15 @@ const {isCatalogQuestion}=require('./conversation.cjs');
 const {answerDialogue}=require('./dialogue.cjs');
 const fold=s=>String(s||'').toLocaleLowerCase('tr').normalize('NFKD').replace(/\p{M}/gu,'').replace(/ı/g,'i');
 const taskNames={files:['Dosyalar','Files'],margin:['Marjin','Margin'],fit:['İç yüzey','Internal fit'],anatomy:['Anatomi','Anatomy'],freeform:['Serbest şekillendirme','Freeform'],contacts:['Temaslar','Contacts'],inspect:['Kontrol','Checks'],review:['Son inceleme','Review']};
+const restorationSubject=q=>/\b(?:kron|kuron|kapson|crown|coping|restorasyon|restoration)\p{L}*\b/u.test(q);
+function restorationTopic(q){
+ const subject=restorationSubject(q)||/tasarim|design/.test(q);
+ if(!subject)return '';
+ if(/preparasyon|hazirlanmis dis|prepared tooth|preparation|oturm|oturt|yerlesm|yanlis yerde|havada|floating|misplac|seat(?:ing)?|does(?:n['’ ]?t| not) fit/.test(q))return 'seating';
+ if(/anatom|\bform\p{L}*\b|morpholog|sek(?:il|li)/u.test(q))return 'anatomy';
+ if(/gorunum|gorunus|dogal|gercekci|renk|materyal|appearance|natural|realistic|shading|shade|material|colou?r/.test(q))return 'appearance';
+ return '';
+}
 function topicOf(q){
  if(/kaydet|kayded|\bsav(?:e|ing)\b|kayit.*(?:hata|basarisiz)|kayit olm/.test(q))return 'save';
  if(/geri al|geri don|\bundo\b/.test(q))return 'undo';
@@ -19,6 +28,7 @@ function topicOf(q){
  if(/ekle(?:me)? firca|add brush/.test(q))return 'add';
  if(/azalt(?:ma)? firca|cikar(?:ma)? firca|reduce brush/.test(q))return 'reduce';
  if(/yumusat|smooth/.test(q))return 'smooth';
+ const restoration=restorationTopic(q);if(restoration)return restoration;
  if(/kole|marjin|margin|yerlestir|placement|\bplace\b/.test(q))return 'margin';
  if(/gorun(?:ur|muyor|mez)|goster|gizle|izole|kamera|visibility|show all|isolate|camera|frame/.test(q))return 'visibility';
  return '';
@@ -29,8 +39,9 @@ function requestIntent(prompt,checkCompound=true){
  // A quoted sentence, translation or writing request is not an instruction to the CAD host.
  if(/cevir|tercume|translate|translation|siir|poem|hikaye|story|cumlesini|kelimesi|ingilizcesi|turkcesi|sentence|taslak|draft|kod yaz|write code/.test(q)||/^["“'‘`]/.test(q))return null;
  if(/tork|torque|cerrahi|surgical|ilac|dosage|diagnos|teshis|tedavi/.test(q))return null;
- const current=/guncel|mevcut|bu (?:tasarim|unite|dis|rapor|is|proje|calisma|kontrol)|yeni kontrol|current|this (?:design|unit|tooth|report|project|workspace)|new check/.test(q);
- const review=/incele|degerlendir|yorumla|bulgu|kontrol sonuc|rapor|analiz|review|interpret|finding|check result|analysis/.test(q);
+ const topic=topicOf(q),restoration=restorationTopic(q);
+ const current=restorationSubject(q)||/guncel|mevcut|bu (?:tasarim|unite|dis|rapor|is|proje|calisma|kontrol)|yeni kontrol|current|this (?:design|unit|tooth|report|project|workspace)|new check/.test(q);
+ const review=restoration==='seating'||/incele|degerlendir|yorumla|bulgu|kontrol sonuc|rapor|analiz|review|interpret|finding|check result|analysis/.test(q);
  const next=/siradaki|sonraki|ne yap(?:ayim|maliyim|alim|acagiz)?|nasil (?:devam|ilerle)|next|what (?:should|can) (?:i|we) do|how (?:should|can) (?:i|we) (?:proceed|continue)/.test(q);
  const help=/yardim|nasil|nereye|nereden|hangi arac|ne oner|oner|yapabilir mi(?:yiz|sin)|bakabilir misin|kontrol edebilir|\bcan (?:we|you)\b|\bhelp\b|\bhow\b|suggest|recommend/.test(q);
  const definition=/nedir|ne demek|ne anlama|tanimi|what (?:is|are)|define|definition/.test(q);
@@ -39,9 +50,14 @@ function requestIntent(prompt,checkCompound=true){
  if(negative)return {q,topic:'',review:false,next:false,negative:true};
  if(checkCompound&&!/^(?:(?:lutfen|please|once|bu projeyi|projeyi|mevcut projeyi|bu calismayi) )*(?:kaydet ve cik|save and exit)(?: lutfen| please)?[.!?]*$/.test(q)){
   const parts=prompt.split(/\s+(?:ve|sonra|ardından|ardindan|ayrıca|ayrica|and|then)\s+|[?;]+/iu).map(s=>s.trim()).filter(Boolean);
-  if(parts.length>1){const intents=parts.map(part=>requestIntent(part,false));if(intents.some(Boolean)&&intents.some(x=>!x))return {q,topic:'',review:false,next:false,mixed:true};}
+  if(parts.length>1){
+   const intents=parts.map(part=>requestIntent(part,false)),restorationRequest=intents.some(i=>i&&['seating','anatomy','appearance'].includes(i.topic));
+   const followup=part=>/^(?:nereden|nasil|hangi arac(?:la)?|where|how)\b.*(?:kontrol|duzelt|incele|check|review|fix)/.test(fold(part));
+   if(intents.some(Boolean)&&intents.some((x,i)=>!x&&!(restorationRequest&&followup(parts[i]))))return {q,topic:'',review:false,next:false,mixed:true};
+   if(restorationRequest&&new Set(intents.filter(Boolean).map(i=>i.topic).filter(Boolean)).size>1)return {q,topic:'',review:false,next:false,mixed:true};
+  }
  }
- const topic=topicOf(q),command=/kaydet|\bsave\b|geri al|\bundo\b|\bredo\b|yerlestir|\bplace\b|goster|\bshow\b|izole|\bisolate\b|arac.*ac|activate|firca.*ac/.test(q);
+ const command=/kaydet|\bsave\b|geri al|\bundo\b|\bredo\b|yerlestir|\bplace\b|goster|\bshow\b|izole|\bisolate\b|arac.*ac|activate|firca.*ac/.test(q)||restoration&&/degistir|iyilestir|\byap\b|make|change|improve/.test(q);
  if(!next&&!(current&&(review||help||/durum|state|status/.test(q)))&&!(topic&&(help||command||review))&&!(review&&/tasarim|mesh|cad|geometri|design|workspace/.test(q)))return null;
  return {q,topic,review,next};
 }
@@ -58,7 +74,7 @@ function suggestCadReply(prompt,{cadContext=null,locale='tr',workingMemory}={}){
  const reply=()=>({ok:true,engine:'core',output:rows.join('\n'),references:[],proposals});
  const task=taskNames[c.task];
  if(intent.negative){rows.push(pick('İstemediğin CAD işlemini önermiyorum. Bu istekte işlem önerisini durdurdum; projede değişiklik yapmadım.','I will not suggest the CAD action you asked me to avoid. Action suggestions are stopped for this request; no project changes were made.'));return reply();}
- if(intent.mixed){rows.push(pick('Bu mesajda farklı türde birden fazla görev var. CAD işlemini diğer görevle birlikte bu yoldan ele alamıyorum. Hangi CAD adımına bakalım? Diğer isteği ayrı mesajda yazabilirsin.','This message combines different task types. I cannot handle the CAD action together with the other task through this path. Which CAD step should we review? Send the other request separately.'));return reply();}
+ if(intent.mixed){rows.push(pick('Bu mesajda birden fazla farklı görev var. Bu Core yolunda tek CAD adımını birlikte inceleyebiliriz. Hangi CAD adımına bakalım? Diğer isteği ayrı mesajda yazabilirsin.','This message combines different tasks. This Core path can review one CAD step at a time. Which CAD step should we review? Send the other request separately.'));return reply();}
  rows.push(pick('Çalışma ünitesi: ','Working unit: ')+(c.unit||'—')+(task?' · '+task[tr?0:1]:''));
  if(c.isSaving){rows.push(pick('Kayıt sürüyor. Başarı sonucu gelmeden kaydedildi veya çıkıldı diyemem.','Saving is in progress. A successful result is required before confirming a save or exit.'));return reply();}
  if(inconsistent(c)){rows.push(pick('Çalışma bilgileri birbiriyle uyuşmuyor. Kaynağı, yüklemeyi ve kole durumunu yenileyip tekrar değerlendir.','Workspace metadata is inconsistent. Refresh the source, loading and margin state before reviewing again.'));return reply();}
@@ -126,17 +142,51 @@ function suggestCadReply(prompt,{cadContext=null,locale='tr',workingMemory}={}){
   rows.push(pick(undo?'Geri alınabilir mesh işlemi: ':'Yinelenebilir mesh işlemi: ',undo?'Undoable mesh edits: ':'Redoable mesh edits: ')+count+'.');
   add(intent.topic,undo?'Mevcut undo geçmişinden bir mesh işlemini geri al.':'Mevcut redo geçmişinden bir mesh işlemini yinele.',undo?'Undo one mesh edit from the existing history.':'Redo one mesh edit from the existing history.');return finish();
  }
+ if(intent.topic==='anatomy'||intent.topic==='appearance'){
+  rows.push(pick('Anatomik dış form ile malzeme/ışık görünümü ayrı ayarlardır. Görüntüdeki değişiklik preparasyona uyumu veya üretim uygunluğunu doğrulamaz.','Anatomical outer shape and material/lighting appearance are separate settings. A visual change does not confirm preparation fit or production suitability.'));
+  if(/kapson|coping/.test(fold(c.restoration)))rows.push(pick('Etkin restorasyon kapşon altyapısıdır; tamamlanmış anatomik kuron değildir. Amaç son kuron ise önce iş tanımındaki restorasyon türünü doğrula.','The active restoration is a coping substructure, not a finished anatomical crown. If a final crown is intended, first confirm the restoration type in job setup.'));
+  if(!c.setupComplete){add('setup','Restorasyon türünü ve etkin üniteyi iş tanımında doğrula.','Confirm the restoration type and active unit in job setup.');return finish();}
+  if(!c.visible&&c.placed)add('show-all','Dış formu değerlendirmeden önce mevcut sahneyi görünür yap.','Restore scene visibility before evaluating the outer shape.');
+  if(!c.visible&&!c.placed&&c.sourceReady&&c.modelReady){
+   rows.push(pick('Başlangıç formu hedef koleye yerleşene kadar gizlidir; Tümünü göster bir yerleştirme hedefi oluşturmaz.','The starter is hidden until it is placed on its target margin; Show all does not create a placement target.'));
+   if(c.marginPoints<3)add('tool-margin','Ham modelde restorasyon yapılacak dişin kolesini tamamla.','Complete the prepared tooth margin on the raw model.');
+   else add('place','Doğruladığın koleye başlangıç formunu yerleştir.','Place the starter on the margin you have verified.');
+  }
+  if(intent.topic==='anatomy'){
+   add('library','Etkin ünite için mevcut anatomik formları karşılaştır; form seçimi ayrıca uygulanır.','Compare the available anatomical forms for the active unit; selecting a form is a separate action.');
+   if(/kapson|coping/.test(fold(c.restoration)))add('setup','Kapşon ile son kuron tasarımını iş tanımında ayırt et.','Distinguish coping and final-crown design in job setup.');
+  }else {
+   add('view-natural','Geometriyi değiştirmeden mevcut doğal gölgeleme görünümüne geç.','Use the existing natural shading view without changing geometry.');
+   add('inspection','Mevcut inceleme panelinde ışık ve yüzey görünümünü değerlendir; bunlar anatomik form üretmez.','Review lighting and surface appearance in the existing inspection panel; these controls do not generate anatomy.');
+  }
+  if(!c.modelReady)rows.push(pick('Sahne henüz hazır değil; model yüklenmeden dış yüzeyi değerlendiremem.','The scene is not ready yet; the outer surface cannot be reviewed before the model loads.'));
+  if(!proposals.length)rows.push(pick('Bu görünüm veya form için şu anda yeni kullanılabilir araç yok. Etkin görünümü ve çalışma modunu kontrol et.','There is no new available tool for this appearance or form request. Check the active view and workspace mode.'));
+  return finish();
+ }
  if(!c.setupComplete){rows.push(pick('Önce iş tanımını tamamla; ünite, restorasyon ve materyali doğrula.','Complete the job definition first; confirm the unit, restoration and material.'));add('setup','Eksik iş tanımını mevcut panelde tamamla.','Complete the missing job definition in the existing panel.');return finish();}
  if(!c.sourceReady){rows.push(pick('Kaynak seçilmedi. Dosyalar adımında çalışma kaynağını seç.','No source is selected. Select the working source in Files.'));return finish();}
  if(!c.modelReady){rows.push(pick('CAD sahnesi henüz hazır değil. Model yüklenince durumu yeniden değerlendir.','The CAD scene is not ready yet. Review again after the model loads.'));return finish();}
  if(intent.topic==='visibility'){
+  if(!c.placed&&/kron|kuron|kapson|restorasyon|crown|coping|restoration|tasarim|design/.test(intent.q)&&!/kamera|camera|frame/.test(intent.q)){
+   rows.push(pick('Restorasyon hedef koleye henüz yerleştirilmediği için başlangıç formu gizlidir. Önce ham modelde doğru dişi ve koleyi doğrula.','The starter is hidden because the restoration has not been placed on its target margin. First confirm the correct prepared tooth and margin on the raw model.'));
+   if(c.marginPoints<3)add('tool-margin','Ham modelde seçili dişin kole çizgisini tamamla.','Complete the selected tooth margin on the raw model.');
+   else add('place','Doğruladığın koleye mevcut başlangıç formunu yerleştir.','Place the existing starter on the margin you have verified.');
+   return finish();
+  }
   if(/izole|yalniz|isolate/.test(intent.q))add('isolate','Etkin restorasyonu mevcut görünürlük ayarlarıyla yalnız göster.','Show the active restoration alone using existing visibility controls.');
   else if(/kamera|camera|frame/.test(intent.q))add('fit-camera','Mevcut sahneyi kameraya sığdır.','Frame the current scene in the camera.');
   else add('show-all','Mevcut görünürlük ayarlarıyla tüm sahneyi göster.','Show the whole scene using the existing visibility controls.');return finish();
  }
  if(intent.topic==='library'){add('library','Seçili ünite için teknisyenin form kütüphanesini aç.','Open the technician form library for the selected unit.');return finish();}
- if(!c.visible){rows.push(pick('Etkin restorasyon görünmüyor; önce görünürlüğü geri getir.','The active restoration is hidden; restore visibility first.'));add('show-all','Gizli sahneyi yeniden göstererek yerleşimi kontrol et.','Restore the hidden scene before checking placement.');return finish();}
+ if(!c.visible&&c.placed){rows.push(pick('Etkin restorasyon görünmüyor; önce görünürlüğü geri getir.','The active restoration is hidden; restore visibility first.'));add('show-all','Gizli sahneyi yeniden göstererek yerleşimi kontrol et.','Restore the hidden scene before checking placement.');return finish();}
  if(c.marginPoints<3){rows.push(pick('Geçerli kole için en az 3 marjin noktası gerekli; mevcut nokta sayısı: ','A valid margin needs at least 3 points; current point count: ')+c.marginPoints+'.');add('tool-margin','Mevcut manuel marjin aracıyla kole çizgisini tamamla.','Complete the margin with the existing manual margin tool.');return finish();}
+ if(intent.topic==='seating'){
+  rows.push(pick('Etkin ünitenin kaynak taramasını ve kole çizgisini restorasyon yapılacak hazırlanmış diş üzerinde doğrula. Kole çizgisi başka dişe veya kaynağa aitse onu düzeltmeden yerleşim uygun sayılamaz.','Confirm the active unit’s source scan and margin on the prepared tooth being restored. Placement cannot be accepted if the margin belongs to another tooth or source.'));
+  rows.push(pick(c.placed?'Yerleştirilmiş bilgisi mevcut kole ankrajını gösterir; preparasyona oturma veya iç yüzey uyumu onayı değildir.':'Bu restorasyon mevcut koleye henüz yerleştirilmemiş.',c.placed?'The placed flag records the current margin anchor; it does not confirm seating on the preparation or internal fit.':'This restoration has not yet been placed on the current margin.'));
+  if(!c.placed)add('place','Doğruladığın etkin koleye mevcut deterministik yerleştirme işlemini uygula.','Use the existing deterministic placement operation on the active margin you have verified.');
+  else {add('tool-margin','Hazırlanan dişin kole sınırını mevcut marjin aracıyla kontrol et.','Check the prepared tooth margin with the existing margin tool.');add('view-section','Yerleşimi mevcut kesit görünümünde incele; bu tek başına iç yüzey uyumunu doğrulamaz.','Inspect seating in the existing section view; this alone does not confirm internal fit.');add('inspect','Güncel mevcut geometri kontrolünü hesapla; bu preparasyon uyum ölçümü değildir.','Calculate the available current geometry check; it is not a preparation fit measurement.');}
+  return finish();
+ }
  if(!c.placed){rows.push(pick('Kole noktaları mevcut; restorasyon henüz koleye yerleştirilmemiş.','Margin points exist; the restoration has not yet been placed on the margin.'));add('place','Seçili restorasyonu mevcut koleye yerleştir; sonucu CAD işlemi doğrular.','Place the selected restoration on the existing margin; the CAD operation confirms the result.');return finish();}
  const topic=intent.topic||topicOf(fold(normalizeMemory(workingMemory).goal))||(c.task==='contacts'?'contact':'');
  if(topic==='wall'&&intent.topic!=='wall'&&!intent.review)rows.push(pick('Kabuk duvar değeri bir tahmindir. Kaynak mesafe haritası gerçek duvar kalınlığı ölçümü değildir.','Shell wall values are estimates. The source distance map is not a true wall thickness measurement.'));

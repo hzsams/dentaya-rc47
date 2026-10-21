@@ -9,7 +9,10 @@ const screenshotDir = process.env.DENTAYA_SCREENSHOT_DIR;
 const userId='11111111-1111-4111-8111-111111111111', orgId='22222222-2222-4222-8222-222222222222', caseId='33333333-3333-4333-8333-333333333333';
 const unit=(code,index)=>({id:`unit-${code}-${index}`,tooth_code:code,anatomy_code:code,role:'single',design_type:'anatomic_crown',tooth_form:code==='46'?'square':'slender',morphology_style:'balanced',material:'Zirkonya',attachment_type:'none',temporary:false,notes:''});
 const caseRow={id:caseId,case_number:'CAD-TEST-030',patient_id:'44444444-4444-4444-8444-444444444444',patient_reference:'TEST',title:'Manuel CAD kontrolü',case_type:'Kron',status:'designing',priority:'normal',due_date:null,tooth_codes:['46','47'],material:'Zirkonya',shade:'A2',clinical_notes:''};
-let savedProject={id:'55555555-5555-4555-8555-555555555555',case_id:caseId,lab_org_id:orgId,source_scan_id:'scan-upper',title:'CAD test',restoration_type:'Kron',tooth_codes:['46','47'],material:'Zirkonya',shade:'A2',workflow_stage:'design',status:'working',settings:{job_setup:{version:1,complete:true,active_unit_id:'unit-46-0',units:[unit('46',0),unit('47',1)],updated_at:null}},margin_points:[],measurements:[],updated_at:new Date().toISOString()};
+// Synthetic registration target for display checks, not a preparation-fit fixture.
+// RC55 intentionally hides a starter until a target margin exists.
+const inspectionMargin=Array.from({length:24},(_,i)=>({x:8+4*Math.cos(i*Math.PI/12),y:-5+3*Math.sin(i*Math.PI/12),z:0}));
+let savedProject={id:'55555555-5555-4555-8555-555555555555',case_id:caseId,lab_org_id:orgId,source_scan_id:'scan-upper',title:'CAD test',restoration_type:'Kron',tooth_codes:['46','47'],material:'Zirkonya',shade:'A2',workflow_stage:'design',status:'working',settings:{job_setup:{version:1,complete:true,active_unit_id:'unit-46-0',units:[unit('46',0),unit('47',1)],updated_at:null}},margin_points:inspectionMargin,measurements:[],updated_at:new Date().toISOString()};
 const scan=(id,arch,file)=>({id,scan_ref:`TEST-${arch}`,patient_id:caseRow.patient_id,case_id:caseId,arch,captured_at:'2026-10-04T10:00:00Z',file_name:file,storage_bucket:'public-demo',storage_path:`/training-scans/${file}`,scanner_brand:'Test fixture',scanner_model:'Public scan',scan_origin:'laboratory',scan_purpose:'master_model'});
 let server,browser,logs='',exitCode=null;const errors=[],writes=[];
 try {
@@ -74,6 +77,7 @@ try {
   assert.equal(await page.locator('canvas').count(),1);
   await page.evaluate(()=>{window.__inspectionCanvas=document.querySelector('canvas');});
   const baseline=await state();
+  assert.equal(baseline.placement.placed,true,'Inspection uses a restoration registered to an explicit target, never an origin starter');
   assert.equal(baseline.flashlight.visible,false);assert.equal(baseline.exposure,1.08);
   assert.equal(await page.locator('[data-cad-command=inspection]').count(),0,'Guided work keeps expert inspection gated');
   const aya=page.getByRole('dialog',{name:'AYA çalışma asistanı',exact:true});
@@ -98,7 +102,7 @@ try {
     for(const write of writes){
       assert.equal(write.method,'PATCH');assert.equal(write.data.source_scan_id,'scan-upper');
       assert.equal(write.data.workflow_stage,'design');assert.deepEqual(write.data.tooth_codes,['46','47']);
-      assert.deepEqual(write.data.margin_points,[]);assert.deepEqual(write.data.measurements,[]);
+      assert.deepEqual(write.data.margin_points,inspectionMargin);assert.deepEqual(write.data.measurements,[]);
     }
   };
   await openAya();

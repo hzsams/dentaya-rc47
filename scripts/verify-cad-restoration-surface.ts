@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {cadRestorationSurface} from '../src/lib/cad-restoration-surface';
+const ceramic={roughness:.2,metalness:0,clearcoat:.35},matte={roughness:.9,metalness:0,clearcoat:0},metal={roughness:.28,metalness:.7,clearcoat:0};
+assert.equal(cadRestorationSurface(true,true).clearcoat,.24,'Natural restoration preview has a restrained ceramic highlight even without following a global tooth style.');
+assert.deepEqual(cadRestorationSurface(true,true,ceramic),{roughness:.2,metalness:0,clearcoat:.35,clearcoatRoughness:.12});
+assert.equal(cadRestorationSurface(true,true,matte).clearcoat,0,'Explicit matte remains matte.');
+assert.equal(cadRestorationSurface(true,true,metal).metalness,.7,'Explicit metal finish is retained.');
+for(const naturalPalette of [false,true])assert.equal(cadRestorationSurface(naturalPalette,false,ceramic).clearcoat,0,'Analysis/wireframe/section modes do not gain a cosmetic clearcoat.');
+assert.equal(cadRestorationSurface(false,true,ceramic).clearcoat,0,'Technical palette stays uncoated.');
+const material=new THREE.MeshPhysicalMaterial(cadRestorationSurface(true,true,ceramic));
+assert.ok(material instanceof THREE.MeshStandardMaterial,'Existing render/inspection gates also accept physical restoration materials.');
+const geometry=new THREE.BoxGeometry(),before=Array.from(geometry.getAttribute('position').array);
+Object.assign(material,cadRestorationSurface(false,false));
+assert.equal(material.clearcoat,0);assert.equal(material.roughness,.42);assert.equal(material.metalness,.03);
+assert.deepEqual(Array.from(geometry.getAttribute('position').array),before,'Surface style changes do not mutate restoration geometry.');
+material.dispose();geometry.dispose();
+console.log('PASS: natural ceramic finish, explicit matte/metal retention, neutral technical analysis, existing material-gate compatibility, geometry unchanged.');

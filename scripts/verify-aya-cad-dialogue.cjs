@@ -135,12 +135,74 @@ async function main(){
   assert.ok(!ids(ask('Bu tasarımın antagonist temasını değerlendir.',{antagonistReady:true,view:'contact',report:contactEvidence})).includes('view-contact'));
   assert.ok(!ids(ask('Ölçüm aracını nasıl açarım?',{tool:'measure'})).includes('tool-measure'));
  });
+ await check('current crown anatomy requests reach the actual active-unit form library',()=>{
+  for(const prompt of ['Bu kron çok yapay görünüyor, anatomik formu nasıl değiştirebilirim?','Bu tasarımın anatomik formunu nasıl değiştirebilirim?','Şu kuronun şeklini değiştir.']){
+   const c=context(),before=JSON.stringify(c),reply=suggestCadReply(prompt,{cadContext:c});
+   assert.ok(reply,prompt);assert.deepEqual(ids(reply),['library'],prompt);assert.match(reply.output,/Anatomik dış form.*malzeme\/ışık/);assert.match(reply.output,/Uygula/);assert.equal(JSON.stringify(c),before,'Advice cannot modify the active unit or its geometry');
+   assert.ok(reply.proposals.every(p=>p.scope===c.scope&&p.snapshot===c.snapshot));
+  }
+  const english=ask('How can I change this crown’s anatomical form?',{}, {locale:'en'});
+  assert.deepEqual(ids(english),['library']);assert.match(english.output,/Anatomical outer shape/);assert.match(english.output,/does not confirm preparation fit/);
+ });
+ await check('coping anatomy is distinguished from a finished crown without inventing a form change',()=>{
+  const reply=ask('Bu kapşonun anatomik formunu nasıl değiştirebilirim?',{restoration:'Kapşon / Coping Altyapı'});
+  assert.deepEqual(ids(reply),['library','setup']);assert.match(reply.output,/kapşon altyapısıdır/);assert.match(reply.output,/tamamlanmış anatomik kuron değildir/);
+  const english=ask('How can I change this coping’s anatomical form?',{restoration:'Coping'}, {locale:'en'});
+  assert.deepEqual(ids(english),['library','setup']);assert.match(english.output,/not a finished anatomical crown/);
+  assert.doesNotMatch(reply.output,/form.*(?:değiştirildi|uygulandı)|kuron.*(?:üretildi|tamamlandı)/);
+ });
+ await check('natural rendering requests use only actual view and expert-inspection capabilities',()=>{
+  const availableTools=['library','view-natural','inspection','save'];
+  for(const [prompt,locale] of [['Bu kuronun görünümünü daha doğal yapabilir miyiz?','tr'],['Make this crown look more natural.','en']]){
+   const reply=ask(prompt,{view:'thickness',availableTools},{locale});assert.deepEqual(ids(reply),['view-natural','inspection']);
+   assert.ok(reply.proposals.every(p=>availableTools.includes(p.tool)));assert.match(reply.output,/anatom|Anatom/);assert.doesNotMatch(reply.output,/başarıyla.*(?:değiştir|uygula)|successfully (?:changed|applied)/);
+  }
+  assert.deepEqual(ids(ask('Bu kronun görünümünü daha doğal yapabilir miyiz?',{view:'natural',availableTools:['library','view-natural']})),[],'An already active view is not offered again and unavailable expert controls are not invented');
+  assert.deepEqual(ids(ask('Bu kronun görünümünü daha doğal yapabilir miyiz?',{view:'thickness',availableTools:[]})),[]);
+ });
+ await check('unready scenes can open a real form library but cannot offer live rendering tools',()=>{
+  const c={sourceReady:false,modelReady:false,placed:false,marginPoints:0};
+  assert.deepEqual(ids(ask('Bu kronun anatomik formunu nasıl değiştirebilirim?',c)),['library']);
+  const appearance=ask('Bu kronun görünümünü daha doğal yapabilir miyiz?',c);assert.deepEqual(ids(appearance),[]);assert.match(appearance.output,/Sahne henüz hazır değil/);
+  const incomplete=ask('Bu kronun anatomik formunu nasıl değiştirebilirim?',{...c,setupComplete:false});assert.deepEqual(ids(incomplete),['setup']);
+ });
+ await check('misplaced crown and coping complaints inspect the real margin without claiming preparation fit',()=>{
+  for(const [prompt,locale] of [['Bu kapşon preparasyonun üstüne oturmuyor; nereden kontrol etmeliyim?','tr'],['Bu kron havada kalıyor, nasıl düzeltebilirim?','tr'],['This crown does not fit the prepared tooth; how should I check it?','en']]){
+   const reply=ask(prompt,{}, {locale});assert.deepEqual(ids(reply),['tool-margin','view-section','inspect'],prompt);
+   assert.match(reply.output,locale==='tr'?/kaynak taramasını.*kole çizgisini/:/source scan and margin/);
+   assert.match(reply.output,locale==='tr'?/preparasyona oturma veya iç yüzey uyumu onayı değildir/:/does not confirm seating.*internal fit/);
+   assert.doesNotMatch(reply.output,/\b\d+(?:[.,]\d+)?\s*mm\b|başarıyla yerleştirildi|uygunluk onaylandı|successfully placed|fit confirmed/);
+   assert.ok(reply.proposals.every(p=>p.tool!=='place'),'An existing placed flag cannot authorize an unsupported replacement action');
+  }
+  const unplaced=ask('Bu kron preparasyonun üstüne oturmuyor, nasıl düzeltebilirim?',{placed:false});assert.deepEqual(ids(unplaced),['place']);assert.match(unplaced.output,/henüz yerleştirilmemiş/);
+  const noPlacement=ask('Bu kron preparasyonun üstüne oturmuyor, nasıl düzeltebilirim?',{placed:false,availableTools:['inspect']});assert.deepEqual(ids(noPlacement),[]);
+  assert.deepEqual(ids(ask('Bu kapşon preparasyonun üstüne oturmuyor, nereden kontrol etmeliyim?',{placed:false,marginPoints:2})),['tool-margin']);
+ });
+ await check('restoration troubleshooting keeps negative requests and independent tasks separate',()=>{
+  for(const prompt of ['Bu kronu daha doğal yapma.','Bu kapşonu yerleştirme.',"Don't change this crown's anatomical form.",'Do not make this crown look more natural.']){
+   const reply=ask(prompt);assert.deepEqual(ids(reply),[]);assert.match(reply.output,/durdur|avoid|stop/);
+  }
+  for(const prompt of ['Bu kronun formunu değiştir ve 12 cm kaç mm?','Bu kapşon preparasyonun üstüne oturmuyor ve kronun doğal görünümünü iyileştir.','Make this crown look more natural and save this project.']){
+   const reply=ask(prompt);assert.deepEqual(ids(reply),[]);assert.match(reply.output,/birden fazla|different tasks/);assert.match(reply.output,/Hangi CAD adımına|Which CAD step/);assert.doesNotMatch(reply.output,/120 mm|Mesh:|Önerilen işlemler yalnız Uygula/);
+  }
+ });
+ await check('an unplaced hidden starter needs its raw-model margin instead of a show-all loop',()=>{
+  for(const [prompt,locale] of [['Kuron görünmüyor, nasıl gösterebilirim?','tr'],['Kuron görünmüyor, ne yapmalıyım?','tr'],['My crown is hidden, how can I show it?','en']]){
+   const reply=ask(prompt,{placed:false,visible:false},{locale});assert.deepEqual(ids(reply),['place'],prompt);
+   assert.deepEqual(ids(ask(prompt,{placed:false,visible:false,marginPoints:0},{locale})),['tool-margin']);
+   assert.deepEqual(ids(ask(prompt,{placed:false,visible:false,availableTools:['show-all']},{locale})),[]);
+  }
+  const appearance=ask('Bu kuronun görünümünü daha doğal yapabilir miyiz?',{placed:false,visible:false,view:'thickness'});
+  assert.ok(ids(appearance).includes('place'));assert.ok(!ids(appearance).includes('show-all'));
+  assert.deepEqual(ids(ask('Kuron görünmüyor, nasıl gösterebilirim?',{placed:true,visible:false})),['show-all']);
+  assert.deepEqual(ids(ask('Bu tasarımın kamerasını sahneye nasıl sığdırabilirim?',{placed:false,visible:false})),['fit-camera']);
+ });
  await check('contradictory evidence cannot enable actions',()=>{
   const contradictions=[{...clean,watertight:true,boundaryEdges:4},{...contactEvidence,samples:1,collisionSamples:2},{...contactEvidence,samples:10,collisionSamples:7,contactSamples:6}];
   for(const report of contradictions){const reply=ask(review,{antagonistReady:true,report});assert.deepEqual(ids(reply),[]);assert.match(reply.output,/uyuşmuyor/);}
  });
  await check('normal definitions, writing, quoted text and clinical tasks are not intercepted',()=>{
-  for(const prompt of ['Dentin nedir?','Marjin nedir?','Duvar kalınlığı ne demek?','What is occlusion?','Kayıtlı kapanış nedir?','"Bu tasarımı incele" cümlesini İngilizceye çevir.','Write a poem about this design.','Bu tasarım için tedavi planı öner.'])assert.equal(suggestCadReply(prompt,{cadContext:context()}),null,prompt);
+  for(const prompt of ['Dentin nedir?','Marjin nedir?','Duvar kalınlığı ne demek?','What is occlusion?','Kayıtlı kapanış nedir?','Kuron nedir?','Kapşon nedir?','What is a coping?','"Bu tasarımı incele" cümlesini İngilizceye çevir.','Translate “Make this crown look natural” into Turkish.','Bu kuronun anatomik formu hakkında şiir yaz.','Write a poem about this design.','Bu tasarım için tedavi planı öner.'])assert.equal(suggestCadReply(prompt,{cadContext:context()}),null,prompt);
  });
  await check('explicit negative CAD requests honor stopping without partial positive actions',()=>{
   for(const prompt of ['Bu projeyi kaydet ve çıkma.','Bu projeyi kaydetme.','Son mesh işlemini geri alma.','Bu tasarımı inceleme.','Bu tasarım için işlem önerme.']){
