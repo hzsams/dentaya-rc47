@@ -70,7 +70,7 @@ try{
  await releaseAndReady(slow,'slow-authentication');assert.equal(await game.isVisible(),true,'A manually opened game survives completion');await game.locator('.dental-break-status.is-ready').waitFor();
  await game.getByRole('button',{name:'Oyunları kapat',exact:true}).click();assert.equal(await slow.p.locator('.dental-break-sheet').count(),0);await slow.p.context().close();
  // A real failure ends its pending state and exposes the existing error.
- const failure=await gated({routePath:'/lab',failMembership:true});failure.release();await failure.p.getByText('Sentetik kurum erişimi hatası',{exact:true}).waitFor();
+ const failure=await gated({routePath:'/lab',failMembership:true});failure.release();await failure.p.getByText('Laboratuvar çalışma alanı açılamadı.',{exact:true}).waitFor();
  assert.equal(await failure.p.locator('[data-loading-pending]').count(),0);await noReadingOverlay(failure.p);await failure.p.context().close();
  // Abandon the loading owner, then deliver a late response to the already interactive new route.
  const cancelled=await gated();await cancelled.p.locator('.studio-activity-dock a[href="/ai"]').click();await cancelled.p.waitForURL('**/ai');

@@ -2,6 +2,7 @@ import {advanceLoadingFact,loadingCount,loadingServerSnapshot,loadingSnapshot,re
 import assert from 'node:assert/strict';
 import {DENTAL_FACTS,dentalFactSource,nextDentalFact,shuffleFacts,dentalFactLanguage} from '../src/lib/dental-facts';
 import './verify-dental-facts';
+import './verify-mini-puzzles';
 import {createKuspPuzzle,kuspSolved,kuspSolution,turnKusp} from '../src/lib/kusp-game';
 assert.equal(DENTAL_FACTS.length,500);for(const language of ['tr','en'] as const){assert.equal(new Set(DENTAL_FACTS.map(f=>f[language])).size,DENTAL_FACTS.length);for(const f of DENTAL_FACTS){assert.ok(f[language].length>=24&&f[language].length<=210);assert.match(f[language],/^[^!?]+\.$/);assert.ok(f[language].split('.').length===2);assert.match(dentalFactSource(f).url,/^https:\/\/((www\.)?(nidcr\.nih\.gov|mouthhealthy\.org|fda\.gov|aae\.org|ada\.org)\/|github\.com\/(abachaa\/MedQuAD\/blob\/[a-f0-9]{40}\/|mrdoob\/three\.js\/blob\/r186\/docs\/pages\/|isl-org\/Open3D\/blob\/v0\.19\.0\/docs\/jupyter\/))/);}}
 assert.equal(new Set(shuffleFacts(()=>0)).size,DENTAL_FACTS.length);assert.equal(dentalFactLanguage('ar'),'en');

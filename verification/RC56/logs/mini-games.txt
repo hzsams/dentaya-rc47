@@ -1,0 +1,24 @@
+{
+  "pass": true,
+  "actualMiniGameRoute": true,
+  "miniGames": 5,
+  "deterministicRandomFixture": true,
+  "newGamesSolvedThroughRealHints": true,
+  "undoRestoresBoards": true,
+  "illegalSlideDoesNotCount": true,
+  "keyboardTabsWrapAcrossFive": true,
+  "gridKeyboardFocus": true,
+  "noAutomaticMoves": true,
+  "oneWinPerBoard": true,
+  "offlineCurrentGame": true,
+  "independentRecordsAndReload": true,
+  "oldRecordsPreserved": true,
+  "hiddenMemoryTimerReleased": true,
+  "englishFallback": true,
+  "mobileBounds": true,
+  "blockedScoreStorageKeepsPlayableGame": true,
+  "screenshots": [
+    "/workspace/dentaya-rc56-validation/RC56_MiniGames_Light_Desktop.png",
+    "/workspace/dentaya-rc56-validation/RC56_MiniGames_Slide_Mobile.png"
+  ]
+}

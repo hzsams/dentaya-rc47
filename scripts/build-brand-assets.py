@@ -1,12 +1,14 @@
 """Build DentAYA's premium vector identity with the Python standard library.
 
-Letterforms stay outlined and independent of installed fonts. Each of the 100
-marks has its own silhouette; depth is vector geometry, never a bitmap effect.
+Letterforms stay outlined and independent of installed fonts. Each catalogue
+mark has its own silhouette; depth is vector geometry, never a bitmap effect.
 Run render-brand-assets.mjs afterwards to refresh PNG and Windows ICO exports.
 """
 from pathlib import Path
 import html
 import json
+import argparse
+import math
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = json.loads((ROOT / 'scripts/brand-source/letterforms.json').read_text())
@@ -100,8 +102,8 @@ def text(x, y, value, size=16, color='#17343A', weight=400, tracking=0):
 
 
 def board():
-    width, height = 1600, 2310
-    pieces = [f'<rect width="{width}" height="{height}" fill="#F3F4EF"/>', text(48, 58, 'DENTAYA  /  ATELIER 100', 24, weight=600, tracking=2), text(48, 94, '100 özgün dental, CAD ve monogram silueti · Kabartmalı vektör yüzeyler', 17, color='#62716A')]
+    width, height = 1600, 250 + math.ceil(len(LOGOS) / 5) * 100 + 60
+    pieces = [f'<rect width="{width}" height="{height}" fill="#F3F4EF"/>', text(48, 58, f'DENTAYA  /  ATELIER {len(LOGOS)}', 24, weight=600, tracking=2), text(48, 94, f'{len(LOGOS)} özgün dental, CAD ve monogram silueti · Kabartmalı vektör yüzeyler', 17, color='#62716A')]
     pieces.append(inline(lockup('01', 'premium', 'emerald', light=True), 548, 114, 504, 110))
     for i, (logo_id, _, _, label, family, material) in enumerate(LOGOS):
         col, row = i % 5, i // 5
@@ -109,32 +111,43 @@ def board():
         pieces.append(f'<rect x="{x}" y="{y}" width="288" height="88" rx="8" fill="#FFFFFF" stroke="#D9E1DA"/>')
         pieces.append(text(x+10, y+19, f'{logo_id} / {label.upper()}', 9, color='#61716B', weight=600, tracking=.3))
         pieces.append(inline(lockup(logo_id, family, material, light=True), x+10, y+28, 266, 58))
-    pieces.append(text(48, 2284, '100 farklı kontur  /  ZÜMRÜT · YEŞİM · TİTANYUM · ŞAMPANYA  /  DENTAYA', 13, color='#61716B'))
-    return svg(''.join(pieces), width, height, 'DentAYA yüz özgün üç boyutlu logo koleksiyonu')
+    pieces.append(text(48, height-26, f'{len(LOGOS)} farklı kontur  /  ZÜMRÜT · YEŞİM · TİTANYUM · ŞAMPANYA  /  DENTAYA', 13, color='#61716B'))
+    return svg(''.join(pieces), width, height, f'DentAYA {len(LOGOS)} özgün kabartmalı vektör logo koleksiyonu')
 
 
 def atelier():
     width, height = 1672, 941
-    pieces = [f'<rect width="{width}" height="{height}" fill="#F3F4EF"/>', text(40, 47, 'DENTAYA ATELIER', 23, weight=600, tracking=3), text(40, 77, '100 ORIGINAL DIMENSIONAL MARKS', 12, color='#62716A', tracking=2), '<path d="M40 96H1632" stroke="#CBD6D0"/>']
+    rows = math.ceil(len(LOGOS)/10)
+    pitch = min(79, 790/rows)
+    tile_height, icon_size = pitch-6, min(46,pitch-23)
+    pieces = [f'<rect width="{width}" height="{height}" fill="#F3F4EF"/>', text(40, 47, 'DENTAYA ATELIER', 23, weight=600, tracking=3), text(40, 77, f'{len(LOGOS)} ORIGINAL DIMENSIONAL MARKS', 12, color='#62716A', tracking=2), '<path d="M40 96H1632" stroke="#CBD6D0"/>']
     for i, (logo_id, _, _, label, _, material) in enumerate(LOGOS):
         col, row = i % 10, i // 10
-        x, y = 40 + col * 160, 113 + row * 79
-        pieces.append(f'<rect x="{x}" y="{y}" width="150" height="73" rx="6" fill="#FFFFFF" stroke="#D9E1DA"/>')
-        pieces.append(inline(icon(logo_id, material), x+52, y+4, 46, 46))
-        pieces.append(text(x+75, y+65, logo_id+' / '+label[:18].upper(), 7.6, color='#47615B', weight=600).replace('<text ', '<text text-anchor="middle" ', 1))
+        x, y = 40 + col * 160, 113 + row * pitch
+        pieces.append(f'<rect x="{x}" y="{y:g}" width="150" height="{tile_height:g}" rx="6" fill="#FFFFFF" stroke="#D9E1DA"/>')
+        pieces.append(inline(icon(logo_id, material), x+(150-icon_size)/2, y+3, icon_size, icon_size))
+        pieces.append(text(x+75, y+tile_height-7, logo_id+' / '+label[:18].upper(), 7.6, color='#47615B', weight=600).replace('<text ', '<text text-anchor="middle" ', 1))
     pieces.append(text(40, 928, 'EMERALD  /  JADE  /  TITANIUM  /  CHAMPAGNE', 10, color='#62716A', tracking=2))
-    return svg(''.join(pieces), width, height, 'DENTAYA yüz özgün kabartmalı logo')
+    return svg(''.join(pieces), width, height, f'DENTAYA {len(LOGOS)} özgün kabartmalı logo')
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--from-id', type=int, default=1, help='Export individual marks at or above this ID; refresh catalogue boards as well')
+    args = parser.parse_args()
+    if not 1 <= args.from_id <= len(LOGOS):
+        parser.error('--from-id must refer to a catalogue ID')
     directory = ROOT / 'public/logos'
     for logo_id, filename, _, _, family, material in LOGOS:
+        if int(logo_id) < args.from_id:
+            continue
         for suffix, light, word_only, mono in [('', False, False, False), ('_light', True, False, False), ('_word', False, True, False), ('_word_light', True, True, False), ('_mono', True, False, True), ('_mono_white', False, False, True)]:
             save(directory / f'{filename}{suffix}.svg', lockup(logo_id, family, material, light, word_only, mono))
         save(directory / f'{filename}_icon.svg', icon(logo_id, material))
-    save(ROOT / 'public/dentaya-logo.svg', lockup('01', 'premium', 'emerald'))
-    save(ROOT / 'public/dentaya-logo-light.svg', lockup('01', 'premium', 'emerald', light=True))
-    save(ROOT / 'public/icon.svg', icon('01', 'emerald'))
+    if args.from_id == 1:
+        save(ROOT / 'public/dentaya-logo.svg', lockup('01', 'premium', 'emerald'))
+        save(ROOT / 'public/dentaya-logo-light.svg', lockup('01', 'premium', 'emerald', light=True))
+        save(ROOT / 'public/icon.svg', icon('01', 'emerald'))
     save(ROOT / 'public/brand/DentAYA_Premium_Logo_Koleksiyonu.svg', board())
     save(ROOT / 'public/brand/DentAYA_Premium_Atelier.svg', atelier())
     save(ROOT / 'public/brand/identity.json', json.dumps({'version': CATALOG['version'], 'wordmark': 'DENTAYA', 'colors': COLORS, 'materials': MATERIALS, 'logos': [{'id': row[0], 'file': row[1], 'style': row[3], 'material': row[5]} for row in LOGOS]}, indent=2)+'\n')

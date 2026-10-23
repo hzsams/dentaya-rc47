@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createRequire} from 'node:module';
+import {createHash} from 'node:crypto';
 
 const require = createRequire(import.meta.url);
 const sharp = require('sharp');
@@ -18,13 +19,24 @@ assert.ok(adapter.includes('../../electron/brand-catalog.json'));
 const uiIds = catalog.logos.map(logo => logo.id);
 assert.equal(identity.wordmark, 'DENTAYA');
 assert.equal(identity.version, catalog.version);
-assert.equal(identity.version, 'premium-3');
-assert.equal(identity.logos.length, 100);
-assert.equal(new Set(identity.logos.map(logo => logo.id)).size, 100);
+assert.equal(identity.version, 'premium-4');
+assert.equal(identity.logos.length, 120);
+assert.equal(new Set(identity.logos.map(logo => logo.id)).size, 120);
 assert.deepEqual(uiIds, identity.logos.map(logo => logo.id));
 assert.deepEqual(LOGOS, identity.logos.map(logo => logo.file));
 assert.ok(adapter.includes('BRAND_ASSET_VERSION = catalog.version'));
-assert.deepEqual(uiIds, Array.from({length:100},(_,index)=>String(index+1).padStart(2,'0')));
+assert.deepEqual(uiIds, Array.from({length:120},(_,index)=>String(index+1).padStart(2,'0')));
+// Saved identities remain exact assets, including rasterized Windows exports.
+// Aggregate hashes use a pre-expansion RC55 snapshot, not regenerated expectations.
+const baseline=JSON.parse(await read('scripts/brand-source/rc55-stable-logos.json'));
+const prior=catalog.logos.filter(logo=>baseline.logoIds.includes(logo.id));
+assert.deepEqual(prior.map(logo=>logo.id),baseline.logoIds);
+const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
+assert.equal(digest(JSON.stringify(prior)),baseline.catalogEntriesSHA256,'The original 100 catalogue entries remain byte-equivalent');
+const priorPaths=prior.flatMap(logo=>[...['','_light','_word','_word_light','_mono','_mono_white','_icon'].map(suffix=>`public/logos/${logo.file}${suffix}.svg`),`public/logos/${logo.file}_icon.png`,`electron/logos/${logo.file}_icon.ico`]).sort();
+assert.equal(priorPaths.length,baseline.assetCount);
+let assetDigests='';for(const file of priorPaths)assetDigests+=file+'\0'+digest(await read(file))+'\n';
+assert.equal(digest(assetDigests),baseline.assetsSHA256,'The original 900 SVG/PNG/ICO files remain byte-identical');
 const silhouettes = new Set();
 let variants = 0, renderedIcons = 0;
 for (const {id, file, material} of identity.logos) {
@@ -79,11 +91,11 @@ for (const {id, file, material} of identity.logos) {
     assert.equal(frame.width,size);assert.equal(frame.height,size);
   }
 }
-assert.equal(silhouettes.size, 100);
+assert.equal(silhouettes.size, 120);
 assert.deepEqual(await read('electron/dentaya.ico'), await read('electron/logos/01_dental_form_icon.ico'));
 assert.deepEqual(await read('public/icon-512.png'), await read('public/logos/01_dental_form_icon.png'));
 const artwork = await sharp(await read('public/brand/DentAYA_Premium_Atelier.webp')).metadata();
 assert.equal(artwork.width, 1672); assert.equal(artwork.height, 941);
 const picker = String(await read('src/app/LogoPicker.tsx'));
 assert.ok(picker.includes('/brand/DentAYA_Premium_Atelier.webp'));
-console.log(JSON.stringify({pass:true,uniqueMarks:silhouettes.size,svgVariants:variants,smallIconRenders:renderedIcons,windowsIcoSizes:7,outlinedWordmark:'DENTAYA',uiAndDesktopAllowlistMatch:true,shippedAtelierArtwork:true}));
+console.log(JSON.stringify({pass:true,uniqueMarks:silhouettes.size,svgVariants:variants,smallIconRenders:renderedIcons,windowsIcoSizes:7,preservedPriorMarks:prior.length,preservedPriorAssetFiles:priorPaths.length,priorAssetsByteIdentical:true,outlinedWordmark:'DENTAYA',uiAndDesktopAllowlistMatch:true,shippedAtelierArtwork:true}));

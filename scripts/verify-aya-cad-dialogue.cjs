@@ -178,6 +178,35 @@ async function main(){
   const noPlacement=ask('Bu kron preparasyonun üstüne oturmuyor, nasıl düzeltebilirim?',{placed:false,availableTools:['inspect']});assert.deepEqual(ids(noPlacement),[]);
   assert.deepEqual(ids(ask('Bu kapşon preparasyonun üstüne oturmuyor, nereden kontrol etmeliyim?',{placed:false,marginPoints:2})),['tool-margin']);
  });
+ await check('raw-model crown design wording uses the selected margin rather than another crown',()=>{
+  for(const [prompt,locale] of [['Modelin üstüne kron yapalım.','tr'],['Ham taramanın üzerine kuron tasarlamak istiyorum.','tr'],['Build a crown on the scan model.','en'],['Make this crown on the model.','en']]){
+   const reply=ask(prompt,{placed:false},{locale});assert.deepEqual(ids(reply),['place'],prompt);
+   assert.match(reply.output,locale==='tr'?/kaynak taramasını.*kole çizgisini/:/source scan and margin/);
+   const placed=ask(prompt,{placed:true},{locale});assert.ok(ids(placed).includes('view-section'));assert.ok(!ids(placed).includes('place'));
+   assert.match(placed.output,locale==='tr'?/iç yüzey uyumu onayı değildir/:/does not confirm seating/);
+  }
+  assert.deepEqual(ids(ask('Modelin üstüne kron yapma.')),[]);
+  assert.deepEqual(ids(ask('Modelin üzerindeki kuronun anatomik formunu nasıl değiştiririm?')),['library'],'A location reference does not replace the user’s explicit anatomy request');
+  assert.equal(suggestCadReply('Modelin üstüne kron yapmak nedir?',{cadContext:context()}),null,'A definition is not a live placement request');
+ });
+ const scopedHistory=(prompt=review)=>[{role:'user',content:prompt,cadScope:base.scope},{role:'assistant',engine:'core',content:'OLD RESULT 0.123 mm',cadScope:base.scope}];
+ await check('short CAD followups use fresh scoped state and never replay prior measured text',()=>{
+  for(const [prompt,locale] of [['Peki şimdi?','tr'],['Devam edelim.','tr'],['What now?','en']]){
+   const reply=ask(prompt,{placed:false},{history:scopedHistory(),locale});assert.deepEqual(ids(reply),['place']);assert.doesNotMatch(reply.output,/0\.123/);
+   assert.ok(reply.proposals.every(p=>p.scope===base.scope&&p.snapshot===base.snapshot));
+  }
+  const fresh=ask('Sonuç nasıl?',{report:clean},{history:scopedHistory()});assert.match(fresh.output,new RegExp(meshReport.triangleCount+' üçgen'));assert.doesNotMatch(fresh.output,/0\.123/);assert.ok(!ids(fresh).includes('inspect'));
+  const changed=ask('Sonuç nasıl?',{dataToken:'geometry:new',snapshot:'snapshot:new',report:null},{history:scopedHistory()});assert.match(changed.output,/güncel geometri kontrolü yok/);assert.deepEqual(ids(changed),['inspect']);assert.equal(changed.proposals[0].snapshot,'snapshot:new');
+  const afterUndo=ask('Peki şimdi?',{}, {history:scopedHistory('Son mesh işlemini geri al.')});assert.ok(!ids(afterUndo).includes('undo'),'A follow-up does not repeat a completed mutation');
+ });
+ await check('CAD followup boundaries reject another unit, unscoped history and a new general topic',()=>{
+  const scope='other-project:source:unit-47';
+  for(const history of [scopedHistory().map(m=>({...m,cadScope:scope})),scopedHistory().map(m=>({role:m.role,content:m.content})),[...scopedHistory(),{role:'user',content:'Dentin nedir?',cadScope:base.scope},{role:'assistant',content:'A general definition',cadScope:base.scope}]]){
+   assert.equal(suggestCadReply('Peki şimdi?',{cadContext:context(),history}),null);
+   assert.equal(suggestCadReply('Sonuç nasıl?',{cadContext:context(),history}),null);
+  }
+  for(const prompt of ['"Peki şimdi?"','Peki şimdi?\n12 cm kaç mm?'])assert.equal(suggestCadReply(prompt,{cadContext:context(),history:scopedHistory()}),null);
+ });
  await check('restoration troubleshooting keeps negative requests and independent tasks separate',()=>{
   for(const prompt of ['Bu kronu daha doğal yapma.','Bu kapşonu yerleştirme.',"Don't change this crown's anatomical form.",'Do not make this crown look more natural.']){
    const reply=ask(prompt);assert.deepEqual(ids(reply),[]);assert.match(reply.output,/durdur|avoid|stop/);

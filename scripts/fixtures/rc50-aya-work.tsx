@@ -41,6 +41,6 @@ export default function Fixture(){
  }
  return <main style={{maxWidth:1120,margin:'auto',padding:16}}>
   <section className="aya-page" id="main-test"><AyaChat/></section>
-  <section id="cad-test" style={{position:'relative',height:940,maxWidth:460,margin:'32px auto 0'}}>{cadOpen&&<CadAyaPanel context={context} onClose={()=>setCadOpen(false)} onRun={run}/>}</section>
+  <section id="cad-test" style={{position:'relative',height:940,maxWidth:460,margin:'32px auto 0'}}>{cadOpen&&<CadAyaPanel key={context.scope} context={context} onClose={()=>setCadOpen(false)} onRun={run}/>}</section>
  </main>;
 }

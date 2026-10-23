@@ -1,0 +1,27 @@
+PASS: clicked AYA inspection/on/off use actual renderer state; guided, unavailable, foreign-scope and revoked capabilities are rejected. Local model bridge is synthetic.
+{
+  "pass": true,
+  "realWebGL": true,
+  "flashlightPixelsChanged": true,
+  "clickedAyaInspection": true,
+  "clickedAyaFlashlightOnOff": true,
+  "hostCapabilitiesChecked": true,
+  "unavailableAndForeignScopeRejected": true,
+  "modeRevokesExpertProposals": true,
+  "syntheticLocalModelBridge": true,
+  "pointerAim": true,
+  "powerConeExposure": true,
+  "restorationEdges": true,
+  "boundedWorldNormals": true,
+  "facetedAndInterior": true,
+  "sectionAxesCenterInvert": true,
+  "restorationFocus": true,
+  "realQuarterTurns": true,
+  "sourceAndRestorationFingerprintsPreserved": true,
+  "historyPreserved": true,
+  "singleCanvas": true,
+  "mobileBounds": true,
+  "newControlsEnglishFallback": true,
+  "savedInspectionSettings": true,
+  "backend": "intercepted synthetic fixture"
+}

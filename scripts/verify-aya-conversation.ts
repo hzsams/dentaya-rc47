@@ -47,5 +47,22 @@ assert.match((await resolveAyaReply({prompt:'Kapanış nedir',cadContext:context
 assert.match((await resolveAyaReply({prompt:'Kapanış',cadContext:{...context,upperReady:false,lowerReady:false}})).output,/Antagonist/);
 const notebook=await resolveAyaReply({prompt:'Kurye saatimiz kaç',knowledge:[{id:'kurye',title:'Kurye saati',content:'Kurye 16:40 saatinde gelir.',kind:'memory'}]});assert.match(notebook.output,/16:40/);assert.equal(notebook.references[0].id,'knowledge-kurye');
 const record=await resolveAyaReply({prompt:'STL nedir'});const next=await resolveAyaReply({prompt:'peki nasıl kontrol ederim',history:[{role:'user',content:'STL nedir'},{role:'assistant',content:record.output,engine:record.engine,references:record.references}],options:DEFAULT_AYA_OPTIONS});assert.equal(next.references[0].id,'aya-qa-scan-stl-check');
+// A failed local inference still leaves the live, typed CAD helper available.
+// Cancellation/context changes are final; none of these mocked calls execute tools.
+const scopedCad={...context,scope:'project:scan:unit46',snapshot:'current-snapshot',dataToken:'current-geometry',task:'margin',availableTools:['place','tool-margin','inspect','save','show-all']};
+for(const error of ['MODEL_MISSING','LOCAL_TIMEOUT','LOCAL_BUSY','LOCAL_INVALID_PLAN','LOCAL_EMPTY_RESPONSE']){
+ const recovered=await resolveAyaReply({prompt:'Modelin üstüne kron yapalım.',cadContext:scopedCad,workingMemory:manualMemory},{callModel:async()=>({ok:false,error})});
+ assert.equal(recovered.engine,'core');assert.equal(recovered.warning,error);assert.equal(recovered.proposals?.[0]?.tool,'place');assert.equal(recovered.proposals[0].scope,scopedCad.scope);assert.equal(recovered.proposals[0].snapshot,scopedCad.snapshot);assert.match(recovered.output,/AYA Core/);assert.equal(recovered.workingMemory,undefined);
+}
+const noMargin=await resolveAyaReply({prompt:'Modelin üstüne kron yapalım.',cadContext:{...scopedCad,marginPoints:0}},{callModel:async()=>({ok:false,error:'LOCAL_ERROR'})});assert.equal(noMargin.proposals?.[0]?.tool,'tool-margin');
+const saveFailure=await resolveAyaReply({prompt:'Güncel çalışma durumunu değerlendir.',cadContext:{...scopedCad,saveFailed:true}},{callModel:async()=>({ok:false,error:'LOCAL_BUSY'})});assert.equal(saveFailure.proposals?.[0]?.tool,'save');assert.match(saveFailure.output,/Son kayıt başarısız/);
+for(const error of ['LOCAL_CANCELLED','LOCAL_CONTEXT_CHANGED']){
+ const halted=await resolveAyaReply({prompt:'Modelin üstüne kron yapalım.',cadContext:scopedCad},{callModel:async()=>({ok:false,error})});assert.equal(halted.warning,error);assert.equal(halted.proposals,undefined);
+}
+let liveCadModelCalls=0;
+const priority=await resolveAyaReply({prompt:'Modelin üstüne kron yapalım.',cadContext:scopedCad},{callModel:async()=>{liveCadModelCalls++;return {ok:true,output:'Fresh model reply'};}});assert.equal(priority.engine,'model');assert.equal(liveCadModelCalls,1);
+const cadHistory=[{role:'user' as const,content:'Güncel çalışma durumunu değerlendir.',cadScope:scopedCad.scope},{role:'assistant' as const,engine:'core' as const,content:'Previous CAD advice',cadScope:scopedCad.scope}];
+const cadFollowup=await resolveAyaReply({prompt:'Peki şimdi?',cadContext:scopedCad,history:cadHistory});assert.equal(cadFollowup.proposals?.[0]?.tool,'place');
+const recoveredFollowup=await resolveAyaReply({prompt:'Peki şimdi?',cadContext:scopedCad,history:cadHistory},{callModel:async()=>({ok:false,error:'LOCAL_TIMEOUT'})});assert.equal(recoveredFollowup.proposals?.[0]?.tool,'place');assert.equal(recoveredFollowup.warning,'LOCAL_TIMEOUT');
 await assert.rejects(()=>resolveAyaReply({prompt:' '}),/INVALID_PROMPT/);await assert.rejects(()=>resolveAyaReply({prompt:'a'.repeat(8001)}),/INVALID_PROMPT/);
 console.log('PASS: model-first definitions/new phrasings/followups, working-memory transfer, honest Core/model labels, offline guide, forced model path, cancellation/timeout/busy/invalid plan, preferences, notebook, clinical safety and actual CAD metadata (mock model calls only).');

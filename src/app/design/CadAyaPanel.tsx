@@ -18,7 +18,7 @@ import {readAyaKnowledge} from '@/lib/aya-knowledge';
 import {readAyaState,type AyaMessage} from '@/lib/aya-local-state';
 import AyaKnowledgePanel from '../ai/AyaKnowledgePanel';
 import AyaSources from '../ai/AyaSources';
-type Message=AyaMessage&{proposals?:AyaProposal[]};
+type Message=AyaMessage&{proposals?:AyaProposal[];cadScope?:string};
 type Event=AyaCadActionEvidence;
 type Session={messages:Message[];memory:AyaWorkingMemory;events:Event[]};
 // Panel close/reopen keeps the current task in process memory, scoped to project/source/unit.
@@ -76,7 +76,7 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
   lock.current=true;followBottom.current=true;setBusy(true);setDraft('');setError('');
   const requestId=crypto.randomUUID(),captured=contextRef.current;
   request.current=requestId;requestSnapshot.current=captured.snapshot??'';
-  const base=previous.slice(-64);setMessages([...base,{role:'user',content:prompt}]);
+  const base=previous.slice(-64);setMessages([...base,{role:'user',content:prompt,cadScope:captured.scope}]);
   let timeout:ReturnType<typeof setTimeout>|undefined;
   try{
    const notebook=readAyaKnowledge(),api=window.dentayaDesktop,options=readAyaState().options,cadContext={...captured,recentActions:actionEvents.slice(-8)};
@@ -87,11 +87,11 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
    if(!live.current||request.current!==requestId)return;
    // A response for another geometry/task cannot change this task's memory or offer executable tools.
    if(captured.scope!==contextRef.current.scope||captured.snapshot!==contextRef.current.snapshot){setDraft(prompt);setError(copy.stale);return;}
-   setMessages([...base,{role:'user',content:prompt},{role:'assistant',content:result.output,engine:result.engine,references:result.references,proposals:result.proposals}]);
+   setMessages([...base,{role:'user',content:prompt,cadScope:captured.scope},{role:'assistant',content:result.output,engine:result.engine,references:result.references,proposals:result.proposals,cadScope:captured.scope}]);
    if(result.workingMemory)setMemory(result.workingMemory);
    if(result.cancelled||result.warning)setDraft(prompt);
    if(result.warning)setError(result.warning==='LOCAL_INVALID_PLAN'?copy.invalid:t('Yerel model yanıt veremedi. Motoru ve model seçimini kontrol edin.'));
-  }catch{if(live.current&&request.current===requestId){const reply=fallbackReply(prompt,{locale,history:base,modelError:'LOCAL_ERROR'});setMessages([...base,{role:'user',content:prompt},{role:'assistant',content:reply.output,engine:'core'}]);setDraft(prompt);}}
+  }catch{if(live.current&&request.current===requestId){const reply=fallbackReply(prompt,{locale,history:base,modelError:'LOCAL_ERROR'});setMessages([...base,{role:'user',content:prompt,cadScope:captured.scope},{role:'assistant',content:reply.output,engine:'core',cadScope:captured.scope}]);setDraft(prompt);}}
   finally{if(timeout)clearTimeout(timeout);if(request.current===requestId){lock.current=false;request.current='';cancelPending.current=null;if(live.current){setBusy(false);}}}
  }
  async function apply(proposal:AyaProposal){
@@ -103,7 +103,7 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
   try{result=await onRun(proposal);}catch{result={ok:false,message:copy.failed};}
   lock.current=false;
   const cached=sessions.get(captured.scope??''),nextEvents=[...(cached?.events??events),{tool:proposal.tool,ok:result.ok,result:result.message,scope:captured.scope??'',snapshot:captured.snapshot??'',dataToken:captured.dataToken??''}].slice(-8);
-  const nextMessages:Message[]=[...(cached?.messages??messages),{role:'assistant',engine:'core',content:copy.toolResult+' · '+copy.tools[proposal.tool]+'\n'+(result.ok?copy.done:copy.failed)+' · '+result.message}];
+  const nextMessages:Message[]=[...(cached?.messages??messages),{role:'assistant',engine:'core',content:copy.toolResult+' · '+copy.tools[proposal.tool]+'\n'+(result.ok?copy.done:copy.failed)+' · '+result.message,cadScope:captured.scope}];
   // Publish the actual result into its original unit, including a panel reopened before completion.
   const session={messages:nextMessages.slice(-64),memory:cached?.memory??memory,events:nextEvents};
   if(captured.scope)cacheSession(captured.scope,session);

@@ -7,6 +7,7 @@ import { forwardRef, useEffect, useImperativeHandle, useRef, useState, type CSSP
 import {cadRoleColor,type CadColorSettings} from '@/lib/cad-color-groups';
 import { toothSurface, useToothAppearance } from '@/lib/tooth-appearance';
 import {cadRestorationSurface} from '@/lib/cad-restoration-surface';
+import {cadSectionContours,type CadSectionInspection} from '@/lib/cad-section-engine';
 import { useCadWorkspace } from '@/lib/cad-workspace-preferences';
 import { experienceDuration } from '@/lib/experience-preferences';
 import { createCameraMotion, sampleCameraMotion } from '@/lib/cad-camera-motion';
@@ -242,9 +243,10 @@ type Props = {
     onHistoryChange?: (state: CadHistoryState) => void;
     onPerformanceInfo?: (info: CadPerformanceInfo) => void;
     onSceneStateChange?: (state:CadSceneState)=>void;
+    onSectionInspectionChange?: (state:CadSectionInspection|null)=>void;
     onStatus?: (message: string) => void;
 };
-const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignViewport({ projectId, source, referenceSources, onContextMenuRequest, toothCodes = [], settings, tool, viewMode, marginPoints, measurements, onMarginPointsChange, onMeasurementsChange, onInsertionAxisChange, onConnectorsChange, onBrushRadiusChange, onBrushStrengthChange, onGeometryCommit, onReadyChange, onHistoryChange, onPerformanceInfo, onSceneStateChange, onStatus }, ref) {
+const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignViewport({ projectId, source, referenceSources, onContextMenuRequest, toothCodes = [], settings, tool, viewMode, marginPoints, measurements, onMarginPointsChange, onMeasurementsChange, onInsertionAxisChange, onConnectorsChange, onBrushRadiusChange, onBrushStrengthChange, onGeometryCommit, onReadyChange, onHistoryChange, onPerformanceInfo, onSceneStateChange, onSectionInspectionChange, onStatus }, ref) {
     const toothAppearance = useToothAppearance();
     const toothAppearanceRef = useRef(toothAppearance);
     useEffect(() => { toothAppearanceRef.current = toothAppearance; applyViewMode();
@@ -305,6 +307,9 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
     const flashlightPointerRef = useRef<THREE.Vector2 | null>(null);
     const inspectionOverlayRef = useRef<{mesh:THREE.Mesh|null;edgeKey:string;normalKey:string;edges:THREE.LineSegments|null;normals:THREE.LineSegments|null}>({mesh:null,edgeKey:'',normalKey:'',edges:null,normals:null});
     const inspectionDiagnosticsRef = useRef('');
+    const sectionOverlayRef=useRef<{key:string;lines:THREE.LineSegments[];summary:CadSectionInspection|null}>({key:'',lines:[],summary:null});
+    const sectionCallbackRef=useRef(onSectionInspectionChange);
+    useEffect(()=>{sectionCallbackRef.current=onSectionInspectionChange;},[onSectionInspectionChange]);
     const placementDiagnosticsRef=useRef<{key:string;value:ReturnType<typeof cadCervicalRegistration>}|null>(null);
     const inspectionAimRef = useRef<{key:string;point:THREE.Vector3}|null>(null);
     const inspectionBoundsVersionsRef = useRef(new WeakMap<THREE.BufferGeometry,number>());
@@ -415,7 +420,7 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
             sourceCacheRef.current={...snapshot.sources,[snapshot.sourceKey]:snapshot.units};unitCacheRef.current={...units};liveUnitRef.current=null;unitHistoryRef.current.clear();activateUnit();setError('');loadingRef.current=false;setLoading(false);readyCallbackRef.current?.(true);return true;
         },
         placeOnMargin() { return registerMargin(); },
-        hasMarginPlacement() { return anchorRef.current.placed&&anchorRef.current.marginKey===marginKey(); },
+        hasMarginPlacement() { return liveUnitRef.current?.key===unitKey()?.key&&anchorRef.current.placed&&anchorRef.current.marginKey===marginKey(); },
         captureCamera() { const camera = cameraRef.current, controls = controlsRef.current; if (!camera || !controls || loading || !designMeshRef.current)
             return null; return { position: camera.position.toArray(), target: controls.target.toArray() }; },
         restoreCamera(value) { if (!value.position.every(Number.isFinite) || !value.target.every(Number.isFinite))
@@ -424,7 +429,7 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
             return null; renderer.render(scene, camera); return new Promise<Blob | null>(resolve => renderer.domElement.toBlob(resolve, 'image/png')); },
         exportStl() {
             const mesh = shellMeshRef.current ?? designMeshRef.current;
-            if (!mesh)
+            if (!mesh || liveUnitRef.current?.key!==unitKey()?.key || !anchorRef.current.placed || anchorRef.current.marginKey!==marginKey())
                 return null;
             const qc = analyzeCadMesh(mesh.geometry);
             if (!qc.watertight || qc.degenerateTriangles || qc.connectedComponents !== 1)
@@ -1917,6 +1922,13 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
         const cache=inspectionOverlayRef.current;
         for(const line of [cache.edges,cache.normals])if(line){sceneRef.current?.remove(line);line.geometry.dispose();(line.material as THREE.Material).dispose();}
         inspectionOverlayRef.current={mesh:null,edgeKey:'',normalKey:'',edges:null,normals:null};
+        clearSectionOverlays();
+    }
+    function clearSectionOverlays(){
+        const cache=sectionOverlayRef.current;
+        for(const line of cache.lines){sceneRef.current?.remove(line);line.geometry.dispose();(line.material as THREE.Material).dispose();}
+        if(cache.summary)sectionCallbackRef.current?.(null);
+        sectionOverlayRef.current={key:'',lines:[],summary:null};
     }
     function inspectionCenter(){
         const mesh=shellMeshRef.current??designMeshRef.current;
@@ -1995,6 +2007,21 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
             if(cache.edges){cache.edges.matrix.copy(mesh.matrixWorld);cache.edges.matrixWorldNeedsUpdate=true;}
             for(const [line,enabled] of [[cache.edges,config.inspection_edges],[cache.normals,config.inspection_normals]] as const)if(line){line.visible=enabled&&mesh.visible;const material=line.material as THREE.LineBasicMaterial;const hasCut=material.clippingPlanes?.length===1;if(hasCut!==section){material.clippingPlanes=section?[plane]:[];material.needsUpdate=true;}}
         }
+        const sectionCache=sectionOverlayRef.current;
+        if(section&&config.inspection_section_contours){
+            const targets=([['restoration',mesh],['source',sourceMeshRef.current]] as const).flatMap(([role,target])=>target?.visible?[[role,target] as const]:[]);
+            const key=targets.map(([role,target])=>{target.updateMatrixWorld(true);const p=target.geometry.getAttribute('position'),i=target.geometry.index;return [role,target.geometry.id,p instanceof THREE.BufferAttribute?p.version:p.data.version,i?.version,...target.matrixWorld.elements].join(',');}).join(';')+'|'+[...plane.normal.toArray(),plane.constant].join(',');
+            if(sectionCache.key!==key){
+                for(const line of sectionCache.lines){scene.remove(line);line.geometry.dispose();(line.material as THREE.Material).dispose();}
+                sectionCache.lines=[];const summary:CadSectionInspection={restoration:null,source:null};
+                for(const [role,target] of targets){
+                    const {segments,...report}=cadSectionContours(target.geometry,target.matrixWorld,plane);summary[role]=report;
+                    const line=new THREE.LineSegments(new THREE.BufferGeometry().setAttribute('position',new THREE.Float32BufferAttribute(segments,3)),new THREE.LineBasicMaterial({color:role==='restoration'?0xffc35c:0x6be1ec,depthWrite:false,depthTest:false,transparent:true,opacity:.95,toneMapped:false}));
+                    line.name='DentAYA '+role+' section contours';line.renderOrder=5;scene.add(line);sectionCache.lines.push(line);
+                }
+                sectionCache.key=key;if(JSON.stringify(sectionCache.summary)!==JSON.stringify(summary)){sectionCache.summary=summary;sectionCallbackRef.current?.(summary);}
+            }
+        }else if(sectionCache.key||sectionCache.summary)clearSectionOverlays();
         let placement:({placed:true}&ReturnType<typeof cadCervicalRegistration>)|{placed:false}={placed:false};
         const design=designMeshRef.current,placementBase=placementBaseRef.current;
         if(anchorRef.current.placed&&design&&placementBase){
@@ -2006,7 +2033,7 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
         // Diagnostics are read from the actual scene objects by the WebGL regression fixture.
         const material=mesh?.material instanceof THREE.MeshStandardMaterial?mesh.material:null;
         const restorationMaterial=material?{type:material.type,roughness:material.roughness,metalness:material.metalness,clearcoat:material instanceof THREE.MeshPhysicalMaterial?material.clearcoat:0}:null;
-        const diagnostics=JSON.stringify({placement,restorationMaterial,flashlight:flashlight?{visible:flashlight.visible,intensity:flashlight.intensity,angle:flashlight.angle,position:flashlight.position.toArray(),target:flashlight.target.position.toArray()}:null,edges:cache.edges?.visible?(cache.edges.geometry.getAttribute('position')?.count??0)/2:0,normals:cache.normals?.visible?(cache.normals.geometry.getAttribute('position')?.count??0)/2:0,faceted:material?.flatShading??false,side:material?.side,exposure:renderer.toneMappingExposure,section:section?{normal:plane.normal.toArray(),constant:plane.constant}:null,restorationCenter:mesh?inspectionCenter().toArray():null,camera:{position:camera.position.toArray(),target:controls.target.toArray(),up:camera.up.toArray()},geometry:{id:mesh?.geometry.id,vertices:mesh?.geometry.getAttribute('position')?.count,hash:mesh?inspectionGeometryFingerprint(mesh):null,sourceHash:sourceMeshRef.current?inspectionGeometryFingerprint(sourceMeshRef.current):null},history:{undo:undoRef.current.length,redo:redoRef.current.length}});
+        const diagnostics=JSON.stringify({placement,restorationMaterial,sectionContours:sectionOverlayRef.current.summary,flashlight:flashlight?{visible:flashlight.visible,intensity:flashlight.intensity,angle:flashlight.angle,position:flashlight.position.toArray(),target:flashlight.target.position.toArray()}:null,edges:cache.edges?.visible?(cache.edges.geometry.getAttribute('position')?.count??0)/2:0,normals:cache.normals?.visible?(cache.normals.geometry.getAttribute('position')?.count??0)/2:0,faceted:material?.flatShading??false,side:material?.side,exposure:renderer.toneMappingExposure,section:section?{normal:plane.normal.toArray(),constant:plane.constant}:null,restorationCenter:mesh?inspectionCenter().toArray():null,camera:{position:camera.position.toArray(),target:controls.target.toArray(),up:camera.up.toArray()},geometry:{id:mesh?.geometry.id,vertices:mesh?.geometry.getAttribute('position')?.count,hash:mesh?inspectionGeometryFingerprint(mesh):null,sourceHash:sourceMeshRef.current?inspectionGeometryFingerprint(sourceMeshRef.current):null},history:{undo:undoRef.current.length,redo:redoRef.current.length}});
         if(diagnostics!==inspectionDiagnosticsRef.current){inspectionDiagnosticsRef.current=diagnostics;if(hostRef.current)hostRef.current.dataset.cadInspectionState=diagnostics;}
     }
     function marginKey(){

@@ -1,0 +1,43 @@
+PASS: actual STL import, preview, committed library save, transfer and per-unit selection.
+PASS: implant-abutment crown appears on its offset margin, sized locally.
+PASS: the actual manual placement control preserves the imported crown and selected contour.
+PASS: sculpted topology, separate unit margins, unit switching and reopen survive cloud save.
+PASS: project contains the form independently of the personal library.
+PASS: an exported technician library is imported through the actual JSON upload control.
+PASS: save-and-exit waits for committed save, with background editing blocked.
+PASS: a failed remote save stays in CAD; explicit local exit and recovery retain all geometry.
+PASS: publication saves complete geometry and save after publication accepts reordered JSONB metadata.
+PASS: the standalone technician catalog persists and fits a small screen.
+{
+  "pass": true,
+  "realEditor": true,
+  "realWebGL": true,
+  "libraryStlImport": true,
+  "libraryPreview": true,
+  "libraryPersistence": true,
+  "libraryTransfer": true,
+  "libraryBundleImport": true,
+  "standaloneCatalog": true,
+  "mobileCatalog": true,
+  "perUnitLibrarySelection": true,
+  "importedTopologyUsed": true,
+  "libraryDeletionDoesNotBreakProject": true,
+  "syntheticImplantAbutments": true,
+  "localMarginSizing": true,
+  "hiddenZeroOpacityRecovered": true,
+  "placementIdempotent": true,
+  "fullMeshPersistence": true,
+  "perUnitPersistence": true,
+  "multiplePlacedUnitsVisible": true,
+  "perUnitVisibility": true,
+  "cloudReopen": true,
+  "saveExitAcknowledged": true,
+  "modalEditGuard": true,
+  "offlineExitRecovery": true,
+  "retainedLocalCheckpoint": true,
+  "publishCheckpoint": true,
+  "saveAfterPublish": true,
+  "optimisticConflictRejected": true,
+  "manualPlacementControl": true,
+  "backend": "intercepted API fixture; no production data"
+}

@@ -287,6 +287,10 @@ try {
  await page.evaluate(()=>sessionStorage.setItem('rc51:hold-recovery','yes'));
  await page.goto(url);await ready();
  await page.waitForFunction(()=>window.rc51RecoveryReads.length>=2);
+ await menu.locator('summary').click();await page.getByRole('button',{name:'Uzman',exact:true}).click();await selectStage('review');
+ const localDownload=page.locator('[data-cad-download-stl]'),publishButton=page.getByRole('button',{name:'STL oluştur ve kliniğin onayına gönder',exact:true});
+ assert.ok(await localDownload.isDisabled(),'Local STL export waits for the recovery lookup');
+ assert.ok(await publishButton.isDisabled(),'Clinical publication waits for the recovery lookup');
  const lookupPatchCount=requestLog.filter(request=>request.method==='PATCH').length;
  await navigateModule('/ai');
  await page.locator('.cad-main-header').getByRole('button',{name:'Kaydet',exact:true}).click();
@@ -295,6 +299,8 @@ try {
  assert.equal(requestLog.filter(request=>request.method==='PATCH').length,lookupPatchCount,'Manual and automatic saves cannot write during recovery lookup');
  await page.evaluate(()=>{sessionStorage.removeItem('rc51:hold-recovery');for(const release of window.rc51RecoveryReads.splice(0))release();});
  await page.locator('.cad-recovery-notice').waitFor();
+ assert.ok(await localDownload.isDisabled(),'Local STL export waits for an explicit recovery decision');
+ assert.ok(await publishButton.isDisabled(),'Clinical publication waits for an explicit recovery decision');
  assert.equal((await readDrafts()).length,1,'An intentional local checkpoint survives expiry pruning');
  const pendingPatchCount=requestLog.filter(request=>request.method==='PATCH').length;
  await navigateModule('/ai');
@@ -305,7 +311,7 @@ try {
  const unresolvedDrafts=await readDrafts();assert.equal(unresolvedDrafts[0].retained,true);assert.deepEqual(unitMesh(unresolvedDrafts[0].workspace.designSnapshot),offlineMesh,'The retained recovery geometry remains intact');
  assert.equal(await page.locator('.cad-recovery-notice').count(),1);assert.equal(await page.locator('.cad-save-dialog[open]').count(),0);
  await page.getByRole('button',{name:'Geri yükle',exact:true}).click();failWrites=false;snapshot=await save();assert.deepEqual(unitMesh(snapshot),offlineMesh);
- console.log('PASS: delayed recovery lookup and pending recovery choice block writes/navigation; explicit local exit and recovery retain all geometry.');
+ console.log('PASS: delayed recovery lookup and pending recovery choice block writes/navigation/local STL/publication; explicit local exit and recovery retain all geometry.');
  // Publishing must include the exact geometry checkpoint, then accept the RPC timestamp despite JSONB key order.
  await menu.locator('summary').click();await page.getByRole('button',{name:'Uzman',exact:true}).click();await selectStage('review');
  await page.getByRole('button',{name:'STL oluştur ve kliniğin onayına gönder',exact:true}).click();

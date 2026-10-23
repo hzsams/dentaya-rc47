@@ -480,3 +480,10 @@
 .cad-professional .cad-inspection-panel>footer{flex:none;padding:8px;border-top:1px solid var(--cad-line);background:var(--cad-surface2)}
 .cad-professional .cad-inspection-panel>footer button{width:100%}
 @media(max-width:1000px){.cad-professional .cad-inspection-panel{left:8px;top:56px}}
+.cad-professional .cad-section-readout{display:grid;gap:8px;margin-top:12px;font-size:11px}
+.cad-professional .cad-section-readout>section{padding:9px;border:1px solid var(--cad-line);border-left:3px solid #e4ae50;background:var(--cad-surface2);border-radius:3px}
+.cad-professional .cad-section-readout>section[data-section-role=source]{border-left-color:#42b9c7}
+.cad-professional .cad-section-readout dl{display:grid;gap:6px;margin:8px 0 0}
+.cad-professional .cad-section-readout dl>div{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.cad-professional .cad-section-readout dt{color:var(--cad-muted)}
+.cad-professional .cad-section-readout dd{margin:0;font-variant-numeric:tabular-nums;white-space:nowrap}

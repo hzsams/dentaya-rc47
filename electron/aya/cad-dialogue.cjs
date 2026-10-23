@@ -3,7 +3,7 @@
 // It never invokes a host callback or supplies geometry parameters.
 const {normalizeWorkspace,normalizeMemory}=require('./agent.cjs');
 const {isCatalogQuestion}=require('./conversation.cjs');
-const {answerDialogue}=require('./dialogue.cjs');
+const {answerDialogue,isAcknowledgement}=require('./dialogue.cjs');
 const fold=s=>String(s||'').toLocaleLowerCase('tr').normalize('NFKD').replace(/\p{M}/gu,'').replace(/ı/g,'i');
 const taskNames={files:['Dosyalar','Files'],margin:['Marjin','Margin'],fit:['İç yüzey','Internal fit'],anatomy:['Anatomi','Anatomy'],freeform:['Serbest şekillendirme','Freeform'],contacts:['Temaslar','Contacts'],inspect:['Kontrol','Checks'],review:['Son inceleme','Review']};
 const restorationSubject=q=>/\b(?:kron|kuron|kapson|crown|coping|restorasyon|restoration)\p{L}*\b/u.test(q);
@@ -13,6 +13,7 @@ function restorationTopic(q){
  if(/preparasyon|hazirlanmis dis|prepared tooth|preparation|oturm|oturt|yerlesm|yanlis yerde|havada|floating|misplac|seat(?:ing)?|does(?:n['’ ]?t| not) fit/.test(q))return 'seating';
  if(/anatom|\bform\p{L}*\b|morpholog|sek(?:il|li)/u.test(q))return 'anatomy';
  if(/gorunum|gorunus|dogal|gercekci|renk|materyal|appearance|natural|realistic|shading|shade|material|colou?r/.test(q))return 'appearance';
+ if(/(?:ham )?(?:model|tarama)\p{L}* (?:ustune|uzerine|ustunde|uzerinde)(?=\s|[,.!?;:]|$)|\bon (?:the |this |my |a )?(?:raw )?(?:(?:scan|prepared) )?model\b/u.test(q))return 'seating';
  return '';
 }
 function topicOf(q){
@@ -45,7 +46,7 @@ function requestIntent(prompt,checkCompound=true){
  const next=/siradaki|sonraki|ne yap(?:ayim|maliyim|alim|acagiz)?|nasil (?:devam|ilerle)|next|what (?:should|can) (?:i|we) do|how (?:should|can) (?:i|we) (?:proceed|continue)/.test(q);
  const help=/yardim|nasil|nereye|nereden|hangi arac|ne oner|oner|yapabilir mi(?:yiz|sin)|bakabilir misin|kontrol edebilir|\bcan (?:we|you)\b|\bhelp\b|\bhow\b|suggest|recommend/.test(q);
  const definition=/nedir|ne demek|ne anlama|tanimi|what (?:is|are)|define|definition/.test(q);
- if(definition&&!(current&&(review||/durum|state|status/.test(q))))return null;
+ if(definition&&!(current&&/durum|state|status|rapor|bulgu|kontrol sonuc|report|finding|check result/.test(q)))return null;
  const negative=/\b(?:kaydetme|kaydetmeyelim|kaydetmeyin|cikma|cikmayalim|geri alma|geri almayalim|inceleme|onerme|gosterme|uygulama|yerlestirme|degistirme|yapma|etme)(?:(?:\s+(?:lutfen|artik))?[.!?]*$|[,;]|\s+(?:ve|ama)\b)|\b(?:do not|don['’ ]?t)\b/.test(q);
  if(negative)return {q,topic:'',review:false,next:false,negative:true};
  if(checkCompound&&!/^(?:(?:lutfen|please|once|bu projeyi|projeyi|mevcut projeyi|bu calismayi) )*(?:kaydet ve cik|save and exit)(?: lutfen| please)?[.!?]*$/.test(q)){
@@ -61,14 +62,39 @@ function requestIntent(prompt,checkCompound=true){
  if(!next&&!(current&&(review||help||/durum|state|status/.test(q)))&&!(topic&&(help||command||review))&&!(review&&/tasarim|mesh|cad|geometri|design|workspace/.test(q)))return null;
  return {q,topic,review,next};
 }
+function cadFollowup(prompt,c,history){
+ // A short reference belongs to CAD only when its preceding substantive turn
+ // was CAD in this same host scope. Never replay old action text or measurements.
+ const short=s=>fold(s).trim().replace(/[.,!?;:]+/g,' ').replace(/\s+/g,' ').trim();
+ const kind=s=>{
+  const q=short(s);
+  if(/^(?:peki simdi|simdi nasil|simdi ne|peki sonra|devam|devam edelim|devamke|ayni hedefle devam|what now|and now|continue|go on)$/.test(q))return 'next';
+  if(/^(?:sonuc nasil|sonuc ne|bunun sonucu ne|bu ne anlama geliyor|buna gore durum nasil|what does this mean|what about the result|how does it look)$/.test(q))return 'review';
+  return '';
+ };
+ if(typeof prompt!=='string'||prompt.length>160||/[\r\n\u2028\u2029]/.test(prompt)||/^[\s]*["'“‘«`>#*-]/u.test(prompt)||!Array.isArray(history))return null;
+ const requested=kind(prompt);if(!requested)return null;
+ let replied=false;
+ for(const message of history.slice(-24).reverse()){
+  if(!message||!['user','assistant'].includes(message.role)||typeof message.content!=='string'||!message.content.trim())continue;
+  if(message.cadScope!==c.scope)return null;
+  if(message.role==='assistant'){replied=true;continue;}
+  if(!replied)return null;
+  if(isAcknowledgement(message.content)||kind(message.content))continue;
+  const prior=requestIntent(message.content);
+  if(!prior||prior.negative||prior.mixed)return null;
+  return {q:fold(prompt),topic:'',review:requested==='review',next:requested==='next'};
+ }
+ return null;
+}
 function inconsistent(c){
  if(c.modelReady&&!c.sourceReady||c.placed&&(!c.sourceReady||!c.modelReady||!c.setupComplete||c.marginPoints<3)||c.report&&!c.modelReady)return true;
  const r=c.report;
  return Boolean(r&&(r.samples!==undefined&&(r.collisionSamples>r.samples||r.contactSamples>r.samples||r.collisionSamples!==undefined&&r.contactSamples!==undefined&&r.collisionSamples+r.contactSamples>r.samples)||r.watertight===true&&(r.boundaryEdges>0||r.nonManifoldEdges>0)));
 }
-function suggestCadReply(prompt,{cadContext=null,locale='tr',workingMemory}={}){
+function suggestCadReply(prompt,{cadContext=null,locale='tr',workingMemory,history=[]}={}){
  if(typeof prompt!=='string')return null;
- const intent=requestIntent(prompt),c=normalizeWorkspace(cadContext);
+ const c=normalizeWorkspace(cadContext),intent=requestIntent(prompt)??(c?cadFollowup(prompt,c,history):null);
  if(!intent||!c)return null;
  const tr=locale==='tr',pick=(a,b)=>tr?a:b,rows=[],proposals=[];
  const reply=()=>({ok:true,engine:'core',output:rows.join('\n'),references:[],proposals});

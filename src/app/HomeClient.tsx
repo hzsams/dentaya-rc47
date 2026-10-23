@@ -56,6 +56,7 @@ export default function HomePage() {
     const [dashboardUpdatedAt, setDashboardUpdatedAt] = useState<string | null>(null);
     const dashboardRequestRef = useRef(0);
     const dashboardOrgRef = useRef("");
+    const workspaceScopeRef = useRef({ userId: "", orgId: "", request: 0, mounted: false });
     const [booting, setBooting] = useState(true);
     const [user, setUser] = useState<User | null>(null);
     const [profile, setProfile] = useState<Profile | null>(null);
@@ -74,7 +75,24 @@ export default function HomePage() {
     const [orgBusy, setOrgBusy] = useState(false);
     const [pendingInviteToken, setPendingInviteToken] = useState("");
     const dashboardLoaderRef = useRef<(currentOrg: Organization) => Promise<void>>(async () => undefined);
+    const clearOrganization = useCallback(() => {
+        workspaceScopeRef.current.orgId = "";
+        dashboardRequestRef.current++;
+        dashboardOrgRef.current = "";
+        setMembership(null);
+        setOrganization(null);
+        setCases([]);
+        setShipments([]);
+        setDashboardCounts(null);
+        setDashboardUpdatedAt(null);
+        setDashboardLoading(false);
+    }, []);
     const loadWorkspace = useCallback(async (currentUser: User) => {
+        const scope = workspaceScopeRef.current;
+        if (!scope.mounted || scope.userId !== currentUser.id)
+            return;
+        const request = ++scope.request;
+        const isCurrent = () => scope.mounted && scope.userId === currentUser.id && scope.request === request;
         setMessage("");
         const [profileResult, membershipResult,] = await Promise.all([
             supabase
@@ -90,6 +108,8 @@ export default function HomePage() {
                 .limit(1)
                 .maybeSingle(),
         ]);
+        if (!isCurrent())
+            return;
         if (profileResult.error) {
             setMessage(profileResult.error
                 .message);
@@ -99,19 +119,14 @@ export default function HomePage() {
         if (membershipResult.error) {
             setMessage(membershipResult.error
                 .message);
-            setMembership(null);
-            setOrganization(null);
-            setCases([]);
-            setShipments([]);
+            clearOrganization();
             return;
         }
         const currentMembership = (membershipResult.data ??
             null) as Membership | null;
         setMembership(currentMembership);
         if (!currentMembership) {
-            setOrganization(null);
-            setCases([]);
-            setShipments([]);
+            clearOrganization();
             return;
         }
         const { data: orgData, error: orgError, } = await supabase
@@ -124,19 +139,27 @@ export default function HomePage() {
             `)
             .eq("id", currentMembership.organization_id)
             .maybeSingle();
+        if (!isCurrent())
+            return;
         if (orgError ||
             !orgData) {
             setMessage(orgError?.message ??
                 "Kurum bilgisi alınamadı.");
-            setOrganization(null);
+            clearOrganization();
             return;
         }
         const currentOrg = orgData as Organization;
+        scope.orgId = currentOrg.id;
         setOrganization(currentOrg);
         await dashboardLoaderRef.current(currentOrg);
-    }, []);
+    }, [clearOrganization]);
     const loadDashboardData = useCallback(async (currentOrg: Organization) => {
+        const scope = workspaceScopeRef.current;
+        if (!scope.mounted || !scope.userId || scope.orgId !== currentOrg.id)
+            return;
+        const workspaceRequest = scope.request, userId = scope.userId;
         const request = ++dashboardRequestRef.current;
+        const isCurrent = () => scope.mounted && scope.userId === userId && scope.orgId === currentOrg.id && scope.request === workspaceRequest && request === dashboardRequestRef.current;
         if (dashboardOrgRef.current !== currentOrg.id) {
             dashboardOrgRef.current = currentOrg.id;
             setCases([]);
@@ -147,7 +170,7 @@ export default function HomePage() {
         setDashboardLoading(true);
         try {
             const data = await loadHomeDashboard(currentOrg);
-            if (request !== dashboardRequestRef.current)
+            if (!isCurrent())
                 return;
             setCases(data.cases as CaseRow[]);
             setShipments(data.shipments as ShipmentRow[]);
@@ -156,11 +179,11 @@ export default function HomePage() {
             setMessage("");
         }
         catch {
-            if (request === dashboardRequestRef.current)
+            if (isCurrent())
                 setMessage("Çalışma alanı bilgilerine ulaşılamadı. Bağlantınızı kontrol edip tekrar deneyin.");
         }
         finally {
-            if (request === dashboardRequestRef.current)
+            if (isCurrent())
                 setDashboardLoading(false);
         }
     }, []);
@@ -177,51 +200,62 @@ export default function HomePage() {
         }
     }, [user?.id]);
     useEffect(() => {
-        let mounted = true;
-        async function boot() {
-            const { data, } = await supabase.auth
-                .getSession();
-            if (!mounted) {
+        let mounted = true, authRevision = 0, observedSession = false;
+        const scope = workspaceScopeRef.current;
+        scope.mounted = true;
+        function applySession(nextUser: User | null) {
+            if (!mounted)
                 return;
-            }
-            const currentUser = data.session?.user ??
-                null;
-            setUser(currentUser);
-            if (currentUser) {
-                await loadWorkspace(currentUser);
-            }
-            if (mounted) {
-                setBooting(false);
+            const nextUserId = nextUser?.id ?? "";
+            const changed = scope.userId !== nextUserId;
+            setUser(nextUser);
+            if (observedSession && !changed)
+                return;
+            observedSession = true;
+            const revision = ++authRevision;
+            scope.userId = nextUserId;
+            scope.request++;
+            clearOrganization();
+            setProfile(null);
+            setMessage("");
+            setAuthBusy(false);
+            setOrgBusy(false);
+            setBooting(!!nextUser);
+            if (nextUser) {
+                // Keep database work outside the auth notification callback.
+                queueMicrotask(() => {
+                    if (!mounted || revision !== authRevision)
+                        return;
+                    void loadWorkspace(nextUser).finally(() => {
+                        if (mounted && revision === authRevision)
+                            setBooting(false);
+                    });
+                });
             }
         }
-        boot();
-        const { data: listener, } = supabase.auth.onAuthStateChange(async (_event, session) => {
-            if (!mounted) {
+        async function boot() {
+            const revision = authRevision;
+            const { data, } = await supabase.auth
+                .getSession();
+            if (!mounted || revision !== authRevision) {
                 return;
             }
-            const nextUser = session?.user ??
-                null;
-            setUser(nextUser);
-            if (nextUser) {
-                await loadWorkspace(nextUser);
-            }
-            else {
-                dashboardRequestRef.current++;
-                setDashboardCounts(null);
-                setDashboardUpdatedAt(null);
-                setProfile(null);
-                setMembership(null);
-                setOrganization(null);
-                setCases([]);
-                setShipments([]);
-            }
-            setBooting(false);
+            applySession(data.session?.user ?? null);
+        }
+        void boot();
+        const { data: listener, } = supabase.auth.onAuthStateChange((_event, session) => {
+            applySession(session?.user ?? null);
         });
         return () => {
             mounted = false;
+            authRevision++;
+            scope.mounted = false;
+            scope.userId = "";
+            scope.orgId = "";
+            scope.request++;
             listener.subscription.unsubscribe();
         };
-    }, [loadWorkspace]);
+    }, [clearOrganization, loadWorkspace]);
     useEffect(() => {
         if (!organization) {
             return;

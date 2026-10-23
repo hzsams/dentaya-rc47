@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "hash": "6325307b16880507e124fa8e9134c76b071eaf7f8bccb6d3f27c55446e86f446",
+  "hash": "9b6f3ab3cc7d6a1607002b477f8e19d0cb23a92b60e1c74ff3d57d00b66c7c80",
   "keys": [
     "(isteğe bağlı)",
     "(örneklem)",
@@ -4850,7 +4850,22 @@
     "★ · {0} demo",
     "✓ Profil doğrulandı",
     "✓ Seçili",
-    "✕ Kapat"
+    "✕ Kapat",
+    "Bu görünümde aktif kayıt bulunmuyor.",
+    "Lab Yöneticisi",
+    "Lab Manager",
+    "Sayılar kurum genelindedir; liste seçili kuyruğun sayfalarını gösterir.",
+    "Counts cover the organization; the list pages through the selected queue.",
+    "mm²",
+    "Preparing laboratory workspace…",
+    "Download active unit STL",
+    "Download the registered active restoration as a local working STL in scan coordinates.",
+    "Tasarımı aç",
+    "Klinik kararı incele",
+    "Üretim / QC kaydını aç",
+    "Teslimat durumunu incele",
+    "Tamamlanan vakayı aç",
+    "Kabul ve planlamayı aç"
   ],
   "templateUiSlots": {
     "{0} uygulandı ve kaydedildi.": [],

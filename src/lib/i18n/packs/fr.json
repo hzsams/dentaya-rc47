@@ -1,7 +1,7 @@
 {
   "version": 1,
   "locale": "fr",
-  "hash": "6325307b16880507e124fa8e9134c76b071eaf7f8bccb6d3f27c55446e86f446",
+  "hash": "9b6f3ab3cc7d6a1607002b477f8e19d0cb23a92b60e1c74ff3d57d00b66c7c80",
   "model": "Offline Marian / M2M100, CTranslate2 INT8",
   "translation": "Machine-assisted translation; glossary reviewed in English. Native-language editorial review is not claimed.",
   "entries": {
@@ -4853,6 +4853,38 @@
     "★ · {0} demo": "★ · {0} démo",
     "✓ Profil doğrulandı": "✓ Profil confirmé",
     "✓ Seçili": "✓ Sélectionné",
-    "✕ Kapat": "▪ Fermer"
-  }
+    "✕ Kapat": "▪ Fermer",
+    "Bu görünümde aktif kayıt bulunmuyor.": "There are no active records in this view.",
+    "Lab Yöneticisi": "Lab Manager",
+    "Lab Manager": "Lab Manager",
+    "Sayılar kurum genelindedir; liste seçili kuyruğun sayfalarını gösterir.": "Counts cover the organization; the list pages through the selected queue.",
+    "Counts cover the organization; the list pages through the selected queue.": "Counts cover the organization; the list pages through the selected queue.",
+    "mm²": "mm²",
+    "Preparing laboratory workspace…": "Preparing laboratory workspace…",
+    "Download active unit STL": "Download active unit STL",
+    "Download the registered active restoration as a local working STL in scan coordinates.": "Download the registered active restoration as a local working STL in scan coordinates.",
+    "Tasarımı aç": "Open design",
+    "Klinik kararı incele": "Review the clinical decision",
+    "Üretim / QC kaydını aç": "Open the production / QC record",
+    "Teslimat durumunu incele": "Review delivery status",
+    "Tamamlanan vakayı aç": "Open the completed case",
+    "Kabul ve planlamayı aç": "Open acceptance and planning"
+  },
+  "englishFallbackKeys": [
+    "Bu görünümde aktif kayıt bulunmuyor.",
+    "Lab Yöneticisi",
+    "Lab Manager",
+    "Sayılar kurum genelindedir; liste seçili kuyruğun sayfalarını gösterir.",
+    "Counts cover the organization; the list pages through the selected queue.",
+    "Preparing laboratory workspace…",
+    "Download active unit STL",
+    "Download the registered active restoration as a local working STL in scan coordinates.",
+    "Tasarımı aç",
+    "Klinik kararı incele",
+    "Üretim / QC kaydını aç",
+    "Teslimat durumunu incele",
+    "Tamamlanan vakayı aç",
+    "Kabul ve planlamayı aç"
+  ],
+  "fallbackNote": "RC56 laboratory and CAD captions listed in englishFallbackKeys use English fallback until reviewed in this locale. Existing translations are retained."
 }

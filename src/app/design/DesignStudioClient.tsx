@@ -25,6 +25,9 @@ import CadBrushPresets from "./CadBrushPresets";
 import CadIcon, { type CadIconName } from "./CadIcon";
 import CadToolPalette from "./CadToolPalette";
 import CadInspectionPanel from './CadInspectionPanel';
+import type {CadSectionInspection} from '@/lib/cad-section-engine';
+import {cadSectionText} from '@/lib/i18n/cad-section';
+import {cadWorkingStlFilename} from '@/lib/cad-export';
 import {CAD_INSPECTION_DEFAULTS,normalizeCadInspection} from '@/lib/cad-inspection';
 import "./cad-workspace.css";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode, } from "react";
@@ -305,6 +308,7 @@ export default function DesignStudioClient() {
     const [panelTab, setPanelTab] = useState<CadPanelTab>("files");
     const [objectPanelCollapsed, setObjectPanelCollapsed] = useState(false);
     const [sceneState,setSceneState]=useState<CadSceneState>(EMPTY_CAD_SCENE);
+    const [sectionReport,setSectionReport]=useState<CadSectionInspection|null>(null);
     const [contextPoint, setContextPoint] = useState<{
         x: number;
         y: number;
@@ -1399,8 +1403,16 @@ export default function DesignStudioClient() {
             setStatus("Kurtarma kaydı ekrandan kaldırıldı; yerel depolama temizliği daha sonra yeniden denenecek.");
         }
     }
+    function downloadWorkingStl(){
+        if(!cadReady||!project||!activeJobUnit||saving||exiting||submitting||contextLoading||!recoveryLookupReady||recoveryDecisionPending)return;
+        const copy=cadSectionText(locale);
+        if(!viewportRef.current?.hasMarginPlacement()){setStatus(copy.placeFirst);return;}
+        const blob=viewportRef.current.exportStl();if(!blob){setStatus(copy.blocked);return;}
+        const url=URL.createObjectURL(blob),anchor=document.createElement('a');anchor.href=url;anchor.download=cadWorkingStlFilename(selectedCase?.case_number??'DentAYA',activeJobUnit.tooth_code);
+        document.body.appendChild(anchor);anchor.click();anchor.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);setStatus(copy.saved);
+    }
     async function submitForApproval() {
-        if (!project || !selectedCase || !user)
+        if (!project || !selectedCase || !user || !cadReady || saving || exiting || submitting || contextLoading || !recoveryLookupReady || recoveryDecisionPending)
             return;
         if (!jobSetup.complete) {
             setSetupOpen(true);
@@ -1415,6 +1427,7 @@ export default function DesignStudioClient() {
             setStatus("Kliniğe göndermeden önce margin çizgisini tanımla.");
             return;
         }
+        if(!viewportRef.current?.hasMarginPlacement()){setStatus(cadSectionText(locale).placeFirst);return;}
         const qcReport = viewportRef.current?.runKernelQc() ?? null;
         setKernelReport(qcReport);
         if (qcReport?.mesh && !qcReport.mesh.watertight) {
@@ -1515,6 +1528,7 @@ export default function DesignStudioClient() {
             setStatus(`${item.label}: bu araç tam geometri çekirdeği gerektiriyor. Tool Suite içinde şartname olarak hazır.`);
             return;
         }
+        if(activation==='command:export-stl'){downloadWorkingStl();setToolLibraryOpen(false);return;}
         if(activation.startsWith('inspection:')){
             if(workspaceMode!=='expert')return;
             const command=activation.slice(11);
@@ -1522,7 +1536,8 @@ export default function DesignStudioClient() {
             else if(command==='rotate-left'||command==='rotate-right')viewportRef.current?.rotateView(command==='rotate-left'?'left':'right');
             else {
                 setInspectionOpen(true);
-                setInspectionTab(command==='section'?'section':['edges','normals','faceted','interior'].includes(command)?'surface':'light');
+                setInspectionTab(['section','section-contours'].includes(command)?'section':['edges','normals','faceted','interior'].includes(command)?'surface':'light');
+                if(command==='section-contours'){setSettings(current=>({...current,inspection_section_contours:true,section_centered:true,section_offset_mm:0}));selectViewMode('section');}
                 const toggles={flashlight:'inspection_flashlight',edges:'inspection_edges',normals:'inspection_normals',faceted:'inspection_faceted',interior:'inspection_interior'} as const;
                 if(command in toggles){const key=toggles[command as keyof typeof toggles];setSettings(current=>({...current,[key]:!current[key]}));}
             }
@@ -2160,6 +2175,8 @@ export default function DesignStudioClient() {
             </Section>)}
 
           {true && (<Section tab={panelTab} category="review" title="Son kontrol">
+              <UiNode as="button" type="button" className="cad-action" data-cad-download-stl disabled={!cadReady||saving||exiting||submitting||contextLoading||!recoveryLookupReady||recoveryDecisionPending} onClick={downloadWorkingStl} translateChildren={false}><CadIcon name="export" size={18}/>{cadSectionText(locale).download}</UiNode>
+              <UiNode as="p" style={ui.helperText} translateChildren={false}>{cadSectionText(locale).downloadHelp}</UiNode>
               <UiNode as="div" style={ui.readinessGrid}>
                 <QualityGate ok={Boolean(activeSource)} title="Çalışma taraması" detail={activeSource?.label ?? "Kaynak yok"}/>
                 <QualityGate ok={marginPoints.length >= 3} title="Marjin" detail={`${marginPoints.length} nokta`}/>
@@ -2168,7 +2185,7 @@ export default function DesignStudioClient() {
               </UiNode>
 
 
-              <UiNode as="button" type="button" className="cad-action" disabled={submitting} onClick={() => void submitForApproval()} style={{
+              <UiNode as="button" type="button" className="cad-action" disabled={!cadReady||saving||exiting||submitting||contextLoading||!recoveryLookupReady||recoveryDecisionPending} onClick={() => void submitForApproval()} style={{
                 ...ui.submitWideButton,
                 opacity: submitting ? 0.55 : 1,
             }}>
@@ -2189,8 +2206,8 @@ export default function DesignStudioClient() {
         </UiNode>
         <UiNode as="footer" className="cad-panel-footer"><UiNode as="button" type="button" disabled={!project || (workspaceMode === 'wizard' ? activeTaskIndex : activeStepIndex) <= 0} onClick={() => void moveStep(-1)}><CadIcon name="back" size={16}/>Geri</UiNode><UiNode as="span">{workspaceMode === 'wizard' ? `${activeTaskIndex + 1} / ${CAD_GUIDED_TASKS.length}` : `${activeStep.index} / ${STEPS.length}`}</UiNode><UiNode as="button" type="button" className="cad-next-step" disabled={!cadReady||!project||exiting} onClick={()=>activeStepId==='review'?void saveAndExit():void moveStep(1)}>{activeStepId==='review'?'Kaydet ve çık':'Sonraki'}<CadIcon name="next" size={16}/></UiNode></UiNode>
       </CadFloatingPanel>
-          <DesignViewport ref={viewportRef} projectId={project?.id} source={displaySource} referenceSources={referenceSources} onContextMenuRequest={setContextPoint} toothCodes={selectedCase?.tooth_codes ?? []} settings={settings} tool={tool} viewMode={viewMode} marginPoints={marginPoints} measurements={measurements} onMarginPointsChange={changeMargin} onMeasurementsChange={setMeasurements} onConnectorsChange={connectors => patchSetting('connectors', connectors)} onBrushRadiusChange={value => patchSetting('brush_radius_mm', value)} onBrushStrengthChange={value => patchSetting('brush_strength_mm', value)} onGeometryCommit={() => setGeometryRevision(v => v + 1)} onReadyChange={setCadReady} onHistoryChange={setHistoryState} onPerformanceInfo={setPerformanceInfo} onSceneStateChange={setSceneState} onInsertionAxisChange={axis => setSettings(current => ({ ...current, insertion_axis_x: axis.x, insertion_axis_y: axis.y, insertion_axis_z: axis.z }))} onStatus={setStatus}/>
-          {workspaceMode==='expert'&&inspectionOpen&&<CadInspectionPanel key={inspectionTab} initialTab={inspectionTab} settings={settings} patch={value=>setSettings(current=>({...current,...value}))} viewMode={viewMode} onView={value=>{selectViewMode(value);}} onClose={()=>setInspectionOpen(false)} onFocus={()=>{viewportRef.current?.focusRestoration();}} onRotate={direction=>viewportRef.current?.rotateView(direction)} onFit={()=>viewportRef.current?.fit()} ready={cadReady}/>}
+          <DesignViewport ref={viewportRef} projectId={project?.id} source={displaySource} referenceSources={referenceSources} onContextMenuRequest={setContextPoint} toothCodes={selectedCase?.tooth_codes ?? []} settings={settings} tool={tool} viewMode={viewMode} marginPoints={marginPoints} measurements={measurements} onMarginPointsChange={changeMargin} onMeasurementsChange={setMeasurements} onConnectorsChange={connectors => patchSetting('connectors', connectors)} onBrushRadiusChange={value => patchSetting('brush_radius_mm', value)} onBrushStrengthChange={value => patchSetting('brush_strength_mm', value)} onGeometryCommit={() => setGeometryRevision(v => v + 1)} onReadyChange={setCadReady} onHistoryChange={setHistoryState} onPerformanceInfo={setPerformanceInfo} onSceneStateChange={setSceneState} onSectionInspectionChange={setSectionReport} onInsertionAxisChange={axis => setSettings(current => ({ ...current, insertion_axis_x: axis.x, insertion_axis_y: axis.y, insertion_axis_z: axis.z }))} onStatus={setStatus}/>
+          {workspaceMode==='expert'&&inspectionOpen&&<CadInspectionPanel sectionReport={sectionReport} key={inspectionTab} initialTab={inspectionTab} settings={settings} patch={value=>setSettings(current=>({...current,...value}))} viewMode={viewMode} onView={value=>{selectViewMode(value);}} onClose={()=>setInspectionOpen(false)} onFocus={()=>{viewportRef.current?.focusRestoration();}} onRotate={direction=>viewportRef.current?.rotateView(direction)} onFit={()=>viewportRef.current?.fit()} ready={cadReady}/>}
           {!focusMode && <UiNode as="aside" className={`cad-object-panel${objectPanelCollapsed ? ' cad-object-panel--collapsed' : ''}`} aria-label="Nesne yöneticisi">
             <UiNode as="div" className="cad-object-panel-title"><CadIcon name="layers" size={18}/>{!objectPanelCollapsed && <UiNode as="strong">Sahne</UiNode>}<CadCommand label={objectPanelCollapsed ? 'Nesne panelini aç' : 'Nesne panelini daralt'} icon={objectPanelCollapsed ? 'layers' : 'collapse'} onClick={() => setObjectPanelCollapsed(v => !v)}/></UiNode>
             {!objectPanelCollapsed && <>

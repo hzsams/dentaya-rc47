@@ -6,12 +6,13 @@ import {dentalFactLanguage} from '@/lib/dental-language';
 import {MINI_GAME_TEXT} from '@/lib/i18n/mini-games';
 import {EMPTY_MINI_RECORD,memoryDeck,readMiniRecord,saveMiniWin} from '@/lib/mini-games';
 const shapes=['M20 13Q40 7 60 13L58 40Q52 46 48 69Q40 88 32 69Q28 46 22 40Z','M19 26L40 9L61 26L58 43L47 74Q40 87 33 74L22 43Z','M18 14Q29 7 40 18Q51 7 62 14L60 43L49 72Q40 86 31 72L20 43Z','M14 16Q26 5 40 14Q54 5 66 16L62 47L50 72Q40 85 30 72L18 47Z','M16 15Q40 5 64 15L61 44L56 76Q49 86 45 65L40 51L35 65Q31 86 24 76L19 44Z','M14 15Q27 5 40 14Q53 5 66 15L62 45L60 74Q55 86 49 65L45 53L43 77Q40 87 37 77L35 53L31 65Q25 86 20 74L18 45Z'];
-export default function MemoryGame(){
+export default function MemoryGame({active=true}:{active?:boolean}){
  const {locale}=useTranslation(),copy=MINI_GAME_TEXT[dentalFactLanguage(locale)];
  const [deck,setDeck]=useState(()=>memoryDeck(4401)),[open,setOpen]=useState<number[]>([]),[matched,setMatched]=useState<number[]>([]),[turns,setTurns]=useState(0),[message,setMessage]=useState(''),[record,setRecord]=useState(EMPTY_MINI_RECORD),[failed,setFailed]=useState(false),timer=useRef<ReturnType<typeof setTimeout>|null>(null),won=useRef(false),locked=useRef(false);
  useEffect(()=>{setDeck(memoryDeck(crypto.getRandomValues(new Uint32Array(1))[0]));setRecord(readMiniRecord('memory'));return()=>{if(timer.current)clearTimeout(timer.current);};},[]);
+ useEffect(()=>{if(!active&&timer.current){clearTimeout(timer.current);timer.current=null;locked.current=false;setOpen([]);}},[active]);
  function choose(index:number){
-  if(locked.current||won.current||matched.includes(index)||open.includes(index))return;
+  if(!active||locked.current||won.current||matched.includes(index)||open.includes(index))return;
   if(!open.length){setOpen([index]);setMessage('');return;}
   const first=open[0],count=turns+1;setTurns(count);setOpen([first,index]);
   if(deck[first]===deck[index]){const next=[...matched,first,index];setMatched(next);setOpen([]);setMessage(copy.matched);if(next.length===12){won.current=true;const result=saveMiniWin('memory',count);setRecord(result.record);setFailed(!result.saved);}}

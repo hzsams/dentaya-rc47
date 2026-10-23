@@ -59,7 +59,7 @@ try {
     const favicon=await page.locator('link[rel="icon"]').first().getAttribute('href');assert.ok(favicon.includes('/'+id+'_')&&favicon.includes(`_icon.svg?brand=${version}`));
     assert.ok(display==='icon'?src.includes('_icon.svg'):display==='word'?src.includes('_word'):!src.includes('_word')&&!src.includes('_icon'));
   }
-  await openSettings();assert.equal(await choices().count(),100);assert.equal(await stored(),'16');await expectFile('16');
+  await openSettings();assert.equal(await choices().count(),ids.length);assert.equal(await stored(),'16');await expectFile('16');
   await page.waitForFunction(()=>{const artwork=document.querySelector('.brand-premium-artwork');return artwork?.complete&&artwork.naturalWidth>0;});
   for(const theme of ['theme:navy','theme:light']){
     await preset().selectOption(theme);
@@ -86,7 +86,7 @@ try {
   await page.locator('.logo-search input').fill('CAD');assert.equal(await choices().count(),catalog.logos.filter(logo=>`${logo.name.tr} ${logo.description.tr} ${catalog.materials[logo.material].tr}`.toLocaleLowerCase('tr').includes('cad')).length);
   await page.locator('.logo-search input').fill('Titanyum');assert.equal(await choices().count(),catalog.logos.filter(logo=>logo.material==='titanium').length);
   await page.locator('.logo-search input').fill('no-matching-brand');assert.equal(await choices().count(),0);assert.equal(await page.locator('.brand-premium-empty').count(),1);
-  await page.locator('.logo-search input').fill('');assert.equal(await choices().count(),100);
+  await page.locator('.logo-search input').fill('');assert.equal(await choices().count(),ids.length);
   const download=page.waitForEvent('download');await page.locator('.customize-panel:visible').getByRole('button',{name:'Ek ayarları dışa aktar',exact:true}).click();
   const exported=JSON.parse(await fs.readFile(await (await download).path(),'utf8'));assert.equal(exported.logo,'01');assert.equal(exported.version,2);
   const importFile=page.locator('.customize-panel:visible input[type="file"]');
@@ -94,12 +94,15 @@ try {
   await importFile.setInputFiles({name:'invalid.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify({...exported,logo:'../../escape'}))});assert.equal(await stored(),'17');
   await importFile.setInputFiles({name:'hundred.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify({...exported,logo:'100'}))});await expectFile('100');assert.equal(await stored(),'100');
   await page.reload();await page.locator('.settings-nav button').filter({hasText:'Görünüm'}).click();await expectFile('100');
+  await importFile.setInputFiles({name:'atelier-120.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify({...exported,logo:'120'}))});await expectFile('120');assert.equal(await stored(),'120');
+  await page.reload();await page.locator('.settings-nav button').filter({hasText:'Görünüm'}).click();await expectFile('120');
   await importFile.setInputFiles({name:'current.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(exported))});await expectFile('01');
   await page.evaluate(()=>{window.rc38SetItem=Storage.prototype.setItem;Storage.prototype.setItem=function(key,value){if(key==='dentaya-logo-choice')throw Error('blocked');return window.rc38SetItem.call(this,key,value);};});
   await choices().nth(2).click();await expectFile('03');assert.match(await page.locator('p[role="status"]').filter({hasText:'CAD Geometry uygulandı.'}).textContent(),/Cihaz kaydı kullanılamıyor/);
   await page.evaluate(()=>{Storage.prototype.setItem=window.rc38SetItem;delete window.rc38SetItem;});await choices().first().click();
   await page.evaluate(()=>{window.rc38DesktopCalls=[];window.dentayaDesktop={updateDesktopIcon:async logo=>{window.rc38DesktopCalls.push(logo);return {ok:true,message:'DentAYA masaüstü simgesi güncellendi. Eski görünürse masaüstünde F5 tuşuna basın.'};}};});
-  await page.locator('.desktop-logo-button').click();await page.waitForFunction(()=>window.rc38DesktopCalls.length===1);assert.deepEqual(await page.evaluate(()=>window.rc38DesktopCalls),['01_dental_form']);await page.evaluate(()=>{delete window.dentayaDesktop;});
+  await choices().last().click();await expectFile('120');await page.locator('.desktop-logo-button').click();await page.waitForFunction(()=>window.rc38DesktopCalls.length===1);assert.deepEqual(await page.evaluate(()=>window.rc38DesktopCalls),[catalog.logos.at(-1).file]);
+  await choices().first().click();await page.locator('.desktop-logo-button').click();await page.waitForFunction(()=>window.rc38DesktopCalls.length===2);assert.deepEqual(await page.evaluate(()=>window.rc38DesktopCalls),[catalog.logos.at(-1).file,'01_dental_form']);await page.evaluate(()=>{delete window.dentayaDesktop;});
   const locales=['tr',...((await fs.readdir(path.join(project,'src/lib/i18n/packs'))).filter(name=>name.endsWith('.json')).map(name=>name.replace('.json','')))];
   for(const locale of locales){await page.locator('.language-select--compact select').selectOption(locale);await page.waitForFunction(locale=>document.documentElement.lang===locale,locale);await expectFile('01');assert.equal(await stored(),'01');}
   await page.locator('.language-select--compact select').selectOption('en');
@@ -121,5 +124,5 @@ try {
     await page.locator('.logo-live-preview').screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'DentAYA_Premium_main_logo.png')});
   }
   assert.deepEqual(errors,[]);
-  console.log(JSON.stringify({pass:true,logos:100,themes:2,displayModes:3,logoThemeModeCombinations:600,compatibleIds:10,restoredIdPreserved:true,artworkLoaded:true,searchAndEmptyState:true,reloadAndScale:true,legacyAndCurrentImports:true,hundredthChoiceImportAndReload:true,invalidImportBlocked:true,storageFailureReported:true,desktopIpc:'mocked',locales:locales.length,brandSpelling:'DENTAYA',mobileFits:true,backend:'mocked; no production data'},null,2));
+  console.log(JSON.stringify({pass:true,logos:ids.length,themes:2,displayModes:3,logoThemeModeCombinations:ids.length*2*3,compatibleIds:10,restoredIdPreserved:true,artworkLoaded:true,searchAndEmptyState:true,reloadAndScale:true,legacyAndCurrentImports:true,hundredthChoiceImportAndReload:true,newestChoiceImportReloadAndDesktop:true,invalidImportBlocked:true,storageFailureReported:true,desktopIpc:'mocked',locales:locales.length,brandSpelling:'DENTAYA',mobileFits:true,backend:'mocked; no production data'},null,2));
 }catch(error){console.error(logs);throw error;}finally{await browser?.close();if(server){server.kill('SIGTERM');await new Promise(resolve=>{if(server.exitCode!==null)return resolve();server.once('exit',resolve);setTimeout(resolve,3000);});}await fs.rm(path.join(project,'.next/dev/types'),{recursive:true,force:true});}

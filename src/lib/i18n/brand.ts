@@ -5,8 +5,8 @@ function copy(locale: "tr" | "en") {
     return {
         atelier: "DENTAYA ATELIER",
         collection: `${BRAND_LOGOS.length} / ${locale === "tr" ? "KOLEKSİYON" : "COLLECTION"}`,
-        artworkAlt: locale === "tr" ? "DENTAYA yüz özgün kabartmalı dental ve CAD logo koleksiyonu" : "DENTAYA collection of one hundred original dimensional dental and CAD marks",
-        intro: locale === "tr" ? "100 özgün siluet. İşlenmiş yüzeyler, ışıklı kenarlar ve size ait bir DENTAYA imzası." : "100 original silhouettes. Crafted surfaces, illuminated edges and a DENTAYA signature of your own.",
+        artworkAlt: locale === "tr" ? `DENTAYA ${BRAND_LOGOS.length} özgün kabartmalı dental ve CAD logo koleksiyonu` : `DENTAYA collection of ${BRAND_LOGOS.length} original dimensional dental and CAD marks`,
+        intro: locale === "tr" ? `${BRAND_LOGOS.length} özgün siluet. İşlenmiş yüzeyler, ışıklı kenarlar ve size ait bir DENTAYA imzası.` : `${BRAND_LOGOS.length} original silhouettes. Crafted surfaces, illuminated edges and a DENTAYA signature of your own.`,
         empty: locale === "tr" ? "Aramanızla eşleşen logo yok." : "No logos match your search.",
         names: Object.fromEntries(BRAND_LOGOS.map(logo => [logo.id, logo.name[locale]])) as Record<BrandLogoId, string>,
         descriptions: Object.fromEntries(BRAND_LOGOS.map(logo => [logo.id, logo.description[locale]])) as Record<BrandLogoId, string>,

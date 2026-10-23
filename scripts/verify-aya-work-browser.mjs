@@ -132,16 +132,29 @@ try{
  const current=await ask(page,cad,'Güncel çalışma durumunu değerlendir ve sıradaki adımı öner.',true);
  assert.doesNotMatch(await current.textContent(),/Son kayıt başarısız|Sentetik kayıt başarısız/,'Historical callback text cannot override current successful host save state');
  assert.equal(await page.evaluate(()=>window.rc50Work.getContext().unsaved),false);
+ const now=await ask(page,cad,'Peki şimdi?',true);assert.equal(await now.locator('[data-proposal-tool="inspect"]').count(),1,'A short scoped CAD follow-up evaluates fresh state');
+ await page.evaluate(()=>window.rc50Work.setContext(c=>({...c,snapshot:'rc56-after-manual-sculpt',dataToken:'rc56-new-geometry',report:null})));
+ const changed=await ask(page,cad,'Sonuç nasıl?',true);assert.match(await changed.textContent(),/güncel geometri kontrolü yok/);assert.equal(await changed.locator('[data-proposal-tool="inspect"]').count(),1,'A geometry change needs a new check instead of repeating historic findings');
+ assert.deepEqual(await page.evaluate(()=>window.rc50Work.actions),['place','save-exit'],'Conversational follow-ups never invoke CAD callbacks');
+ await screenshot(cad,'AYA_RC56_scoped_followup.png');
+ const previousUnit=await page.evaluate(()=>window.rc50Work.getContext());
+ // Match the actual DesignStudioClient scope key so each unit has its own panel session.
+ await page.evaluate(()=>window.rc50Work.setContext(c=>({...c,unit:'47',scope:'rc56-synthetic-project/source/unit-47',snapshot:'rc56-unit47',dataToken:'rc56-unit47-geometry',placed:false,availableTools:['place','inspect']})));
+ await page.waitForFunction(()=>window.rc50Work.getContext().unit==='47');
+ const otherUnit=await ask(page,cad,'Peki şimdi?',true);assert.equal(await otherUnit.locator('[data-proposal-tool]').count(),0,'Another unit cannot infer a follow-up target from the previous unit');
+ const otherMemory=await ask(page,cad,'Hedefimiz neydi?',true);assert.ok(!(await otherMemory.textContent()).includes(goal),'The new unit does not inherit the previous goal');
+ await page.evaluate(context=>window.rc50Work.setContext(()=>context),previousUnit);await page.waitForFunction(()=>window.rc50Work.getContext().unit==='46');
+ const returnedMemory=await ask(page,cad,'Hedefimiz neydi?',true);assert.ok((await returnedMemory.textContent()).includes(goal),'Returning to the original unit restores its own working memory');
  timings.offlineCadMs=Date.now()-cadStarted;
 
  const modelStarted=Date.now(),modelPage=await browser.newPage({viewport:{width:1280,height:940}});watch(modelPage);
  await modelPage.addInitScript(()=>{
-  const state=window.rc50Model={calls:[]};
+  const state=window.rc50Model={calls:[],error:''};
   window.dentayaDesktop={
    onOpenPreferences:()=>()=>{},
    localAyaStatus:async()=>({ok:true,models:[{name:'rc50-synthetic-local-model',size:1000}],progress:{running:false,status:'ready',completed:0,total:0}}),
    onLocalAyaToken:()=>()=>{},
-   localAyaChat:async input=>{state.calls.push(input);return {ok:true,output:'Sentetik yerel model yanıtı: çalışma bağlamı alındı.',references:[],workingMemory:input.workingMemory};},
+   localAyaChat:async input=>{state.calls.push(input);if(state.error)return {ok:false,error:state.error};return {ok:true,output:'Sentetik yerel model yanıtı: çalışma bağlamı alındı.',references:[],workingMemory:input.workingMemory};},
    localAyaCancel:async()=>({ok:true}),
   };
  });
@@ -158,13 +171,21 @@ try{
  await modelMain.getByRole('button',{name:'Yeni sohbet',exact:true}).click();
  await ask(modelPage,modelMain,'Bağımsız yeni çalışma için kısa bir öneri yaz');
  assert.deepEqual(await modelPage.evaluate(()=>window.rc50Model.calls.at(-1).workingMemory),{goal:'',decisions:[],openQuestions:[]},'A new conversation sends empty memory to the model');
+ const modelCad=modelPage.locator('#cad-test');await modelCad.getByRole('combobox',{name:'Kurulu yerel model',exact:true}).waitFor();
+ await modelPage.evaluate(()=>{window.rc50Model.error='LOCAL_TIMEOUT';});
+ const recoveredCad=await ask(modelPage,modelCad,'Modelin üstüne kron yapalım.',true);assert.match(await recoveredCad.textContent(),/AYA Core/);
+ const fallbackPlace=recoveredCad.locator('[data-proposal-tool="place"]');await fallbackPlace.waitFor();assert.deepEqual(await modelPage.evaluate(()=>window.rc50Work.actions),[],'Model failure keeps placement as an explicit suggestion');
+ await screenshot(modelCad,'AYA_RC56_model_failure_cad_help.png');
+ await fallbackPlace.getByRole('button',{name:'Uygula',exact:true}).click();await modelPage.waitForFunction(()=>window.rc50Work.getContext().placed===true);assert.deepEqual(await modelPage.evaluate(()=>window.rc50Work.actions),['place']);
+ await modelPage.evaluate(()=>{window.rc50Model.error='';});const callsBefore=await modelPage.evaluate(()=>window.rc50Model.calls.length);
+ const restoredModel=await ask(modelPage,modelCad,'Peki şimdi?',true);assert.match(await restoredModel.textContent(),/Sentetik yerel model yanıtı/);assert.equal(await modelPage.evaluate(()=>window.rc50Model.calls.length),callsBefore+1,'A recovered ready model keeps priority over Core follow-up handling');
  timings.readyModelMs=Date.now()-modelStarted;
  assert.deepEqual(errors,[],'The real conversation components run without page, hydration, or React errors');
  await browser.close();browser=null;
  await stopServer();
  rmSync(route,{recursive:true,force:true});rmSync(path.join(root,'.next/dev/types'),{recursive:true,force:true});
  assert.equal(existsSync(route),false);timings.totalMs=Date.now()-started;
- console.log(JSON.stringify({pass:true,explicitMemoryInRealChat:true,memoryRecallAndNewConversation:true,historyOptInReload:true,multistepConversionAndMemoryDraft:true,offlineTypedCadProposal:true,applyRequired:true,staleProposalDisabled:true,callbackFailurePreserved:true,manualSaveSupersedesHistoricalFailure:true,noInventedGeometryMetrics:true,readyModelReceivesExplicitMemory:true,modelCallsAreMock:true,cadCallbacksAreSynthetic:true,realGeometryValidated:false,timings,screenshots},null,2));
+ console.log(JSON.stringify({pass:true,explicitMemoryInRealChat:true,memoryRecallAndNewConversation:true,historyOptInReload:true,multistepConversionAndMemoryDraft:true,offlineTypedCadProposal:true,applyRequired:true,staleProposalDisabled:true,callbackFailurePreserved:true,manualSaveSupersedesHistoricalFailure:true,scopedCadFollowups:true,changedGeometryRequiresCurrentCheck:true,crossUnitFollowupAndMemoryBoundaries:true,failedModelRetainsApplyOnlyCadHelp:true,recoveredModelRetainsPriority:true,noInventedGeometryMetrics:true,readyModelReceivesExplicitMemory:true,modelCallsAreMock:true,cadCallbacksAreSynthetic:true,realGeometryValidated:false,timings,screenshots},null,2));
 }catch(error){console.error(logs.slice(-14000));throw error;}finally{
  await browser?.close();
  await stopServer();

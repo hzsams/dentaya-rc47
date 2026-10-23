@@ -1,6 +1,12 @@
-# DentAYA RC55
+# DentAYA RC56
 
-Sürüm `1.0.0-rc.55`, AYA Core `0.11.0`. RC55, aydınlık panelleri ve erik moru başlıklarıyla DentAYA Studio düzenini korur. CAD; nesneler ve parametreler solda, mevcut komutlar koyu sağ araç şeridinde, geniş 3B alan ortada olacak şekilde düzenlenir. Ortak uygulama başlığı CAD'de gösterilmez. Özgün DentAYA varlıkları kullanılır; exocad/3Shape çalışma ergonomisi referanstır.
+Sürüm `1.0.0-rc.56`, AYA Core `0.12.0`. RC56, aydınlık panelleri ve erik moru başlıklarıyla DentAYA Studio düzenini korur. CAD; nesneler ve parametreler solda, mevcut komutlar koyu sağ araç şeridinde, geniş 3B alan ortada olacak şekilde düzenlenir. Ortak uygulama başlığı CAD'de gösterilmez. Özgün DentAYA varlıkları kullanılır; exocad/3Shape çalışma ergonomisi referanstır.
+
+RC56, laboratuvar ana sayfasına solda **Lab Yöneticisi** panelini ve dokuz görünümlü, gerçek kurum sayılarıyla çalışan 40 satırlık sayfalı iş kuyruğunu ekler. Başarısız yenilemede son başarılı liste korunur; kuyruk ve oturum değişimleri eski hasta referanslarını yeni bağlama taşımaz. Yeni migration veya otomatik vaka durum değişikliği yoktur.
+
+AYA Core'da modele öncelik veren akış korunur. Kuronun ham modele yerleştirilmesi ve kısa CAD takip soruları güncel proje/kaynak/üniteye bağlanır; model hatasında mevcut güncel CAD rehberi hata bilgisiyle kullanılabilir. Alıntılar veya tek bellek alanını temizleme istekleri tüm çalışma belleğini sıfırlamaz. Kullanıcı Uygula kapısı ve 27 tipli araç sözleşmesi korunur.
+
+CAD uzman incelemesine gerçek üçgen/düzlem kesişiminden kesit çizgileri, uzunluk ve güvenilir kapalı alan eklenir; bunlar duvar kalınlığı veya iç uyum değildir. Son kontrolde aktif ünitenin çalışma STL'si ham tarama koordinatlarında indirilebilir. Yerleşim, tek kapalı gövde ve yerel kurtarma kapıları kullanılır. İki yeni mini oyunla toplam beş oyun, 20 yeni hacim etkili logoyla toplam 120 seçenek bulunur. Önceki oyun rekorları ve 01–100 logo varlıkları korunur.
 
 Uygulama giriş adresi doğrudan İş yöneticisini açar. CAD dışındaki ekranlarda kompakt başlık, simgeli etkinlik şeridi ve durum çubuğu kullanılır. İş yöneticisi mevcut iş kayıtlarını tek ana tabloda toplar; seçili kaydın ayrıntıları bağlama göre açılır. Ayarlar kategori listesi ve araç odaklı ayar alanlarıyla çalışır. Yeni CAD oturumlarında düz Studio arka planı kullanılır; ızgara ve eksenler kapalı başlar. Önceden açıkça seçilmiş sahne arka planları, ızgara ve eksen tercihleri korunur.
 
@@ -22,11 +28,11 @@ RC53, kaynaklı 500 TR/EN bilgi kartını AYA bağlamına ekler. Kısa takip sor
 
 CAD uzman modunda İnceleme paneli; kamera/imleç hedefli gerçek fener, ışık gücü ve konisi, yüzey kenarları, sınırlı normal çizgileri, düz yüzey gölgelemesi, iç yüzey görünümü, pozlama, kesit ekseni/merkez/ters yön ve kamera kontrollerini sunar. Bu görünüm işlemleri geometriyi değiştirmez. AYA’nın `inspection`, `flashlight-on` ve `flashlight-off` önerileri mevcut çalışma denetiminden sonra Uygula ile çalışır. Sekiz manuel araç ve kılavuzlu görev kapıları korunur.
 
-Ayarlar'da 100 özgün logo bulunur; hacim, metalik yüzey, kenar ışığı ve gölge SVG katmanlarıyla üretilir. Her seçeneğin açık/koyu, simge ve yazı biçimleri ile Windows ICO varlığı vardır. Bunlar hacim etkili çizimlerdir; 3B mesh dosyaları değildir. İlk 18 logo kimliği, tercih aktarımı ve masaüstü simgesi akışı korunur.
+Ayarlar'da 120 özgün logo bulunur; hacim, metalik yüzey, kenar ışığı ve gölge SVG katmanlarıyla üretilir. Her seçeneğin açık/koyu, simge ve yazı biçimleri ile Windows ICO varlığı vardır. Bunlar hacim etkili çizimlerdir; 3B mesh dosyaları değildir. İlk 18 logo kimliği, tercih aktarımı ve masaüstü simgesi akışı korunur.
 
-Başlangıç: [KURULUM.txt](KURULUM.txt). Kullanım: [RC55_KULLANIM.md](RC55_KULLANIM.md). Güncel kontroller ve sınırlar: [RC55_KONTROL_RAPORU.md](RC55_KONTROL_RAPORU.md). Önceki RC raporları tarihsel kayıttır; yeni sürümün doğrulaması sayılmaz.
+Başlangıç: [KURULUM.txt](KURULUM.txt). Kullanım: [RC56_KULLANIM.md](RC56_KULLANIM.md). Güncel kontroller ve sınırlar: [RC56_KONTROL_RAPORU.md](RC56_KONTROL_RAPORU.md). Önceki RC raporları tarihsel kayıttır; yeni sürümün doğrulaması sayılmaz.
 
-[100 logonun görünümü](public/brand/DentAYA_Premium_Atelier.webp). Bilgi kartı sayısı **500**, kaynak grubu **60**; ayrı AYA soru kataloğu **1008** kayıttır. [Yeni kartların kaynakları](BILGI_KARTLARI_RC53_KAYNAKLAR.md) ve [katalog/30.000 hedefi](DENTAL_BILGI_KATALOGU_RAPORU.md). 30.000 gerçek içerik hedefi tamamlanmadı; kapasite testinin sentetik verileri ürüne eklenmez.
+[120 logonun görünümü](public/brand/DentAYA_Premium_Atelier.webp). Bilgi kartı sayısı **500**, kaynak grubu **60**; ayrı AYA soru kataloğu **1008** kayıttır. [Yeni kartların kaynakları](BILGI_KARTLARI_RC53_KAYNAKLAR.md) ve [katalog/30.000 hedefi](DENTAL_BILGI_KATALOGU_RAPORU.md). 30.000 gerçek içerik hedefi tamamlanmadı; kapasite testinin sentetik verileri ürüne eklenmez.
 
 Bu depo tam kaynak içerir. Windows Setup EXE'si, model ağırlıkları veya kişisel bağlantı ayarları içermez. Gerçek Windows, model ve sunucu doğrulamalarının sınırları test raporunda belirtilir.
 

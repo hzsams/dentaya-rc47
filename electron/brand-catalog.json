@@ -1,5 +1,5 @@
 {
-  "version": "premium-3",
+  "version": "premium-4",
   "wordmark": "DENTAYA",
   "materials": {
     "emerald": {
@@ -1619,6 +1619,326 @@
       "family": "premium",
       "material": "champagne",
       "path": "M30 8H66L88 30V66L66 88H30L8 66V30ZM36 22L22 36V60L36 74H60L74 60V36L60 22ZM34 36L43 32L48 37L53 32L62 36L58 59H51L48 51L45 59H38Z"
+    },
+    {
+      "id": "101",
+      "file": "101_cervical_vault",
+      "name": {
+        "tr": "Servikal Kubbe",
+        "en": "Cervical Vault"
+      },
+      "description": {
+        "tr": "Kole çizgisini koruyan açık kemer ve koronal kubbe",
+        "en": "Open arch and coronal vault preserving a cervical line"
+      },
+      "style": "Cervical Vault",
+      "family": "premium",
+      "material": "emerald",
+      "path": "M13 43Q13 14 48 10Q83 14 83 43V61H69V43Q69 27 48 24Q27 27 27 43V61H13ZM22 69Q48 82 74 69L80 81Q48 98 16 81ZM37 36H59L65 43L59 61H51L48 53L45 61H37L31 43Z"
+    },
+    {
+      "id": "102",
+      "file": "102_occlusal_dial",
+      "name": {
+        "tr": "Oklüzal Kadran",
+        "en": "Occlusal Dial"
+      },
+      "description": {
+        "tr": "Dört yönlü CAD kadranında anatomik merkez",
+        "en": "An anatomical centre in a four-direction CAD dial"
+      },
+      "style": "Occlusal Dial",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M42 7H54V24H42ZM72 42H89V54H72ZM42 72H54V89H42ZM7 42H24V54H7ZM48 25L69 37V59L48 71L27 59V37ZM48 37L37 43V53L48 59L59 53V43ZM37 45H59V51H37Z"
+    },
+    {
+      "id": "103",
+      "file": "103_milling_spire",
+      "name": {
+        "tr": "Freze Kulesi",
+        "en": "Milling Spire"
+      },
+      "description": {
+        "tr": "Katmanlı freze profili ve kılavuz prizma",
+        "en": "Layered milling profile and guide prism"
+      },
+      "style": "Milling Spire",
+      "family": "sans",
+      "material": "champagne",
+      "path": "M48 7L80 25V42L66 50V33L48 23L30 33V50L16 42V25ZM37 39H59V53H37ZM16 57L48 75L80 57V72L48 90L16 72ZM31 53H65V64H31Z"
+    },
+    {
+      "id": "104",
+      "file": "104_margin_cameo",
+      "name": {
+        "tr": "Marjin Kameosu",
+        "en": "Margin Cameo"
+      },
+      "description": {
+        "tr": "Kole konturunu çevreleyen dental kameo",
+        "en": "Dental cameo surrounding a cervical contour"
+      },
+      "style": "Margin Cameo",
+      "family": "serif",
+      "material": "jade",
+      "path": "M48 8C67 8 83 23 83 42C83 62 70 74 61 88H35C26 74 13 62 13 42C13 23 29 8 48 8ZM48 22C36 22 27 31 27 43C27 57 37 65 43 75H53C59 65 69 57 69 43C69 31 60 22 48 22ZM35 35Q42 29 48 35Q54 29 61 35L58 56H51L48 48L45 56H38Z"
+    },
+    {
+      "id": "105",
+      "file": "105_zircon_sail",
+      "name": {
+        "tr": "Zirkon Yelken",
+        "en": "Zircon Sail"
+      },
+      "description": {
+        "tr": "Keskin olmayan yüzeylerden yükselen zirkon yelken",
+        "en": "Zircon sail rising from softened facets"
+      },
+      "style": "Zircon Sail",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M16 15H61L86 42L65 84H25L9 43ZM28 28L22 41L35 70H55L69 43L56 28ZM41 28H50V59H41ZM59 45H75V54H59Z"
+    },
+    {
+      "id": "106",
+      "file": "106_bridge_pavilion",
+      "name": {
+        "tr": "Köprü Pavyonu",
+        "en": "Bridge Pavilion"
+      },
+      "description": {
+        "tr": "Çift dayanağı tek kemerde birleştiren pavyon",
+        "en": "A pavilion joining paired abutments under one arch"
+      },
+      "style": "Bridge Pavilion",
+      "family": "serif",
+      "material": "emerald",
+      "path": "M10 44Q19 12 48 12Q77 12 86 44L72 49Q66 27 48 27Q30 27 24 49ZM17 54H35V85H17ZM61 54H79V85H61ZM35 52H61V65H35ZM39 71H57V85H39Z"
+    },
+    {
+      "id": "107",
+      "file": "107_section_ribbon",
+      "name": {
+        "tr": "Kesit Şeridi",
+        "en": "Section Ribbon"
+      },
+      "description": {
+        "tr": "Kesit boyunca katmanları açığa çıkaran akışkan şerit",
+        "en": "Flowing ribbon revealing layers along a section"
+      },
+      "style": "Section Ribbon",
+      "family": "premium",
+      "material": "jade",
+      "path": "M13 21Q30 7 48 21Q66 35 83 21V38Q66 52 48 38Q30 24 13 38ZM13 44Q30 30 48 44Q66 58 83 44V61Q66 75 48 61Q30 47 13 61ZM13 67Q30 53 48 67Q66 81 83 67V82Q66 96 48 82Q30 68 13 82Z"
+    },
+    {
+      "id": "108",
+      "file": "108_implant_lantern",
+      "name": {
+        "tr": "İmplant Feneri",
+        "en": "Implant Lantern"
+      },
+      "description": {
+        "tr": "Halka içinde yönlenmiş implant ve ışık kılavuzu",
+        "en": "An oriented implant and light guide within a halo"
+      },
+      "style": "Implant Lantern",
+      "family": "sans",
+      "material": "champagne",
+      "path": "M48 7L82 26V57L68 66V34L48 23L28 34V66L14 57V26ZM38 32H58V44H38ZM36 50L61 44L64 54L39 60ZM34 65L59 59L62 69L37 75ZM40 81L56 77L48 91Z"
+    },
+    {
+      "id": "109",
+      "file": "109_sculpt_crest",
+      "name": {
+        "tr": "Şekillendirme Arması",
+        "en": "Sculpt Crest"
+      },
+      "description": {
+        "tr": "Yumuşak yüzeyle katman izini birleştiren arma",
+        "en": "A crest combining a soft surface and layered trace"
+      },
+      "style": "Sculpt Crest",
+      "family": "premium",
+      "material": "emerald",
+      "path": "M12 20Q27 8 43 16Q57 26 72 14L86 26Q69 44 49 35Q32 24 22 35ZM17 44Q32 32 48 40Q62 50 77 38L87 50Q69 66 50 58Q34 48 25 59ZM25 67Q40 57 53 65Q64 72 75 64L82 77Q62 95 42 82L21 80Z"
+    },
+    {
+      "id": "110",
+      "file": "110_articulator_gate",
+      "name": {
+        "tr": "Artikülatör Kapısı",
+        "en": "Articulator Gate"
+      },
+      "description": {
+        "tr": "Karşılıklı kollar ve merkezde kapanış kılavuzu",
+        "en": "Opposing arms and a central bite guide"
+      },
+      "style": "Articulator Gate",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M10 16H86V31H55V41H41V31H10ZM10 65H41V55H55V65H86V80H10ZM15 37H29V59H15ZM67 37H81V59H67ZM48 40L57 48L48 56L39 48Z"
+    },
+    {
+      "id": "111",
+      "file": "111_scan_iris",
+      "name": {
+        "tr": "Tarama İrisi",
+        "en": "Scan Iris"
+      },
+      "description": {
+        "tr": "Açık tarama köşeleriyle korunan dental çekirdek",
+        "en": "A dental core protected by open scanning corners"
+      },
+      "style": "Scan Iris",
+      "family": "sans",
+      "material": "jade",
+      "path": "M10 10H36V23H23V36H10ZM60 10H86V36H73V23H60ZM73 60H86V86H60V73H73ZM10 60H23V73H36V86H10ZM35 31Q42 25 48 31Q54 25 61 31L66 41L59 65H51L48 54L45 65H37L30 41Z"
+    },
+    {
+      "id": "112",
+      "file": "112_occlusal_tide",
+      "name": {
+        "tr": "Oklüzal Gelgit",
+        "en": "Occlusal Tide"
+      },
+      "description": {
+        "tr": "Üç oklüzal sırtı taşıyan dairesel dalga",
+        "en": "A circular tide carrying three occlusal ridges"
+      },
+      "style": "Occlusal Tide",
+      "family": "premium",
+      "material": "champagne",
+      "path": "M48 8Q80 8 88 39H73Q67 23 48 23Q29 23 23 39H8Q16 8 48 8ZM8 50Q21 37 34 50Q48 63 62 50Q75 37 88 50V66Q75 53 62 66Q48 79 34 66Q21 53 8 66ZM18 74Q48 93 78 74L84 85Q48 109 12 85Z"
+    },
+    {
+      "id": "113",
+      "file": "113_contact_scale",
+      "name": {
+        "tr": "Temas Dengesi",
+        "en": "Contact Balance"
+      },
+      "description": {
+        "tr": "İki temas yüzeyini ortak merkezde dengeleyen form",
+        "en": "Two contact surfaces balanced around a shared centre"
+      },
+      "style": "Contact Balance",
+      "family": "sans",
+      "material": "emerald",
+      "path": "M42 8H54V23L82 33L78 45L54 36V68H66V82H30V68H42V36L18 45L14 33L42 23ZM11 49H35L29 65H17ZM61 49H85L79 65H67ZM39 88H57V94H39Z"
+    },
+    {
+      "id": "114",
+      "file": "114_crown_folio",
+      "name": {
+        "tr": "Kuron Folyosu",
+        "en": "Crown Folio"
+      },
+      "description": {
+        "tr": "Koronal kıvrımı D harfinde birleştiren açık folyo",
+        "en": "An open folio joining a coronal fold with the letter D"
+      },
+      "style": "Crown Folio",
+      "family": "serif",
+      "material": "titanium",
+      "path": "M15 9H47Q83 9 83 48Q83 87 47 87H15V71H45Q67 71 67 48Q67 25 45 25H31V56H15ZM37 33L45 39L53 31L61 39L57 58H41ZM12 62H35V69H12Z"
+    },
+    {
+      "id": "115",
+      "file": "115_arch_portal",
+      "name": {
+        "tr": "Kemer Geçidi",
+        "en": "Arch Portal"
+      },
+      "description": {
+        "tr": "Yuvarlatılmış kemerde üç yüzeyli dental geçit",
+        "en": "A three-surface dental portal within a rounded arch"
+      },
+      "style": "Arch Portal",
+      "family": "premium",
+      "material": "jade",
+      "path": "M13 87V45Q13 9 48 9Q83 9 83 45V87H68V45Q68 24 48 24Q28 24 28 45V87ZM38 40H58L66 53L57 76H49L46 65L43 76H35L30 53ZM39 82H57V91H39Z"
+    },
+    {
+      "id": "116",
+      "file": "116_surface_weave",
+      "name": {
+        "tr": "Yüzey Örgüsü",
+        "en": "Surface Weave"
+      },
+      "description": {
+        "tr": "Üçgensel yüzey bağlantılarını taşıyan dokuma",
+        "en": "A weave carrying triangular surface connections"
+      },
+      "style": "Surface Weave",
+      "family": "sans",
+      "material": "champagne",
+      "path": "M48 7L85 29V67L48 89L11 67V29ZM48 22L25 36V60L48 74L71 60V36ZM45 25H51V45L67 36L71 42L55 51L70 60L66 66L48 55L30 66L26 60L41 51L25 42L29 36L45 45Z"
+    },
+    {
+      "id": "117",
+      "file": "117_cervical_pearl",
+      "name": {
+        "tr": "Servikal İnci",
+        "en": "Cervical Pearl"
+      },
+      "description": {
+        "tr": "İnci çekirdeğinin çevresinde akıcı servikal kontur",
+        "en": "A flowing cervical contour around a pearl core"
+      },
+      "style": "Cervical Pearl",
+      "family": "serif",
+      "material": "jade",
+      "path": "M48 9Q73 9 82 29L68 37Q63 24 48 24Q30 24 30 37Q30 47 47 49Q75 52 75 72Q75 90 48 90Q23 90 14 70L28 62Q33 75 48 75Q60 75 60 68Q60 62 44 60Q15 57 15 36Q15 9 48 9ZM40 34Q48 26 56 34Q64 42 56 50Q48 58 40 50Q32 42 40 34Z"
+    },
+    {
+      "id": "118",
+      "file": "118_inlay_fold",
+      "name": {
+        "tr": "İnley Kıvrımı",
+        "en": "Inlay Fold"
+      },
+      "description": {
+        "tr": "Merkezde kilitlenen dört inley yüzeyi",
+        "en": "Four inlay surfaces locking around a centre"
+      },
+      "style": "Inlay Fold",
+      "family": "sans",
+      "material": "titanium",
+      "path": "M13 13H43V36H31V25H25V43H13ZM53 13H83V43H71V25H65V36H53ZM53 53H65V71H71V53H83V83H53ZM13 53H25V71H31V60H43V83H13ZM37 37H59V59H37ZM44 44V52H52V44Z"
+    },
+    {
+      "id": "119",
+      "file": "119_cusp_satellite",
+      "name": {
+        "tr": "Kusp Uydusu",
+        "en": "Cusp Satellite"
+      },
+      "description": {
+        "tr": "Asimetrik yörüngede üç tüberküllü koronal çekirdek",
+        "en": "A three-cusp coronal core in an asymmetric orbit"
+      },
+      "style": "Cusp Satellite",
+      "family": "premium",
+      "material": "emerald",
+      "path": "M48 12Q80 12 87 40L73 43Q68 27 48 27Q31 27 22 42L9 34Q21 12 48 12ZM9 55L23 52Q27 71 48 71Q65 71 74 57L87 66Q75 87 48 87Q16 87 9 55ZM30 42L40 35L48 42L56 35L66 42L61 60H53L48 53L43 60H35Z"
+    },
+    {
+      "id": "120",
+      "file": "120_atelier_keystone",
+      "name": {
+        "tr": "Atölye Kilit Taşı",
+        "en": "Atelier Keystone"
+      },
+      "description": {
+        "tr": "DENTAYA atölyesi için kilit taşlı Y imzası",
+        "en": "A keystone Y signature for the DENTAYA atelier"
+      },
+      "style": "Atelier Keystone",
+      "family": "serif",
+      "material": "champagne",
+      "path": "M15 14H35L48 35L61 14H81L58 53V74H72V88H24V74H38V53ZM43 10H53V24H43ZM10 36H24V48H10ZM72 36H86V48H72Z"
     }
   ]
 }

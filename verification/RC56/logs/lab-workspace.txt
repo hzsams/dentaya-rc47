@@ -1,0 +1,27 @@
+{
+  "pass": true,
+  "realRoutes": [
+    "/workspace",
+    "/lab"
+  ],
+  "leftLabManager": true,
+  "exactCounts": true,
+  "queueFilters": true,
+  "paginationBeyondPreview": true,
+  "contextualCadLink": true,
+  "currentPageSearch": true,
+  "failedRefreshRetainsRecords": true,
+  "failedFilterCanRetry": true,
+  "paginationUsesDisplayedQueue": true,
+  "crossTabSignoutClearsLab": true,
+  "lateMembershipCannotRestorePriorUser": true,
+  "authRequests": {
+    "signIns": 2,
+    "signOuts": 2
+  },
+  "roleGatedTeam": true,
+  "mobileCollapsedAndFits": true,
+  "clinicUnaffected": true,
+  "noCaseWrites": true,
+  "backend": "intercepted synthetic fixture; no production data"
+}

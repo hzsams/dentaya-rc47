@@ -1,0 +1,55 @@
+{
+  "release": "1.0.0-rc.56",
+  "baseRelease": "1.0.0-rc.55",
+  "baseCommit": "c9957942c43690c1cb9a84e9efd6a65e9218a643",
+  "status": "pass",
+  "checkedAt": "2026-10-24T02:37:12+03:00",
+  "nativeModelInferenceVerified": false,
+  "windowsInstallerProduced": false,
+  "liveOrganizationBackendVerified": false,
+  "dentalFactsActual": 500,
+  "dentalFactSourcesActual": 60,
+  "brandLogosActual": 120,
+  "ayaQuestionCatalogueActual": 1008,
+  "miniGamesActual": 5,
+  "dentalFactsTarget": 30000,
+  "nativeGrammarVerified": true,
+  "nativeGrammarChecks": 22,
+  "nativeModelWeightsAvailable": false,
+  "nativeModelInferenceStatus": "blocked-model-weights",
+  "nativeEvidence": {
+    "grammar": {
+      "path": "native-grammar-report.json",
+      "sha256": "c3057b8310e4523339301004f84d615a829649185a7303113a40b1cc80f9d8dc"
+    },
+    "inference": {
+      "path": "native-inference-report.json",
+      "sha256": "1fea758b92fd9457b5d5116a8c7666f29b5701d7479c6c8eb511fa7d3b5112f2"
+    },
+    "modelAccess": {
+      "path": "model-access-report.json",
+      "sha256": "73336968d3a696f35d29394020c73e834023bd4d060b3dfbe95857eb0c9dfdb4"
+    }
+  },
+  "checks": [
+    {
+      "name": "full-verify",
+      "command": "npm run verify",
+      "exitCode": 0,
+      "seconds": 216.1,
+      "log": "logs/full-verify.txt",
+      "sha256": "3e0b7132e66eadfec0e9e64729f1c45a66eba0a6f6c9421e1a834c18063ba3b8"
+    },
+    {
+      "name": "loading-reading",
+      "command": "node scripts/verify-loading-reading-browser.mjs",
+      "exitCode": 0,
+      "seconds": 25.58,
+      "log": "logs/loading-reading.txt",
+      "sha256": "71f2377ebea7a3059b62cfd1a897c3ebd557eff0ec79ff4087e48b4a764151de"
+    }
+  ],
+  "browserRuns": 12,
+  "browserResults": "browser-results.json",
+  "browserResultsSha256": "1878ca9e897b7176ee1c1cc40cb79ada2c94c5e154263408ddbc30e361f09641"
+}

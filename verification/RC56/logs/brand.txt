@@ -1,0 +1,22 @@
+{
+  "pass": true,
+  "logos": 120,
+  "themes": 2,
+  "displayModes": 3,
+  "logoThemeModeCombinations": 720,
+  "compatibleIds": 10,
+  "restoredIdPreserved": true,
+  "artworkLoaded": true,
+  "searchAndEmptyState": true,
+  "reloadAndScale": true,
+  "legacyAndCurrentImports": true,
+  "hundredthChoiceImportAndReload": true,
+  "newestChoiceImportReloadAndDesktop": true,
+  "invalidImportBlocked": true,
+  "storageFailureReported": true,
+  "desktopIpc": "mocked",
+  "locales": 46,
+  "brandSpelling": "DENTAYA",
+  "mobileFits": true,
+  "backend": "mocked; no production data"
+}

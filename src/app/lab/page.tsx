@@ -1,521 +1,92 @@
-"use client";
+'use client';
+import {useCallback,useEffect,useRef,useState} from 'react';
+import {useRouter} from 'next/navigation';
+import type {RealtimeChannel} from '@supabase/supabase-js';
+import UiNode from '@/lib/i18n/UiNode';
+import UiLink from '@/lib/i18n/UiLink';
+import UserText from '@/lib/i18n/UserText';
+import {useTranslation} from '@/lib/i18n';
+import {supabase} from '@/lib/supabase';
+import {dueLabel,homeStatus,localDay,type HomeCounts} from '@/lib/home-dashboard';
+import {LAB_PAGE_SIZE,LAB_QUEUE_FILTERS,createLabLoadGate,labNextAction,searchLabPage,type LabCase,type LabCounts,type LabQueueFilter,type HomeLabQueue} from '@/lib/lab-workspace';
+import {loadLabWorkspacePage} from '@/lib/load-lab-workspace';
 import LoadingExperience from '@/app/loading-play/LoadingExperience';
-import UserText from "@/lib/i18n/UserText";
-import UiNode from "@/lib/i18n/UiNode";
-import { useTranslation } from '@/lib/i18n';
-import { useCallback, useEffect, useState, type CSSProperties } from "react";
-import { useRouter } from "next/navigation";
-import type { RealtimeChannel } from "@supabase/supabase-js";
-import NotificationCenter from "@/app/NotificationCenter";
-import OnboardingGuide from "@/app/OnboardingGuide";
-import { supabase } from "@/lib/supabase";
-import { dy, useDentayaThemeRuntime } from "@/app/dentaya-theme";
-type Org = {
-    id: string;
-    name: string;
-    org_type: "clinic" | "laboratory" | "courier";
-};
-type CaseRow = {
-    id: string;
-    case_number: string;
-    patient_reference: string;
-    title: string;
-    case_type: string;
-    priority: string;
-    status: string;
-    due_date: string | null;
-    tooth_codes: string[];
-    material: string | null;
-    shade: string | null;
-    updated_at: string;
-};
-type Project = {
-    id: string;
-    case_id: string;
-    workflow_stage: string;
-    status: string;
-    updated_at: string;
-};
-export default function LaboratoryWorkspacePage() {
-    const { t: uiText } = useTranslation();
-    useDentayaThemeRuntime();
-    const router = useRouter();
-    const [org, setOrg] = useState<Org | null>(null);
-    const [cases, setCases] = useState<CaseRow[]>([]);
-    const [projects, setProjects] = useState<Project[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [message, setMessage] = useState("");
-    const loadData = useCallback(async (orgId: string) => {
-        const [c, p] = await Promise.all([
-            supabase
-                .from("cases")
-                .select("id,case_number,patient_reference,title,case_type,priority,status,due_date,tooth_codes,material,shade,updated_at")
-                .eq("lab_org_id", orgId)
-                .neq("status", "cancelled")
-                .order("updated_at", { ascending: false })
-                .limit(150),
-            supabase
-                .from("design_projects")
-                .select("id,case_id,workflow_stage,status,updated_at")
-                .eq("lab_org_id", orgId)
-                .order("updated_at", { ascending: false })
-                .limit(150),
-        ]);
-        if (c.error)
-            setMessage(c.error.message);
-        if (p.error)
-            setMessage(p.error.message);
-        setCases((c.data ?? []) as CaseRow[]);
-        setProjects((p.data ?? []) as Project[]);
-    }, []);
-    useEffect(() => {
-        let active = true;
-        let channel: RealtimeChannel | null = null;
-        async function boot() {
-            const { data: session } = await supabase.auth.getSession();
-            const user = session.session?.user;
-            if (!user) {
-                router.replace("/workspace");
-                return;
-            }
-            const { data: membership, error: membershipError } = await supabase
-                .from("memberships")
-                .select("organization_id")
-                .eq("user_id", user.id)
-                .eq("status", "active")
-                .limit(1)
-                .maybeSingle();
-            if (membershipError || !membership) {
-                setMessage(membershipError?.message ?? "Aktif kurum bulunamadı.");
-                setLoading(false);
-                return;
-            }
-            const { data: orgData, error: orgError } = await supabase
-                .from("organizations")
-                .select("id,name,org_type")
-                .eq("id", membership.organization_id)
-                .maybeSingle();
-            if (orgError || !orgData) {
-                setMessage(orgError?.message ?? "Kurum bulunamadı.");
-                setLoading(false);
-                return;
-            }
-            const currentOrg = orgData as Org;
-            if (currentOrg.org_type !== "laboratory") {
-                router.replace(currentOrg.org_type === "clinic" ? "/clinic" : "/logistics");
-                return;
-            }
-            if (!active)
-                return;
-            setOrg(currentOrg);
-            await loadData(currentOrg.id);
-            if (!active)
-                return;
-            channel = supabase
-                .channel(`lab-home-${currentOrg.id}`)
-                .on("postgres_changes", { event: "*", schema: "public", table: "cases", filter: `lab_org_id=eq.${currentOrg.id}` }, () => void loadData(currentOrg.id))
-                .on("postgres_changes", { event: "*", schema: "public", table: "design_projects", filter: `lab_org_id=eq.${currentOrg.id}` }, () => void loadData(currentOrg.id))
-                .subscribe();
-            setLoading(false);
-        }
-        void boot();
-        return () => {
-            active = false;
-            if (channel)
-                void supabase.removeChannel(channel);
-        };
-    }, [loadData, router]);
-    const activeCases = cases.filter((item) => !["delivered", "cancelled"].includes(item.status));
-    const designCases = cases.filter((item) => ["design", "approval"].includes(item.status));
-    const productionCases = cases.filter((item) => ["production", "qc", "ready"].includes(item.status));
-    const newCases = cases.filter((item) => item.status === "new");
-    const highPriority = activeCases.filter((item) => item.priority === "urgent" || item.priority === "high");
-    const reviewCases = projects.filter((item) => item.status === "ready_for_review");
-    if (loading) return <LoadingExperience title="Laboratuvar çalışma alanı hazırlanıyor…"/>;
-    if (!org) {
-        return <UiNode as="main" style={ui.center}>{message || "Laboratuvar çalışma alanı açılamadı."}</UiNode>;
-    }
-    return (<UiNode as="main" style={ui.page}>
-      <style>{`
-        * { box-sizing: border-box; }
-        .lab-card, .lab-module {
-          transition: transform var(--dy-motion-fast,150ms), border-color var(--dy-motion-fast,150ms), background var(--dy-motion-fast,150ms);
-        }
-        .lab-card:hover, .lab-module:hover {
-          transform: translateY(-3px);
-          border-color: var(--dy-accent,#6de2cf) !important;
-        }
-        @media (max-width: 980px) {
-          .lab-header { flex-direction: column; align-items: flex-start !important; }
-          .lab-hero, .lab-grid, .lab-summary { grid-template-columns: 1fr !important; }
-          .lab-stats { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
-        }
-        @media (max-width: 560px) {
-          .lab-stats { grid-template-columns: 1fr !important; }
-          .lab-actions { width: 100%; }
-          .lab-actions a, .lab-actions button { flex: 1 1 100%; }
-        }
-      `}</style>
-
-      <UiNode as="header" className="lab-header" style={ui.header}>
-        <UiNode as="div">
-          <UiNode as="p" style={ui.eyebrow}>{uiText("LABORATUVAR ÇALIŞMA ALANI")}</UiNode>
-          <UiNode as="h1" style={ui.title}><UserText>{org.name}</UserText></UiNode>
-        </UiNode>
-
-        <UiNode as="div" className="lab-actions" style={ui.actions}>
-          <NotificationCenter />
-        </UiNode>
-      </UiNode>
-
-      {message && <UiNode as="div" style={ui.notice}>{message}</UiNode>}
-
-      <OnboardingGuide />
-
-      <UiNode as="section" className="lab-stats" style={ui.stats}>
-        <Stat label="Aktif İş" value={activeCases.length} detail="açık laboratuvar akışı"/>
-        <Stat label="Yeni İş" value={newCases.length} detail="işe alınacak vaka"/>
-        <Stat label="Tasarım / Onay" value={designCases.length} detail="CAD ve klinik kararı"/>
-        <Stat label="Üretim / QC" value={productionCases.length} detail="üretim hattı"/>
-      </UiNode>
-
-      <UiNode as="section" className="lab-hero" style={ui.hero}>
-        <UiNode as="div" style={{ display: "grid", gap: 14, alignContent: "start" }}>
-          <UiNode as="div">
-            <UiNode as="p" style={ui.eyebrow}>ÜRETİM / QC</UiNode>
-            <UiNode as="h2" style={ui.heroTitle}>Üretim öncesi devir</UiNode>
-          </UiNode>
-
-          <UiNode as="div" className="lab-summary" style={ui.summaryGrid}>
-            <SummaryCard tone="accent" title="Yeni işler" value={newCases.length} detail="Önce kabul ve planlama ekranına yönel"/>
-            <SummaryCard tone="warning" title="Kritik öncelik" value={highPriority.length} detail="Acil veya yüksek öncelikli vakalar"/>
-            <SummaryCard tone="success" title="Klinik inceleme" value={reviewCases.length} detail="Gönderilmiş CAD projeleri klinik kararında"/>
-          </UiNode>
-        </UiNode>
-
-        <UiNode as="aside" className="work-action-panel" aria-label="İş kuyruğu">
-          <UiNode as="span" className="work-kicker">İŞ KUYRUĞU</UiNode><UiNode as="h2">Kontrol sizde</UiNode><UiNode as="p">Öncelikli kayıtları inceleyin, ardından ilgili modülde işlemi tamamlayın.</UiNode>
-          <UiNode as="div" className="work-queue-row"><UiNode as="span">Öncelikli vakalar<UiNode as="small">Acil veya yüksek öncelik</UiNode></UiNode><UiNode as="strong">{highPriority.length}</UiNode></UiNode>
-          <UiNode as="div" className="work-queue-row"><UiNode as="span">Karar bekleyen işler<UiNode as="small">İncelemeye gönderilen tasarım</UiNode></UiNode><UiNode as="strong">{reviewCases.length}</UiNode></UiNode>
-        </UiNode>
-      </UiNode>
-
-      <UiNode as="section" style={ui.section}>
-        <UiNode as="div" style={ui.sectionHead}>
-          <UiNode as="div">
-            <UiNode as="p" style={ui.eyebrow}>OPERASYON GÖRÜNÜMÜ</UiNode>
-            <UiNode as="h2" style={ui.sectionTitle}>Liste yerine özet</UiNode>
-          </UiNode>
-        </UiNode>
-
-        <UiNode as="div" className="lab-grid" style={ui.overviewGrid}>
-          <OverviewCard title="Gelen iş kuyruğu" detail={`${newCases.length} yeni, ${activeCases.length} aktif iş var.`} hint="Planlama, kabul ve öncelik kontrolü için Vaka ekranını aç."/>
-          <OverviewCard title="CAD ve klinik onayı" detail={`${designCases.length} tasarım / onay, ${reviewCases.length} klinik incelemede.`} hint="CAD ekranından projeyi aç; klinik geri bildirimlerini Mesajlar’dan takip et."/>
-          <OverviewCard title="Üretim akışı" detail={`${productionCases.length} iş üretim veya kalite aşamasında.`} hint="Canlı takip ve teslimat için Lojistik modülüne geçebilirsin."/>
-        </UiNode>
-      </UiNode>
-    </UiNode>);
+import DentayaIcon from '@/app/DentayaIcon';
+import LabManagerPanel from '@/app/LabManagerPanel';
+import {useDentayaThemeRuntime} from '@/app/dentaya-theme';
+import '@/app/workspace-desktop.css';
+type Org={id:string;name:string;org_type:'clinic'|'laboratory'|'courier'};
+type Snapshot={cases:LabCase[];total:number;counts:LabCounts;filter:LabQueueFilter;page:number;updatedAt:string};
+export default function LaboratoryWorkspacePage(){
+ useDentayaThemeRuntime();
+ const router=useRouter(),{locale,intlLocale,t:uiText}=useTranslation(),tr=locale==='tr';
+ const [org,setOrg]=useState<Org|null>(null),[role,setRole]=useState('member'),[booting,setBooting]=useState(true),[loading,setLoading]=useState(false),[error,setFailure]=useState<''|'boot'|'load'>('');
+ const [filter,setFilter]=useState<LabQueueFilter>('active'),[page,setPage]=useState(0),[search,setSearch]=useState(''),[snapshot,setSnapshot]=useState<Snapshot|null>(null);
+ const loadGate=useRef(createLabLoadGate()),requestRef=useRef({filter,page}),orgScopeRef=useRef('');
+ useEffect(()=>{requestRef.current={filter,page};},[filter,page]);
+ const copy=tr?{title:'Lab Yöneticisi',refresh:'Yenile',refreshing:'Güncelleniyor…',queue:'Laboratuvar iş kuyruğu',search:'Bu sayfada vaka ara',case:'Vaka / Hasta Ref',job:'İş ve materyal',status:'Aşama',due:'Termin',action:'Sıradaki işlem',empty:'Bu görünümde kayıt bulunmuyor.',noMatch:'Bu sayfada arama sonucu bulunamadı.',next:'Sonraki sayfa',previous:'Önceki sayfa',page:'Sayfa',total:'Toplam kayıt',preview:'Arama yalnız açık sayfayı tarar. Diğer kayıtlara sayfa kontrolleriyle ulaşabilirsiniz.',loadFail:'Laboratuvar kuyruğu güncellenemedi.',last:'Son başarılı kayıtlar korunuyor.',retry:'Tekrar dene',workspace:'İş yöneticisine dön',noOrg:'Laboratuvar çalışma alanı açılamadı.',updated:'Son güncelleme',loading:'İş kuyruğu yükleniyor…',filters:'Kuyruk görünümü',filterNames:{active:'Açık işler',priority:'Öncelikli',overdue:'Geciken',today:'Bugün teslim',new:'Yeni işler',design:'Tasarım',approval:'Onay bekleyen',production:'Üretim / QC',all:'Açık ve tamamlanan'}}:{title:'Lab Manager',refresh:'Refresh',refreshing:'Refreshing…',queue:'Laboratory work queue',search:'Search cases on this page',case:'Case / Patient ref',job:'Job and material',status:'Stage',due:'Due',action:'Next action',empty:'There are no records in this view.',noMatch:'No matching records on this page.',next:'Next page',previous:'Previous page',page:'Page',total:'Total records',preview:'Search covers this page only. Use the page controls to reach other records.',loadFail:'The laboratory queue could not be refreshed.',last:'The last successfully loaded records are retained.',retry:'Try again',workspace:'Back to job manager',noOrg:'The laboratory workspace could not be opened.',updated:'Last updated',loading:'Loading work queue…',filters:'Queue view',filterNames:{active:'Open jobs',priority:'Priority',overdue:'Overdue',today:'Due today',new:'New jobs',design:'Design',approval:'Awaiting approval',production:'Production / QC',all:'Open and completed'}};
+ const load=useCallback(async(orgId:string,nextFilter:LabQueueFilter,nextPage:number)=>{
+  if(orgScopeRef.current!==orgId)return;
+  const ticket=loadGate.current.begin();setLoading(true);setFailure('');
+  try{const result=await loadLabWorkspacePage(orgId,nextFilter,nextPage);if(!loadGate.current.isCurrent(ticket))return;const last=Math.max(0,Math.ceil(result.total/LAB_PAGE_SIZE)-1);if(nextPage>last){setPage(last);return;}setSnapshot({...result,filter:nextFilter,page:nextPage,updatedAt:new Date().toISOString()});}
+  catch{if(loadGate.current.isCurrent(ticket))setFailure('load');}
+  finally{if(loadGate.current.isCurrent(ticket))setLoading(false);}
+ },[]);
+ useEffect(()=>{
+  let active=true,revision=0;let authUserId:string|null|undefined;const gate=loadGate.current;
+  function leaveWorkspace(){
+   revision++;orgScopeRef.current='';gate.invalidate();requestRef.current={filter:'active',page:0};setOrg(null);setRole('member');setSnapshot(null);setFilter('active');setPage(0);setSearch('');setLoading(false);setFailure('');setBooting(false);router.replace('/workspace');
+  }
+  const {data:listener}=supabase.auth.onAuthStateChange((event,session)=>{
+   if(!active)return;const nextUserId=session?.user.id??null;
+   if(event==='SIGNED_OUT'||(authUserId!==undefined&&authUserId!==nextUserId))leaveWorkspace();
+   authUserId=nextUserId;
+  });
+  async function boot(){
+   const started=revision;const current=()=>active&&started===revision;
+   try{
+    const {data:session,error:sessionError}=await supabase.auth.getSession();if(!current())return;
+    if(sessionError)throw sessionError;if(!session.session?.user){router.replace('/workspace');return;}
+    if(authUserId!==undefined&&authUserId!==session.session.user.id){leaveWorkspace();return;}authUserId=session.session.user.id;
+    const {data:member,error:memberError}=await supabase.from('memberships').select('organization_id,role').eq('user_id',session.session.user.id).eq('status','active').limit(1).maybeSingle();if(!current())return;if(memberError||!member)throw memberError??new Error('LAB_MEMBERSHIP_MISSING');
+    const {data:organization,error:orgError}=await supabase.from('organizations').select('id,name,org_type').eq('id',member.organization_id).maybeSingle();if(!current())return;if(orgError||!organization)throw orgError??new Error('LAB_ORGANIZATION_MISSING');
+    const currentOrg=organization as Org;if(currentOrg.org_type!=='laboratory'){router.replace(currentOrg.org_type==='clinic'?'/clinic':'/logistics');return;}
+    orgScopeRef.current=currentOrg.id;setRole(member.role??'member');setOrg(currentOrg);
+   }catch{if(current())setFailure('boot');}finally{if(current())setBooting(false);}
+  }
+  void boot();return()=>{active=false;revision++;orgScopeRef.current='';gate.invalidate();listener.subscription.unsubscribe();};
+ },[router]);
+ useEffect(()=>{
+  if(!org)return;const gate=loadGate.current;void load(org.id,filter,page);return()=>gate.invalidate();
+ },[org,filter,page,load]);
+ useEffect(()=>{
+  if(!org)return;let active=true;let channel:RealtimeChannel|null=null;let timer:ReturnType<typeof setTimeout>|undefined;
+  channel=supabase.channel('lab-queue-'+org.id).on('postgres_changes',{event:'*',schema:'public',table:'cases',filter:'lab_org_id=eq.'+org.id},()=>{if(!active)return;clearTimeout(timer);timer=setTimeout(()=>{if(!active)return;const current=requestRef.current;void load(org.id,current.filter,current.page);},180);}).subscribe();
+  return()=>{active=false;clearTimeout(timer);if(channel)void supabase.removeChannel(channel);};
+ },[org,load]);
+ function navigateQueue(next:LabQueueFilter,nextPage:number){
+  if(next===filter&&nextPage===page){if(error==='load'&&org)void load(org.id,next,nextPage);return;}
+  loadGate.current.invalidate();requestRef.current={filter:next,page:nextPage};setFilter(next);setPage(nextPage);setSearch('');
+ }
+ function choose(next:LabQueueFilter){navigateQueue(next,0);}
+ if(booting)return <LoadingExperience title={tr?'Laboratuvar çalışma alanı hazırlanıyor…':'Preparing laboratory workspace…'}/>;
+ if(!org)return <UiNode as="main" className="desktop-workspace-home lab-queue-unavailable" translateChildren={false}><DentayaIcon name="lab" size={34}/><UiNode as="h1">{copy.noOrg}</UiNode><UiLink href="/workspace" translateChildren={false}>{copy.workspace}</UiLink></UiNode>;
+ const rows=snapshot?searchLabPage(snapshot.cases,search,intlLocale()):[],shownFilter=snapshot?.filter??filter,shownPage=snapshot?.page??page,counts=snapshot?.counts;
+ const homeCounts:HomeCounts|null=counts?{active:counts.active,urgent:counts.priority,approval:counts.approval,overdue:counts.overdue,today:counts.today,pickup:0,inTransit:0,pickedUp:0}:null;
+ const leftQueue:HomeLabQueue=(['active','approval','overdue','today'] as string[]).includes(shownFilter)?shownFilter as HomeLabQueue:'priority';
+ const refresh=()=>void load(org.id,filter,page),pages=Math.max(1,Math.ceil((snapshot?.total??0)/LAB_PAGE_SIZE));
+ return <UiNode as="main" className="desktop-workspace-home laboratory-workspace" aria-busy={loading} translateChildren={false}>
+  <UiNode as="header" className="desktop-home-toolbar lab-header" translateChildren={false}><UiNode as="div" className="desktop-home-heading" translateChildren={false}><DentayaIcon name="lab" size={22}/><UiNode as="h1">{copy.title}</UiNode><UiNode as="span" className="desktop-home-divider"/><UserText>{org.name}</UserText></UiNode><UiNode as="div" className="desktop-home-toolbar-actions" translateChildren={false}><UiLink href="/workspace" className="desktop-home-button" translateChildren={false}>{copy.workspace}</UiLink><UiNode as="button" type="button" className="desktop-home-button" disabled={loading} onClick={refresh} translateChildren={false}>{loading?copy.refreshing:copy.refresh}</UiNode></UiNode></UiNode>
+  {error&&<UiNode as="div" className="desktop-home-error" role="alert" translateChildren={false}><DentayaIcon name="notification" size={20}/><UiNode as="div" translateChildren={false}><UiNode as="strong">{copy.loadFail}</UiNode>{snapshot&&<UiNode as="span">{copy.last}</UiNode>}</UiNode><UiNode as="button" type="button" onClick={refresh} disabled={loading} translateChildren={false}>{copy.retry}</UiNode></UiNode>}
+  <UiNode as="div" className="lab-queue-workbench" translateChildren={false}><LabManagerPanel queuePage targetId="lab-queue-records" counts={homeCounts} queue={leftQueue} role={role} onQueue={next=>choose(next==='recent'?'all':next)}/>
+   <UiNode as="section" className="desktop-home-records lab-queue-records" id="lab-queue-records" aria-label={copy.queue} translateChildren={false}>
+    <UiNode as="div" className="desktop-home-panel-heading" translateChildren={false}><DentayaIcon name="case" size={18}/><UiNode as="h2">{copy.queue}</UiNode><UiNode as="span" className="desktop-home-tag">{snapshot?String(snapshot.total):'—'}</UiNode></UiNode>
+    <UiNode as="div" className="desktop-home-records-toolbar" translateChildren={false}><UiNode as="div" className="desktop-home-view-buttons" role="group" aria-label={copy.filters} translateChildren={false}>{LAB_QUEUE_FILTERS.map(kind=><UiNode as="button" key={kind} type="button" aria-pressed={shownFilter===kind} disabled={loading} onClick={()=>choose(kind)} translateChildren={false}>{copy.filterNames[kind]}{kind!=='all'&&counts&&<UiNode as="b">{counts[kind]}</UiNode>}</UiNode>)}</UiNode><UiNode as="label" className="desktop-home-record-search" translateChildren={false}><DentayaIcon name="guide" size={16}/><UiNode as="input" type="search" aria-label={copy.search} placeholder={copy.search} value={search} onChange={e=>setSearch(e.target.value)} translateChildren={false}/></UiNode></UiNode>
+    <UiNode as="div" className="desktop-home-table-scroll" translateChildren={false}><UiNode as="table" className="desktop-home-table lab-queue-table" translateChildren={false}><UiNode as="thead"><UiNode as="tr"><UiNode as="th" scope="col">{copy.case}</UiNode><UiNode as="th" scope="col">{copy.job}</UiNode><UiNode as="th" scope="col">{copy.status}</UiNode><UiNode as="th" scope="col">{copy.due}</UiNode><UiNode as="th" scope="col">{copy.action}</UiNode></UiNode></UiNode><UiNode as="tbody">{rows.map(item=>{const action=labNextAction(item),late=item.due_date&&item.due_date<localDay()&&!['delivered','cancelled'].includes(item.status);return <UiNode as="tr" key={item.id} data-lab-case={item.id}><UiNode as="td"><UiLink href={'/cases/'+encodeURIComponent(item.id)} className="lab-queue-case"><UiNode as="strong"><UserText>{item.case_number}</UserText></UiNode><UiNode as="small"><UserText>{item.patient_reference||'—'}</UserText></UiNode></UiLink></UiNode><UiNode as="td"><UserText>{item.title||item.case_type}</UserText><UiNode as="small" className="lab-queue-material"><UserText>{[item.material,item.shade,item.tooth_codes.join(', ')].filter(Boolean).join(' · ')||'—'}</UserText></UiNode></UiNode><UiNode as="td"><UiNode as="span" className="desktop-home-status">{uiText(homeStatus(item.status))}</UiNode>{['urgent','high'].includes(item.priority)&&<UiNode as="small" className="lab-queue-priority">{uiText(item.priority==='urgent'?'Acil':'Yüksek öncelik')}</UiNode>}</UiNode><UiNode as="td"><UiNode as="span" className={late?'desktop-home-danger':undefined}>{dueLabel(item.due_date,intlLocale())}</UiNode></UiNode><UiNode as="td"><UiLink href={action.href} className="desktop-home-button lab-queue-action"><DentayaIcon name={action.icon} size={16}/>{uiText(action.label)}</UiLink></UiNode></UiNode>;})}</UiNode></UiNode></UiNode>
+    {!rows.length&&<UiNode as="div" className="desktop-home-empty" role="status" translateChildren={false}><DentayaIcon name="lab" size={32}/><UiNode as="strong">{!snapshot?loading?copy.loading:error?copy.loadFail:copy.empty:search?copy.noMatch:copy.empty}</UiNode></UiNode>}
+    <UiNode as="div" className="lab-queue-pagination" translateChildren={false}><UiNode as="span">{copy.page} {shownPage+1} / {pages} · {copy.total}: {snapshot?.total??'—'}</UiNode><UiNode as="button" type="button" className="desktop-home-button" disabled={loading||!snapshot||shownPage===0} onClick={()=>navigateQueue(shownFilter,shownPage-1)} translateChildren={false}>{copy.previous}</UiNode><UiNode as="button" type="button" className="desktop-home-button" disabled={loading||!snapshot||shownPage+1>=pages} onClick={()=>navigateQueue(shownFilter,shownPage+1)} translateChildren={false}>{copy.next}</UiNode></UiNode>
+    <UiNode as="div" className="desktop-home-records-note lab-queue-footer" translateChildren={false}><DentayaIcon name="guide" size={15}/><UiNode as="span">{copy.preview}{snapshot&&' '+copy.updated+': '+new Date(snapshot.updatedAt).toLocaleTimeString(intlLocale(),{hour:'2-digit',minute:'2-digit'})}</UiNode></UiNode>
+   </UiNode>
+  </UiNode>
+ </UiNode>;
 }
-function Stat({ label, value, detail }: {
-    label: string;
-    value: number;
-    detail: string;
-}) {
-    const { t: uiText } = useTranslation();
-    return (<UiNode as="article" style={ui.stat}>
-      <UiNode as="span">{uiText(label)}</UiNode>
-      <UiNode as="strong">{value}</UiNode>
-      <UiNode as="small">{detail}</UiNode>
-    </UiNode>);
-}
-function SummaryCard({ title, value, detail, tone, }: {
-    title: string;
-    value: number;
-    detail: string;
-    tone: "accent" | "warning" | "success";
-}) {
-    const toneColor = tone === "warning" ? "#e8bd73" : tone === "success" ? "#63cc98" : dy.accent;
-    return (<UiNode as="article" className="lab-card" style={{
-            ...ui.summaryCard,
-            borderColor: tone === "warning" ? "rgba(232,189,115,.32)" : tone === "success" ? "rgba(99,204,152,.28)" : dy.border,
-        }}>
-      <UiNode as="span" style={{ ...ui.moduleEye, color: toneColor }}>{title}</UiNode>
-      <UiNode as="strong" style={{ fontSize: 34, lineHeight: 1 }}>{value}</UiNode>
-      <UiNode as="p" style={ui.summaryText}>{detail}</UiNode>
-    </UiNode>);
-}
-function OverviewCard({ title, detail, hint }: {
-    title: string;
-    detail: string;
-    hint: string;
-}) {
-    return (<UiNode as="article" className="lab-card" style={ui.overviewCard}>
-      <UiNode as="strong" style={{ fontSize: 18 }}>{title}</UiNode>
-      <UiNode as="p" style={ui.overviewText}>{detail}</UiNode>
-      <UiNode as="span" style={ui.overviewHint}>{hint}</UiNode>
-    </UiNode>);
-}
-const ui: Record<string, CSSProperties> = {
-    page: {
-        minHeight: "100vh",
-        padding: "22px clamp(18px,4vw,52px) 60px",
-        background: dy.bg,
-        color: dy.text,
-        fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-        fontSize: 15,
-    },
-    center: {
-        minHeight: "100vh",
-        display: "grid",
-        placeItems: "center",
-        padding: 24,
-        background: dy.bg,
-        color: dy.muted,
-    },
-    header: {
-        maxWidth: 1460,
-        margin: "0 auto 20px",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "flex-end",
-        gap: 24,
-    },
-    back: {
-        color: dy.muted,
-        textDecoration: "none",
-        fontSize: 13,
-    },
-    eyebrow: {
-        margin: "13px 0 7px",
-        color: dy.accent,
-        fontSize: 13,
-        fontWeight: 900,
-        letterSpacing: ".16em",
-    },
-    title: {
-        margin: "0 0 9px",
-        fontSize: "clamp(26px,3vw,34px)",
-        letterSpacing: "-.05em",
-    },
-    sub: {
-        maxWidth: 800,
-        margin: 0,
-        color: dy.muted,
-        lineHeight: 1.65,
-        fontSize: 14,
-    },
-    actions: {
-        display: "flex",
-        gap: 8,
-        flexWrap: "wrap",
-        marginTop: 16,
-    },
-    primary: {
-        minHeight: 42,
-        display: "inline-grid",
-        placeItems: "center",
-        padding: "0 14px",
-        borderRadius: 12,
-        background: dy.accent,
-        color: dy.accentContrast,
-        textDecoration: "none",
-        fontWeight: 900,
-        fontSize: 13,
-    },
-    secondary: {
-        minHeight: 42,
-        display: "inline-grid",
-        placeItems: "center",
-        padding: "0 14px",
-        borderRadius: 12,
-        border: `1px solid ${dy.border}`,
-        background: dy.surface,
-        color: dy.text,
-        textDecoration: "none",
-        fontWeight: 800,
-        fontSize: 13,
-    },
-    primaryWide: {
-        minHeight: 44,
-        display: "grid",
-        placeItems: "center",
-        borderRadius: 14,
-        background: dy.accent,
-        color: dy.accentContrast,
-        textDecoration: "none",
-        fontWeight: 900,
-    },
-    notice: {
-        maxWidth: 1460,
-        margin: "0 auto 12px",
-        padding: "11px 13px",
-        borderRadius: 12,
-        border: `1px solid ${dy.border}`,
-        background: dy.surface2,
-        color: dy.muted,
-        fontSize: 13,
-    },
-    stats: {
-        maxWidth: 1460,
-        margin: "0 auto 12px",
-        display: "grid",
-        gridTemplateColumns: "repeat(4,1fr)",
-        gap: 9,
-    },
-    stat: {
-        minHeight: 108,
-        padding: 16,
-        display: "grid",
-        alignContent: "space-between",
-        gap: 5,
-        borderRadius: 16,
-        border: `1px solid ${dy.border}`,
-        background: dy.surface,
-    },
-    hero: {
-        maxWidth: 1460,
-        margin: "0 auto 12px",
-        padding: 22,
-        display: "grid",
-        gridTemplateColumns: "minmax(0,1.1fr) minmax(320px,.9fr)",
-        gap: 18,
-        borderRadius: 10,
-        border: `1px solid ${dy.border}`,
-        background: dy.surface,
-    },
-    heroTitle: {
-        margin: "4px 0 10px",
-        fontSize: "clamp(22px,2.4vw,28px)",
-        letterSpacing: "-.04em",
-    },
-    summaryGrid: {
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))",
-        gap: 9,
-    },
-    summaryCard: {
-        minHeight: 148,
-        padding: 14,
-        display: "grid",
-        gap: 8,
-        borderRadius: 8,
-        border: `1px solid ${dy.border}`,
-        background: dy.surface,
-        color: dy.text,
-        textDecoration: "none",
-    },
-    summaryText: {
-        margin: 0,
-        color: dy.muted,
-        lineHeight: 1.55,
-        fontSize: 13,
-    },
-    ayaPanel: {
-        padding: 16,
-        display: "grid",
-        gap: 14,
-        alignContent: "start",
-        borderRadius: 20,
-        border: `1px solid ${dy.border}`,
-        background: "rgba(7,17,24,.56)",
-        backdropFilter: "blur(12px)",
-    },
-    ayaTitle: {
-        margin: "0 0 6px",
-        fontSize: 26,
-    },
-    ayaText: {
-        margin: 0,
-        color: dy.muted,
-        lineHeight: 1.55,
-        fontSize: 14,
-    },
-    section: {
-        maxWidth: 1460,
-        margin: "0 auto 12px",
-        padding: "12px 0 0",
-    },
-    sectionHead: {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "flex-end",
-        gap: 14,
-        marginBottom: 10,
-    },
-    sectionTitle: {
-        margin: 0,
-        fontSize: 28,
-    },
-    smallMuted: {
-        color: dy.muted,
-        fontSize: 13,
-    },
-    inlineLink: {
-        color: dy.accent,
-        fontWeight: 800,
-        textDecoration: "none",
-    },
-    moduleGrid: {
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
-        gap: 10,
-    },
-    module: {
-        minHeight: 180,
-        padding: 16,
-        display: "flex",
-        flexDirection: "column",
-        borderRadius: 8,
-        border: `1px solid ${dy.border}`,
-        background: dy.surface,
-        color: dy.text,
-        textDecoration: "none",
-    },
-    moduleEye: {
-        color: dy.accent,
-        fontSize: 12,
-        fontWeight: 900,
-        letterSpacing: ".16em",
-        textTransform: "uppercase",
-    },
-    moduleTitle: {
-        marginTop: 16,
-        fontSize: 20,
-    },
-    moduleText: {
-        margin: "8px 0 0",
-        color: dy.muted,
-        fontSize: 14,
-        lineHeight: 1.6,
-    },
-    arrow: {
-        marginTop: "auto",
-        color: dy.accent,
-        fontWeight: 850,
-    },
-    overviewGrid: {
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))",
-        gap: 10,
-    },
-    overviewCard: {
-        minHeight: 164,
-        padding: 16,
-        display: "grid",
-        gap: 10,
-        borderRadius: 8,
-        border: `1px solid ${dy.border}`,
-        background: dy.surface,
-    },
-    overviewText: {
-        margin: 0,
-        color: dy.text,
-        fontSize: 15,
-        lineHeight: 1.6,
-    },
-    overviewHint: {
-        color: dy.muted,
-        fontSize: 13,
-        lineHeight: 1.55,
-    },
-};

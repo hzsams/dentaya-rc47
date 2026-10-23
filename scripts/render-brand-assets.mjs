@@ -8,6 +8,9 @@ const require=createRequire(import.meta.url);
 const sharp=require(process.env.DENTAYA_SHARP_MODULE || 'sharp');
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const catalog=JSON.parse(await fs.readFile(path.join(root,'electron/brand-catalog.json'),'utf8'));
+const fromArg=process.argv.find(arg=>arg.startsWith('--from-id='));
+const fromId=fromArg?Number(fromArg.slice('--from-id='.length)):1;
+if(!Number.isInteger(fromId)||fromId<1||fromId>catalog.logos.length)throw Error('--from-id must refer to a catalogue ID');
 const logos=path.join(root,'public/logos');
 const icoDirectory=path.join(root,'electron/logos');
 await fs.mkdir(icoDirectory,{recursive:true});
@@ -25,7 +28,8 @@ function ico(frames) {
   }
   return Buffer.concat([directory,...frames]);
 }
-for(const {file} of catalog.logos) {
+for(const {id,file} of catalog.logos) {
+  if(Number(id)<fromId)continue;
   const source=await fs.readFile(path.join(logos,`${file}_icon.svg`));
   const png=await sharp(source,{density:384}).resize(512,512).png({compressionLevel:9}).toBuffer();
   await fs.writeFile(path.join(logos,`${file}_icon.png`),png);
@@ -33,8 +37,10 @@ for(const {file} of catalog.logos) {
   for(const size of sizes)frames.push(await sharp(source,{density:384}).resize(size,size).png({compressionLevel:9}).toBuffer());
   await fs.writeFile(path.join(icoDirectory,`${file}_icon.ico`),ico(frames));
 }
-for(const size of [192,512])await sharp(path.join(root,'public/icon.svg'),{density:384}).resize(size,size).png({compressionLevel:9}).toFile(path.join(root,`public/icon-${size}.png`));
-await fs.copyFile(path.join(icoDirectory,`${catalog.logos[0].file}_icon.ico`),path.join(root,'electron/dentaya.ico'));
+if(fromId===1){
+  for(const size of [192,512])await sharp(path.join(root,'public/icon.svg'),{density:384}).resize(size,size).png({compressionLevel:9}).toFile(path.join(root,`public/icon-${size}.png`));
+  await fs.copyFile(path.join(icoDirectory,`${catalog.logos[0].file}_icon.ico`),path.join(root,'electron/dentaya.ico'));
+}
 const board=path.join(root,'public/brand/DentAYA_Premium_Logo_Koleksiyonu');
 await sharp(board+'.svg',{density:72}).png({compressionLevel:9}).toFile(board+'.png');
 await sharp(path.join(root,'public/brand/DentAYA_Premium_Atelier.svg')).webp({quality:90}).toFile(path.join(root,'public/brand/DentAYA_Premium_Atelier.webp'));

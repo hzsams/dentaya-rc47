@@ -30,6 +30,7 @@ export const DENTAYA_CAD_TOOL_MATRIX: CadToolMatrixItem[] = [
   t('inspection-faceted', 'İnceleme', 'Yüzey', 'Düz Yüzey Gölgeleme', 'Aktif restorasyonda üçgen yüzey gölgelemesini açar.', 'live', 'inspection:faceted'),
   t('inspection-interior', 'İnceleme', 'Yüzey', 'İç Yüzey İncelemesi', 'Aktif restorasyon yüzeylerini iki taraftan görünür kılar.', 'live', 'inspection:interior'),
   t('inspection-section', 'İnceleme', 'Kesit', 'Kesit Yönü ve Merkezi', 'X/Y/Z veya giriş ekseninde kesit, taraf çevirme ve restorasyon merkezine alma kontrollerini açar.', 'live', 'inspection:section'),
+  t('inspection-section-contours','İnceleme','Kesit','Kesit Çizgileri ve Ölçümleri','Görünür restorasyon ve ham taramanın gerçek düzlem kesişimini çizer; kapalı konturlarda alanı hesaplar.','live','inspection:section-contours'),
   t('inspection-focus', 'İnceleme', 'Kamera', 'Aktif Restorasyona Odaklan', 'Kamerayı aktif restorasyonun gerçek dünya sınırlarına odaklar.', 'live', 'inspection:focus'),
   t('inspection-turn-left', 'İnceleme', 'Kamera', 'Görünümü 90° Sola Çevir', 'Kamerayı mevcut hedef çevresinde 90 derece döndürür.', 'live', 'inspection:rotate-left'),
   t('inspection-turn-right', 'İnceleme', 'Kamera', 'Görünümü 90° Sağa Çevir', 'Kamerayı mevcut hedef çevresinde ters yönde 90 derece döndürür.', 'live', 'inspection:rotate-right'),
@@ -291,7 +292,7 @@ export const DENTAYA_CAD_TOOL_MATRIX: CadToolMatrixItem[] = [
   t("multilayer-nesting", "Üretim", "Manufacturing", "Multi-layer Nesting", "Katmanlı materyalde renk/pozisyon ilişkisi.", "roadmap"),
   t("save-scene", "Dosya", "Save / Export", "Save Scene", "DentAYA CAD proje durumunu kaydet.", "live", "command:save"),
   t("save-version", "Dosya", "Save / Export", "Save Version", "Yeni tasarım versiyonu oluşturma.", "live", "stage:review"),
-  t("export-stl", "Dosya", "Save / Export", "STL Export", "Aktif restorasyon mesh'ini STL olarak oluştur.", "live", "stage:review"),
+  t("export-stl", "Dosya", "Save / Export", "Aktif Ünite STL İndir", "Güncel koleye yerleşmiş aktif restorasyonu taramanın koordinatlarında yerel çalışma STL’si olarak indir.", "live", "command:export-stl"),
   t("case-share", "Dosya", "Collaboration", "Case Share", "Klinik/lab tasarım review ve vaka paylaşımı.", "live", "stage:review"),
 
   // View / utility tools from the design environment
@@ -490,6 +491,7 @@ export function cadAvailabilityLabel(value: CadToolAvailability) {
 
 /** New expert commands use English outside Turkish until translated catalog packs exist. */
 export function cadInspectionCatalogCopy(item:CadToolMatrixItem,locale:string):CadToolMatrixItem{
+  if(locale!=='tr'&&item.id==='export-stl')return {...item,label:'Download active unit STL',description:'Download the registered active restoration as a local working STL in scan coordinates.'};
   if(locale==='tr'||!item.activation?.startsWith('inspection:'))return item;
   const copy:Record<string,[string,string]>={
     'expert-inspection':['Expert inspection window','Open separate light, surface, section and camera controls.'],
@@ -500,6 +502,7 @@ export function cadInspectionCatalogCopy(item:CadToolMatrixItem,locale:string):C
     'inspection-faceted':['Faceted shading','Use triangle face shading on the active restoration.'],
     'inspection-interior':['Interior inspection','Show both sides of the active restoration surface.'],
     'inspection-section':['Section direction and center','Open X/Y/Z or insertion-axis section controls, inversion and restoration centering.'],
+    'inspection-section-contours':['Section contours and measurements','Draw actual plane intersections of the visible restoration and scan; report area only for complete closed contours.'],
     'inspection-focus':['Focus active restoration','Frame the actual world bounds of the active restoration.'],
     'inspection-turn-left':['Turn view 90° left','Orbit the camera a quarter turn around the current target.'],
     'inspection-turn-right':['Turn view 90° right','Orbit the camera a quarter turn in the opposite direction.']

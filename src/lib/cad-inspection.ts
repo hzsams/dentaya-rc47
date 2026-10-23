@@ -10,6 +10,7 @@ export type CadInspectionSettings = {
     inspection_normals: boolean;
     inspection_faceted: boolean;
     inspection_interior: boolean;
+    inspection_section_contours: boolean;
     inspection_exposure: number;
 };
 
@@ -22,6 +23,7 @@ export const CAD_INSPECTION_DEFAULTS: Readonly<CadInspectionSettings> = Object.f
     inspection_normals: false,
     inspection_faceted: false,
     inspection_interior: false,
+    inspection_section_contours: false,
     inspection_exposure: 1.08,
 });
 
@@ -42,6 +44,7 @@ export function normalizeCadInspection(value?: Partial<CadInspectionSettings> | 
         inspection_normals: input.inspection_normals === true,
         inspection_faceted: input.inspection_faceted === true,
         inspection_interior: input.inspection_interior === true,
+        inspection_section_contours: input.inspection_section_contours === true,
         inspection_exposure: boundedNumber(input.inspection_exposure, 0.3, 2, CAD_INSPECTION_DEFAULTS.inspection_exposure),
     };
 }

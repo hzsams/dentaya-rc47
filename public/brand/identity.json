@@ -1,5 +1,5 @@
 {
-  "version": "premium-3",
+  "version": "premium-4",
   "wordmark": "DENTAYA",
   "colors": {
     "ink": "#17343A",
@@ -637,6 +637,126 @@
       "id": "100",
       "file": "100_studio_jewel",
       "style": "Studio Jewel",
+      "material": "champagne"
+    },
+    {
+      "id": "101",
+      "file": "101_cervical_vault",
+      "style": "Cervical Vault",
+      "material": "emerald"
+    },
+    {
+      "id": "102",
+      "file": "102_occlusal_dial",
+      "style": "Occlusal Dial",
+      "material": "titanium"
+    },
+    {
+      "id": "103",
+      "file": "103_milling_spire",
+      "style": "Milling Spire",
+      "material": "champagne"
+    },
+    {
+      "id": "104",
+      "file": "104_margin_cameo",
+      "style": "Margin Cameo",
+      "material": "jade"
+    },
+    {
+      "id": "105",
+      "file": "105_zircon_sail",
+      "style": "Zircon Sail",
+      "material": "titanium"
+    },
+    {
+      "id": "106",
+      "file": "106_bridge_pavilion",
+      "style": "Bridge Pavilion",
+      "material": "emerald"
+    },
+    {
+      "id": "107",
+      "file": "107_section_ribbon",
+      "style": "Section Ribbon",
+      "material": "jade"
+    },
+    {
+      "id": "108",
+      "file": "108_implant_lantern",
+      "style": "Implant Lantern",
+      "material": "champagne"
+    },
+    {
+      "id": "109",
+      "file": "109_sculpt_crest",
+      "style": "Sculpt Crest",
+      "material": "emerald"
+    },
+    {
+      "id": "110",
+      "file": "110_articulator_gate",
+      "style": "Articulator Gate",
+      "material": "titanium"
+    },
+    {
+      "id": "111",
+      "file": "111_scan_iris",
+      "style": "Scan Iris",
+      "material": "jade"
+    },
+    {
+      "id": "112",
+      "file": "112_occlusal_tide",
+      "style": "Occlusal Tide",
+      "material": "champagne"
+    },
+    {
+      "id": "113",
+      "file": "113_contact_scale",
+      "style": "Contact Balance",
+      "material": "emerald"
+    },
+    {
+      "id": "114",
+      "file": "114_crown_folio",
+      "style": "Crown Folio",
+      "material": "titanium"
+    },
+    {
+      "id": "115",
+      "file": "115_arch_portal",
+      "style": "Arch Portal",
+      "material": "jade"
+    },
+    {
+      "id": "116",
+      "file": "116_surface_weave",
+      "style": "Surface Weave",
+      "material": "champagne"
+    },
+    {
+      "id": "117",
+      "file": "117_cervical_pearl",
+      "style": "Cervical Pearl",
+      "material": "jade"
+    },
+    {
+      "id": "118",
+      "file": "118_inlay_fold",
+      "style": "Inlay Fold",
+      "material": "titanium"
+    },
+    {
+      "id": "119",
+      "file": "119_cusp_satellite",
+      "style": "Cusp Satellite",
+      "material": "emerald"
+    },
+    {
+      "id": "120",
+      "file": "120_atelier_keystone",
+      "style": "Atelier Keystone",
       "material": "champagne"
     }
   ]

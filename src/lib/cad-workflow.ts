@@ -91,6 +91,7 @@ export function cadActivationAllowed(activation: string | undefined, stage: CadW
     if (activation.startsWith('stage:')) return mode === 'expert';
     if (activation === 'command:job-setup' || activation === 'command:save' || activation === 'command:undo' || activation === 'command:redo' || activation === 'command:fit') return true;
     if (mode === 'expert') return bridge || activation !== 'command:clear-connectors';
+    if(activation==='command:export-stl')return policy.tabs.includes('review');
     if (activation.startsWith('setting:')) return policy.tabs.includes('freeform');
     if (['command:project-margin', 'command:margin-up', 'command:margin-down', 'command:clear-margin', 'command:smooth-margin'].includes(activation)) return policy.tabs.includes('margin');
     if (['command:internal-fit', 'command:set-axis', 'command:blockout', 'command:crown-shell', 'command:repair-shell'].includes(activation)) return policy.tabs.includes('fit');

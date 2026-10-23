@@ -168,6 +168,11 @@ try {
   assert.ok((await state()).normals<=240,'Normals are bounded to 240 actual samples');
   await tab('section').click();
   await control('section-center').click();
+  await control('section-contours').check();
+  await waitState(()=>{const c=JSON.parse(document.querySelector('[data-cad-inspection-state]').dataset.cadInspectionState).sectionContours;return c?.restoration?.segmentCount>0&&c.restoration.areaMm2>0;});
+  assert.match(await panel.locator('[data-cad-section-readout]').textContent(),/mm²/,'Actual closed section measurements reach the visible inspection panel');
+  assert.equal((await state()).geometry.hash,baseline.geometry.hash,'Section computation cannot modify the crown');
+  if(screenshotDir)await page.screenshot({path:path.join(screenshotDir,'CAD_Section_Measurements.png'),animations:'disabled',style:'nextjs-portal{visibility:hidden!important}'});
   for(const [axis,expected] of [['x',[1,0,0]],['y',[0,1,0]],['z',[0,0,1]],['insertion',[0,0,1]]]){
     await control('section-axis').selectOption(axis);
     await page.waitForFunction(expected=>{const s=JSON.parse(document.querySelector('[data-cad-inspection-state]').dataset.cadInspectionState);return s.section&&s.section.normal.every((v,i)=>Math.abs(v-expected[i])<1e-8);},expected);
@@ -179,6 +184,7 @@ try {
   const beforeInvert=(await state()).section;await control('section-invert').check();
   await page.waitForFunction(before=>{const p=JSON.parse(document.querySelector('[data-cad-inspection-state]').dataset.cadInspectionState).section;return Math.abs(p.constant+before.constant)<1e-6&&p.normal.every((v,i)=>Math.abs(v+before.normal[i])<1e-6);},beforeInvert);
   await control('section').uncheck();
+  await waitState(()=>JSON.parse(document.querySelector('[data-cad-inspection-state]').dataset.cadInspectionState).sectionContours===null);
   await tab('camera').click();await control('focus').click();
   await waitState(()=>{const s=JSON.parse(document.querySelector('[data-cad-inspection-state]').dataset.cadInspectionState);return s.camera.target.every((v,i)=>Math.abs(v-s.restorationCenter[i])<1e-6);});
   const beforeTurn=(await state()).camera;

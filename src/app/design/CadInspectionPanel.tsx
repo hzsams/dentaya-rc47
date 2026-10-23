@@ -3,13 +3,16 @@ import {useState} from 'react';
 import UiNode from '@/lib/i18n/UiNode';
 import {useTranslation} from '@/lib/i18n';
 import {cadInspectionText} from '@/lib/i18n/cad-inspection';
+import {cadSectionText} from '@/lib/i18n/cad-section';
+import type {CadSectionInspection} from '@/lib/cad-section-engine';
 import {CAD_INSPECTION_DEFAULTS,normalizeCadInspection} from '@/lib/cad-inspection';
 import type {CadSettings,CadViewMode} from './DesignViewport';
 import CadIcon from './CadIcon';
 
 type Tab='light'|'surface'|'section'|'camera';
-export default function CadInspectionPanel({settings,patch,viewMode,onView,onClose,onFocus,onRotate,onFit,ready,initialTab='light'}:{settings:CadSettings;patch:(value:Partial<CadSettings>)=>void;viewMode:CadViewMode;onView:(value:CadViewMode)=>void;onClose:()=>void;onFocus:()=>void;onRotate:(value:'left'|'right')=>void;onFit:()=>void;ready:boolean;initialTab?:Tab}){
- const {locale}=useTranslation(),copy=cadInspectionText(locale);
+export default function CadInspectionPanel({settings,patch,viewMode,onView,onClose,onFocus,onRotate,onFit,ready,sectionReport,initialTab='light'}:{settings:CadSettings;patch:(value:Partial<CadSettings>)=>void;viewMode:CadViewMode;onView:(value:CadViewMode)=>void;onClose:()=>void;onFocus:()=>void;onRotate:(value:'left'|'right')=>void;onFit:()=>void;ready:boolean;sectionReport?:CadSectionInspection|null;initialTab?:Tab}){
+ const {locale,intlLocale}=useTranslation(),copy=cadInspectionText(locale),sectionCopy=cadSectionText(locale);
+ const number=(value:number)=>value.toLocaleString(intlLocale(),{maximumFractionDigits:2});
  const [tab,setTab]=useState<Tab>(initialTab),config=normalizeCadInspection(settings);
  const toggle=(id:string,label:string,checked:boolean,onChange:(value:boolean)=>void)=><UiNode as="label" className="cad-inspection-toggle"><UiNode as="span">{label}</UiNode><UiNode as="input" type="checkbox" data-cad-inspection={id} checked={checked} onChange={event=>onChange(event.target.checked)}/></UiNode>;
  const slider=(id:string,label:string,value:number,min:number,max:number,step:number,onChange:(value:number)=>void,unit='')=><UiNode as="label" className="cad-inspection-range"><UiNode as="span">{label}<UiNode as="output">{Number(value.toFixed(2))}{unit}</UiNode></UiNode><UiNode as="input" type="range" data-cad-inspection={id} min={min} max={max} step={step} value={value} onChange={event=>onChange(Number(event.target.value))}/></UiNode>;
@@ -36,11 +39,16 @@ export default function CadInspectionPanel({settings,patch,viewMode,onView,onClo
    </>}
    {tab==='section'&&<>
     {toggle('section',copy.cut,viewMode==='section',value=>onView(value?'section':'natural'))}
+    {toggle('section-contours',sectionCopy.contours,config.inspection_section_contours,value=>{patch({inspection_section_contours:value});if(value)onView('section');})}
     <UiNode as="label" className="cad-inspection-select"><UiNode as="span">{copy.axis}</UiNode><UiNode as="select" data-cad-inspection="section-axis" value={settings.section_axis??'insertion'} onChange={event=>{patch({section_axis:event.target.value as CadSettings['section_axis']});onView('section');}}>{(['x','y','z','insertion'] as const).map(axis=><UiNode as="option" key={axis} value={axis}>{axis==='insertion'?copy.insertion:axis.toUpperCase()}</UiNode>)}</UiNode></UiNode>
     {toggle('section-invert',copy.invert,settings.section_inverted??false,value=>patch({section_inverted:value}))}
     {slider('section-offset',copy.offset,settings.section_offset_mm,-60,60,.25,value=>{patch({section_offset_mm:value});onView('section');},' mm')}
     <UiNode as="div" className="cad-inspection-actions"><UiNode as="button" type="button" data-cad-inspection="section-center" onClick={()=>{patch({section_centered:true,section_offset_mm:0});onView('section');}}>{copy.center}</UiNode><UiNode as="button" type="button" data-cad-inspection="section-origin" onClick={()=>{patch({section_centered:false,section_offset_mm:0});onView('section');}}>{copy.origin}</UiNode></UiNode>
     <UiNode as="p">{settings.section_centered?copy.centered:copy.world}</UiNode>
+    {viewMode==='section'&&config.inspection_section_contours&&<UiNode as="div" className="cad-section-readout" data-cad-section-readout>
+     {(['restoration','source'] as const).map(role=>{const report=sectionReport?.[role];return <UiNode as="section" key={role} data-section-role={role}><UiNode as="strong">{sectionCopy[role]}</UiNode>{report?.segmentCount?<><UiNode as="dl"><UiNode as="div"><UiNode as="dt">{sectionCopy.length}</UiNode><UiNode as="dd">{number(report.perimeterMm)} mm</UiNode></UiNode><UiNode as="div"><UiNode as="dt">{sectionCopy.area}</UiNode><UiNode as="dd">{report.areaMm2===null?'—':number(report.areaMm2)+' mm²'}</UiNode></UiNode><UiNode as="div"><UiNode as="dt">{sectionCopy.loops}</UiNode><UiNode as="dd">{report.closedLoops}</UiNode></UiNode></UiNode>{report.warnings.length>0&&<UiNode as="p">{sectionCopy.incomplete}</UiNode>}</>:<UiNode as="p">{sectionCopy.unavailable}</UiNode>}</UiNode>;})}
+     <UiNode as="p">{sectionCopy.help}</UiNode>
+    </UiNode>}
    </>}
    {tab==='camera'&&<><UiNode as="div" className="cad-inspection-actions"><UiNode as="button" type="button" data-cad-inspection="focus" onClick={onFocus}><CadIcon name="isolate" size={18}/>{copy.focus}</UiNode><UiNode as="button" type="button" data-cad-inspection="rotate-left" onClick={()=>onRotate('left')}><CadIcon name="undo" size={18}/>{copy.left}</UiNode><UiNode as="button" type="button" data-cad-inspection="rotate-right" onClick={()=>onRotate('right')}><CadIcon name="redo" size={18}/>{copy.right}</UiNode><UiNode as="button" type="button" onClick={onFit}><CadIcon name="fit" size={18}/>{copy.fit}</UiNode></UiNode><UiNode as="p">{copy.cameraHelp}</UiNode></>}
   </UiNode>
