@@ -86,6 +86,13 @@ export default function WorkspaceChrome({ children }: {
         moduleMenu.current?.showModal();
         moduleMenu.current?.querySelector<HTMLInputElement>('input[type="search"]')?.focus();
     }
+    function restoreModuleMenuFocus(){
+        const trigger=moduleMenuTrigger.current??menuButton.current;
+        const active=document.activeElement;
+        // Native close restores focus before its queued close event; preserve any newer focus choice.
+        const needsFocus=!active||!active.isConnected||active===document.body||active===document.documentElement||moduleMenu.current?.contains(active);
+        if(needsFocus&&!document.querySelector('dialog[open]')&&trigger?.isConnected)trigger.focus();
+    }
     useEffect(()=>{
         const keyboard=(event:KeyboardEvent)=>{if(isDesktop&&event.altKey&&!event.ctrlKey&&!event.metaKey&&event.key.toLowerCase()==='m'){event.preventDefault();openModuleMenu();}};
         window.addEventListener('keydown',keyboard);window.addEventListener('dentaya:open-modules',openModuleMenu);return()=>{window.removeEventListener('keydown',keyboard);window.removeEventListener('dentaya:open-modules',openModuleMenu);};
@@ -164,7 +171,7 @@ export default function WorkspaceChrome({ children }: {
         <UiNode as="span" className="desktop-network-status"><UiNode as="i" data-online={online} aria-hidden="true"/>{online?desktopCopy.networkAvailable:desktopCopy.offline}</UiNode>
         <UiNode as="code">{DENTAYA_RELEASE.version.replace('1.0.0-rc.','RC')}</UiNode>
       </UiNode>}
-      <UiNode as="dialog" ref={moduleMenu} className="desktop-module-menu" aria-label={desktopCopy.modules} onKeyDown={event=>{if(event.key==='Escape'){event.preventDefault();moduleMenu.current?.close();}}} onClick={event=>{if(event.target===moduleMenu.current)moduleMenu.current?.close();}} onClose={()=>{const trigger=moduleMenuTrigger.current??menuButton.current;if(trigger?.isConnected)trigger.focus();}}>
+      <UiNode as="dialog" ref={moduleMenu} className="desktop-module-menu" aria-label={desktopCopy.modules} onKeyDown={event=>{if(event.key==='Escape'){event.preventDefault();moduleMenu.current?.close();}}} onClick={event=>{if(event.target===moduleMenu.current)moduleMenu.current?.close();}} onClose={restoreModuleMenuFocus}>
         <UiNode as="header" translateChildren={false}><UiNode as="strong">{desktopCopy.modules}</UiNode><UiNode as="button" type="button" aria-label={desktopCopy.closeMenu} onClick={()=>moduleMenu.current?.close()}>✕</UiNode></UiNode>
         <UiNode as="div" onClick={event=>{if((event.target as HTMLElement).closest('a'))moduleMenu.current?.close();}}><ModuleNavigation pathname={pathname}/></UiNode>
       </UiNode>

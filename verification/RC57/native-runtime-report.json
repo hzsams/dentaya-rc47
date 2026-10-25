@@ -1,0 +1,98 @@
+{
+  "checkedAtUTC": "2026-10-24T18:10:56.852357+00:00",
+  "sourceHead": "2d70381f79b76282da499f27200a932985497835",
+  "sourceRelease": "RC56",
+  "workScope": "RC57 preparation, current native runtime/model feasibility only",
+  "sourceEdits": false,
+  "serversStarted": false,
+  "nativeInference": false,
+  "mock": false,
+  "platform": "linux x64",
+  "checks": {
+    "nativeVersion": {
+      "pass": true,
+      "command": "/workspace/dentaya-native-runtime/llama-b9380/llama-server --version",
+      "version": "9380 (d205df681)",
+      "compiler": "GNU 11.4.0 for Linux x86_64"
+    },
+    "nativeArtifactHashes": {
+      "pass": true,
+      "llama-server": "f26a542c95f00b1dbbf21074e7cf0b41c7d822a0c2cc1b47d89bca022f61491a",
+      "llama-b9380-bin-ubuntu-x64.tar.gz": "b12c76fe1c830c645b805dcd2eb67aad582da4488eb0133d55cc176be529d50d",
+      "json.hpp": "aaf127c04cb31c406e5b04a63f1ae89369fccde6d8fa7cdda1ed4f32dfc5de63",
+      "libllama-common.so": "e4aaebc8496ebebab156a772fdd7816ccefa9b50333aadc1a364517596e7d944",
+      "libllama.so": "164a7773e901be1ff0aa90f8d5e3647dd0473f8ac641e505fcb991cb0920e260"
+    },
+    "modelPresence": {
+      "available": false,
+      "searchedRoots": [
+        "/workspace",
+        "/tmp"
+      ],
+      "searchedPatterns": [
+        "*.gguf",
+        "*.gguf.part",
+        "aya-runtime-manifest.json"
+      ],
+      "matchingFiles": [],
+      "searchNote": "A traversal returned a nonzero exit status for unreadable/missing nested paths; no positive match was printed. /workspace/dentaya-native-runtime was directly listed and contains no model."
+    },
+    "ollama": {
+      "commandOnPATH": false,
+      "loopbackEndpoint": "http://127.0.0.1:11434/api/tags",
+      "httpStatus": "000",
+      "exitCode": 7,
+      "error": "Failed to connect to 127.0.0.1 port 11434: Could not connect to server"
+    }
+  },
+  "grammar": {
+    "runThisSession": true,
+    "report": "/workspace/dentaya-rc57-validation/native-grammar-report.json",
+    "log": "/workspace/dentaya-rc57-validation/native-grammar.log",
+    "passedCases": 22,
+    "pass": true,
+    "grammarOnly": true,
+    "nativeInference": false,
+    "mock": false,
+    "checkedAtUTC": "2026-10-24T18:27:55.763041+00:00",
+    "schemaSHA256": {
+      "agent-no-cad": "dbd184843506a9db85b12a6e978b32a7663f20bc311f8162666ae422b14f560d",
+      "agent-cad": "ae8e311d6998451cade3fb26960de35d22f3bc55b853a95fa7bd846a6a0d760d"
+    },
+    "sandboxAttempt": {
+      "exitCode": 1,
+      "error": "spawnSync g++ EPERM",
+      "report": "/workspace/dentaya-rc57-validation/native-grammar-sandbox-report.json",
+      "log": "/workspace/dentaya-rc57-validation/native-grammar-sandbox.log"
+    },
+    "successfulAttempt": "Same pinned native grammar command, execution escalation, no download or server."
+  },
+  "inference": {
+    "scriptRunThisSession": true,
+    "scriptExitCode": 1,
+    "report": "/workspace/dentaya-rc57-validation/native-inference-report.json",
+    "log": "/workspace/dentaya-rc57-validation/native-inference.log",
+    "checkedAtUTC": "2026-10-24T18:27:31.656733+00:00",
+    "stage": "model-validation",
+    "casesRun": 0,
+    "blocked": true,
+    "reason": "ENOENT pinned model absent; official HEAD blocked at CONNECT proxy.",
+    "semanticAcceptance": "not verified",
+    "nativeInference": false,
+    "mock": false
+  },
+  "sourceHashes": {
+    "electron/aya/managed-runtime.cjs": "42e432dd7bd9470257672dbb815197607af3626eacf3dd47eed5c2105fa60b34",
+    "electron/aya/agent.cjs": "c33611a764395e904f364f22a7d5ea89e21dd6ee4f825e90ac78b9bc23fa2a6f",
+    "src/lib/aya-setup-status.ts": "a746f82ffc794290b318fa84e328be879c21363d02a622bd33adaac9d61cf4ab",
+    "src/app/ai/AyaEngineSetup.tsx": "7ab28528b8e66ea17aaf33fd0003488c0cd7ff569a5935b9c32e7b592fa00f8e"
+  },
+  "followUpCheckedAtUTC": "2026-10-24T18:28:09.454550+00:00",
+  "sourceHashesAtGrammarFollowUp": {
+    "electron/aya/agent.cjs": "5e8fe7c12030566ed1a0787215f77661bd66361f0fb7a342e4486ec7fb54fa08",
+    "electron/aya/managed-runtime.cjs": "42e432dd7bd9470257672dbb815197607af3626eacf3dd47eed5c2105fa60b34",
+    "scripts/verify-aya-native-grammar.cjs": "10140a1f8100a49966d4d522929a53dcdc128eefdcfa76e05ed3843f1a7a6ca7",
+    "scripts/verify-aya-native.cjs": "152e7c0a6b5bad9ae945e2a92ee921dd0450ecac20bebd768c5fa409b85547b8"
+  },
+  "sourceHeadNote": "Base source HEAD recorded before root RC57 changes; follow-up grammar executed current RC57 working tree. Schema hashes match RC56 unchanged schemas."
+}

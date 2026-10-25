@@ -12,7 +12,8 @@ import { CAD_GUIDED_TASKS, cadStagePolicy, cadViewsForScene, cadTransitionBlock,
 import { LanguageSelect } from '../LanguageSettings';
 import CadAyaPanel from "./CadAyaPanel";
 import {cadStateToken,summarizeAyaReport,availableAyaTools,createAyaActionDispatcher,type AyaActionResult} from '@/lib/aya-cad-agent';
-import type {AyaCadContext,AyaCadEvidence} from '@/lib/aya-cad-assistance';
+import type {AyaCadContext} from '@/lib/aya-cad-assistance';
+import {summarizeAyaSection,type CadSectionInspectionReceipt} from '@/lib/cad-section-evidence';
 import type {AyaProposal,AyaCadTool} from '../../../electron/aya/agent.cjs';
 import {ayaAgentText} from '@/lib/i18n/aya-agent';
 import {cadInspectionText} from '@/lib/i18n/cad-inspection';
@@ -309,6 +310,7 @@ export default function DesignStudioClient() {
     const [objectPanelCollapsed, setObjectPanelCollapsed] = useState(false);
     const [sceneState,setSceneState]=useState<CadSceneState>(EMPTY_CAD_SCENE);
     const [sectionReport,setSectionReport]=useState<CadSectionInspection|null>(null);
+    const [sectionReceipt,setSectionReceipt]=useState<CadSectionInspectionReceipt|null>(null);
     const [contextPoint, setContextPoint] = useState<{
         x: number;
         y: number;
@@ -346,9 +348,12 @@ export default function DesignStudioClient() {
     const [submitting, setSubmitting] = useState(false);
     const [status, setStatus] = useState("DentAYA CAD hazırlanıyor…");
     const [blocked, setBlocked] = useState("");
-    const [kernelReport, setKernelReport] = useState<CadKernelReport | null>(null);
+    const [storedKernelReport,setStoredKernelReport]=useState<CadKernelReport|null>(null);
+    const [kernelReportToken,setKernelReportToken]=useState('');
     const [blockoutPreview, setBlockoutPreview] = useState(false);
     const [geometryRevision, setGeometryRevision] = useState(0);
+    const geometryEpochRef=useRef(0),qcBaseTokenRef=useRef('');
+    const markGeometryChanged=useCallback(()=>{const next=++geometryEpochRef.current;setGeometryRevision(next);},[]);
     const [historyState, setHistoryState] = useState<CadHistoryState>({
         undoCount: 0,
         redoCount: 0,
@@ -364,8 +369,9 @@ export default function DesignStudioClient() {
     const dirtyRevisionRef=useRef(0),cleanRevisionRef=useRef(-1);
     const [hasUnsavedChanges,setHasUnsavedChanges]=useState(true);
     const [ayaOpen,setAyaOpen]=useState(false);
-    const [ayaEvidence,setAyaEvidence]=useState<AyaCadEvidence|null>(null),[ayaEpoch,setAyaEpoch]=useState(0);
+    const [ayaEpoch,setAyaEpoch]=useState(0);
     const ayaContextRef=useRef<AyaCadContext|null>(null),ayaDispatch=useRef(createAyaActionDispatcher());
+    const setKernelReport=useCallback((report:CadKernelReport|null)=>{setStoredKernelReport(report);setKernelReportToken(report?cadStateToken([qcBaseTokenRef.current,geometryEpochRef.current]):'');},[]);
 
     const [libraryTarget,setLibraryTarget]=useState<string|null>(null);
     const [exiting,setExiting]=useState(false),[exitFailure,setExitFailure]=useState(false);
@@ -426,7 +432,7 @@ export default function DesignStudioClient() {
         setKernelReport(null);
         setPerformanceInfo(null);
         setHistoryState({ undoCount: 0, redoCount: 0, lastAction: null });
-    }, [sourceKey]);
+    }, [sourceKey,setKernelReport]);
     const activeStepId = project?.workflow_stage === "approved"
         ? "review"
         : project?.workflow_stage ?? "scan";
@@ -1385,7 +1391,7 @@ export default function DesignStudioClient() {
         setRecoveryDecisionPending(false);
         setRecoveryCandidate(null);
         setLocalRecoverySavedAt(recoveryCandidate.savedAt);
-        setGeometryRevision((value) => value + 1);
+        markGeometryChanged();
         setStatus(`Kurtarma kaydı geri yüklendi · ${formatRecoveryTime(recoveryCandidate.savedAt, intlLocale())}.`);
     }
     async function discardRecoveryDraft() {
@@ -1723,10 +1729,17 @@ export default function DesignStudioClient() {
     // Asset buffers and saved workspace geometry must never be re-hashed on every UI render.
     const ayaSettings=Object.fromEntries(Object.entries(settings).filter(([key])=>!['cad_library_assets','cad_workspace','unit_margins','source_margins','unit_workflow','unit_parameters'].includes(key)));
     const ayaDataToken=cadStateToken([ayaScope,geometryRevision,ayaSettings,marginPoints,sceneState.upperReady,sceneState.lowerReady,sceneState.antagonistReady]);
+    const ayaSectionKey=cadStateToken([ayaDataToken,viewMode]);
+    const currentSection=summarizeAyaSection(sectionReceipt,{key:ayaSectionKey,dataToken:ayaDataToken,ready:cadReady&&!contextLoading&&recoveryLookupReady&&!recoveryDecisionPending,view:viewMode});
+    const qcSettings=Object.fromEntries(Object.entries(ayaSettings).filter(([key])=>key!=='guided_task'));
+    const qcBaseToken=cadStateToken([ayaScope,qcSettings,marginPoints,sceneState.upperReady,sceneState.lowerReady,sceneState.antagonistReady]);
+    const kernelReport=kernelReportToken===cadStateToken([qcBaseToken,geometryRevision])&&cadReady&&!contextLoading&&recoveryLookupReady&&!recoveryDecisionPending?storedKernelReport:null;
+    const currentAyaReport=kernelReport?summarizeAyaReport(kernelReport,ayaDataToken,sceneState.antagonistReady,settings.minimum_thickness_mm):null;
     const inspectionContext=normalizeCadInspection(settings);
     const ayaContext:AyaCadContext={
+        sectionToken:ayaSectionKey,section:currentSection,
         inspectionFlashlight:inspectionContext.inspection_flashlight,inspectionFlashlightTarget:inspectionContext.inspection_flashlight_target,
-        scope:ayaScope,dataToken:ayaDataToken,snapshot:cadStateToken([ayaDataToken,ayaEpoch,activeStepId,panelTab,tool,viewMode,historyState,saving,exiting,submitting,contextLoading,cadReady,sceneState]),
+        scope:ayaScope,dataToken:ayaDataToken,snapshot:cadStateToken([ayaDataToken,ayaEpoch,activeStepId,panelTab,tool,viewMode,historyState,saving,exiting,submitting,contextLoading,cadReady,sceneState,currentSection,currentAyaReport]),
         unit:activeJobUnit?.tooth_code??'',restoration:activeJobUnit?cadRestorationLabel(activeJobUnit.design_type):'',
         stage:activeStepId,task:panelTab,upperReady:sceneState.upperReady,lowerReady:sceneState.lowerReady,antagonistReady:sceneState.antagonistReady,openingMm:sceneState.openingMm,
         setupComplete:jobSetup.complete,sourceReady:Boolean(activeSource),modelReady:cadReady&&!contextLoading&&recoveryLookupReady&&!recoveryDecisionPending,
@@ -1734,10 +1747,10 @@ export default function DesignStudioClient() {
         unsaved:dirtyRevisionRef.current!==cleanRevisionRef.current,saveFailed:exitFailure,isSaving:saving||exiting||submitting||contextLoading,
         material:activeJobUnit?.material??project?.material??'',tool,view:viewMode,undoCount:historyState.undoCount,redoCount:historyState.redoCount,
         measurementsMm:measurements.map(m=>m.distance).slice(-8),designSettings:{cementGapMm:settings.cement_gap_mm,minimumThicknessMm:settings.minimum_thickness_mm,brushRadiusMm:settings.brush_radius_mm},
-        report:ayaEvidence?.dataToken===ayaDataToken?ayaEvidence:null
+        report:currentAyaReport
     };
     ayaContext.availableTools=availableAyaTools(ayaContext,{inspection:workspaceMode==='expert',tools:activeTools,views:activeViews,internalFit:cadActivationAllowed('command:internal-fit',activeStepId,workspaceMode,hasBridge,panelTab),canNext:activeTaskIndex<CAD_GUIDED_TASKS.length-1&&jobSetup.complete&&Boolean(activeSource)&&marginPoints.length>=3});
-    useLayoutEffect(()=>{ayaContextRef.current=ayaContext;});
+    useLayoutEffect(()=>{ayaContextRef.current=ayaContext;qcBaseTokenRef.current=qcBaseToken;});
     async function runAyaAction(proposal:AyaProposal):Promise<AyaActionResult>{
         const current=ayaContextRef.current,copy=ayaAgentText(locale);
         if(!current)return {ok:false,message:copy.unavailable};
@@ -1745,7 +1758,7 @@ export default function DesignStudioClient() {
         const handlers:Partial<Record<AyaCadTool,()=>AyaActionResult|Promise<AyaActionResult>>>={
             setup:()=>{setSetupOpen(true);return {ok:true,message:copy.opened};},
             library:()=>{if(!activeJobUnit)return {ok:false,message:copy.unavailable};setLibraryTarget(activeJobUnit.id);return {ok:true,message:copy.opened};},
-            inspect:()=>{const report=viewportRef.current?.runKernelQc();if(!report)return {ok:false,message:copy.unavailable};setKernelReport(report);setAyaEvidence(summarizeAyaReport(report,current.dataToken!,sceneState.antagonistReady,settings.minimum_thickness_mm));return {ok:true,message:copy.qcDone};},
+            inspect:()=>{const report=viewportRef.current?.runKernelQc();if(!report)return {ok:false,message:copy.unavailable};setKernelReport(report);return {ok:true,message:copy.qcDone};},
             place:()=>{if(!viewportRef.current?.placeOnMargin())return {ok:false,message:copy.placeFailed};setSettings(s=>({...s,show_design:true,opacity:s.opacity>0?s.opacity:1,shell_preview_opacity:s.shell_preview_opacity>0?s.shell_preview_opacity:.96}));return {ok:true,message:copy.placed};},
             save:async()=>{const ok=await saveProject(true);return {ok,message:ok?copy.saved:copy.saveFailed};},
             'save-exit':async()=>{const ok=await saveAndExit();return {ok,message:ok?copy.saved:copy.saveFailed};},
@@ -1965,7 +1978,8 @@ export default function DesignStudioClient() {
                 <MiniButton label="Kesit görünümü" active={viewMode === "section"} onClick={() => setViewMode("section")}/>
               </UiNode>
 
-              {kernelReport?.crownShell && (<UiNode as="div" style={ui.kernelReport}>
+              {storedKernelReport?.crownShell&&!kernelReport&&<UiNode as="p" role="status" data-cad-qc-stale style={ui.helperText} translateChildren={false}>{cadSectionText(locale).qcStale}</UiNode>}
+              {kernelReport?.crownShell && (<UiNode as="div" data-cad-shell-report style={ui.kernelReport}>
                   <InfoRow label="Shell topoloji" value={kernelReport.crownShell.qc.watertight ? "Watertight" : "Açık / non-manifold"}/>
                   <InfoRow label="Wall tahmini" value={`${kernelReport.crownShell.minimumWallEstimateMm.toFixed(2)}–${kernelReport.crownShell.maximumWallEstimateMm.toFixed(2)} mm`}/>
                   <InfoRow label="Fit vertex" value={kernelReport.crownShell.fittedInnerVertices.toLocaleString(intlLocale())}/>
@@ -2148,7 +2162,8 @@ export default function DesignStudioClient() {
                 CAD Kernel QC çalıştır
               </UiNode>
 
-              {kernelReport && (<UiNode as="div" style={ui.kernelReport}>
+              {storedKernelReport&&!kernelReport&&<UiNode as="p" role="status" data-cad-qc-stale style={ui.helperText} translateChildren={false}>{cadSectionText(locale).qcStale}</UiNode>}
+              {kernelReport && (<UiNode as="div" data-cad-qc-report style={ui.kernelReport}>
                   <InfoRow label="Mesh" value={kernelReport.mesh
                     ? `${kernelReport.mesh.triangleCount.toLocaleString(intlLocale())} üçgen · ${kernelReport.mesh.watertight ? "watertight" : "açık/non-manifold"}`
                     : "—"}/>
@@ -2206,7 +2221,7 @@ export default function DesignStudioClient() {
         </UiNode>
         <UiNode as="footer" className="cad-panel-footer"><UiNode as="button" type="button" disabled={!project || (workspaceMode === 'wizard' ? activeTaskIndex : activeStepIndex) <= 0} onClick={() => void moveStep(-1)}><CadIcon name="back" size={16}/>Geri</UiNode><UiNode as="span">{workspaceMode === 'wizard' ? `${activeTaskIndex + 1} / ${CAD_GUIDED_TASKS.length}` : `${activeStep.index} / ${STEPS.length}`}</UiNode><UiNode as="button" type="button" className="cad-next-step" disabled={!cadReady||!project||exiting} onClick={()=>activeStepId==='review'?void saveAndExit():void moveStep(1)}>{activeStepId==='review'?'Kaydet ve çık':'Sonraki'}<CadIcon name="next" size={16}/></UiNode></UiNode>
       </CadFloatingPanel>
-          <DesignViewport ref={viewportRef} projectId={project?.id} source={displaySource} referenceSources={referenceSources} onContextMenuRequest={setContextPoint} toothCodes={selectedCase?.tooth_codes ?? []} settings={settings} tool={tool} viewMode={viewMode} marginPoints={marginPoints} measurements={measurements} onMarginPointsChange={changeMargin} onMeasurementsChange={setMeasurements} onConnectorsChange={connectors => patchSetting('connectors', connectors)} onBrushRadiusChange={value => patchSetting('brush_radius_mm', value)} onBrushStrengthChange={value => patchSetting('brush_strength_mm', value)} onGeometryCommit={() => setGeometryRevision(v => v + 1)} onReadyChange={setCadReady} onHistoryChange={setHistoryState} onPerformanceInfo={setPerformanceInfo} onSceneStateChange={setSceneState} onSectionInspectionChange={setSectionReport} onInsertionAxisChange={axis => setSettings(current => ({ ...current, insertion_axis_x: axis.x, insertion_axis_y: axis.y, insertion_axis_z: axis.z }))} onStatus={setStatus}/>
+          <DesignViewport ref={viewportRef} projectId={project?.id} source={displaySource} referenceSources={referenceSources} onContextMenuRequest={setContextPoint} toothCodes={selectedCase?.tooth_codes ?? []} settings={settings} tool={tool} viewMode={viewMode} marginPoints={marginPoints} measurements={measurements} onMarginPointsChange={changeMargin} onMeasurementsChange={setMeasurements} onConnectorsChange={connectors => patchSetting('connectors', connectors)} onBrushRadiusChange={value => patchSetting('brush_radius_mm', value)} onBrushStrengthChange={value => patchSetting('brush_strength_mm', value)} onGeometryCommit={markGeometryChanged} onReadyChange={setCadReady} onHistoryChange={setHistoryState} onPerformanceInfo={setPerformanceInfo} onSceneStateChange={setSceneState} onSectionInspectionChange={setSectionReport} sectionEvidenceKey={ayaSectionKey} onSectionEvidenceChange={setSectionReceipt} onInsertionAxisChange={axis => setSettings(current => ({ ...current, insertion_axis_x: axis.x, insertion_axis_y: axis.y, insertion_axis_z: axis.z }))} onStatus={setStatus}/>
           {workspaceMode==='expert'&&inspectionOpen&&<CadInspectionPanel sectionReport={sectionReport} key={inspectionTab} initialTab={inspectionTab} settings={settings} patch={value=>setSettings(current=>({...current,...value}))} viewMode={viewMode} onView={value=>{selectViewMode(value);}} onClose={()=>setInspectionOpen(false)} onFocus={()=>{viewportRef.current?.focusRestoration();}} onRotate={direction=>viewportRef.current?.rotateView(direction)} onFit={()=>viewportRef.current?.fit()} ready={cadReady}/>}
           {!focusMode && <UiNode as="aside" className={`cad-object-panel${objectPanelCollapsed ? ' cad-object-panel--collapsed' : ''}`} aria-label="Nesne yöneticisi">
             <UiNode as="div" className="cad-object-panel-title"><CadIcon name="layers" size={18}/>{!objectPanelCollapsed && <UiNode as="strong">Sahne</UiNode>}<CadCommand label={objectPanelCollapsed ? 'Nesne panelini aç' : 'Nesne panelini daralt'} icon={objectPanelCollapsed ? 'layers' : 'collapse'} onClick={() => setObjectPanelCollapsed(v => !v)}/></UiNode>

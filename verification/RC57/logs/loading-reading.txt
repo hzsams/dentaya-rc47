@@ -1,0 +1,26 @@
+{
+  "pass": true,
+  "productionStandalone": true,
+  "artificialDelayMs": 0,
+  "timings": [
+    {
+      "scenario": "fast-authentication",
+      "releaseToReadyMs": 64
+    },
+    {
+      "scenario": "slow-authentication",
+      "releaseToReadyMs": 30
+    }
+  ],
+  "fastRouteImmediatelyInteractive": true,
+  "slowRealRequestRemainsPending": true,
+  "realErrorsVisible": true,
+  "completionHasNoReadingOverlay": true,
+  "navigationCancellationHasNoStaleOverlay": true,
+  "gameSurvivesLoading": true,
+  "manualFactsGamesLocaleAndSelectionPreserved": true,
+  "concurrentOwnership": "unit verify-loading-play",
+  "reducedMotion": true,
+  "pageErrors": 0,
+  "backend": "intercepted synthetic HTTP fixture; no production data"
+}

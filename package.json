@@ -1,6 +1,6 @@
 {
   "name": "dentaya-production-rc",
-  "version": "1.0.0-rc.56",
+  "version": "1.0.0-rc.57",
   "private": true,
   "type": "module",
   "description": "DentAYA klinik, laboratuvar ve dental CAD çalışma platformu",
@@ -23,7 +23,7 @@
     "verify:migrations": "node --import tsx scripts/verify-migrations.ts",
     "verify:e2e": "node --import tsx scripts/verify-e2e-workflow.ts",
     "verify:operations": "node --import tsx scripts/verify-operations-center.ts",
-    "verify": "npm run verify:runtime && npm run verify:professional-shell && npm run verify:lab-workspace && npm run verify:workflow-safety && npm run verify:brand-assets && npm run verify:desktop-brand && npm run verify:release && npm run verify:windows-package && npm run verify:release-env && npm run verify:security && npm run verify:localization && npm run verify:system-translations && npm run verify:aya && npm run verify:local-aya && npm run verify:aya-agent && npm run verify:aya-cad-agent && npm run verify:aya-core && npm run verify:aya-managed && npm run verify:language-packs && npm run verify:desktop-language && npm run verify:experience && npm run verify:dental-facts && npm run verify:loading-play && npm run verify:rc44 && npm run verify:tooth-appearance && npm run verify:tooth-forms && npm run verify:cad-library && npm run verify:sculpt-integrity && npm run verify:morphology-sculpt && npm run verify:tooth-layout && npm run verify:cad-display && npm run verify:cad-view && npm run verify:cad-inspection && npm run verify:cad-section && npm run verify:performance && npm run verify:pilot && npm run lint -- --max-warnings=0 && npm run typecheck && npm run verify:cad && npm run verify:cad-setup && npm run verify:cad-daily && npm run verify:cad-restoration && npm run verify:cad-interaction && npm run verify:cad-workflow && npm run verify:cad-panel && npm run verify:cad-guided && npm run verify:migrations && npm run verify:e2e && npm run verify:community && npm run verify:operations && npm run verify:validation && npm run build",
+    "verify": "npm run verify:runtime && npm run verify:professional-shell && npm run verify:lab-workspace && npm run verify:workflow-safety && npm run verify:brand-assets && npm run verify:desktop-brand && npm run verify:release && npm run verify:windows-package && npm run verify:release-env && npm run verify:security && npm run verify:localization && npm run verify:system-translations && npm run verify:aya && npm run verify:local-aya && npm run verify:aya-agent && npm run verify:aya-cad-agent && npm run verify:aya-section && npm run verify:aya-core && npm run verify:aya-managed && npm run verify:language-packs && npm run verify:desktop-language && npm run verify:experience && npm run verify:dental-facts && npm run verify:loading-play && npm run verify:rc44 && npm run verify:tooth-appearance && npm run verify:tooth-forms && npm run verify:cad-library && npm run verify:sculpt-integrity && npm run verify:morphology-sculpt && npm run verify:tooth-layout && npm run verify:cad-display && npm run verify:cad-view && npm run verify:cad-inspection && npm run verify:cad-section && npm run verify:performance && npm run verify:pilot && npm run lint -- --max-warnings=0 && npm run typecheck && npm run verify:cad && npm run verify:cad-setup && npm run verify:cad-daily && npm run verify:cad-restoration && npm run verify:cad-interaction && npm run verify:cad-workflow && npm run verify:cad-panel && npm run verify:cad-guided && npm run verify:migrations && npm run verify:e2e && npm run verify:community && npm run verify:operations && npm run verify:validation && npm run build",
     "check": "npm run verify",
     "db:start": "supabase start",
     "db:reset": "supabase db reset",
@@ -105,7 +105,8 @@
     "verify:lab-workspace": "node scripts/verify-lab-workspace.mjs",
     "verify:lab-workspace-browser": "node scripts/verify-lab-workspace-browser.mjs",
     "verify:mini-games-browser": "node --import tsx scripts/verify-mini-games-browser.mjs",
-    "verify:cad-section": "node --import tsx scripts/verify-cad-section.ts"
+    "verify:cad-section": "node --import tsx scripts/verify-cad-section.ts",
+    "verify:aya-section": "node --import tsx scripts/verify-aya-section-context.ts && node scripts/verify-aya-section.cjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.116.0",

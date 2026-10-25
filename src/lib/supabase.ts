@@ -27,7 +27,7 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
   },
   global: {
     headers: {
-      "X-Client-Info": "dentaya-production-rc/1.0.0-rc.56",
+      "X-Client-Info": "dentaya-production-rc/1.0.0-rc.57",
     },
   },
 });

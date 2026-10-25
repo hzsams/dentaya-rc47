@@ -1,9 +1,9 @@
 {
-  "release": "1.0.0-rc.56",
+  "release": "1.0.0-rc.57",
   "status": "source-release-candidate",
-  "date": "2026-10-24",
-  "baseRelease": "1.0.0-rc.55",
-  "baseCommit": "c9957942c43690c1cb9a84e9efd6a65e9218a643",
+  "date": "2026-10-25",
+  "baseRelease": "1.0.0-rc.56",
+  "baseCommit": "2d70381f79b76282da499f27200a932985497835",
   "nativeModelInferenceVerified": false,
   "windowsInstallerProduced": false,
   "liveOrganizationBackendVerified": false,
@@ -17,8 +17,8 @@
   "miniGamesActual": 5,
   "nativeModelWeightsAvailable": false,
   "nativeModelInferenceStatus": "blocked-model-weights",
-  "verification": "RC56_KONTROL_RAPORU.md",
-  "sourceVerification": "verification/RC56/source-verification.json",
+  "verification": "RC57_KONTROL_RAPORU.md",
+  "sourceVerification": "verification/RC57/source-verification.json",
   "files": [
     {
       "path": ".env.example",
@@ -28,7 +28,7 @@
     {
       "path": ".env.release.example",
       "size": 407,
-      "sha256": "a117bb34cbf5a2a10c32f609831419141c4f698ea7306ce6578acfebf68b8b20"
+      "sha256": "42f76f7b6727eff2bd1f58d82e41d6bd898f0d053f7550befedd68f99bed35dd"
     },
     {
       "path": ".gitignore",
@@ -42,8 +42,8 @@
     },
     {
       "path": "AGENTS.md",
-      "size": 5627,
-      "sha256": "fed29481c6091c83929f1fec6000147b72893ca4d05727f37091b4044aed59f1"
+      "size": 6455,
+      "sha256": "4d756e921bb0c2db02a6fc19bd8cca6bbd1dfd1725c1bdeaab1645884dbfc198"
     },
     {
       "path": "AYA_ACTIONS_QA.md",
@@ -167,8 +167,8 @@
     },
     {
       "path": "DENTAYA_GUNCELLE_DERLE.cmd",
-      "size": 3142,
-      "sha256": "14b909230ee97e2203a50f07164f9902d1c4ba242e8209245c69daeca5e8256e"
+      "size": 3144,
+      "sha256": "b78219ba48ba2697aafee9867a1c7721c8ed32e9927a4ad889e49e0ad0471f34"
     },
     {
       "path": "DentAYA_CAD_Degisiklikler.txt",
@@ -207,8 +207,8 @@
     },
     {
       "path": "KURULUM.txt",
-      "size": 4424,
-      "sha256": "7a3bcdda8dab56aee3d432add2b239e60df7be5141158eb9759df966b8971dcd"
+      "size": 4645,
+      "sha256": "2cba43548a38310e795135163989f82cf43d58c09c337efb9d5c61f1371732a5"
     },
     {
       "path": "LOGO_GUNCELLEME.txt",
@@ -691,6 +691,21 @@
       "sha256": "0355f91ba63387c7286948c88e7ac6b9190cbe915b6bb3fe212bebc2c5089433"
     },
     {
+      "path": "RC57_AYA_1008_SORU_CEVAP.json",
+      "size": 365775,
+      "sha256": "0f68b272cb88cc54cb6513aa00f22cbdd2f2b39bda41cee04e54c636b3e5e4cd"
+    },
+    {
+      "path": "RC57_KONTROL_RAPORU.md",
+      "size": 9731,
+      "sha256": "f295ca3d3d5fc3dc7c9752b49b5e329af28a6dfe34000690b039b59f3d60a43d"
+    },
+    {
+      "path": "RC57_KULLANIM.md",
+      "size": 7583,
+      "sha256": "f1ff923c0e29c4b88df0d75e1aae348f75ffc2d9b19b40b89468765f11e690c4"
+    },
+    {
       "path": "RC6_CHANGELOG.md",
       "size": 805,
       "sha256": "3da664df997388f7c74588f417e0676b263ac4aa225fced31091f5f197b6a03f"
@@ -707,8 +722,8 @@
     },
     {
       "path": "README.md",
-      "size": 8013,
-      "sha256": "69a302adca56006b5093e67ffcbe9e2c60faa33dd3a0c58063c4b4ada11d6cf8"
+      "size": 9215,
+      "sha256": "d486a787ef75dce8a04d89ef654463f154afd72f14fe5b1d4b9a5dd0ee7b36ae"
     },
     {
       "path": "README_BUILD_FIX_01.md",
@@ -967,8 +982,8 @@
     },
     {
       "path": "electron/aya/agent.cjs",
-      "size": 18277,
-      "sha256": "c33611a764395e904f364f22a7d5ea89e21dd6ee4f825e90ac78b9bc23fa2a6f"
+      "size": 19761,
+      "sha256": "5e8fe7c12030566ed1a0787215f77661bd66361f0fb7a342e4486ec7fb54fa08"
     },
     {
       "path": "electron/aya/agent.d.cts",
@@ -978,7 +993,7 @@
     {
       "path": "electron/aya/assistant.cjs",
       "size": 9981,
-      "sha256": "0923a7f93c91a1517543dd2fe672e9e3f6a3f5d8e4db590fec856df07ab2e827"
+      "sha256": "5b038f47c77fd70f73e42e103c62293de3297d87e8aefd9a13b82e63cba08f1f"
     },
     {
       "path": "electron/aya/assistant.d.cts",
@@ -987,8 +1002,8 @@
     },
     {
       "path": "electron/aya/cad-dialogue.cjs",
-      "size": 30245,
-      "sha256": "2f7e872dc00aa0bd4e70cfc5818093614b8aeba5c7eedbbee39062c9a49f1b78"
+      "size": 31093,
+      "sha256": "0d86656f7b808f5323ba8d8a5547e071dd790298e089bb9796e4224efc3f6e4a"
     },
     {
       "path": "electron/aya/cad-dialogue.d.cts",
@@ -1324,6 +1339,16 @@
       "path": "electron/aya/qa-catalog.d.cts",
       "size": 589,
       "sha256": "496dfc36cc5658b8f1bc3d401b553982e0df9fd6c2fc8c8a5b50662187495685"
+    },
+    {
+      "path": "electron/aya/section-dialogue.cjs",
+      "size": 8028,
+      "sha256": "df4bd7db3743ef29e105f9a99c6dddbd04293b12bd39507c1b21943756830aa9"
+    },
+    {
+      "path": "electron/aya/section-dialogue.d.cts",
+      "size": 389,
+      "sha256": "470bb030650b46a1cf2627bd833dd37a30abc50d4d9088036a225b1893867677"
     },
     {
       "path": "electron/aya/task-dialogue.cjs",
@@ -1993,12 +2018,12 @@
     {
       "path": "package-lock.json",
       "size": 354831,
-      "sha256": "412ea3c27c89b40fcc8d61a8aec659ce07c380bc437ed34c0ac673a1e4949836"
+      "sha256": "c1f368da5cf3c80c2d1445bbf0ec11a0e4427340c011fd9cfe461d5bea1b5134"
     },
     {
       "path": "package.json",
-      "size": 10079,
-      "sha256": "fdf9325feec2f9d6c5472933fe6de7e521c937f12a4e077fcca07d3121909c82"
+      "size": 10233,
+      "sha256": "a5a5de42bd6911087d8b2f5bec58cfc006b31d80d33c95b5f489d9240240808c"
     },
     {
       "path": "public/aya/aya-alert.png",
@@ -7277,8 +7302,8 @@
     },
     {
       "path": "scripts/verify-appearance-browser.mjs",
-      "size": 11769,
-      "sha256": "11542772b679e329e8eedb6c87fc900dbd7b103e339b146200e7aaa6f0def39d"
+      "size": 15357,
+      "sha256": "a005813813fa4db0a02ed613c56a30855392a0033af4b0e9e50977105286ebf1"
     },
     {
       "path": "scripts/verify-appointment-planner.ts",
@@ -7297,8 +7322,8 @@
     },
     {
       "path": "scripts/verify-aya-cad-dialogue.cjs",
-      "size": 30516,
-      "sha256": "ef4f1f4f34f311d0b7fc2bd5431c77539c19ef31b62a924e917f6a06ba045676"
+      "size": 38953,
+      "sha256": "a3392066a826fff148462cb6e64decad72ed7faea86376bdcb93c1e3558e088c"
     },
     {
       "path": "scripts/verify-aya-catalog.cjs",
@@ -7312,13 +7337,13 @@
     },
     {
       "path": "scripts/verify-aya-conversation-browser.mjs",
-      "size": 20803,
-      "sha256": "9c393ba498df8d47ba5a0a7b175ad70d27c1bfd53b41cdb480bca3ac5a33fc93"
+      "size": 24579,
+      "sha256": "08b31b4d85eebb1b051d17c19f62dd7a731faac6223315c26aebd0607782867f"
     },
     {
       "path": "scripts/verify-aya-conversation.ts",
-      "size": 11082,
-      "sha256": "9447f87380c80647e5d13d31f062851f339cfa8c4e3e698200c97c5ce72d20a4"
+      "size": 12659,
+      "sha256": "00153648156cdceeeb9ba10a9638fd78aa48c06d1fd684606d1775906bf6e7e2"
     },
     {
       "path": "scripts/verify-aya-core.cjs",
@@ -7376,14 +7401,24 @@
       "sha256": "55152e472218e1d544fb5400fbddb929dc6756c619fedca93fed16b8570350b1"
     },
     {
+      "path": "scripts/verify-aya-section-context.ts",
+      "size": 4120,
+      "sha256": "336ed1eff7b6a07b0cadf40dda0be3778ac99cbd60ecca23efcf601269e0c192"
+    },
+    {
+      "path": "scripts/verify-aya-section.cjs",
+      "size": 13890,
+      "sha256": "492f07ad729a5595fec8703e3d59999a862664f73e334e7eb605c793a85b0800"
+    },
+    {
       "path": "scripts/verify-aya-setup.ts",
       "size": 1510,
       "sha256": "5a459708d97526de735a7911865b9f6aa6359629e9214bb2d3d5f2e74d1561c5"
     },
     {
       "path": "scripts/verify-aya-state-browser.mjs",
-      "size": 10662,
-      "sha256": "12912aa646acc27af1a83c23c97291f565c5a5c123a0a97ba799726bea237a86"
+      "size": 13763,
+      "sha256": "1ede4a6ca0ef2ffc20b9d62ae396f30883c7f85940b26f1728c43d348f3bd488"
     },
     {
       "path": "scripts/verify-aya-tasks.cjs",
@@ -7427,13 +7462,13 @@
     },
     {
       "path": "scripts/verify-cad-daily-browser.mjs",
-      "size": 47044,
-      "sha256": "5058ece2fe53c364967239ab7ba8fc546304f44e8654fb12247178d48c53f78b"
+      "size": 51066,
+      "sha256": "5dedfc79ec7460710f4e76f9a042ac0010b2e4613881c64a6ed6608bae125072"
     },
     {
       "path": "scripts/verify-cad-daily.ts",
-      "size": 9668,
-      "sha256": "0efd6790ac42627b827647d946ca309022b2fc180e0509daa86def65e94f3a31"
+      "size": 10355,
+      "sha256": "f16bdcf893ebd45ac12797002ac6688c293918b2c6e8d7c5dffeaaeff6e17a43"
     },
     {
       "path": "scripts/verify-cad-display.ts",
@@ -7457,8 +7492,8 @@
     },
     {
       "path": "scripts/verify-cad-inspection-browser.mjs",
-      "size": 26065,
-      "sha256": "b6aa936aeb5a3a85f6657fc081194d4c117cb1050b842bf83fb875e5794ab9c7"
+      "size": 33878,
+      "sha256": "5bd111757a1ca3a6b8f44105200b0de8ffc95937707cf98e583145cdb96a6b09"
     },
     {
       "path": "scripts/verify-cad-inspection.ts",
@@ -7503,7 +7538,7 @@
     {
       "path": "scripts/verify-cad-restoration-browser.mjs",
       "size": 24298,
-      "sha256": "9b562ac2d57b29bd5f9d3be30caad4b7e521ded18a151b3351a5654c0d07faef"
+      "sha256": "9d70524cb79a68c08f52930bf50bd02e07b9e2ee6e08c2935d05a88e49f5b06f"
     },
     {
       "path": "scripts/verify-cad-restoration-surface.ts",
@@ -7517,8 +7552,8 @@
     },
     {
       "path": "scripts/verify-cad-section.ts",
-      "size": 4495,
-      "sha256": "b13c8d485c9202fff881148acb290551ddc8adb8e4a75a85097068a2680d001a"
+      "size": 7070,
+      "sha256": "97765763767b7c58f391624f0af249aa0d35188ec0f385eebf198c8fb1aa06d5"
     },
     {
       "path": "scripts/verify-cad-view-state.ts",
@@ -7557,8 +7592,8 @@
     },
     {
       "path": "scripts/verify-desktop-shell-browser.mjs",
-      "size": 27882,
-      "sha256": "bae8d32a632fd05fe8f3aa52f1380743f47828f1a0c798a3c839ace36028c480"
+      "size": 28519,
+      "sha256": "2225e27026067118b0173c51d86e33cea8e7b95080272b8a21c963e96c555f75"
     },
     {
       "path": "scripts/verify-e2e-workflow.ts",
@@ -7612,8 +7647,8 @@
     },
     {
       "path": "scripts/verify-local-aya.cjs",
-      "size": 13242,
-      "sha256": "b678077c6058e738991ad4a8a75b3f87799453eeb43bde6e5d31cf74c6fb1a4b"
+      "size": 14764,
+      "sha256": "08e60d31e3a3483d56336077dd43f5c96eb0a76649452638244ba2493800ebbc"
     },
     {
       "path": "scripts/verify-localization.ts",
@@ -7907,8 +7942,8 @@
     },
     {
       "path": "src/app/WorkspaceChrome.tsx",
-      "size": 15304,
-      "sha256": "3f0a1e6e8cbc00efefb4bc33308b0c0a57de2268093475a411bcb2b7703c8449"
+      "size": 15736,
+      "sha256": "306820256f462f7549b35dbc71d8204370de4cb5ff301db4ab215f6f7a4498a0"
     },
     {
       "path": "src/app/WorkspaceLauncher.tsx",
@@ -7917,8 +7952,8 @@
     },
     {
       "path": "src/app/ai/AyaChat.tsx",
-      "size": 20798,
-      "sha256": "bafe2ea77058f14f0613f7b30c0a9167d05a5c6cb8ea443e9447b9aa8ba8802c"
+      "size": 22257,
+      "sha256": "0f811ea86e7a08c08495f9b2f7a38e3040586e62bcfdee3263eede72c643c1cd"
     },
     {
       "path": "src/app/ai/AyaConnection.tsx",
@@ -8092,8 +8127,8 @@
     },
     {
       "path": "src/app/customization.ts",
-      "size": 15230,
-      "sha256": "f7e05bd789c67b029584d6116220221767184fe9f693cdd9f448db71bf30515d"
+      "size": 15535,
+      "sha256": "2ada42bc7e0909526090116a7ac8d2b822bb2de281dc93c50577738202b4bea8"
     },
     {
       "path": "src/app/dentaya-theme.tsx",
@@ -8102,8 +8137,8 @@
     },
     {
       "path": "src/app/design/CadAyaPanel.tsx",
-      "size": 16798,
-      "sha256": "8bae834326f4ba3f493fb4b978d0a814d1c6621d6fe4d15cb522e194736c385d"
+      "size": 17015,
+      "sha256": "d367540d7952735645235195805ab13118259ebb623fadaea05617a668b180c0"
     },
     {
       "path": "src/app/design/CadBrushPresets.tsx",
@@ -8157,13 +8192,13 @@
     },
     {
       "path": "src/app/design/DesignStudioClient.tsx",
-      "size": 177581,
-      "sha256": "5d7b985f63ff148b455e788e6a6557f5443572c495344e64886b2d009f625e4d"
+      "size": 179456,
+      "sha256": "0a46077c2435d704fe41a41c442d070e7d5d1634b24b751ff1c125e2762fa533"
     },
     {
       "path": "src/app/design/DesignViewport.tsx",
-      "size": 149511,
-      "sha256": "eb1432e12f602905f53081ed7a9a913528d8aa17bf713bd9975a45d3f8ff158f"
+      "size": 152103,
+      "sha256": "870555936e332c0f184fce5e5a0a43c725998e75a2bcf37dd38f766d78a172dd"
     },
     {
       "path": "src/app/design/cad-workspace.css",
@@ -8447,8 +8482,8 @@
     },
     {
       "path": "src/lib/aya-cad-assistance.ts",
-      "size": 3463,
-      "sha256": "7af80553a57544b59279442fb5bacb46ded597247faf4b1dcabc50df56516391"
+      "size": 3844,
+      "sha256": "efcb1dc90f339010394adc337f5318ed41350d8472503258e2b52ef16d269c8a"
     },
     {
       "path": "src/lib/aya-command-engine.ts",
@@ -8457,8 +8492,8 @@
     },
     {
       "path": "src/lib/aya-conversation.ts",
-      "size": 5245,
-      "sha256": "554ceeefc338aaf92b8f4021bcf9ad9e500267d9bcff02ba98b53863613d1e33"
+      "size": 5396,
+      "sha256": "6f9739a08e7cf03cf0f57226c6689168312f46ac1dd2e6ab6a53f20be341129f"
     },
     {
       "path": "src/lib/aya-download-status.ts",
@@ -8617,8 +8652,8 @@
     },
     {
       "path": "src/lib/cad-recovery.ts",
-      "size": 7187,
-      "sha256": "bc4d0d0e80006dc47aff1ab61a67052a091151efa03e268049f2447cae33cda9"
+      "size": 7237,
+      "sha256": "69b137c9336079ecb0d17983fd1f1fdd2833e77a59937da1587aac50838b4b9a"
     },
     {
       "path": "src/lib/cad-restoration-shape.ts",
@@ -8652,8 +8687,13 @@
     },
     {
       "path": "src/lib/cad-section-engine.ts",
-      "size": 8549,
-      "sha256": "ac75ca5194af424d01c3964c33cb08aa2493c4673ca954f8e01373939835f359"
+      "size": 10650,
+      "sha256": "8395a711d092150d92a9ec0ea7536568b74223ee227147b2671e03e00918417f"
+    },
+    {
+      "path": "src/lib/cad-section-evidence.ts",
+      "size": 1306,
+      "sha256": "6143b41a9e2af9dd667bdaa5d1991e37bd5dd0f1219a4ff73fbef0cbe53a4233"
     },
     {
       "path": "src/lib/cad-spatial-engine.ts",
@@ -8802,8 +8842,8 @@
     },
     {
       "path": "src/lib/i18n/cad-section.ts",
-      "size": 1832,
-      "sha256": "8c1839797b68505201f242de72e1d96117bc2d1612a82a521274c5c82f59ba97"
+      "size": 2072,
+      "sha256": "a40aa0f4d84e6d09915a7d72e210bc0163cb60e52628473d4772b7059a572ebc"
     },
     {
       "path": "src/lib/i18n/catalog-extra.tsv",
@@ -9348,7 +9388,7 @@
     {
       "path": "src/lib/release.ts",
       "size": 418,
-      "sha256": "a2bdc8ef977ecbfcb4549014995588da17cdaae36ba3687ad983507f4b6b3574"
+      "sha256": "9536104cc56ba78ce32ac26dec823987dee88560cd5864c5cab7a285707073a3"
     },
     {
       "path": "src/lib/retry.ts",
@@ -9383,7 +9423,7 @@
     {
       "path": "src/lib/supabase.ts",
       "size": 1108,
-      "sha256": "03f0ac87fd692436fac55215f5ca12fdfd9066036bb3561def7eccb0195e2bb3"
+      "sha256": "ba4bfdd9ba5b6744d5e1198f911930785ebe64681800638e4f0b22de58e77e98"
     },
     {
       "path": "src/lib/system-messages.ts",
@@ -11519,6 +11559,391 @@
       "path": "verification/RC56/source-verification.json",
       "size": 1835,
       "sha256": "ddb5d21dbd3edaf8ad02eeb7e30af1b0bd44ce99e4e9f98914924a4036163a3c"
+    },
+    {
+      "path": "verification/RC57/browser-results.json",
+      "size": 14246,
+      "sha256": "1c14dece5088db09b29bf3c581a6be15f1c22487e86377a8e3cf64a1ce99fb32"
+    },
+    {
+      "path": "verification/RC57/logs/appearance.txt",
+      "size": 1170,
+      "sha256": "384bea06d0e5684a153d8748504fb140e1474ce118ca095d98d64094391deda1"
+    },
+    {
+      "path": "verification/RC57/logs/aya-conversation.txt",
+      "size": 908,
+      "sha256": "23786ca413be1023e8e6693b3a7dc11f1c16128ac8b1396698eefdfb4c02b8ca"
+    },
+    {
+      "path": "verification/RC57/logs/aya-state.txt",
+      "size": 719,
+      "sha256": "f18090884ad5933f62d9abb64853e92af782576974bbec4c8d2dec3c624cd47d"
+    },
+    {
+      "path": "verification/RC57/logs/aya-work.txt",
+      "size": 1398,
+      "sha256": "45f440d118eebf273341b07262d171f5237f2eddad2c9314a5d2869bccbce1c0"
+    },
+    {
+      "path": "verification/RC57/logs/cad-daily.txt",
+      "size": 2556,
+      "sha256": "be39e39d73b86fb6a46d38f9f4fa9a471dea66d75caf3170f5957cb4b84f9f04"
+    },
+    {
+      "path": "verification/RC57/logs/cad-inspection.txt",
+      "size": 1436,
+      "sha256": "cb02e0032634b481eb903aad99dd502698405582fb773e66da6091e5a7697ab9"
+    },
+    {
+      "path": "verification/RC57/logs/cad-restoration.txt",
+      "size": 3500,
+      "sha256": "551b8bbd08ebbc0c2de5e8d5937e1b3c7a3fb513d98097a7ad6df323cb2a96de"
+    },
+    {
+      "path": "verification/RC57/logs/desktop-shell.txt",
+      "size": 1363,
+      "sha256": "8a4795dea45495560b1ef46683acbf7753f5da441db2ce9fc27b7d0b1e324cc7"
+    },
+    {
+      "path": "verification/RC57/logs/full-verify.txt",
+      "size": 42599,
+      "sha256": "9d8feb7c733ccb211dc8bc3a7b5e5764f9d9915ac81421b9d8f0120095fcbdb7"
+    },
+    {
+      "path": "verification/RC57/logs/loading-reading.txt",
+      "size": 721,
+      "sha256": "3f66f4393559c8f4f78a953a1974ac545cca814bcb95ae700a26ff38d91353e9"
+    },
+    {
+      "path": "verification/RC57/model-access-report.json",
+      "size": 1874,
+      "sha256": "50ac0f458a9e34a37fae97fb36fcbfacf2b6b8870380ca69f35bbbbc6cb673a3"
+    },
+    {
+      "path": "verification/RC57/native-grammar-report.json",
+      "size": 3991,
+      "sha256": "c3057b8310e4523339301004f84d615a829649185a7303113a40b1cc80f9d8dc"
+    },
+    {
+      "path": "verification/RC57/native-inference-report.json",
+      "size": 1277,
+      "sha256": "1fea758b92fd9457b5d5116a8c7666f29b5701d7479c6c8eb511fa7d3b5112f2"
+    },
+    {
+      "path": "verification/RC57/native-runtime-report.json",
+      "size": 4456,
+      "sha256": "01befadde8cee8bb2c1a5d64d5f1cf22b561ec72b942eb4296927cfe3119f0f4"
+    },
+    {
+      "path": "verification/RC57/screenshots/AYA_RC49_basic_dialogue.png",
+      "size": 82698,
+      "sha256": "8a7514cc6c38af546bb764a22e343bd9229837dfa5fb33be07b25012ca241dc1"
+    },
+    {
+      "path": "verification/RC57/screenshots/AYA_RC49_identity.png",
+      "size": 69172,
+      "sha256": "8898a778be8e4393edbe0963a6e3b064decd2b9b387b45fe0726ff277e7e3a57"
+    },
+    {
+      "path": "verification/RC57/screenshots/AYA_RC50_callback_failure_and_stale_proposal.png",
+      "size": 129970,
+      "sha256": "465e0669f5a9cfd11210bfc6895c6d97619fe802b7132f5c1c43d420ad2d6bbb"
+    },
+    {
+      "path": "verification/RC57/screenshots/AYA_RC50_memory_and_multistep.png",
+      "size": 80019,
+      "sha256": "8e84d975f0620b9bc643eb0a5fdccb459d34b9c27545f4bab443f2e6f601dbc3"
+    },
+    {
+      "path": "verification/RC57/screenshots/AYA_RC50_model_receives_explicit_memory.png",
+      "size": 69789,
+      "sha256": "cbcd175a36b51d73ec43195563cff19860b319f25c39b40c468956972cf3f60b"
+    },
+    {
+      "path": "verification/RC57/screenshots/AYA_RC50_offline_place_proposal.png",
+      "size": 96695,
+      "sha256": "b1ab250de535bad2ca8c6a08e4747c66fe37483c0fc04116853e68caf09a57c7"
+    },
+    {
+      "path": "verification/RC57/screenshots/AYA_RC54_memory_conflict.png",
+      "size": 115541,
+      "sha256": "cb755a10bfc7b9887697f72fd20a9840934e4ed21d6950f25bd560dbdea3f43d"
+    },
+    {
+      "path": "verification/RC57/screenshots/AYA_RC54_unavailable_model_core.png",
+      "size": 60953,
+      "sha256": "fd4282d2431eaa620bfeb864d3a142dcd1bedaceade6ce971076756e7c7150ba"
+    },
+    {
+      "path": "verification/RC57/screenshots/AYA_RC56_model_failure_cad_help.png",
+      "size": 90072,
+      "sha256": "6bfd91de82b0bc9b2e3150920956d86e51fbf9c7f00d3c4ba1e0d934a320106a"
+    },
+    {
+      "path": "verification/RC57/screenshots/AYA_RC56_scoped_followup.png",
+      "size": 130015,
+      "sha256": "bd0237af41af317bd38416114a2cddf47c8a5e0ba18fb593a6da2ab8e9ef6cad"
+    },
+    {
+      "path": "verification/RC57/screenshots/AYA_conversation_desktop.png",
+      "size": 63106,
+      "sha256": "9f02dd4af5370de9d021288a8d387a11e13c7d6681c8a386f2e26c3cbd31b015"
+    },
+    {
+      "path": "verification/RC57/screenshots/CAD_Inspection_Desktop.png",
+      "size": 815331,
+      "sha256": "d6e451c17e4cc87cf686ee29c7e5b2e2992037221bf7e378c8497c3eed1a2c8e"
+    },
+    {
+      "path": "verification/RC57/screenshots/CAD_Inspection_Mobile.png",
+      "size": 125015,
+      "sha256": "47b4532abb4400566a75aaab804d45660251686c77aa74f9736ca97f26cb7205"
+    },
+    {
+      "path": "verification/RC57/screenshots/CAD_Section_Measurements.png",
+      "size": 686394,
+      "sha256": "e3942be75e150504405e509874cb650212c02ab7024ad4652d804d03aea767b9"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC40_CAD_AYA.png",
+      "size": 240979,
+      "sha256": "0a0c3143c30e776a60724b0aa81dd8171cce9d808d7471ac636d3310e993af51"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC46_AYA_mobile.png",
+      "size": 60030,
+      "sha256": "0c5b83591e0bc56cf8b4064af2493683d6ea82318872cd192649912305809e00"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC51_CAD_daily.png",
+      "size": 227265,
+      "sha256": "d30487bb0cb107e4f654cce4017a422dfd644c10d9dcee61d05cb23d27daf0a0"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC57_16_anatomic_crown_occlusal.png",
+      "size": 296309,
+      "sha256": "a2df76217ed8a21c749300180ca0ef94461d85e85003044f3355c07b79b786c1"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC57_16_anatomic_crown_placed.png",
+      "size": 194573,
+      "sha256": "91a6200082b2b583311a2ad46315c2813ac7ffd70bb528b338be09c925351f3b"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC57_46_anatomic_crown_occlusal.png",
+      "size": 279528,
+      "sha256": "66f10ae54312e624e5c05d1c100feee453f1d78bdf8e730fe170518b0ad268b6"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC57_46_anatomic_crown_placed.png",
+      "size": 214665,
+      "sha256": "854499ed00dc3c41f663c29af7044245fc2ee3f9273577180f3f7a5118c5a738"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC57_47_coping_occlusal.png",
+      "size": 277041,
+      "sha256": "59079415504375f97216c23ed3aa7cbdb143ab56a3eee27c02141fe0b946fa90"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC57_47_coping_placed.png",
+      "size": 222610,
+      "sha256": "70fab388aca3e1cbc04387c3d9e22d34ecb16ced8c69895eabf50e79168982e3"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC57_AYA_Diagnostic_Draft.png",
+      "size": 130978,
+      "sha256": "6ad6a03e9a8b0645f0c72bd6a885e8f338e79c748478e592338c01005023e057"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC57_AYA_Empty_Memory_Reload.png",
+      "size": 62053,
+      "sha256": "d860a89024e968f680552650db6ca9276e6f97589ecc7d2ae54da199eb60ac25"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC57_AYA_Section_Evidence.png",
+      "size": 541780,
+      "sha256": "5a32e236cee50d660ea924161beb2f15ce4165d5596e5030b7424e40b65810b2"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC57_AYA_placement_guidance.png",
+      "size": 249904,
+      "sha256": "101ad5fd1d1c78922f176b56422d6c421e7e039bf8e07ef6257637cd8c38065a"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC57_Background_CAD_Graphite.png",
+      "size": 868310,
+      "sha256": "aabbddf1db1d0e6eeb91f0c169cd5c2f9e830c427ab73d7047bf4ab157956cb2"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC57_Background_CAD_Midnight.png",
+      "size": 867352,
+      "sha256": "44218354dafe38fc6ca1107edb6d0a69f67f78ab422f67826a86fdb23693b51e"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC57_Background_Coral_Mobile.png",
+      "size": 49126,
+      "sha256": "8cf749a9725a34da0a50dbbdb54fdb16d544a9675cffbca483af6bdc2423ed67"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC57_Background_Graphite_Desktop.png",
+      "size": 222822,
+      "sha256": "4bbe480f97f27d20b9f3c5f4293319bbb09a09671efa04cf4d87620011df1504"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC57_Background_Midnight_Mobile.png",
+      "size": 50287,
+      "sha256": "4ea7b77f105fe49d23fe2318fa7df2f1b917b3e2bb29d92c61c8be2ca976fc17"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC57_CAD_Current_Shell_QC.png",
+      "size": 277645,
+      "sha256": "4413956c52c2c5e7706dd5788b291bbb18c86263288d2359fe5d6c03a2cf6889"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC57_CAD_Stale_QC.png",
+      "size": 198639,
+      "sha256": "4d542a809f8990186ce028cd684dc06b296c0a5660c51f083ec88bd707f5acaa"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC57_manual_crown_design.png",
+      "size": 291217,
+      "sha256": "3c353ab3561e6fa966514795bba7d83282066241c1da68787e2c4604f58510a9"
+    },
+    {
+      "path": "verification/RC57/screenshots/RC57_raw_model_before_margin.png",
+      "size": 137143,
+      "sha256": "ef59b97b0344043855a7184a8f57d5d739607e55b2948e5e6944604292ecb473"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-ai-1366.png",
+      "size": 106400,
+      "sha256": "728f6b9fbf0bc51b28c8e65affb991ce7ed04c38557717434fd8b4e1085e08bb"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-ai-1440.png",
+      "size": 131490,
+      "sha256": "e898f5b4d4b1516c866520a30a8f9aabf6c67038ce34eb74f94cda9df6d417b3"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-ai-390.png",
+      "size": 45431,
+      "sha256": "6fa7159549a8f055ed309a82f0bb24f98d20c8380db8d0df9fe277000d39ced4"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-appointments-1366.png",
+      "size": 122738,
+      "sha256": "c7079bc8c7b3905a63b5a3c8590ead10434a4e0c9c277c96308d892bed3cea13"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-appointments-1440.png",
+      "size": 141897,
+      "sha256": "9fc69eff01e8ef81524ef7b15ea9caf2c08ef864fe4e82ec97d1807212465afa"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-appointments-390.png",
+      "size": 47372,
+      "sha256": "b43c0f51c911f5b991d6ee77d01ca9e52cbfc61b864448969d2ce0fcc4b6ff11"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-finance-1366.png",
+      "size": 150560,
+      "sha256": "a99fb5abebfc134c88c617b32f8fee32f5193ddef44dd2a18e142126ec3c04d9"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-finance-1440.png",
+      "size": 181495,
+      "sha256": "25b930bf734d50c3776a28a2b2d0e3ad0d1f7b526c493f1a63558f6648ee7686"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-finance-390.png",
+      "size": 54671,
+      "sha256": "c2a131860caa26d8f8ee9f11ea583e611668dda812490ad7eb1c859bb4ef38d3"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-messages-1366.png",
+      "size": 146646,
+      "sha256": "a64c580d1224c1aa231f16e3c978e7da699a4586b44d0005479a26392dbf115f"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-messages-1440.png",
+      "size": 190049,
+      "sha256": "606fb1cd1d05ad5b73b968ba683c83b4c584793e04424bffc0e67faa400388cc"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-messages-390.png",
+      "size": 62351,
+      "sha256": "64db2ded030aeb5aa80860935afde9b7cc14df101c2ad2da08f431b5b993f919"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-patients-1366.png",
+      "size": 106330,
+      "sha256": "94266dd3cb2d00f57b2abc463968dc9d12df84ca2968a94f277e15f4c3c00d2e"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-patients-1440.png",
+      "size": 119063,
+      "sha256": "1e91dc82291fbd565e905edc31b910952bf4ea49a52caeb24d34c9944b39e689"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-patients-390.png",
+      "size": 44831,
+      "sha256": "9135142962c22e77893ff63555145501b9c86c1ac207788571a818b556838d3a"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-patients-light-1440.png",
+      "size": 117574,
+      "sha256": "2bfcd8f00cdef8fdaa63cfa212fdf23ed5d88a9013c5f2005e3a4c4040f1d1bb"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-patients-rtl-1440.png",
+      "size": 124442,
+      "sha256": "65d29d114444ecb0f3629a097e5007f324b88aa2b02ce8ca888587e61e074c98"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-patients-rtl-390.png",
+      "size": 48240,
+      "sha256": "9e91a583b174d55f822a152e22b9bfb618f2ac73360ffd1cac90a8395e73949f"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-workspace-1366.png",
+      "size": 134456,
+      "sha256": "f89b55e6f5304218ab609302c5453de37ebc88a79b6902ef2242c26843a5add2"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-workspace-1440.png",
+      "size": 147858,
+      "sha256": "dbb5217ff3dc48cceb53caf4438a700dcf0c333089688b9d1d5cf080b5761ac4"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-workspace-390.png",
+      "size": 55292,
+      "sha256": "21fabf25120522736d8918828083483fae60afd473e9698f4ad225ce213f7f91"
+    },
+    {
+      "path": "verification/RC57/screenshots/desktop-workspace-guest-1440.png",
+      "size": 150967,
+      "sha256": "cac2b590bac5af6c2441818a58130a347ac17af81a603c270f465ddc741a9ca4"
+    },
+    {
+      "path": "verification/RC57/screenshots/loading-ready-mobile.png",
+      "size": 22478,
+      "sha256": "249867be60dfcd54415c12f364abcd1eba4b3e2f8dd8cd4e443da57aebd841b9"
+    },
+    {
+      "path": "verification/RC57/screenshots/palette-desktop.png",
+      "size": 36646,
+      "sha256": "15536d4b0e1b887cb2e64e2b88103510f109f81adc75a3db0f056027c45ad826"
+    },
+    {
+      "path": "verification/RC57/screenshots/palette-mobile.png",
+      "size": 30738,
+      "sha256": "7b634230b685e4207d40d4e8c473c378680a45eeab7dc4078fdae3a0398c7af6"
+    },
+    {
+      "path": "verification/RC57/source-verification.json",
+      "size": 1835,
+      "sha256": "17fbba65e08c8b4e97c61625efa87ee1ae846372c7613dc08f52fb4152e10d91"
     },
     {
       "path": "verification/professional/aya.json",

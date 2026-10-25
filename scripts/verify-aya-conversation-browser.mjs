@@ -95,7 +95,32 @@ try{
  await modelPage.evaluate(()=>window.rc46Fixture.saveAyaKnowledge([{id:'synthetic',title:'Kurye',kind:'memory',content:'Kurye 16:40.'}],true));
  await askModel('Kurye bilgisini kullanarak devam et');
  assert.equal(await modelPage.evaluate(()=>window.rc46Model.calls.at(-1).knowledge[0].content),'Kurye 16:40.');
+ const unsentDraft='  Henüz göndermediğim vaka sorusu\nÖnce kontrol edeceğim.  ';
+ await modelText.fill(unsentDraft);
  await modelMain.getByRole('button',{name:'Sohbet ayarları',exact:true}).click();await modelMain.getByRole('button',{name:'Yerel yanıtı test et',exact:true}).click();await modelPage.waitForFunction(()=>window.rc46Model.calls.length===5);await modelPage.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);assert.match(await modelMain.locator('.aya-status').textContent(),/Yerel model · yanıt alındı/);
+ assert.equal(await modelText.inputValue(),unsentDraft,'A successful setup diagnostic preserves the unsent composer draft exactly');
+ const diagnosticPrompt=await modelPage.evaluate(()=>window.rc46Model.calls.at(-1).prompt);
+ await modelMain.locator('#aya-response-mode').selectOption('core');
+ await modelPage.evaluate(()=>{window.rc46Model.mode='error';window.rc46Model.error='LOCAL_TIMEOUT';});
+ await modelMain.getByRole('button',{name:'Yerel yanıtı test et',exact:true}).click();
+ await modelMain.locator('.aya-chat-error').waitFor();await modelPage.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);
+ assert.equal(await modelText.inputValue(),unsentDraft,'A failed diagnostic cannot replace the draft with its test prompt');
+ if(process.env.DENTAYA_SCREENSHOT_DIR)await modelMain.locator('.aya-conversation-shell').screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC57_AYA_Diagnostic_Draft.png'),animations:'disabled'});
+ assert.equal(await modelMain.locator('.aya-chat-error').getByRole('button',{name:'Soruyu düzenle',exact:true}).count(),0,'Editing the fixed diagnostic must not overwrite a different composer draft');
+ await modelPage.evaluate(()=>window.rc46Model.mode='ok');
+ const callsBeforeDiagnosticRetry=await modelPage.evaluate(()=>window.rc46Model.calls.length);
+ await modelMain.locator('.aya-chat-error').getByRole('button',{name:'Tekrar gönder',exact:true}).click();
+ await modelPage.waitForFunction(count=>window.rc46Model.calls.length===count+1,callsBeforeDiagnosticRetry);await modelPage.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);
+ assert.equal(await modelPage.evaluate(()=>window.rc46Model.calls.at(-1).prompt),diagnosticPrompt,'Retry repeats the forced model diagnostic even when normal chat uses Core');
+ assert.equal(await modelText.inputValue(),unsentDraft);
+ await modelPage.evaluate(()=>{window.rc46Model.mode='pending';window.rc46Model.cancelAcknowledges=false;});
+ await modelMain.getByRole('button',{name:'Yerel yanıtı test et',exact:true}).click();await modelPage.waitForFunction(()=>window.rc46Model.pending);
+ await modelMain.locator('.aya-chat-composer button[type=button]').click();await modelPage.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);
+ assert.equal(await modelText.inputValue(),unsentDraft,'Cancellation preserves the separate draft even when native cancellation never settles');
+ await modelPage.evaluate(()=>{window.rc46Model.mode='ok';window.rc46Model.pending=null;});
+ await modelMain.locator('#aya-response-mode').selectOption('automatic');
+ await modelMain.locator('.aya-chat-error').getByRole('button',{name:'Tekrar gönder',exact:true}).click();await modelPage.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);
+ assert.equal(await modelText.inputValue(),unsentDraft,'Retry after diagnostic cancellation also retains the unrelated draft');
  await modelPage.evaluate(()=>window.rc46Fixture.saveAyaOptions({saveHistory:true}));
  await modelPage.waitForFunction(()=>window.rc46Fixture.readAyaState().sessions[0]?.workingMemory?.goal==='Cuma teslimine hazırlan');
  await modelPage.reload();await modelMain.locator('.aya-message--assistant').last().waitFor();await modelPage.waitForFunction(()=>document.querySelector('.aya-status--model'));
@@ -110,6 +135,10 @@ try{
   assert.match(await modelMain.locator('.aya-chat-error').textContent(),error==='LOCAL_INVALID_PLAN'?/doğrulanamadı/:error==='LOCAL_TIMEOUT'?/zaman aşımına/:error==='LOCAL_BUSY'?/başka bir işlemde/:error==='MODEL_MISSING'?/bulunamadı/:/boş yanıt/);
   assert.match(await modelMain.locator('.aya-status').textContent(),/Son istek tamamlanamadı/,'An unsuccessful reply must clear the successful-model indicator');
  }
+ await modelText.fill('Başarısız sorunun düzenlenmiş hali');await modelPage.evaluate(()=>window.rc46Model.mode='ok');
+ await modelMain.locator('.aya-chat-error').getByRole('button',{name:'Tekrar gönder',exact:true}).click();await modelPage.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);
+ assert.equal(await modelPage.evaluate(()=>window.rc46Model.calls.at(-1).prompt),'Başarısız sorunun düzenlenmiş hali','Normal retry sends the current edited draft');
+ assert.equal(await modelText.inputValue(),'','A successful regular retry consumes its own draft');
  await modelPage.evaluate(()=>{window.rc46Model.mode='pending';window.rc46Model.cancelAcknowledges=false;});
  await modelText.fill('Kısa bir masal yaz');await modelMain.locator('form button[type=submit]').click();await modelPage.waitForFunction(()=>window.rc46Model.pending);
  // The native cancellation promise deliberately never settles.
@@ -148,7 +177,7 @@ try{
  assert.deepEqual(errors,[]);
  // Complete source cleanup before publishing the pass result as well as in finally.
  rmSync(route,{recursive:true,force:true});rmSync(path.join(root,'.next/dev/types'),{recursive:true,force:true});assert.equal(existsSync(route),false);
- console.log(JSON.stringify({pass:true,noBridgeChat:true,modelMissingDoesNotLockComposer:true,freeText:true,followup:true,catalogueFilterAndPrepare:true,historyOptIn:true,cadContext:true,noAutomaticCadActions:true,mobile:true,coreDoesNotPretendModel:true,modelFirstDefinitionsAndNewPhrasings:true,memoryAcrossTurnsAndOptInReload:true,notebookToggle:true,realModelTestButton:true,modelErrorAndCancelKeepQuestion:true,hungCancellationAndStaleResult:true,prepareOnlyWelcomeTools:true,explicitEnglishFallback:true,collapsedConversationSettings:true,keyboardSettingsFocus:true,boundedExplicitMemory:true,offlineMemoryRecall:true,modelCallsAreMock:true},null,2));
+ console.log(JSON.stringify({pass:true,noBridgeChat:true,modelMissingDoesNotLockComposer:true,freeText:true,followup:true,catalogueFilterAndPrepare:true,historyOptIn:true,cadContext:true,noAutomaticCadActions:true,mobile:true,coreDoesNotPretendModel:true,modelFirstDefinitionsAndNewPhrasings:true,memoryAcrossTurnsAndOptInReload:true,notebookToggle:true,realModelTestButton:true,diagnosticSuccessFailureCancelPreserveDraft:true,diagnosticRetryRetainsForcedModel:true,editedRegularRetryConsumesDraft:true,modelErrorAndCancelKeepQuestion:true,hungCancellationAndStaleResult:true,prepareOnlyWelcomeTools:true,explicitEnglishFallback:true,collapsedConversationSettings:true,keyboardSettingsFocus:true,boundedExplicitMemory:true,offlineMemoryRecall:true,modelCallsAreMock:true},null,2));
 }catch(error){console.error(logs.slice(-14000));throw error;}finally{
  // These are generated by this test server and reference its now-removed fixture.
  // Source code and production output are not removed.

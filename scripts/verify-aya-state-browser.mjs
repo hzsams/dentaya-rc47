@@ -96,9 +96,41 @@ try{
  await page.evaluate(()=>{window.rc54State.mode='ready';});await cad.getByRole('combobox',{name:'Kurulu yerel model',exact:true}).waitFor();
  await page.evaluate(()=>{window.rc54State.mode='unavailable';window.dispatchEvent(new Event('focus'));});await page.waitForFunction(()=>!document.querySelector('#cad-test select[aria-label="Kurulu yerel model"]'));
  await screenshot(cad,'AYA_RC54_unavailable_model_core.png');
+ // A manually edited session can contain memory without any sent messages.
+ // Clearing its last memory must also clear its opted-in persisted record.
+ await page.evaluate(()=>window.rc50Work.saveAyaOptions({saveHistory:false}));
+ await main.getByRole('button',{name:'Yeni sohbet',exact:true}).click();
+ await page.evaluate(()=>window.rc50Work.saveAyaOptions({saveHistory:true}));
+ assert.equal(await page.evaluate(()=>window.rc50Work.readAyaState().sessions.length),0,'Enabling history in an empty conversation must not create an empty session');
+ await main.getByRole('button',{name:'Bellek ve notlar',exact:true}).click();
+ async function saveGoal(goal){
+  await memory.getByRole('button',{name:'Belleği düzenle',exact:true}).click();await main.locator('#aya-memory-goal').fill(goal);await memory.getByRole('button',{name:'Belleği kaydet',exact:true}).click();
+ }
+ await saveGoal('YALNIZ BELLEKTEKİ HEDEF');
+ await page.waitForFunction(()=>window.rc50Work.readAyaState().sessions[0]?.workingMemory.goal==='YALNIZ BELLEKTEKİ HEDEF');
+ assert.equal(await main.locator('.aya-message').count(),0);
+ await memory.getByRole('button',{name:'Belleği temizle',exact:true}).click();
+ await page.waitForFunction(()=>window.rc50Work.readAyaState().sessions.length===0);
+ await saveGoal('EDİTÖRDEN SİLİNECEK HEDEF');
+ await page.waitForFunction(()=>window.rc50Work.readAyaState().sessions[0]?.workingMemory.goal==='EDİTÖRDEN SİLİNECEK HEDEF');
+ await saveGoal('');await page.waitForFunction(()=>window.rc50Work.readAyaState().sessions.length===0);
+ await page.reload();await page.waitForFunction(()=>window.rc50Work&&!document.querySelector('#aya-local-message')?.disabled);
+ assert.equal(await main.locator('.aya-goal-preview').count(),0,'Reload cannot restore memory cleared from a memory-only conversation');
+ assert.equal(await main.locator('.aya-message').count(),0);
+ assert.equal(await page.evaluate(()=>window.rc50Work.readAyaState().sessions.length),0,'Reload does not save a fresh empty record');
+ await screenshot(main.locator('.aya-conversation-shell'),'RC57_AYA_Empty_Memory_Reload.png');
+ await main.getByRole('button',{name:'Sohbet ayarları',exact:true}).click();await main.getByRole('button',{name:'Bellek ve notlar',exact:true}).click();
+ await saveGoal('BU PENCERENİN HEDEFİ');await page.waitForFunction(()=>window.rc50Work.readAyaState().sessions.length===1);
+ await page.evaluate(()=>{
+  const key='dentaya:aya-core:v1',stored=JSON.parse(localStorage.getItem(key));
+  stored.sessions[0].workingMemory={goal:'DİĞER PENCERENİN YENİ HEDEFİ',decisions:[],openQuestions:[]};
+  localStorage.setItem(key,JSON.stringify(stored));window.dispatchEvent(new StorageEvent('storage',{key}));
+ });
+ await memory.getByRole('button',{name:'Belleği temizle',exact:true}).click();
+ assert.equal(await page.evaluate(()=>window.rc50Work.readAyaState().sessions[0]?.workingMemory.goal),'DİĞER PENCERENİN YENİ HEDEFİ','A local empty reset cannot delete a newer stored edit from another window');
  assert.deepEqual(errors,[],'State transitions produce no React/hydration/page errors');
  await browser.close();browser=null;await stopServer();await fs.rm(route,{recursive:true,force:true});owned=false;await fs.rm(path.join(root,'.next/dev/types'),{recursive:true,force:true});
- console.log(JSON.stringify({pass:true,sessionEditorIsolation:true,pendingReplyMemoryConflict:true,userDraftPreserved:true,explicitMemoryReload:true,lateStatusCannotOverwriteReady:true,cadInstallAndUnavailableUseCore:true,cadBusyPollingRecovers:true,modelCallsAreMock:true,cadCallbacksAreSynthetic:true,nativeInference:false,screenshots},null,2));
+ console.log(JSON.stringify({pass:true,sessionEditorIsolation:true,pendingReplyMemoryConflict:true,userDraftPreserved:true,explicitMemoryReload:true,lateStatusCannotOverwriteReady:true,cadInstallAndUnavailableUseCore:true,cadBusyPollingRecovers:true,memoryOnlyResetPersists:true,emptySessionNotCreated:true,newerStoredMemoryPreserved:true,modelCallsAreMock:true,cadCallbacksAreSynthetic:true,nativeInference:false,screenshots},null,2));
 }catch(error){console.error(logs);throw error;}finally{
  await browser?.close();await stopServer();if(owned)await fs.rm(route,{recursive:true,force:true});await fs.rm(path.join(root,'.next/dev/types'),{recursive:true,force:true});
 }

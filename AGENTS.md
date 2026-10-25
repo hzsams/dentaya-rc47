@@ -1,6 +1,6 @@
 # DentAYA çalışma talimatı
 
-Bu klasör RC46/RC47 tabanından geliştirilen RC56 kaynak güncellemesidir. Önce CODEX_DEVIR_NOTLARI.md ve CODEX_BASLANGIC_PROMPTU.md dosyalarını oku; bunlar ilk WIP devir kayıtlarıdır. Güncel kapsam ve test sınırları RC56_KONTROL_RAPORU.md içindedir. RC56 sonuçlarını verification/RC56 kayıtlarından kontrol et; önceki sürümün geçen kontrollerini yeni kaynak doğrulaması sayma. Windows EXE, gerçek model çıkarımı ve canlı kurum kabulünü doğrulanmış kabul etme.
+Bu klasör RC46/RC47 tabanından geliştirilen RC57 kaynak güncellemesidir. Önce CODEX_DEVIR_NOTLARI.md ve CODEX_BASLANGIC_PROMPTU.md dosyalarını oku; bunlar ilk WIP devir kayıtlarıdır. Güncel kapsam ve test sınırları RC57_KONTROL_RAPORU.md içindedir. RC57 sonuçlarını verification/RC57 kayıtlarından kontrol et; önceki sürümün geçen kontrollerini yeni kaynak doğrulaması sayma. Windows EXE, gerçek model çıkarımı ve canlı kurum kabulünü doğrulanmış kabul etme.
 
 - RC55, RC52'nin Studio aydınlık panellerini, mor başlıkları ve CAD'de sağ koyu komut şeridini kullanır; nesneler parametrelerin üstünde soldadır. CAD'de ortak uygulama başlığını veya ek modül kenar çubuğunu geri getirme. exocad/3Shape ergonomik referanstır; tescilli kod, logo veya arayüz varlığı kopyalama. Geçerli dil, açıkça seçilmiş görünüm tercihleri, kılavuzlu/uzman mod ve taşıma/sıfırlama davranışlarını koru.
 - Yükleme yalnız gerçek bekleyen işlemin ömrünü izler. Zorunlu 5 saniyelik okuma, işlem sonrasında kalan katman veya hazır ekranda odak tuzağı ekleme. Bilgi kartları ve mini oyunlar isteğe bağlı kalır.
@@ -26,3 +26,8 @@ Bu klasör RC46/RC47 tabanından geliştirilen RC56 kaynak güncellemesidir. Ön
 - RC56 Lab Yöneticisi kurum kapsamlı dokuz filtre/40 satır sayfalama kullanır; arama açık sayfayla sınırlıdır. Hata sonrası snapshot korunur; oturum/kullanıcı değişimi eski kayıtları ve bekleyen istekleri geçersizleştirir.
 - RC56 kesit çizgisi/alanı gerçek üçgen-düzlem kesişimidir; duvar kalınlığı veya iç uyum değildir. Açık/çakışan/sınırlandırılmış alanı uydurma. Aktif ünite STL indirmesinde güncel kole, mesh QC ve kurtarma hazır olma kapılarını koru.
 - RC56 120 hacim etkili SVG logo ve 5 mini oyun içerir. Önceki 01–100 katalog/900 varlığını ve eski oyun kayıtlarını koru. Oyunlar hazır ekranı bekletmez. AYA kısa takipleri aynı scope içinde güncel CAD durumunu kullanır; model hatasında rehberin motor bilgisini gizleme. Alıntı/soru/kısmi bellek silme isteğini tüm belleği sıfırlama yetkisi sayma.
+
+- RC57 gerçek kesit kanıtını kaynak/ünite/düzlem anahtarıyla AYA'ya taşır. Aynı sayısal alan yeni düzlem kimliğinin yerini tutmaz. Kopya yüz alanını güvenilir sayma; açık/çakışan/sınırlandırılmış alanı uydurma. Güncel QC arayüzü ve asistanı eski ünite/geometri sayılarıyla besleme.
+- Model testi kullanıcının yazılmamış taslağını korur; tanı Retry normal sorunun taslağını tüketmez. Mesajsız son belleği açık silme eski kaydı geri getirmemeli; başka pencerenin daha yeni kaydını silme.
+
+- RC57 ortak arka plan/görünüm kataloğu 72 seçenek içerir. Dört reference paleti kullanıcının arka plan talebidir; bunları mini oyun teması olarak uygulama. Önceki seçimleri kendiliğinden değiştirme; mevcut ortak görünüm seçimi CAD tema zeminine de uygulanır.

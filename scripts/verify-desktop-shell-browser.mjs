@@ -154,6 +154,15 @@ async function keyboardAndPreferences(page) {
   assert.equal(await modules.evaluate(node => node === document.activeElement), true, 'Module menu Escape restores its trigger');
   const launcher = page.locator('[data-dentaya-launcher="true"]');
   assert.equal(await launcher.count(), 1, 'Exactly one keyboard navigation owner is exposed');
+  await page.keyboard.press('Alt+m');
+  await moduleMenu.waitFor({ state: 'visible' });
+  await page.evaluate(() => new Promise(resolve => {
+    const menu = document.querySelector('.desktop-module-menu');
+    menu.addEventListener('close', () => requestAnimationFrame(() => requestAnimationFrame(() => resolve())), { once: true });
+    menu.close();
+    document.querySelector('[data-dentaya-launcher="true"]').focus();
+  }));
+  assert.equal(await launcher.evaluate(node => node === document.activeElement), true, 'A queued module-menu close preserves focus moved to the launcher in the same task');
   await launcher.focus();
   await page.keyboard.press('Control+k');
   const palette = page.getByRole('dialog', { name: 'DentAYA hızlı navigasyon', exact: true });
@@ -180,7 +189,7 @@ async function keyboardAndPreferences(page) {
   assert.equal(await page.locator('html').getAttribute('data-workspace-reduced-motion'), 'true');
   await page.keyboard.press('Escape');
   await preferences.waitFor({ state: 'hidden' });
-  checks.push('Alt+M module menu and search; single navigation owner; Ctrl+K search and active descendant; modal Escape/focus restoration; Ctrl+, local preferences');
+  checks.push('Alt+M module menu and search; queued close preserves newer focus; single navigation owner; Ctrl+K search and active descendant; modal Escape/focus restoration; Ctrl+, local preferences');
 }
 
 async function mobileActionReachable(page, route) {

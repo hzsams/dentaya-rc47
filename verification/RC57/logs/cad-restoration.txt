@@ -1,0 +1,103 @@
+PASS: actual rendered 46 anatomic_crown stays on its selected preparation, survives real controls and exports a closed working STL in raw scan coordinates.
+PASS: actual rendered 47 coping stays on its selected preparation, survives real controls and exports a closed working STL in raw scan coordinates.
+PASS: actual rendered 16 anatomic_crown stays on its selected preparation, survives real controls and exports a closed working STL in raw scan coordinates.
+{
+  "pass": true,
+  "realWebGL": true,
+  "syntheticPreparedStumps": true,
+  "syntheticBackend": true,
+  "crownAndCoping": true,
+  "offsetTiltedAndOppositeAxes": true,
+  "actualRenderedNeckRegistration": true,
+  "cuspHeightPreservesMargin": true,
+  "naturalFinishAndTechnicalPalette": true,
+  "cosmeticChangesPreserveGeometry": true,
+  "ayaRestorationGuidanceAndNoAutomaticActions": true,
+  "perUnitSaveReopen": true,
+  "failedLegacyUpgradeRetainsSavedSurface": true,
+  "rawModelBeforeTarget": true,
+  "noFloatingSecondCrown": true,
+  "hiddenStarterGuidance": true,
+  "modelInference": false,
+  "manualDesignUndoRedo": true,
+  "localActiveUnitStlDownload": true,
+  "unregisteredExportBlocked": true,
+  "measurements": [
+    {
+      "unit": "46",
+      "type": "anatomic_crown",
+      "height": 0.84,
+      "cervicalCenterGapMm": 0.019999999999999858,
+      "maxMarginGapMm": 0.020000000000301832
+    },
+    {
+      "unit": "46",
+      "type": "anatomic_crown",
+      "height": 1.2,
+      "cervicalCenterGapMm": 0.019999999999999858,
+      "maxMarginGapMm": 0.020000000000301832
+    },
+    {
+      "unit": "47",
+      "type": "coping",
+      "height": 0.84,
+      "cervicalCenterGapMm": 0.020000000000000004,
+      "maxMarginGapMm": 0.020000000000371297
+    },
+    {
+      "unit": "47",
+      "type": "coping",
+      "height": 1.2,
+      "cervicalCenterGapMm": 0.020000000000000004,
+      "maxMarginGapMm": 0.020000000000371297
+    },
+    {
+      "unit": "16",
+      "type": "anatomic_crown",
+      "height": 0.84,
+      "cervicalCenterGapMm": 0.01999999999999999,
+      "maxMarginGapMm": 0.020000000000249964
+    },
+    {
+      "unit": "16",
+      "type": "anatomic_crown",
+      "height": 1.2,
+      "cervicalCenterGapMm": 0.01999999999999999,
+      "maxMarginGapMm": 0.020000000000249964
+    }
+  ],
+  "exports": [
+    {
+      "unit": "46",
+      "triangles": 8736,
+      "rawAxialMinZ": 0.019999837028392517,
+      "maxRawVertexErrorMm": 0.000001059006482122571,
+      "bytes": 2655571
+    },
+    {
+      "unit": "47",
+      "triangles": 8736,
+      "rawAxialMinZ": 0.020000027492642403,
+      "maxRawVertexErrorMm": 5.382348930246411e-7,
+      "bytes": 2639870
+    },
+    {
+      "unit": "16",
+      "triangles": 8736,
+      "rawAxialMinZ": 0.019999973475933075,
+      "maxRawVertexErrorMm": 6.746192620788787e-7,
+      "bytes": 2638553
+    }
+  ],
+  "screenshots": [
+    "/workspace/dentaya-rc57-validation/RC57_46_anatomic_crown_occlusal.png",
+    "/workspace/dentaya-rc57-validation/RC57_46_anatomic_crown_placed.png",
+    "/workspace/dentaya-rc57-validation/RC57_manual_crown_design.png",
+    "/workspace/dentaya-rc57-validation/RC57_47_coping_occlusal.png",
+    "/workspace/dentaya-rc57-validation/RC57_47_coping_placed.png",
+    "/workspace/dentaya-rc57-validation/RC57_16_anatomic_crown_occlusal.png",
+    "/workspace/dentaya-rc57-validation/RC57_16_anatomic_crown_placed.png",
+    "/workspace/dentaya-rc57-validation/RC57_AYA_placement_guidance.png",
+    "/workspace/dentaya-rc57-validation/RC57_raw_model_before_margin.png"
+  ]
+}

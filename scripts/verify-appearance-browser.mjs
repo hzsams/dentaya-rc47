@@ -58,9 +58,27 @@ try {
   const cad=await page.evaluate(()=>JSON.parse(localStorage.getItem('dentaya:cad-workspace:v1')));assert.equal(cad.background,'theme');assert.equal(cad.rotateSpeed,1.4);assert.equal(cad.zoomSpeed,1.2);
   await page.getByRole('button',{name:'Tümünü Kaydet',exact:true}).click();await page.waitForFunction(()=>document.body.textContent.includes('kaydedildi'));
   assert.ok(writes.some(w=>w.table==='user_preferences'&&(Array.isArray(w.data)?w.data[0]:w.data).theme==='ocean'),'Save must use the current shared palette theme');
-  const options=await select().locator('option:not([disabled])').evaluateAll(nodes=>nodes.map(node=>node.value));assert.equal(options.length,68);
+  const options=await select().locator('option:not([disabled])').evaluateAll(nodes=>nodes.map(node=>node.value));assert.equal(options.length,72);
   for(const option of options){await select().selectOption(option);assert.equal(await select().inputValue(),option);const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('dentaya:customization-v1')));assert.equal(stored.appearancePreset,option);assert.deepEqual(await colors(),[stored.background,stored.panel,stored.accent].map(c=>c.toLowerCase()));}
   for(const [group,id] of [['Studio','studio-graphite'],['Mineral','mineral-jade'],['Heritage','heritage-oxford'],['Contrast','contrast-ivory']]){await palette().locator('.appearance-collection-tabs').getByRole('button',{name:group,exact:true}).click();await palette().locator(`[data-palette-card="palette:${id}"]`).click();assert.equal(await select().inputValue(),'palette:'+id);}
+  const referencePalettes=[
+    ['reference-midnight',['#121747','#1a2154','#00b9f2']],
+    ['reference-graphite',['#0c0d0e','#2d2e33','#10adb1']],
+    ['reference-turquoise',['#082a30','#103d45','#16cdb8']],
+    ['reference-coral',['#2b1621','#422433','#ff7198']],
+  ];
+  const hexRgb=hex=>'rgb('+[1,3,5].map(offset=>parseInt(hex.slice(offset,offset+2),16)).join(', ')+')';
+  for(const [id,expected] of referencePalettes){
+    await select().selectOption('palette:'+id);await expectColors(expected);
+    const rendered=await page.evaluate(()=>({background:getComputedStyle(document.body).backgroundColor,panel:getComputedStyle(document.querySelector('.appearance-palette:has(select)')).backgroundColor,text:document.documentElement.style.getPropertyValue('--dy-text'),accentText:document.documentElement.style.getPropertyValue('--dy-accent-contrast'),family:document.documentElement.dataset.dyColorFamily}));
+    assert.equal(rendered.background,hexRgb(expected[0]),'The actual application background follows the reference palette');assert.equal(rendered.panel,hexRgb(expected[1]));assert.equal(rendered.family,'dark');
+    const luminance=hex=>{const c=[1,3,5].map(offset=>parseInt(hex.slice(offset,offset+2),16)/255).map(value=>value<=.04045?value/12.92:((value+.055)/1.055)**2.4);return c[0]*.2126+c[1]*.7152+c[2]*.0722;};
+    const ratio=(a,b)=>{const x=luminance(a),y=luminance(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);};
+    assert.ok(expected.slice(0,2).every(surface=>ratio(rendered.text,surface)>=4.5),'Body and panel text retain readable contrast');assert.ok(ratio(expected[2],expected[1])>=4.5,'Small accent labels remain readable');assert.ok(ratio(rendered.accentText,expected[2])>=4.5,'Accent buttons retain readable text');
+    const workspace=await page.evaluate(()=>JSON.parse(localStorage.getItem('dentaya:cad-workspace:v1')));assert.equal(workspace.background,'theme');assert.equal(workspace.rotateSpeed,1.4);assert.equal(workspace.zoomSpeed,1.2);
+    await page.getByRole('button',{name:'Tümünü Kaydet',exact:true}).click();await page.waitForFunction(()=>document.body.textContent.includes('kaydedildi'));await openSettings();assert.equal(await select().inputValue(),'palette:'+id);await expectColors(expected);
+    if(id==='reference-graphite'&&process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC57_Background_Graphite_Desktop.png'),animations:'disabled'});}
+  }
   await select().selectOption('palette:carbon');await expectColors(['#101215','#1c2026','#b9c6d7']);
   await palette().locator('summary').click();await palette().getByLabel('Vurgu rengi',{exact:true}).evaluate(input=>{Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(input,'#aa55cc');input.dispatchEvent(new Event('input',{bubbles:true}));});
   await page.waitForFunction(()=>document.documentElement.style.getPropertyValue('--dy-accent')==='#aa55cc');assert.equal(await select().inputValue(),'custom');
@@ -78,6 +96,13 @@ try {
   if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await palette().screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'palette-desktop.png')});}
   await page.setViewportSize({width:390,height:844});assert.ok(await palette().evaluate(n=>n.getBoundingClientRect().right<=innerWidth+1));assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   if(process.env.DENTAYA_SCREENSHOT_DIR)await palette().screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'palette-mobile.png')});
+  await select().selectOption('palette:reference-midnight');await expectColors(['#121747','#1a2154','#00b9f2']);
+  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+  if(process.env.DENTAYA_SCREENSHOT_DIR)await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC57_Background_Midnight_Mobile.png'),animations:'disabled'});
+  await select().selectOption('palette:reference-coral');await expectColors(['#2b1621','#422433','#ff7198']);
+  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+  if(process.env.DENTAYA_SCREENSHOT_DIR)await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC57_Background_Coral_Mobile.png'),animations:'disabled'});
+  await openSettings();assert.equal(await select().inputValue(),'palette:reference-coral');await expectColors(['#2b1621','#422433','#ff7198']);
   assert.deepEqual(errors,[]);
-  console.log(JSON.stringify({pass:true,presetChoices:options.length,oneVisiblePalette:true,duplicateEditorsRemoved:true,settingsAndQuickPanelSynced:true,legacyAccentCannotLeak:true,reloadPreservesSelection:true,saveUsesCurrentPalette:true,customColorAndReset:true,appearanceExportVersion:2,version1Import:true,version2Import:true,cadFollowsPalette:true,cadCameraSpeedsPreserved:true,languages,mobileFits:true,backend:'mocked, no production data'},null,2));
+  console.log(JSON.stringify({pass:true,presetChoices:options.length,referencePalettes:4,actualGlobalReferenceBackgrounds:true,readableTextPanelAndAccentContrast:true,referencePaletteSaveAndReload:true,referencePalettesMobileFit:true,oneVisiblePalette:true,duplicateEditorsRemoved:true,settingsAndQuickPanelSynced:true,legacyAccentCannotLeak:true,reloadPreservesSelection:true,saveUsesCurrentPalette:true,customColorAndReset:true,appearanceExportVersion:2,version1Import:true,version2Import:true,cadFollowsPalette:true,cadCameraSpeedsPreserved:true,languages,mobileFits:true,backend:'mocked, no production data'},null,2));
 } catch(error){console.error(logs);throw error;} finally {await browser?.close();server?.kill('SIGTERM');}

@@ -18,7 +18,8 @@ export function cadSectionContours(geometry: THREE.BufferGeometry, matrix: THREE
     }
     const limit = (value: number | undefined, fallback: number, max: number) => value === undefined ? fallback : Number.isFinite(value) ? Math.max(0, Math.min(max, Math.floor(value))) : 0;
     const maxTriangles = limit(options.maxTriangles, 500_000, 500_000), maxSegments = limit(options.maxSegments, 20_000, 20_000);
-    const plane = inputPlane.clone().normalize(), epsilon = 1e-5, points: THREE.Vector3[] = [], buckets = new Map<string, number[]>(), edges = new Set<string>(), adjacency: Set<number>[] = [];
+    const plane = inputPlane.clone().normalize(), epsilon = 1e-5, points: THREE.Vector3[] = [], buckets = new Map<string, number[]>(), edges = new Set<string>(), intersectedFaces = new Set<string>(), adjacency: Set<number>[] = [];
+    const edgeCuts = new Map<string, {onPlaneEdge: boolean; side: number; count: number}>();
     function vertex(point: THREE.Vector3) {
         const x = Math.floor(point.x / epsilon), y = Math.floor(point.y / epsilon), z = Math.floor(point.z / epsilon);
         for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) for (let dz = -1; dz <= 1; dz++) {
@@ -50,9 +51,27 @@ export function cadSectionContours(geometry: THREE.BufferGeometry, matrix: THREE
             if (a > epsilon && b < -epsilon || a < -epsilon && b > epsilon) add(triangle[k].clone().lerp(triangle[next], a / (a - b)));
         }
         if (hits.length !== 2 || hits[0].distanceToSquared(hits[1]) <= epsilon * epsilon) continue;
+        // Deduplicating contour edges alone can hide a duplicated surface and
+        // turn coincident overlapping faces into an apparently clean area.
+        // Match complete faces, so two valid neighbours cut on their shared
+        // edge still produce one contour segment without an overlap warning.
+        const faceKey = triangle.map(point => [point.x, point.y, point.z].map(value => Math.round(value / epsilon)).join(',')).sort().join('|');
+        if (intersectedFaces.has(faceKey)) warnings.add('duplicate-face');
+        else intersectedFaces.add(faceKey);
         const a = vertex(hits[0]), b = vertex(hits[1]); if (a === b) continue;
-        const key = a < b ? `${a}:${b}` : `${b}:${a}`; if (edges.has(key)) continue;
+        const key = a < b ? `${a}:${b}` : `${b}:${a}`;
+        const onPlaneEdge = distances.filter(d => Math.abs(d) <= epsilon).length === 2;
+        const side = Math.sign(distances.find(d => Math.abs(d) > epsilon) ?? 0), previousCut = edgeCuts.get(key);
+        if (previousCut) {
+            // A real edge shared by two neighbours on opposite sides of the
+            // plane is one valid contour segment. Repeated interior cuts (also
+            // with different triangulations) or extra incident faces are not.
+            previousCut.count++;
+            if (!onPlaneEdge || !previousCut.onPlaneEdge || previousCut.side === side || previousCut.count > 2) warnings.add('duplicate-face');
+            continue;
+        }
         if (edges.size >= maxSegments) {result.truncated = true; warnings.add('truncated'); break;}
+        edgeCuts.set(key, {onPlaneEdge, side, count: 1});
         edges.add(key); adjacency[a].add(b); adjacency[b].add(a);
         result.segments.push(...points[a].toArray(), ...points[b].toArray()); result.perimeterMm += points[a].distanceTo(points[b]);
     }
@@ -79,8 +98,17 @@ export function cadSectionContours(geometry: THREE.BufferGeometry, matrix: THREE
         outer: for (let i = 0; i < lines.length; i++) for (let j = i + 1; j < lines.length && lines[j].minX <= lines[i].maxX + epsilon; j++) {
             const a = lines[i], b = lines[j];
             if (++comparisons > 200_000) {warnings.add('complex'); break outer;}
-            if (a.a === b.a || a.a === b.b || a.b === b.a || a.b === b.b || b.minY > a.maxY + epsilon || a.minY > b.maxY + epsilon) continue;
+            if (b.minY > a.maxY + epsilon || a.minY > b.maxY + epsilon) continue;
             const p = projected[a.a], q = projected[a.b], r = projected[b.a], s = projected[b.b], c1 = cross(p, q, r), c2 = cross(p, q, s), c3 = cross(r, s, p), c4 = cross(r, s, q);
+            const dx = q.x - p.x, dy = q.y - p.y, length = Math.hypot(dx, dy);
+            if (Math.abs(c1) <= epsilon * length && Math.abs(c2) <= epsilon * length) {
+                const along = (point: {x: number; y: number}) => ((point.x - p.x) * dx + (point.y - p.y) * dy) / length;
+                const start = along(r), end = along(s);
+                // Adjacent edges may touch or continue straight; a positive
+                // shared interval is ambiguous even when they share a vertex.
+                if (Math.min(length, Math.max(start, end)) - Math.max(0, Math.min(start, end)) > epsilon) {warnings.add('self-intersection'); break outer;}
+            }
+            if (a.a === b.a || a.a === b.b || a.b === b.a || a.b === b.b) continue;
             if (c1 * c2 <= 1e-14 && c3 * c4 <= 1e-14) {warnings.add('self-intersection'); break outer;}
         }
         if (loops.length > 256) warnings.add('complex');

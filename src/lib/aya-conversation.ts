@@ -4,6 +4,7 @@ import {answerDialogue} from '../../electron/aya/dialogue.cjs';
 import {answerTasks} from '../../electron/aya/task-dialogue.cjs';
 import {answerMemory,isMemoryCommand} from '../../electron/aya/memory-dialogue.cjs';
 import {suggestCadReply} from '../../electron/aya/cad-dialogue.cjs';
+import {suggestSectionReply} from '../../electron/aya/section-dialogue.cjs';
 import {answerCatalog,fallbackReply,isCatalogQuestion,safetyReply} from '../../electron/aya/conversation.cjs';
 import {ayaDocumentGuide} from './aya-guide';
 import {ayaCadHelp,type AyaCadContext} from './aya-cad-assistance';
@@ -25,7 +26,7 @@ export async function resolveAyaReply(input:Input,{t=s=>s,callModel}:{t?:(s:stri
  const modelFailure=(error:string):AyaReply=>{
   // A failed model must not make a basic product question unanswerable. Keep
   // cancellation final and label both the Core answer and the failed attempt.
-  const known=error==='LOCAL_CANCELLED'||error==='LOCAL_CONTEXT_CHANGED'?null:answerDialogue(prompt,context)??(isMemoryCommand(prompt)?null:answerMemory(prompt,context))??suggestCadReply(prompt,context)??answerTasks(prompt,{...context,t});
+  const known=error==='LOCAL_CANCELLED'||error==='LOCAL_CONTEXT_CHANGED'?null:answerDialogue(prompt,context)??(isMemoryCommand(prompt)?null:answerMemory(prompt,context))??suggestSectionReply(prompt,context)??suggestCadReply(prompt,context)??answerTasks(prompt,{...context,t});
   if(known)return {...known,warning:error,output:known.output+'\n\n'+(locale==='tr'?'Yerel model bu isteği tamamlayamadı; bu yanıt AYA Core tarafından hazırlandı.':'The local model could not complete this request; AYA Core prepared this reply.')};
   return {...fallbackReply(prompt,{locale,history,modelEnabled:true,modelError:error}),warning:error,cancelled:error==='LOCAL_CANCELLED'};
  };
@@ -47,7 +48,7 @@ export async function resolveAyaReply(input:Input,{t=s=>s,callModel}:{t?:(s:stri
   // Exact catalogue questions are intentional definitions/checks, not CAD commands.
   const canonical=options.useKnowledge!==false&&isCatalogQuestion(prompt)?answerCatalog(prompt,context):null;
   if(canonical)return canonical;
-  const currentCad=suggestCadReply(prompt,context);if(currentCad)return currentCad;
+  const currentCad=suggestSectionReply(prompt,context)??suggestCadReply(prompt,context);if(currentCad)return currentCad;
   const owned=answerOwned(prompt,{...context,includeCatalog:!cadContext},t);
   if(owned)return owned;
   const cad=cadContext&&!cadContext.scope?ayaCadHelp(prompt,cadContext,t):null;

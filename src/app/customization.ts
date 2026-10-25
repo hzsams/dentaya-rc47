@@ -3,6 +3,10 @@ import {updateCadWorkspace} from '@/lib/cad-workspace-preferences';
 import { useEffect, useSyncExternalStore } from "react";
 
 export const COLOR_PALETTES = [
+  ["reference-midnight", "Neon Midnight", "#121747", "#1a2154", "#00b9f2"],
+  ["reference-graphite", "Graphite Turquoise", "#0c0d0e", "#2d2e33", "#10adb1"],
+  ["reference-turquoise", "Deep Turquoise", "#082a30", "#103d45", "#16cdb8"],
+  ["reference-coral", "Deep Coral", "#2b1621", "#422433", "#ff7198"],
   ["studio-graphite", "Studio Graphite", "#12181e", "#1d2831", "#9fc5d9"],
   ["studio-steel", "Studio Steel", "#e9eef2", "#fafdff", "#355c73"],
   ["studio-ink", "Studio Ink", "#121c2a", "#1c2d42", "#b6cce6"],

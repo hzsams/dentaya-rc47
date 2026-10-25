@@ -10,7 +10,7 @@ const restorationSubject=q=>/\b(?:kron|kuron|kapson|crown|coping|restorasyon|res
 function restorationTopic(q){
  const subject=restorationSubject(q)||/tasarim|design/.test(q);
  if(!subject)return '';
- if(/preparasyon|hazirlanmis dis|prepared tooth|preparation|oturm|oturt|yerlesm|yanlis yerde|havada|floating|misplac|seat(?:ing)?|does(?:n['’ ]?t| not) fit/.test(q))return 'seating';
+ if(/preparasyon|hazirlanmis dis|prepared tooth|preparation|oturm|oturt|yerles(?:m|im)|yanlis yerde|havada|floating|misplac|seat(?:ing)?|does(?:n['’ ]?t| not) fit/.test(q))return 'seating';
  if(/anatom|\bform\p{L}*\b|morpholog|sek(?:il|li)/u.test(q))return 'anatomy';
  if(/gorunum|gorunus|dogal|gercekci|renk|materyal|appearance|natural|realistic|shading|shade|material|colou?r/.test(q))return 'appearance';
  if(/(?:ham )?(?:model|tarama)\p{L}* (?:ustune|uzerine|ustunde|uzerinde)(?=\s|[,.!?;:]|$)|\bon (?:the |this |my |a )?(?:raw )?(?:(?:scan|prepared) )?model\b/u.test(q))return 'seating';
@@ -42,7 +42,7 @@ function requestIntent(prompt,checkCompound=true){
  if(/tork|torque|cerrahi|surgical|ilac|dosage|diagnos|teshis|tedavi/.test(q))return null;
  const topic=topicOf(q),restoration=restorationTopic(q);
  const current=restorationSubject(q)||/guncel|mevcut|bu (?:tasarim|unite|dis|rapor|is|proje|calisma|kontrol)|yeni kontrol|current|this (?:design|unit|tooth|report|project|workspace)|new check/.test(q);
- const review=restoration==='seating'||/incele|degerlendir|yorumla|bulgu|kontrol sonuc|rapor|analiz|review|interpret|finding|check result|analysis/.test(q);
+ const review=/incele|degerlendir|yorumla|bulgu|kontrol sonuc|rapor|analiz|review|interpret|evaluate|finding|check result|analysis/.test(q)||['wall','contact','undercut'].includes(topic)&&/durum|sonuc|state|status|result/.test(q);
  const next=/siradaki|sonraki|ne yap(?:ayim|maliyim|alim|acagiz)?|nasil (?:devam|ilerle)|next|what (?:should|can) (?:i|we) do|how (?:should|can) (?:i|we) (?:proceed|continue)/.test(q);
  const help=/yardim|nasil|nereye|nereden|hangi arac|ne oner|oner|yapabilir mi(?:yiz|sin)|bakabilir misin|kontrol edebilir|\bcan (?:we|you)\b|\bhelp\b|\bhow\b|suggest|recommend/.test(q);
  const definition=/nedir|ne demek|ne anlama|tanimi|what (?:is|are)|define|definition/.test(q);
@@ -59,7 +59,7 @@ function requestIntent(prompt,checkCompound=true){
   }
  }
  const command=/kaydet|\bsave\b|geri al|\bundo\b|\bredo\b|yerlestir|\bplace\b|goster|\bshow\b|izole|\bisolate\b|arac.*ac|activate|firca.*ac/.test(q)||restoration&&/degistir|iyilestir|\byap\b|make|change|improve/.test(q);
- if(!next&&!(current&&(review||help||/durum|state|status/.test(q)))&&!(topic&&(help||command||review))&&!(review&&/tasarim|mesh|cad|geometri|design|workspace/.test(q)))return null;
+ if(!next&&!(current&&(review||help||restoration==='seating'||/durum|state|status/.test(q)))&&!(topic&&(help||command||review))&&!(review&&/tasarim|mesh|cad|geometri|design|workspace/.test(q)))return null;
  return {q,topic,review,next};
 }
 function cadFollowup(prompt,c,history){
@@ -101,9 +101,9 @@ function suggestCadReply(prompt,{cadContext=null,locale='tr',workingMemory,histo
  const task=taskNames[c.task];
  if(intent.negative){rows.push(pick('İstemediğin CAD işlemini önermiyorum. Bu istekte işlem önerisini durdurdum; projede değişiklik yapmadım.','I will not suggest the CAD action you asked me to avoid. Action suggestions are stopped for this request; no project changes were made.'));return reply();}
  if(intent.mixed){rows.push(pick('Bu mesajda birden fazla farklı görev var. Bu Core yolunda tek CAD adımını birlikte inceleyebiliriz. Hangi CAD adımına bakalım? Diğer isteği ayrı mesajda yazabilirsin.','This message combines different tasks. This Core path can review one CAD step at a time. Which CAD step should we review? Send the other request separately.'));return reply();}
- rows.push(pick('Çalışma ünitesi: ','Working unit: ')+(c.unit||'—')+(task?' · '+task[tr?0:1]:''));
- if(c.isSaving){rows.push(pick('Kayıt sürüyor. Başarı sonucu gelmeden kaydedildi veya çıkıldı diyemem.','Saving is in progress. A successful result is required before confirming a save or exit.'));return reply();}
- if(inconsistent(c)){rows.push(pick('Çalışma bilgileri birbiriyle uyuşmuyor. Kaynağı, yüklemeyi ve kole durumunu yenileyip tekrar değerlendir.','Workspace metadata is inconsistent. Refresh the source, loading and margin state before reviewing again.'));return reply();}
+ const unitLine=pick('Çalışma ünitesi: ','Working unit: ')+(c.unit||'—')+(task?' · '+task[tr?0:1]:'');
+ if(c.isSaving){rows.push(pick('Kayıt sürüyor. Başarı sonucu gelmeden kaydedildi veya çıkıldı diyemem.','Saving is in progress. A successful result is required before confirming a save or exit.'),unitLine);return reply();}
+ if(inconsistent(c)){rows.push(pick('Çalışma bilgileri birbiriyle uyuşmuyor. Kaynağı, yüklemeyi ve kole durumunu yenileyip tekrar değerlendir.','Workspace metadata is inconsistent. Refresh the source, loading and margin state before reviewing again.'),unitLine);return reply();}
  const can=tool=>{
   if(!c.availableTools.includes(tool))return false;
   if(tool==='setup')return true;
@@ -121,7 +121,14 @@ function suggestCadReply(prompt,{cadContext=null,locale='tr',workingMemory,histo
   return true;
  };
  const add=(tool,a,b)=>{if(proposals.length<4&&can(tool)&&!proposals.some(p=>p.tool===tool))proposals.push({tool,reason:pick(a,b),scope:c.scope,snapshot:c.snapshot});};
- const finish=()=>{if(proposals.length)rows.push(pick('Önerilen işlemler yalnız Uygula düğmesine bastığında çalışır; güncel çalışma tekrar denetlenir.','Suggested actions run only when you click Apply; the current workspace is checked again.'));return reply();};
+ const finish=(manualStep='')=>{
+  // Ordinary tool/next-step help leads with an available action. Analysis keeps
+  // its evidence first; a placement complaint alone is not a QC report request.
+  if(!intent.review){const step=manualStep||proposals[0]?.reason;if(step)rows.unshift(step);}
+  rows.push(unitLine);
+  if(proposals.length)rows.push(pick('Önerilen işlemler yalnız Uygula düğmesine bastığında çalışır; güncel çalışma tekrar denetlenir.','Suggested actions run only when you click Apply; the current workspace is checked again.'));
+  return reply();
+ };
  const last=c.recentActions.at(-1),lastSave=c.recentActions.filter(a=>a.tool==='save'||a.tool==='save-exit').at(-1);
  const failedSave=c.saveFailed;
  if(failedSave){
@@ -130,7 +137,7 @@ function suggestCadReply(prompt,{cadContext=null,locale='tr',workingMemory,histo
   add('save','Önce mevcut projeyi yeniden kaydet; başarısını gerçek kayıt sonucu belirler.','Retry saving the current project first; the actual save result determines success.');
  }else if(last?.result)rows.push(pick(last.ok?'Son işlem tamamlandı: ':'Son işlem başarısız: ',last.ok?'Last action completed: ':'Last action failed: ')+last.result);
  const r=c.report;
- if(intent.review||['wall','contact','undercut'].includes(intent.topic)){
+ if(intent.review){
   if(!r)rows.push(pick('Bu çalışma için güncel geometri kontrolü yok. Ölçüm veya uygunluk sonucu çıkaramam.','There is no current geometry check for this workspace. Measurements or clearance cannot be inferred.'));
   else {
    const mesh=[];
@@ -205,7 +212,7 @@ function suggestCadReply(prompt,{cadContext=null,locale='tr',workingMemory,histo
  }
  if(intent.topic==='library'){add('library','Seçili ünite için teknisyenin form kütüphanesini aç.','Open the technician form library for the selected unit.');return finish();}
  if(!c.visible&&c.placed){rows.push(pick('Etkin restorasyon görünmüyor; önce görünürlüğü geri getir.','The active restoration is hidden; restore visibility first.'));add('show-all','Gizli sahneyi yeniden göstererek yerleşimi kontrol et.','Restore the hidden scene before checking placement.');return finish();}
- if(c.marginPoints<3){rows.push(pick('Geçerli kole için en az 3 marjin noktası gerekli; mevcut nokta sayısı: ','A valid margin needs at least 3 points; current point count: ')+c.marginPoints+'.');add('tool-margin','Mevcut manuel marjin aracıyla kole çizgisini tamamla.','Complete the margin with the existing manual margin tool.');return finish();}
+ if(c.marginPoints<3){rows.push(pick('Geçerli kole için en az 3 marjin noktası gerekli; mevcut nokta sayısı: ','A valid margin needs at least 3 points; current point count: ')+c.marginPoints+'.');add('tool-margin','Mevcut manuel marjin aracıyla kole çizgisini tamamla.','Complete the margin with the existing manual margin tool.');return finish(c.tool==='margin'?pick('Ham modelde seçili dişin kole çizgisini tamamla.','Complete the selected tooth margin on the raw model.'):'');}
  if(intent.topic==='seating'){
   rows.push(pick('Etkin ünitenin kaynak taramasını ve kole çizgisini restorasyon yapılacak hazırlanmış diş üzerinde doğrula. Kole çizgisi başka dişe veya kaynağa aitse onu düzeltmeden yerleşim uygun sayılamaz.','Confirm the active unit’s source scan and margin on the prepared tooth being restored. Placement cannot be accepted if the margin belongs to another tooth or source.'));
   rows.push(pick(c.placed?'Yerleştirilmiş bilgisi mevcut kole ankrajını gösterir; preparasyona oturma veya iç yüzey uyumu onayı değildir.':'Bu restorasyon mevcut koleye henüz yerleştirilmemiş.',c.placed?'The placed flag records the current margin anchor; it does not confirm seating on the preparation or internal fit.':'This restoration has not yet been placed on the current margin.'));
@@ -215,10 +222,11 @@ function suggestCadReply(prompt,{cadContext=null,locale='tr',workingMemory,histo
  }
  if(!c.placed){rows.push(pick('Kole noktaları mevcut; restorasyon henüz koleye yerleştirilmemiş.','Margin points exist; the restoration has not yet been placed on the margin.'));add('place','Seçili restorasyonu mevcut koleye yerleştir; sonucu CAD işlemi doğrular.','Place the selected restoration on the existing margin; the CAD operation confirms the result.');return finish();}
  const topic=intent.topic||topicOf(fold(normalizeMemory(workingMemory).goal))||(c.task==='contacts'?'contact':'');
- if(topic==='wall'&&intent.topic!=='wall'&&!intent.review)rows.push(pick('Kabuk duvar değeri bir tahmindir. Kaynak mesafe haritası gerçek duvar kalınlığı ölçümü değildir.','Shell wall values are estimates. The source distance map is not a true wall thickness measurement.'));
- if(topic==='contact'&&(!(intent.review||intent.topic==='contact')||!r))rows.push(pick('Temas değerlendirmesi yüklü antagonist yüzeyine göre örneklenir; dinamik veya klinik oklüzyon onayı değildir.','Contact evaluation samples the loaded antagonist surface; it is not dynamic or clinical occlusion clearance.'));
+ if(topic==='wall'&&!intent.review)rows.push(pick('Kabuk duvar değeri bir tahmindir. Kaynak mesafe haritası gerçek duvar kalınlığı ölçümü değildir.','Shell wall values are estimates. The source distance map is not a true wall thickness measurement.'));
+ if(topic==='contact'&&(!intent.review||!r))rows.push(pick('Temas değerlendirmesi yüklü antagonist yüzeyine göre örneklenir; dinamik veya klinik oklüzyon onayı değildir.','Contact evaluation samples the loaded antagonist surface; it is not dynamic or clinical occlusion clearance.'));
  if(topic==='contact'){
-  if(!c.antagonistReady){if(!rows.some(s=>s.includes(pick('Antagonist yüklü değil','No antagonist is loaded'))))rows.push(pick('Antagonist yüklü değil; Dosyalar adımında karşıt çene kaynağını doğrula. Temas sonucu çıkaramam.','No antagonist is loaded; confirm the opposing scan in Files. Contact results cannot be inferred.'));return finish();}
+  if(!c.antagonistReady){if(!rows.some(s=>s.includes(pick('Antagonist yüklü değil','No antagonist is loaded'))))rows.push(pick('Antagonist yüklü değil; Dosyalar adımında karşıt çene kaynağını doğrula. Temas sonucu çıkaramam.','No antagonist is loaded; confirm the opposing scan in Files. Contact results cannot be inferred.'));return finish(pick('Dosyalar adımında karşıt çene kaynağını doğrula; antagonist yüklü değil.','Confirm the opposing scan in Files; no antagonist is loaded.'));}
+  if(!intent.review&&r?.contactReference!=='antagonist')rows.push(pick('Antagonist yüklü, ancak güncel raporda antagonist karşılaştırması yok.','An antagonist is loaded, but the current report has no antagonist comparison.'));
   if(c.openingMm>0&&/kapanis|bite/.test(intent.q))add('recorded-bite','İki yüklü çeneyi kayıtlı kapanışta göster; yeni hizalama veya oklüzyon çözümü yapmaz.','Show both loaded jaws in their registered bite; this does not perform a new alignment or solve occlusion.');
   add('view-contact','Yüklü antagoniste göre örneklenmiş temas mesafelerini göster.','Show sampled contact distances to the loaded antagonist.');
   if(!r||r.contactReference!=='antagonist')add('inspect','Güncel geometri ve mevcut antagonist karşılaştırmasını hesapla.','Calculate current geometry checks and the available antagonist comparison.');

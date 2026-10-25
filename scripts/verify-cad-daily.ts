@@ -29,7 +29,7 @@ for(const bad of [[{x:0,y:0,z:0},{x:1,y:0,z:0},{x:2,y:0,z:0}],[{x:NaN,y:0,z:0},{
  const before=Array.from(g.getAttribute('position').array);assert.equal(placeCadCrownOnMargin(g,bad,new THREE.Vector3(0,0,1)),null);assert.deepEqual(Array.from(g.getAttribute('position').array),before);
 }
 const data=captureCadGeometry(g),base=[...data.positions];data.positions[2]=Math.fround(data.positions[2]+.09);
-const workspace:CadWorkspaceSnapshot={version:1,sourceKey:'test-source',units:{'unit-46':{key:'unit-46:46:anatomic_crown:natural:balanced',geometry:data,base,placementBase:[...base],anchor:{position:[18,-9,5],quaternion:[0,0,0,1],placed:true}}}};
+const workspace:CadWorkspaceSnapshot={version:1,sourceKey:'public-demo|/training-scans/602.stl|602.stl|18.00000000|-9.000000000|3.000000000|12.00000000|1280',units:{'unit-46':{key:'unit-46:46:anatomic_crown:natural:balanced',geometry:data,base,placementBase:[...base],anchor:{position:[18,-9,5],quaternion:[0,0,0,1],placed:true}}}};
 const shell=buildCrownShell(new THREE.Mesh(g),null,{wallThicknessMm:.5,cervicalCutRatio:.12,innerFitBlend:0,cementGapMm:.05,marginGapMm:.02,axialGapMm:.05,radialGapMm:.05,transitionMm:1,millingCompensationMm:0});
 workspace.units['unit-46'].shell=captureCadGeometry(shell.geometry);workspace.units['unit-46'].shellReport=shell.report;
 workspace.sources={'other-source':{'unit-47':structuredClone(workspace.units['unit-46'])}};
@@ -38,7 +38,7 @@ const shape=restoreCadGeometry(restored!.units['unit-46'].geometry);assert.deepE
 assert.equal(await decodeCadWorkspace({...encoded,data:'not base64'}),null);assert.equal(validateCadWorkspace({...workspace,units:{constructor:workspace.units['unit-46']}}),false);
 const invalid=JSON.parse(JSON.stringify(workspace));invalid.units['unit-46'].geometry.indices[0]=9999999;assert.equal(validateCadWorkspace(invalid),false);
 assert.equal(validateCadWorkspace({...workspace,version:99}),false);
-const draft=(key:string,savedAt:number,retained=false):CadRecoveryDraft=>({key,projectId:'recovery-test',sourceKey:workspace.sourceKey,savedAt,retained,geometry:new Float32Array(data.positions),workspace:{settings:{fixture:'acknowledgment-race'},marginPoints:[],measurements:[],designSnapshot:workspace,workflowStage:'design',projectStatus:'working'}});
+const draft=(key:string,savedAt:number,retained=false):CadRecoveryDraft=>({key,projectId:'recovery-test',sourceKey:'scan:scan-lower',savedAt,retained,geometry:new Float32Array(data.positions),workspace:{settings:{fixture:'acknowledgment-race'},marginPoints:[],measurements:[],designSnapshot:workspace,workflowStage:'design',projectStatus:'working'}});
 const key='checkpoint-order';
 await saveCadRecoveryDraft(draft(key,300));await acknowledgeCadRecoveryDraft(key,250);assert.equal((await loadCadRecoveryDraft(key))?.savedAt,300,'Later edits remain recoverable');
 await acknowledgeCadRecoveryDraft('new-write-after-ack',200);await saveCadRecoveryDraft(draft('new-write-after-ack',100));assert.equal((await loadCadRecoveryDraft('new-write-after-ack'))?.savedAt,100,'A new write after acknowledgment remains recoverable even if the device clock moved backward');
@@ -50,13 +50,16 @@ const remoteSettings={cad_workspace:{...encoded,savedAt:200},view:{opacity:.7,sh
 const remoteProject={id:covered.projectId,settings:remoteSettings,margin_points:[],measurements:[],workflow_stage:'design',status:'working'};
 await saveCadRecoveryDraft(covered);
 const persisted=await loadCadRecoveryDraft(covered.key);assert.ok(persisted);
-assert.equal(await isCadRecoveryDraftAcknowledged(persisted,remoteProject),true,'An identical acknowledged remote payload covers a late local checkpoint after reload');
+assert.notEqual(persisted.sourceKey,persisted.workspace.designSnapshot!.sourceKey,'The recovery UI source identity differs from the loader fingerprint in the saved workspace');
+assert.equal(await isCadRecoveryDraftAcknowledged(persisted,remoteProject),true,'An identical acknowledged remote payload covers a late local checkpoint after reload when UI identity and loader fingerprint differ');
 assert.equal(await isCadRecoveryDraftAcknowledged(covered,{...remoteProject,settings:{...remoteSettings,cad_workspace:{...encoded,savedAt:100}}}),true,'Equal timestamps require the same complete workspace and settings');
 assert.ok(await loadCadRecoveryDraft(covered.key),'Acknowledgment comparison never mutates local checkpoints');
 assert.equal(await isCadRecoveryDraftAcknowledged({...covered,retained:true},remoteProject),false,'An explicit retained checkpoint remains available even when the cloud payload matches');
 assert.equal(await isCadRecoveryDraftAcknowledged({...covered,savedAt:201},remoteProject),false,'A later local checkpoint remains available');
 assert.equal(await isCadRecoveryDraftAcknowledged(covered,{...remoteProject,id:'another-project'}),false,'Project identity must match');
-assert.equal(await isCadRecoveryDraftAcknowledged({...covered,sourceKey:'another-source'},remoteProject),false,'The local source must match the complete snapshot');
+const wrongSourceWorkspace={...workspace,sourceKey:workspace.sourceKey.replaceAll('602.stl','603.stl')};
+const wrongSourceRecord=await encodeCadWorkspace(wrongSourceWorkspace);
+assert.equal(await isCadRecoveryDraftAcknowledged(covered,{...remoteProject,settings:{...remoteSettings,cad_workspace:{...wrongSourceRecord,savedAt:200}}}),false,'The decoded remote loader fingerprint must match the local snapshot even when every geometry value matches');
 assert.equal(await isCadRecoveryDraftAcknowledged({...covered,workspace:{...covered.workspace,designSnapshot:undefined}},remoteProject),false,'Legacy drafts without a complete snapshot remain recoverable');
 assert.equal(await isCadRecoveryDraftAcknowledged({...covered,workspace:{...covered.workspace,designSnapshot:invalid}},remoteProject),false,'Corrupt local snapshots are never dismissed as acknowledged');
 const changedWorkspace=structuredClone(workspace);changedWorkspace.units['unit-46'].geometry.positions[2]+=.125;
@@ -76,4 +79,4 @@ const differentRemotePayloads=[
 for(const remote of differentRemotePayloads)assert.equal(await isCadRecoveryDraftAcknowledged(covered,remote),false,'Newer remote metadata is insufficient when the full acknowledged payload differs or is corrupt');
 const changedLocal=draft('changed-local',100);changedLocal.workspace={...covered.workspace,designSnapshot:changedWorkspace};
 assert.equal(await isCadRecoveryDraftAcknowledged(changedLocal,remoteProject),false,'An older timestamp never dismisses a distinct unsaved local edit');
-shape.dispose();shell.geometry.dispose();g.dispose();console.log(JSON.stringify({pass:true,placedCrowns:crowns,translatedTiltedAndOppositeAxes:true,cervicalCentersMatchMargins:true,closedSingleBodies:true,invalidMarginsDoNotModifyGeometry:true,fullTopologyAndEditsRoundTrip:true,shellReportAndSourceFramesRoundTrip:true,compressedGeometry:true,corruptRecordsRejected:true,exactRemoteCheckpointComparison:true,newerRetainedAndChangedRecoveryPreserved:true},null,2));
+shape.dispose();shell.geometry.dispose();g.dispose();console.log(JSON.stringify({pass:true,placedCrowns:crowns,translatedTiltedAndOppositeAxes:true,cervicalCentersMatchMargins:true,closedSingleBodies:true,invalidMarginsDoNotModifyGeometry:true,fullTopologyAndEditsRoundTrip:true,shellReportAndSourceFramesRoundTrip:true,compressedGeometry:true,corruptRecordsRejected:true,distinctRecoveryIdentityAndSnapshotFingerprint:true,wrongRemoteSourceFingerprintRejected:true,exactRemoteCheckpointComparison:true,newerRetainedAndChangedRecoveryPreserved:true},null,2));

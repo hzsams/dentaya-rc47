@@ -44,10 +44,11 @@ export async function isCadRecoveryDraftAcknowledged(draft: CadRecoveryDraft, pr
     if (!local || !settingsObject(local.settings) || !settingsObject(project.settings) ||
       !Array.isArray(local.marginPoints) || !Array.isArray(project.margin_points) ||
       !Array.isArray(local.measurements) || !Array.isArray(project.measurements) ||
-      !validateCadWorkspace(local.designSnapshot) || local.designSnapshot.sourceKey !== draft.sourceKey) return false;
+      !validateCadWorkspace(local.designSnapshot)) return false;
     const record = project.settings.cad_workspace as Partial<CadWorkspaceRecord> | undefined;
     if (!record || typeof record.savedAt !== 'number' || !Number.isFinite(record.savedAt) || record.savedAt < draft.savedAt) return false;
     const remote = await decodeCadWorkspace(record);
+    // The caller checks the UI source identity; compare loader fingerprints within the full snapshots.
     if (!remote || !sameCadJson(local.designSnapshot, remote)) return false;
     const editableSettings = (settings: Record<string, unknown>) => Object.fromEntries(Object.entries(settings).filter(([key]) => key !== 'cad_workspace'));
     return sameCadJson(editableSettings(local.settings), editableSettings(project.settings)) &&

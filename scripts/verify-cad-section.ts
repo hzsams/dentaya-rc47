@@ -19,6 +19,40 @@ const tangent = cadSectionContours(box, identity, new THREE.Plane(new THREE.Vect
 const outside = cadSectionContours(box, identity, new THREE.Plane(new THREE.Vector3(0, 0, 1), -20)); assert.equal(outside.segmentCount, 0); assert.equal(outside.areaMm2, null);
 const shifted = box.clone().translate(1, 0, 0), overlapping = mergeGeometries([box, shifted]);
 assert.equal(cadSectionContours(overlapping, identity, plane).areaMm2, null, 'Crossing/overlapping contours must not be sold as a valid closed section area');
+const coincident = mergeGeometries([box, box]), coincidentNonIndexed = coincident.toNonIndexed();
+const flipped = box.clone(), flippedIndices = Array.from(flipped.index!.array), alternateIndices: number[] = [];
+for (let i = 0; i < flippedIndices.length; i += 6) {
+    const [a, b, c, , d] = flippedIndices.slice(i, i + 6);
+    alternateIndices.push(a, b, d, a, d, c);
+}
+flipped.setIndex(alternateIndices);
+near(cadSectionContours(flipped, identity, plane).areaMm2, 24, 1e-5);
+const retriangulated = mergeGeometries([box, flipped]), retriangulatedNonIndexed = retriangulated.toNonIndexed();
+for (const geometry of [coincident, coincidentNonIndexed, retriangulated, retriangulatedNonIndexed]) {
+    const report = cadSectionContours(geometry, identity, plane);
+    assert.equal(report.areaMm2, null, 'Deduplicated lines from coincident faces cannot certify a clean section area');
+    assert.ok(report.warnings.includes('duplicate-face'));
+    assert.equal(report.segmentCount, section.segmentCount, 'Keep the useful contour lines while withholding ambiguous area');
+}
+// This closed contour backtracks along part of its preceding edge. Its shared
+// endpoint must not exempt the positive overlapping interval from area checks.
+const backtrackingPoints = [[0, 0], [4, 0], [2, 0], [2, 2], [0, 2]];
+const backtracking = new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(backtrackingPoints.flatMap(([x, y], i) => {
+    const [nextX, nextY] = backtrackingPoints[(i + 1) % backtrackingPoints.length];
+    return [x, y, 0, nextX, nextY, 0, x, y, 1];
+}), 3));
+const backtrackingReport = cadSectionContours(backtracking, identity, plane);
+assert.equal(backtrackingReport.closedLoops, 1);
+assert.equal(backtrackingReport.areaMm2, null);
+assert.ok(backtrackingReport.warnings.includes('self-intersection'));
+near(backtrackingReport.perimeterMm, 12);
+const sharedEdges = new THREE.BoxGeometry(6, 4, 8, 1, 1, 2), sharedEdgesNonIndexed = sharedEdges.toNonIndexed();
+for (const geometry of [sharedEdges, sharedEdgesNonIndexed]) {
+    const report = cadSectionContours(geometry, identity, plane);
+    near(report.areaMm2, 24); near(report.perimeterMm, 20);
+    assert.equal(report.closedLoops, 1);
+    assert.deepEqual(report.warnings, [], 'A plane along valid neighbours\' shared edges must still have measurable area');
+}
 const separate = box.clone().translate(12, 0, 0), disjoint = mergeGeometries([box, separate]); near(cadSectionContours(disjoint, identity, plane).areaMm2, 48);
 const alignedParts = Array.from({length:256}, (_, i) => new THREE.BoxGeometry(6, 4, 8, 2, 2, 1).translate(i * 8, 0, 0)), aligned = mergeGeometries(alignedParts);
 const complex = cadSectionContours(aligned, identity, plane); assert.equal(complex.closedLoops, 256); assert.equal(complex.areaMm2, null); assert.ok(complex.warnings.includes('complex'), 'Dense aligned contours retain their lines while bounding the area sweep, including rejected pairs');
@@ -27,5 +61,5 @@ assert.ok(cadSectionContours(box, identity, new THREE.Plane(new THREE.Vector3(Na
 assert.ok(cadSectionContours(box, new THREE.Matrix4().makeScale(0, 1, 1), plane).warnings.includes('invalid'));
 assert.equal(cadSectionContours(new THREE.BufferGeometry(), identity, plane).areaMm2, null);
 assert.equal(cadInspectionGeometryFingerprint(box), before); assert.ok(plane.equals(originalPlane)); assert.ok(identity.equals(new THREE.Matrix4()));
-for (const geometry of [box, outer, inner, hollow, triangle,shifted,overlapping,separate,disjoint,aligned,...alignedParts]) geometry.dispose();
-console.log(JSON.stringify({pass: true,analyticBoxAreaAndPerimeter: true,worldTransformAndNonIndexed: true,nestedHoleSubtraction: true,planeInversionInvariant: true,openCoplanarAndTruncatedAreaWithheld: true,sourceUnchanged: true,intaglioFitVerified: false}, null, 2));
+for (const geometry of [box, outer, inner, hollow, triangle,shifted,overlapping,coincident,coincidentNonIndexed,flipped,retriangulated,retriangulatedNonIndexed,backtracking,sharedEdges,sharedEdgesNonIndexed,separate,disjoint,aligned,...alignedParts]) geometry.dispose();
+console.log(JSON.stringify({pass: true,analyticBoxAreaAndPerimeter: true,worldTransformAndNonIndexed: true,nestedHoleSubtraction: true,planeInversionInvariant: true,openCoplanarAndTruncatedAreaWithheld: true,coincidentFacesWithheldAndSharedEdgesPreserved:true,differentTriangulationsAndPartialOverlapWithheld:true,sourceUnchanged: true,intaglioFitVerified: false}, null, 2));

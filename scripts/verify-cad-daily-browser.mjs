@@ -237,6 +237,21 @@ try {
  await page.getByRole('tab',{name:'Serbest',exact:true}).click();
  await page.locator('[data-cad-menu=analysis]>summary').click();assert.equal(await page.locator('[data-cad-menu=analysis]').getByRole('button',{name:'Temas',exact:true}).count(),0,'No contact view is offered without an actual antagonist');await page.locator('[data-cad-menu=analysis]>summary').click();
  if(await page.getByRole('button',{name:'Nesne panelini aç',exact:true}).count())await page.getByRole('button',{name:'Nesne panelini aç',exact:true}).click();await page.getByRole('button',{name:'Restorasyon tek başına göster',exact:true}).click();
+ // Geometry-producing controls compute QC in the same user event. The new
+ // report must survive the React commit and a task-only tab switch.
+ const openShell=async()=>{await page.getByRole('tab',{name:'İç yüzey',exact:true}).click();const create=page.getByRole('button',{name:'Crown shell oluştur',exact:true});if(!await create.isVisible())await page.getByText('Crown Shell / Intaglio',{exact:true}).click();};
+ await openShell();await page.getByRole('button',{name:'Crown shell oluştur',exact:true}).click();await page.locator('[data-cad-shell-report]').waitFor();assert.equal(await page.locator('[data-cad-qc-stale]').count(),0,'A just-computed shell report survives its own geometry commit');
+ await page.getByRole('tab',{name:'Kontrol',exact:true}).click();await page.locator('[data-cad-qc-report]').waitFor();
+ await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();await ask('Bu güncel shell kontrolünü yorumla');
+ const shellEvidence=await page.evaluate(()=>window.rc47CadModel.calls.at(-1).cadContext.report);assert.ok(shellEvidence.triangles>0);assert.ok(Number.isFinite(shellEvidence.minimumWallEstimateMm));assert.equal(shellEvidence.wallMethod,'shell-offset-estimate');
+ if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC57_CAD_Current_Shell_QC.png'),animations:'disabled',style:'nextjs-portal{visibility:hidden!important}'});}
+ await aya.getByRole('button',{name:'Kapat',exact:true}).click();await openShell();await page.getByRole('button',{name:'Mesh repair',exact:true}).click();await page.locator('[data-cad-shell-report]').waitFor();
+ await page.getByRole('button',{name:"Shell'i temizle",exact:true}).click();await page.getByRole('tab',{name:'Kontrol',exact:true}).click();await page.locator('[data-cad-qc-report]').waitFor();
+ await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();await ask('Shell temizlendikten sonraki güncel kontrolü yorumla');
+ const clearedEvidence=await page.evaluate(()=>window.rc47CadModel.calls.at(-1).cadContext.report);assert.ok(clearedEvidence.triangles>0);assert.equal(clearedEvidence.minimumWallEstimateMm,undefined,'Clearing the shell removes its old wall estimate from AYA');await aya.getByRole('button',{name:'Kapat',exact:true}).click();
+ assert.deepEqual(unitMesh(await save()),unitMesh(again),'Build/repair/clear inspection preserves the original outer crown');
+ console.log('PASS: same-event shell QC survives rendering/tasks and reaches AYA; clearing shell drops the old wall estimate.');
+ const showCurrentQc=async()=>{await page.getByRole('tab',{name:'Kontrol',exact:true}).click();await page.getByRole('button',{name:'CAD Kernel QC çalıştır',exact:true}).click();await page.locator('[data-cad-qc-report]').waitFor();};
  const sculpt=async()=>{
   await page.keyboard.press('Numpad8');await frames();await page.locator('.cad-tool-palette--compact [data-cad-tool=add]').click();
   const box=await page.locator('canvas').boundingBox();const before=await page.locator('.cad-history-count').textContent();
@@ -245,7 +260,8 @@ try {
    if((await page.locator('.cad-history-count').textContent())!==before)return;
   }throw Error('A real brush stroke did not hit the placed crown');
  };
- await sculpt();snapshot=await save();assert.notDeepEqual(unitMesh(snapshot),unitMesh(again));const edited=unitMesh(snapshot);
+ await showCurrentQc();await page.getByRole('tab',{name:'Serbest',exact:true}).click();
+ await sculpt();await page.getByRole('tab',{name:'Kontrol',exact:true}).click();await page.locator('[data-cad-qc-stale]').waitFor();assert.equal(await page.locator('[data-cad-qc-report]').count(),0,'A real sculpt removes stale QC metrics from the inspector');await page.getByRole('tab',{name:'Serbest',exact:true}).click();snapshot=await save();assert.notDeepEqual(unitMesh(snapshot),unitMesh(again));const edited=unitMesh(snapshot);
  await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();
  assert.match(await aya.locator('.aya-cad-evidence').textContent(),/Güncel geometri kontrolü yok/,'Sculpt invalidates old report evidence');
  await aya.locator('[data-aya-tool=undo]').click();await page.waitForFunction(()=>document.querySelector('.cad-status-bar')?.textContent?.includes('Geri alındı'));
@@ -255,7 +271,8 @@ try {
  await page.evaluate(()=>{for(const resolve of window.rc47CadModel.pending.splice(0))resolve();window.rc47CadModel.mode='ok';});assert.doesNotMatch(await aya.getByRole('log').textContent(),/Gecikmiş model yanıtı/);await aya.getByRole('button',{name:'Kapat',exact:true}).click();
  snapshot=await save();assert.deepEqual(unitMesh(snapshot),edited,'Manual redo restores the same deterministic sculpted geometry');
  console.log('PASS: AYA undo and manual redo use real history; geometry changes invalidate a pending model reply and old evidence.');
- await page.getByRole('button',{name:'Diş 47',exact:true}).click();await selectStage('design');
+ await showCurrentQc();
+ await page.getByRole('button',{name:'Diş 47',exact:true}).click();await selectStage('design');await page.getByRole('tab',{name:'Kontrol',exact:true}).click();await page.locator('[data-cad-qc-stale]').waitFor();assert.equal(await page.locator('[data-cad-qc-report]').count(),0,'Another unit never shows the prior unit QC metrics');if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC57_CAD_Stale_QC.png'),animations:'disabled',style:'nextjs-portal{visibility:hidden!important}'});}await page.getByRole('tab',{name:'Serbest',exact:true}).click();
  snapshot=await save();assert.equal(snapshot.units['unit-47-1'].anchor.placed,true);assert.ok(Math.abs(snapshot.units['unit-47-1'].anchor.position[0]+16)<.001);
  await page.getByRole('button',{name:'Diş 46',exact:true}).click();snapshot=await save();assert.deepEqual(unitMesh(snapshot),edited);
  assert.ok(await page.locator('.cad-history-actions button[aria-label="Geri al"]').isEnabled());
@@ -334,7 +351,7 @@ try {
  console.log('PASS: desktop module navigation rejects conflicting saves, waits for retry acknowledgment and retains the requested destination and edited scene.');
 
  assert.deepEqual(errors,[]);
- console.log(JSON.stringify({pass:true,realEditor:true,realWebGL:true,syntheticImplantAbutments:true,localMarginSizing:true,hiddenZeroOpacityRecovered:true,ayaChecksDoNotChangeMesh:true,fullMeshPersistence:true,perUnitPersistence:true,cloudReopen:true,saveExitAcknowledged:true,modalEditGuard:true,offlineExitRecovery:true,retainedLocalCheckpoint:true,publishCheckpoint:true,saveAfterPublish:true,optimisticConflictRejected:true,desktopNavigationSaveGuard:true,pendingRecoveryBlocksNavigationAndSave:true,ayaContextGuide:true,ayaModelBridge:'mock; no native inference',ayaProposalClickOnly:true,ayaActualQcFollowup:true,ayaLateReplyGuard:true,ayaScopedMemory:true,saveBeforeCaseSwitch:true,caseFailureRetainsScene:true,targetReadFailureRestoresCase:true,ayaKeyboardAndLaptopComposer:true,noContactWithoutAntagonist:true,backend:'intercepted API fixture; no production data'},null,2));
+ console.log(JSON.stringify({pass:true,realEditor:true,realWebGL:true,syntheticImplantAbutments:true,localMarginSizing:true,hiddenZeroOpacityRecovered:true,ayaChecksDoNotChangeMesh:true,fullMeshPersistence:true,perUnitPersistence:true,cloudReopen:true,saveExitAcknowledged:true,modalEditGuard:true,offlineExitRecovery:true,retainedLocalCheckpoint:true,publishCheckpoint:true,saveAfterPublish:true,optimisticConflictRejected:true,desktopNavigationSaveGuard:true,pendingRecoveryBlocksNavigationAndSave:true,staleQcHiddenAfterSculptAndUnitSwitch:true,currentShellQcSurvivesGeometryCommitAndTabs:true,manualQcSharedWithAya:true,ayaContextGuide:true,ayaModelBridge:'mock; no native inference',ayaProposalClickOnly:true,ayaActualQcFollowup:true,ayaLateReplyGuard:true,ayaScopedMemory:true,saveBeforeCaseSwitch:true,caseFailureRetainsScene:true,targetReadFailureRestoresCase:true,ayaKeyboardAndLaptopComposer:true,noContactWithoutAntagonist:true,backend:'intercepted API fixture; no production data'},null,2));
  }
 }catch(error){
  console.error(logs);

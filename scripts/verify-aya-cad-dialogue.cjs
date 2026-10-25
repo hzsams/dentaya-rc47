@@ -39,6 +39,90 @@ async function main(){
   for(const proposal of reply.proposals){assert.deepEqual(Object.keys(proposal).sort(),['reason','scope','snapshot','tool']);assert.equal(proposal.scope,c.scope);assert.equal(proposal.snapshot,c.snapshot);assert.ok(c.availableTools.includes(proposal.tool));assert.ok(TOOL_IDS.includes(proposal.tool));assert.ok(proposal.reason.trim());}
   assert.equal(JSON.stringify(c),before);assert.deepEqual(Array.from(solid.attributes.position.array),positions);
  });
+ await check('ordinary raw-model placement leads with one practical action without unrelated QC',()=>{
+  for(const [prompt,locale] of [['Modelin üstüne kron yapalım.','tr'],['Bu kron preparasyonun üstüne oturmuyor.','tr'],['Build a crown on the scan model.','en'],['This crown does not fit the prepared tooth.','en']]){
+   for(const report of [null,shellEvidence]){
+    const reply=ask(prompt,{placed:false,report},{locale}),first=reply.output.split('\n')[0];
+    assert.deepEqual(ids(reply),['place'],prompt);assert.match(first,locale==='tr'?/koleye.*yerleştir/:/placement operation.*margin/,prompt);
+    assert.match(reply.output,locale==='tr'?/kaynak taramasını.*kole çizgisini/:/source scan and margin/);
+    assert.doesNotMatch(reply.output,/Mesh:|geometri kontrolü yok|No current geometry|no current geometry|Antagonist yüklü değil|No antagonist is loaded|wall estimate from|duvar tahmini:|undercut örnek oranı/);
+    assert.match(reply.output,locale==='tr'?/yalnız Uygula/:/only when you click Apply/);
+   }
+  }
+ });
+ await check('ordinary seating troubleshooting keeps fit limits after its corrective action',()=>{
+  for(const [prompt,locale] of [['Bu kapşon preparasyonun üstüne oturmuyor; nereden kontrol etmeliyim?','tr'],['This coping does not fit the prepared tooth; how should I check it?','en']]){
+   const reply=ask(prompt,{report:shellEvidence},{locale}),first=reply.output.split('\n')[0];
+   assert.deepEqual(ids(reply),['tool-margin','view-section','inspect']);
+   assert.match(first,locale==='tr'?/kole sınırını.*kontrol et/:/Check the prepared tooth margin/);
+   assert.match(reply.output,locale==='tr'?/preparasyona oturma veya iç yüzey uyumu onayı değildir/:/does not confirm seating.*internal fit/);
+   assert.doesNotMatch(reply.output,/Mesh:|\b\d+(?:[.,]\d+)? mm\b|Antagonist yüklü değil|No antagonist is loaded/);
+  }
+ });
+ await check('next-step help leads with placement or current mesh findings rather than unit metadata',()=>{
+  for(const [prompt,locale] of [['Sıradaki adım ne?','tr'],['What should I do next?','en']]){
+   const placement=ask(prompt,{placed:false},{locale});assert.deepEqual(ids(placement),['place']);
+   assert.match(placement.output.split('\n')[0],locale==='tr'?/^Seçili restorasyonu.*yerleştir/:/^Place the selected restoration/);
+   const concern=ask(prompt,{report:openEvidence},{locale});assert.ok(ids(concern).includes('view-section'));assert.ok(!ids(concern).includes('next'));
+   assert.match(concern.output.split('\n')[0],locale==='tr'?/bulguları.*gözden geçir/:/Review the report findings/);
+   assert.doesNotMatch(concern.output,/Mesh:|Antagonist yüklü değil|No antagonist is loaded/);
+  }
+ });
+ await check('an active manual margin tool receives a completion step without a redundant proposal',()=>{
+  for(const [prompt,locale] of [['Sıradaki adım ne?','tr'],['What should I do next?','en']]){
+   const reply=ask(prompt,{placed:false,marginPoints:2,tool:'margin'},{locale});assert.deepEqual(ids(reply),[]);
+   assert.match(reply.output.split('\n')[0],locale==='tr'?/^Ham modelde.*kole çizgisini tamamla/:/^Complete the selected tooth margin on the raw model/);
+   assert.match(reply.output,/2\./);assert.doesNotMatch(reply.output,/Uygula|click Apply|Mesh:/);
+  }
+ });
+ await check('explicit placement analysis still reports current evidence and missing evidence truthfully',()=>{
+  for(const [prompt,locale] of [['Bu kuronun yerleşimini güncel rapora göre değerlendir.','tr'],['Review this crown’s seating against the current report.','en']]){
+   const current=ask(prompt,{report:shellEvidence},{locale});assert.ok(current.output.includes(shell.report.minimumWallEstimateMm+' mm'));
+   assert.match(current.output,locale==='tr'?/gerçek duvar kalınlığı ölçümü değildir/:/not a true wall thickness measurement/);
+   assert.match(current.output,locale==='tr'?/Antagonist yüklü değil/:/No antagonist is loaded/);
+   const missing=ask(prompt,{report:{...shellEvidence,dataToken:'geometry:old'}},{locale});
+   assert.match(missing.output,locale==='tr'?/güncel geometri kontrolü yok/:/no current geometry check/);
+   assert.doesNotMatch(missing.output,/\b\d+(?:[.,]\d+)? mm\b/);
+   assert.match(missing.output,locale==='tr'?/iç yüzey uyumu onayı değildir/:/does not confirm seating/);
+  }
+ });
+ await check('appearance and anatomy help put the requested practical action before their distinctions',()=>{
+  for(const [prompt,locale,pattern] of [['Bu kronun anatomik formunu nasıl değiştirebilirim?','tr',/^Etkin ünite için.*formları karşılaştır/],['How can I change this crown’s anatomical form?','en',/^Compare the available anatomical forms/],['Bu kronun görünümünü daha doğal yapabilir miyiz?','tr',/^Geometriyi değiştirmeden.*görünümüne geç/],['Make this crown look more natural.','en',/^Use the existing natural shading view/]]){
+   const reply=ask(prompt,{view:'thickness',availableTools:['library','view-natural','inspection']},{locale});
+   assert.match(reply.output.split('\n')[0],pattern);
+   assert.match(reply.output,locale==='tr'?/Anatomik dış form.*malzeme\/ışık/:/Anatomical outer shape.*material\/lighting/);
+   assert.match(reply.output,locale==='tr'?/preparasyona uyumu.*doğrulamaz/:/does not confirm preparation fit/);
+  }
+ });
+ await check('missing antagonist next-step help starts with the missing source rather than a clinical caveat',()=>{
+  for(const [locale,goal,prompt] of [['tr','Antagonist temaslarını incele.','Sıradaki adım ne?'],['en','Review antagonist contacts.','What should I do next?']]){
+   const reply=ask(prompt,{}, {locale,workingMemory:{goal,decisions:[],openQuestions:[]}});assert.deepEqual(ids(reply),[]);
+   assert.match(reply.output.split('\n')[0],locale==='tr'?/^Dosyalar adımında karşıt çene kaynağını doğrula/:/^Confirm the opposing scan in Files/);
+   assert.match(reply.output,locale==='tr'?/Temas sonucu çıkaramam/:/Contact results cannot be inferred/);
+   assert.doesNotMatch(reply.output,/\b\d+(?:[.,]\d+)? mm\b|click Apply|Uygula/);
+  }
+ });
+ await check('current failed or pending save takes priority over an ordinary placement next step',()=>{
+  for(const [prompt,locale] of [['Sıradaki adım ne?','tr'],['What should I do next?','en']]){
+   const failed=ask(prompt,{placed:false,report:shellEvidence,saveFailed:true},{locale});assert.deepEqual(ids(failed),['save']);
+   assert.match(failed.output.split('\n')[0],locale==='tr'?/^Önce mevcut projeyi yeniden kaydet/:/^Retry saving the current project first/);
+   assert.match(failed.output,locale==='tr'?/Son kayıt başarısız/:/The last save failed/);assert.doesNotMatch(failed.output,/Mesh:|duvar tahmini:|wall estimate from/);
+   const pending=ask(prompt,{placed:false,isSaving:true},{locale});assert.deepEqual(ids(pending),[]);
+   assert.match(pending.output.split('\n')[0],locale==='tr'?/^Kayıt sürüyor/:/^Saving is in progress/);
+  }
+ });
+ await check('operational analysis views avoid unrelated mesh data while status questions retain real evidence',()=>{
+  for(const [locale,wallHelp,contactHelp,status] of [['tr','Kalınlık görünümünü nasıl açarım?','Bu tasarımın kayıtlı kapanışını nasıl gösteririm?','Güncel duvar kontrolünün durumu nasıl?'],['en','How can I open the thickness view?','How can I show this design in the registered bite?','What is the current wall check status?']]){
+   const wall=ask(wallHelp,{report:shellEvidence},{locale});assert.ok(ids(wall).includes('view-thickness'));
+   assert.doesNotMatch(wall.output,/Mesh:|Antagonist yüklü değil|No antagonist is loaded/);
+   assert.match(wall.output,locale==='tr'?/gerçek duvar kalınlığı ölçümü değildir/:/not a true wall thickness measurement/);
+   const contactReply=ask(contactHelp,{report:contactEvidence,antagonistReady:true,openingMm:4},{locale});assert.ok(ids(contactReply).includes('recorded-bite'));
+   assert.doesNotMatch(contactReply.output,/Mesh:|en düşük duvar tahmini:|wall estimate from/);
+   assert.match(contactReply.output,locale==='tr'?/klinik oklüzyon onayı değildir/:/not dynamic or clinical occlusion clearance/);
+   const evidence=ask(status,{report:shellEvidence},{locale});assert.ok(evidence.output.includes(shell.report.minimumWallEstimateMm+' mm'));
+   const missing=ask(status,{report:null},{locale});assert.match(missing.output,locale==='tr'?/güncel geometri kontrolü yok/:/no current geometry check/);
+  }
+ });
  await check('existing host rejects changed project, source, unit and geometry',async()=>{
   const c=context({placed:false}),proposal=suggestCadReply('Sıradaki adım ne?',{cadContext:c}).proposals[0];let callbacks=0;
   assert.equal(ayaProposalBlock(proposal,c),null);

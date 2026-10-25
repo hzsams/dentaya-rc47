@@ -8,6 +8,7 @@ import {cadRoleColor,type CadColorSettings} from '@/lib/cad-color-groups';
 import { toothSurface, useToothAppearance } from '@/lib/tooth-appearance';
 import {cadRestorationSurface} from '@/lib/cad-restoration-surface';
 import {cadSectionContours,type CadSectionInspection} from '@/lib/cad-section-engine';
+import type {CadSectionInspectionReceipt} from '@/lib/cad-section-evidence';
 import { useCadWorkspace } from '@/lib/cad-workspace-preferences';
 import { experienceDuration } from '@/lib/experience-preferences';
 import { createCameraMotion, sampleCameraMotion } from '@/lib/cad-camera-motion';
@@ -244,9 +245,11 @@ type Props = {
     onPerformanceInfo?: (info: CadPerformanceInfo) => void;
     onSceneStateChange?: (state:CadSceneState)=>void;
     onSectionInspectionChange?: (state:CadSectionInspection|null)=>void;
+    sectionEvidenceKey?: string;
+    onSectionEvidenceChange?: (receipt:CadSectionInspectionReceipt|null)=>void;
     onStatus?: (message: string) => void;
 };
-const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignViewport({ projectId, source, referenceSources, onContextMenuRequest, toothCodes = [], settings, tool, viewMode, marginPoints, measurements, onMarginPointsChange, onMeasurementsChange, onInsertionAxisChange, onConnectorsChange, onBrushRadiusChange, onBrushStrengthChange, onGeometryCommit, onReadyChange, onHistoryChange, onPerformanceInfo, onSceneStateChange, onSectionInspectionChange, onStatus }, ref) {
+const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignViewport({ projectId, source, referenceSources, onContextMenuRequest, toothCodes = [], settings, tool, viewMode, marginPoints, measurements, onMarginPointsChange, onMeasurementsChange, onInsertionAxisChange, onConnectorsChange, onBrushRadiusChange, onBrushStrengthChange, onGeometryCommit, onReadyChange, onHistoryChange, onPerformanceInfo, onSceneStateChange, onSectionInspectionChange, sectionEvidenceKey, onSectionEvidenceChange, onStatus }, ref) {
     const toothAppearance = useToothAppearance();
     const toothAppearanceRef = useRef(toothAppearance);
     useEffect(() => { toothAppearanceRef.current = toothAppearance; applyViewMode();
@@ -310,6 +313,11 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
     const sectionOverlayRef=useRef<{key:string;lines:THREE.LineSegments[];summary:CadSectionInspection|null}>({key:'',lines:[],summary:null});
     const sectionCallbackRef=useRef(onSectionInspectionChange);
     useEffect(()=>{sectionCallbackRef.current=onSectionInspectionChange;},[onSectionInspectionChange]);
+    const sectionEvidenceCallbackRef=useRef(onSectionEvidenceChange);
+    useEffect(()=>{sectionEvidenceCallbackRef.current=onSectionEvidenceChange;},[onSectionEvidenceChange]);
+    const sectionEvidenceInputRef=useRef<{key:string;sourceIdentity:string;settings:CadSettings;marginPoints:CadPoint[]}|null>(null);
+    const sectionEvidenceEmissionRef=useRef('');
+    const loadedSourceOriginRef=useRef<{identity:string;sourceSimplified:boolean}|null>(null);
     const placementDiagnosticsRef=useRef<{key:string;value:ReturnType<typeof cadCervicalRegistration>}|null>(null);
     const inspectionAimRef = useRef<{key:string;point:THREE.Vector3}|null>(null);
     const inspectionBoundsVersionsRef = useRef(new WeakMap<THREE.BufferGeometry,number>());
@@ -1585,7 +1593,14 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
     const sourceIdentity = `${projectId??''}:${source?.bucket ?? ""}:${source?.path ?? ""}:${source?.fileName ?? ""}:${toothCodes.join(",")}`;
     const unitIdentity = `${activeUnitIdentity?.id ?? ""}:${activeUnitIdentity?.anatomy_code ?? ""}:${activeUnitIdentity?.design_type ?? ""}:${activeUnitIdentity?.tooth_form ?? "natural"}:${activeUnitIdentity?.morphology_style ?? ""}:${activeUnitIdentity?.form_library_id??""}:${activeUnitIdentity?.form_library_id?settings.cad_library_assets?.[activeUnitIdentity.form_library_id]?.sha256??"":""}`;
     useEffect(()=>{
+        const previous=sectionEvidenceInputRef.current;
+        sectionEvidenceInputRef.current=sectionEvidenceKey?{key:sectionEvidenceKey,sourceIdentity,settings,marginPoints}:null;
+        if(previous?.key!==sectionEvidenceKey||previous?.sourceIdentity!==sourceIdentity)clearSectionEvidence();
+        // The renderer reads applied settings/margins and desired origin from refs.
+    },[sectionEvidenceKey,sourceIdentity,settings,marginPoints]);
+    useEffect(()=>{
         if(sourceLoadingRef.current||!sourceMeshRef.current||!sourceFingerprintRef.current)return;
+        clearSectionEvidence();
         const sequence=++unitLoadSequenceRef.current;
         if(!activeCadUnit(settingsRef.current.job_setup)?.form_library_id){activateUnit();loadingRef.current=false;setLoading(false);setError('');readyCallbackRef.current?.(true);return;}
         loadingRef.current=true;setLoading(true);readyCallbackRef.current?.(false);
@@ -1594,7 +1609,7 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[unitIdentity]);
     useEffect(() => {
-        void loadSource(source);
+        void loadSource(source,sourceIdentity);
         // loadSource is an imperative renderer operation keyed by the stable source identity.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sourceIdentity]);
@@ -1721,8 +1736,9 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
             throw storageError;
         return data.arrayBuffer();
     }
-    async function loadSource(input: ModelSource | null) {
+    async function loadSource(input: ModelSource | null, identity: string) {
         const sequence = ++loadSequenceRef.current;sourceLoadingRef.current=true;
+        loadedSourceOriginRef.current=null;clearSectionEvidence();
         if(workspaceProjectRef.current===projectId){cacheLiveUnit();if(sourceFingerprintRef.current)sourceCacheRef.current[sourceFingerprintRef.current]={...unitCacheRef.current};}
         else {sourceCacheRef.current={};unitHistoryRef.current.clear();workspaceProjectRef.current=projectId;}
         liveUnitRef.current=null;sourceFingerprintRef.current='';unitCacheRef.current={};
@@ -1842,6 +1858,7 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
             drawConnectors(settingsRef.current.connectors ?? []);
             fitCamera();if(anchorRef.current.placed)focusRestoration(false);
             loadingRef.current=false;setLoading(false);
+            loadedSourceOriginRef.current={identity,sourceSimplified:sourceTriangles>renderTriangles};
             readyCallbackRef.current?.(true);
             onStatus?.(performanceInfo.adaptive
                 ? `Tarama hazır · yüksek yoğunluk modu ${performanceInfo.sourceTriangles.toLocaleString(currentIntlLocale())} → render ${performanceInfo.renderTriangles.toLocaleString(currentIntlLocale())} üçgen.`
@@ -1929,6 +1946,11 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
         for(const line of cache.lines){sceneRef.current?.remove(line);line.geometry.dispose();(line.material as THREE.Material).dispose();}
         if(cache.summary)sectionCallbackRef.current?.(null);
         sectionOverlayRef.current={key:'',lines:[],summary:null};
+        clearSectionEvidence();
+    }
+    function clearSectionEvidence(){
+        if(sectionEvidenceEmissionRef.current)sectionEvidenceCallbackRef.current?.(null);
+        sectionEvidenceEmissionRef.current='';
     }
     function inspectionCenter(){
         const mesh=shellMeshRef.current??designMeshRef.current;
@@ -2019,9 +2041,20 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
                     const line=new THREE.LineSegments(new THREE.BufferGeometry().setAttribute('position',new THREE.Float32BufferAttribute(segments,3)),new THREE.LineBasicMaterial({color:role==='restoration'?0xffc35c:0x6be1ec,depthWrite:false,depthTest:false,transparent:true,opacity:.95,toneMapped:false}));
                     line.name='DentAYA '+role+' section contours';line.renderOrder=5;scene.add(line);sectionCache.lines.push(line);
                 }
-                sectionCache.key=key;if(JSON.stringify(sectionCache.summary)!==JSON.stringify(summary)){sectionCache.summary=summary;sectionCallbackRef.current?.(summary);}
+                sectionCache.key=key;sectionCache.summary=summary;sectionCallbackRef.current?.(summary);
             }
         }else if(sectionCache.key||sectionCache.summary)clearSectionOverlays();
+        const evidenceInput=sectionEvidenceInputRef.current,sourceOrigin=loadedSourceOriginRef.current;
+        if(section&&config.inspection_section_contours&&sectionCache.summary&&evidenceInput&&sourceOrigin
+            &&!sourceLoadingRef.current&&!loadingRef.current&&sourceMeshRef.current&&sourceFingerprintRef.current
+            &&sourceOrigin.identity===evidenceInput.sourceIdentity&&liveUnitRef.current?.key===unitKey()?.key
+            &&settingsRef.current===evidenceInput.settings&&marginRef.current===evidenceInput.marginPoints){
+            const emissionKey=JSON.stringify([evidenceInput.key,sectionCache.key]);
+            if(sectionEvidenceEmissionRef.current!==emissionKey){
+                sectionEvidenceEmissionRef.current=emissionKey;
+                sectionEvidenceCallbackRef.current?.({key:evidenceInput.key,plane:{normal:[plane.normal.x,plane.normal.y,plane.normal.z],constantMm:plane.constant},sourceSimplified:sourceOrigin.sourceSimplified,inspection:sectionCache.summary});
+            }
+        }else clearSectionEvidence();
         let placement:({placed:true}&ReturnType<typeof cadCervicalRegistration>)|{placed:false}={placed:false};
         const design=designMeshRef.current,placementBase=placementBaseRef.current;
         if(anchorRef.current.placed&&design&&placementBase){
