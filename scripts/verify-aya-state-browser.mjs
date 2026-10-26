@@ -26,7 +26,8 @@ try{
  const deadline=Date.now()+60000;let ready=false;
  while(Date.now()<deadline){if(exitCode!==null)throw Error(logs);try{if((await fetch(url)).ok){ready=true;break;}}catch{}await new Promise(resolve=>setTimeout(resolve,250));}assert.ok(ready,logs);
  browser=await chromium.launch({headless:true,...(process.env.DENTAYA_CHROMIUM_PATH?{executablePath:process.env.DENTAYA_CHROMIUM_PATH}:{}),args:['--no-sandbox','--disable-dev-shm-usage']});
- const page=await browser.newPage({viewport:{width:1366,height:960}});
+ const context=await browser.newContext({viewport:{width:1366,height:960}});
+ const page=await context.newPage();
  page.on('pageerror',error=>errors.push(error.message));page.on('console',message=>{if(/hydration|maximum update depth|unique "key"/i.test(message.text()))errors.push(message.text());});
  await page.addInitScript(()=>{
   const state=window.rc54State={mode:'ready',pendingReply:null,pendingStatus:null,polls:0,calls:[]};
@@ -109,7 +110,7 @@ try{
  assert.equal(await page.evaluate(()=>window.rc54State.calls.at(-1).model),'synthetic-preferred-model','The recovered selection is used for the next real bridge request');
  await page.evaluate(()=>{window.rc54State.pendingReply({ok:true,output:'Seçili model ile sentetik devam yanıtı'});window.rc54State.pendingReply=null;});
  await page.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);
- await screenshot(main.locator('.aya-conversation-shell'),'RC58_AYA_Focus_Model_Recovery.png');
+ await screenshot(main.locator('.aya-conversation-shell'),'RC59_AYA_Focus_Model_Recovery.png');
  const cad=page.locator('#cad-test');
  await page.evaluate(()=>{window.rc54State.mode='installing';window.dispatchEvent(new Event('focus'));});
  await page.waitForFunction(()=>!document.querySelector('#cad-test select[aria-label="Kurulu yerel model"]'));
@@ -144,19 +145,77 @@ try{
  assert.equal(await main.locator('.aya-goal-preview').count(),0,'Reload cannot restore memory cleared from a memory-only conversation');
  assert.equal(await main.locator('.aya-message').count(),0);
  assert.equal(await page.evaluate(()=>window.rc50Work.readAyaState().sessions.length),0,'Reload does not save a fresh empty record');
- await screenshot(main.locator('.aya-conversation-shell'),'RC58_AYA_Empty_Memory_Reload.png');
+ await screenshot(main.locator('.aya-conversation-shell'),'RC59_AYA_Empty_Memory_Reload.png');
  await main.getByRole('button',{name:'Sohbet ayarları',exact:true}).click();await main.getByRole('button',{name:'Bellek ve notlar',exact:true}).click();
  await saveGoal('BU PENCERENİN HEDEFİ');await page.waitForFunction(()=>window.rc50Work.readAyaState().sessions.length===1);
- await page.evaluate(()=>{
-  const key='dentaya:aya-core:v1',stored=JSON.parse(localStorage.getItem(key));
-  stored.sessions[0].workingMemory={goal:'DİĞER PENCERENİN YENİ HEDEFİ',decisions:[],openQuestions:[]};
-  localStorage.setItem(key,JSON.stringify(stored));window.dispatchEvent(new StorageEvent('storage',{key}));
- });
+ // A second real browser page shares this origin's localStorage. All edits
+ // below use the real controls; only the desktop model transport is synthetic.
+ const secondPage=await context.newPage();secondPage.on('pageerror',error=>errors.push(error.message));
+ await secondPage.goto(url);await secondPage.waitForFunction(()=>window.rc50Work&&document.querySelector('.aya-goal-preview'));
+ const secondMain=secondPage.locator('#main-test'),secondMemory=secondMain.locator('.aya-working-memory');
+ async function secondEditGoal(goal){
+  await secondMain.getByRole('button',{name:'Sohbet ayarları',exact:true}).click();
+  await secondMain.getByRole('button',{name:'Bellek ve notlar',exact:true}).click();
+  await secondMemory.getByRole('button',{name:'Belleği düzenle',exact:true}).click();
+  await secondMain.locator('#aya-memory-goal').fill(goal);
+  await secondMemory.getByRole('button',{name:'Belleği kaydet',exact:true}).click();
+ }
+ await secondEditGoal('DİĞER PENCERENİN YENİ HEDEFİ');
+ await page.waitForFunction(()=>window.rc50Work.readAyaState().sessions[0]?.workingMemory.goal==='DİĞER PENCERENİN YENİ HEDEFİ');
  await memory.getByRole('button',{name:'Belleği temizle',exact:true}).click();
  assert.equal(await page.evaluate(()=>window.rc50Work.readAyaState().sessions[0]?.workingMemory.goal),'DİĞER PENCERENİN YENİ HEDEFİ','A local empty reset cannot delete a newer stored edit from another window');
+ await main.locator('.aya-session-conflict').waitFor();
+ const unsent='BU PENCEREDEKİ GÖNDERİLMEMİŞ TASLAK';await input.fill(unsent);
+ await main.getByRole('button',{name:'Saklanan sohbeti yükle',exact:true}).click();
+ await main.locator('.aya-goal-preview').filter({hasText:'DİĞER PENCERENİN YENİ HEDEFİ'}).waitFor();
+ assert.equal(await input.inputValue(),unsent,'Explicit stored-conversation reload preserves the unsent composer draft');
+ assert.equal(await main.locator('.aya-session-conflict').count(),0);
+ // A pending reply captures the old goal while a newer stored decision is
+ // committed in the second window. Its late result remains local work.
+ await page.evaluate(()=>{window.rc54State.mode='ready';window.dispatchEvent(new Event('focus'));});
+ await page.waitForFunction(()=>document.querySelector('#main-test .aya-status--model'));
+ await input.fill('Eski hedefle başlayan bekleyen model yanıtı');await main.locator('.aya-chat-composer button[type=submit]').click();
+ await page.waitForFunction(()=>window.rc54State.pendingReply);
+ const originalId=await page.evaluate(()=>window.rc50Work.readAyaState().sessions[0].id);
+ await secondPage.reload();await secondPage.waitForFunction(()=>window.rc50Work&&document.querySelector('.aya-goal-preview'));
+ await secondEditGoal('YENİ PENCEREDE ONAYLANAN TESLİM HEDEFİ');
+ await page.waitForFunction(()=>window.rc50Work.readAyaState().sessions[0]?.workingMemory.goal==='YENİ PENCEREDE ONAYLANAN TESLİM HEDEFİ');
+ await page.evaluate(()=>{window.rc54State.pendingReply({ok:true,output:'BEKLEYEN PENCERENİN YANITI KORUNDU',workingMemory:{goal:'ESKİ YANITIN YEREL HEDEFİ',decisions:['Yerel karar'],openQuestions:[]}});window.rc54State.pendingReply=null;});
+ await main.locator('.aya-session-conflict').waitFor();await page.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);
+ assert.equal(await page.evaluate(id=>window.rc50Work.readAyaState().sessions.find(session=>session.id===id)?.workingMemory.goal,originalId),'YENİ PENCEREDE ONAYLANAN TESLİM HEDEFİ','The delayed reply cannot overwrite a newer stored goal');
+ assert.match(await main.locator('.aya-message--assistant').last().textContent(),/BEKLEYEN PENCERENİN YANITI KORUNDU/);
+ assert.match(await main.locator('.aya-goal-preview').textContent(),/ESKİ YANITIN YEREL HEDEFİ/,'Conflict handling retains current in-memory work');
+ await screenshot(main.locator('.aya-conversation-shell'),'RC59_AYA_Two_Window_Conflict.png');
+ await input.fill(unsent);await main.getByRole('button',{name:'Bu çalışmayı ayrı sohbete kaydet',exact:true}).click();
+ await page.waitForFunction(()=>window.rc50Work.readAyaState().sessions.length===2&&!document.querySelector('.aya-session-conflict'));
+ const copyId=await page.evaluate(()=>window.rc50Work.readAyaState().sessions[0].id);
+ assert.notEqual(copyId,originalId);assert.equal(await input.inputValue(),unsent);
+ assert.equal(await page.evaluate(id=>window.rc50Work.readAyaState().sessions.find(session=>session.id===id)?.workingMemory.goal,originalId),'YENİ PENCEREDE ONAYLANAN TESLİM HEDEFİ');
+ assert.equal(await page.evaluate(id=>window.rc50Work.readAyaState().sessions.find(session=>session.id===id)?.workingMemory.goal,copyId),'ESKİ YANITIN YEREL HEDEFİ');
+ // Deleting a conversation while another window is answering cannot cause the
+ // delayed window to silently re-create the deleted record.
+ await input.fill('Silinen kayda gelen geç yanıt');await main.locator('.aya-chat-composer button[type=submit]').click();await page.waitForFunction(()=>window.rc54State.pendingReply);
+ await secondPage.reload();await secondPage.waitForFunction(()=>window.rc50Work&&document.querySelector('.aya-goal-preview'));
+ await secondMain.getByRole('button',{name:'Sohbet ayarları',exact:true}).click();await secondMain.getByRole('button',{name:'Geçmiş',exact:true}).click();
+ const firstHistoryRow=secondMain.locator('.aya-history-item').first();
+ await secondPage.evaluate(()=>{const original=Storage.prototype.setItem;window.rc59RestoreStorage=()=>{Storage.prototype.setItem=original;};Storage.prototype.setItem=function(key,value){if(key==='dentaya:aya-core:v1')throw new DOMException('Synthetic storage failure','QuotaExceededError');return original.call(this,key,value);};});
+ await firstHistoryRow.getByRole('button',{name:'Sil',exact:true}).click();
+ assert.equal(await secondMain.locator('.aya-history-item').count(),2,'A failed history delete preserves the record and active conversation');
+ assert.match(await secondMain.locator('.aya-chat-error').textContent(),/saklanamadı/);
+ await secondPage.evaluate(()=>window.rc59RestoreStorage());
+ await firstHistoryRow.getByRole('button',{name:'Sil',exact:true}).click();
+ await page.waitForFunction(id=>!window.rc50Work.readAyaState().sessions.some(session=>session.id===id),copyId);
+ await page.evaluate(()=>{window.rc54State.pendingReply({ok:true,output:'SİLİNEN KAYDIN YALNIZ YEREL YANITI',workingMemory:{goal:'SİLİNEN KAYDIN YEREL HEDEFİ',decisions:[],openQuestions:[]}});window.rc54State.pendingReply=null;});
+ await main.locator('.aya-session-conflict').waitFor();await page.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);
+ assert.equal(await page.evaluate(id=>window.rc50Work.readAyaState().sessions.some(session=>session.id===id),copyId),false,'A delayed reply cannot resurrect a conversation deleted from another window');
+ assert.match(await main.locator('.aya-session-conflict').textContent(),/saklanan kaydı silinmiş/);
+ assert.equal(await main.getByRole('button',{name:'Saklanan sohbeti yükle',exact:true}).isDisabled(),true);
+ assert.match(await main.locator('.aya-message--assistant').last().textContent(),/SİLİNEN KAYDIN YALNIZ YEREL YANITI/);
+ await screenshot(main.locator('.aya-conversation-shell'),'RC59_AYA_Deleted_Record_Recovery.png');
+ await secondPage.close();
  assert.deepEqual(errors,[],'State transitions produce no React/hydration/page errors');
  await browser.close();browser=null;await stopServer();await fs.rm(route,{recursive:true,force:true});owned=false;await fs.rm(path.join(root,'.next/dev/types'),{recursive:true,force:true});
- console.log(JSON.stringify({pass:true,sessionEditorIsolation:true,pendingReplyMemoryConflict:true,userDraftPreserved:true,explicitMemoryReload:true,lateStatusCannotOverwriteReady:true,mainFocusRecoversEngineChanges:true,explicitModelChoiceSurvivesUnavailable:true,recoveredStatusClearsTransportError:true,cadInstallAndUnavailableUseCore:true,cadBusyPollingRecovers:true,memoryOnlyResetPersists:true,emptySessionNotCreated:true,newerStoredMemoryPreserved:true,modelCallsAreMock:true,cadCallbacksAreSynthetic:true,nativeInference:false,screenshots},null,2));
+ console.log(JSON.stringify({pass:true,sessionEditorIsolation:true,pendingReplyMemoryConflict:true,userDraftPreserved:true,explicitMemoryReload:true,lateStatusCannotOverwriteReady:true,mainFocusRecoversEngineChanges:true,explicitModelChoiceSurvivesUnavailable:true,recoveredStatusClearsTransportError:true,cadInstallAndUnavailableUseCore:true,cadBusyPollingRecovers:true,memoryOnlyResetPersists:true,emptySessionNotCreated:true,newerStoredMemoryPreserved:true,twoRealWindowsPreserveNewerStoredReply:true,explicitStoredReloadPreservesDraft:true,explicitSeparateCopyPreservesBoth:true,failedDeleteRetainsRecord:true,deletedConversationNotResurrected:true,modelCallsAreMock:true,cadCallbacksAreSynthetic:true,nativeInference:false,screenshots},null,2));
 }catch(error){console.error(logs);throw error;}finally{
  await browser?.close();await stopServer();if(owned)await fs.rm(route,{recursive:true,force:true});await fs.rm(path.join(root,'.next/dev/types'),{recursive:true,force:true});
 }

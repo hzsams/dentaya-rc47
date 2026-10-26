@@ -15,5 +15,15 @@ export function useAyaState(){return useSyncExternalStore(subscribe,readAyaState
 function write(options:AyaOptions,list:AyaSession[]){try{const data={options,sessions:options.saveHistory?list.slice(0,12).map(s=>({...s,messages:s.messages.slice(-40)})):[]};if(data.sessions[0])while(JSON.stringify(data.sessions[0]).length>900000&&data.sessions[0].messages.length>1)data.sessions[0].messages.shift();while(JSON.stringify(data).length>1_200_000&&data.sessions.length)data.sessions.pop();localStorage.setItem(KEY,JSON.stringify(data));window.dispatchEvent(new Event(EVENT));return true;}catch{return false;}}
 export function saveAyaOptions(patch:Partial<AyaOptions>){const p=readAyaState();return write(normalizeAyaOptions({...p.options,...patch}),p.sessions);}
 export function saveAyaSession(s:AyaSession){const p=readAyaState();return !p.options.saveHistory||write(p.options,[s,...p.sessions.filter(x=>x.id!==s.id)]);}
+/** Compare the last read canonical record; no persisted schema or timestamp-only identity. */
+export function ayaSessionRevision(session:AyaSession|undefined):string|null{return session?JSON.stringify(session):null;}
+export type AyaSessionSaveResult='saved'|'disabled'|'conflict'|'failed';
+/** Optimistic check against the latest read; localStorage is not a cross-window transaction. */
+export function saveAyaSessionIfCurrent(s:AyaSession,expected:string|null):AyaSessionSaveResult{
+ const p=readAyaState();
+ if(!p.options.saveHistory)return 'disabled';
+ if(ayaSessionRevision(p.sessions.find(session=>session.id===s.id))!==expected)return 'conflict';
+ return write(p.options,[s,...p.sessions.filter(session=>session.id!==s.id)])?'saved':'failed';
+}
 export function deleteAyaSession(id:string){const p=readAyaState();return write(p.options,p.sessions.filter(s=>s.id!==id));}
 export function clearAyaSessions(){return write(readAyaState().options,[]);}

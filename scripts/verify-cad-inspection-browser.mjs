@@ -186,7 +186,7 @@ try {
   await page.evaluate(()=>{window.rc53InspectionModel.mode='fail';});
   await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).fill('Bu kesitin gerçek alanını ve uzunluğunu yorumla.');await aya.getByRole('button',{name:'Gönder',exact:true}).click();await aya.getByRole('button',{name:'Gönder',exact:true}).waitFor();
   const actualReply=aya.locator('.cad-aya-messages article').last();assert.ok((await actualReply.textContent()).includes(String(Number(measuredSection.restoration.areaMm2.toPrecision(6)))+' mm²'),'Core cites the actual measured closed area');assert.match(await actualReply.textContent(),/sadeleştirilmiş/);assert.match(await actualReply.textContent(),/duvar kalınlığı/);assert.equal(await actualReply.locator('[data-proposal-tool]').count(),0,'Interpreting existing contours never proposes or runs a geometry mutation');await assertInspectionPreservesMesh();
-  if(screenshotDir)await page.screenshot({path:path.join(screenshotDir,'RC58_AYA_Section_Evidence.png'),animations:'disabled',style:'nextjs-portal{visibility:hidden!important}'});
+  if(screenshotDir)await page.screenshot({path:path.join(screenshotDir,'RC59_AYA_Section_Evidence.png'),animations:'disabled',style:'nextjs-portal{visibility:hidden!important}'});
   await page.evaluate(()=>{window.rc53InspectionModel.mode='normal';});
 
   for(const [axis,expected] of [['x',[1,0,0]],['y',[0,1,0]],['z',[0,0,1]],['insertion',[0,0,1]]]){
@@ -251,8 +251,8 @@ try {
   const appearanceSelect=page.locator('dialog[open] .appearance-palette select');await appearanceSelect.waitFor();
   const originalAppearance=await appearanceSelect.inputValue();assert.notEqual(originalAppearance,'custom','The fixture starts from a restorable named appearance');
   for(const [id,bg,screenshot] of [
-    ['reference-midnight','#121747','RC58_Background_CAD_Midnight.png'],
-    ['reference-graphite','#0c0d0e','RC58_Background_CAD_Graphite.png'],
+    ['reference-midnight','#121747','RC59_Background_CAD_Midnight.png'],
+    ['reference-graphite','#0c0d0e','RC59_Background_CAD_Graphite.png'],
     ['reference-turquoise','#082a30',null],
     ['reference-coral','#2b1621',null],
   ]){

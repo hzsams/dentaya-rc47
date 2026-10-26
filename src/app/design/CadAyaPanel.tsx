@@ -5,6 +5,7 @@ import UserText from '@/lib/i18n/UserText';
 import {useTranslation} from '@/lib/i18n';
 import type {AyaCadContext,AyaCadActionEvidence} from '@/lib/aya-cad-assistance';
 import {createAyaStatusRefreshGate,selectAyaModel} from '@/lib/aya-ui-state';
+import {ayaSetupError} from '@/lib/aya-setup-status';
 import {ayaProposalBlock,type AyaActionResult} from '@/lib/aya-cad-agent';
 import {resolveAyaReply} from '@/lib/aya-conversation';
 import {fallbackReply} from '../../../electron/aya/conversation.cjs';
@@ -21,7 +22,7 @@ import AyaKnowledgePanel from '../ai/AyaKnowledgePanel';
 import AyaSources from '../ai/AyaSources';
 type Message=AyaMessage&{proposals?:AyaProposal[];cadScope?:string};
 type Event=AyaCadActionEvidence;
-type Session={messages:Message[];memory:AyaWorkingMemory;events:Event[]};
+type Session={draft:string;pendingDraft:string;messages:Message[];memory:AyaWorkingMemory;events:Event[]};
 // Panel close/reopen keeps the current task in process memory, scoped to project/source/unit.
 const sessions=new Map<string,Session>();
 const sessionListeners=new Map<string,Set<(session:Session)=>void>>();
@@ -34,7 +35,9 @@ type Props={context:AyaCadContext;onClose:()=>void;onRun?:(p:AyaProposal)=>Promi
 export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetup,onShow,onNext}:Props){
  const {t,locale}=useTranslation(),copy=ayaAgentText(locale),toolsCopy=WORK_TOOLS_TEXT[dentalFactLanguage(locale)];
  const scope=context.scope??'',saved=sessions.get(scope);
- const [draft,setDraft]=useState(''),[messages,setMessages]=useState<Message[]>(()=>saved?.messages??[]),[memory,setMemory]=useState(()=>saved?.memory??normalizeMemory(null)),[events,setEvents]=useState<Event[]>(()=>saved?.events??[]);
+ // A closed request is cancelled, but its original question stays available for
+ // retry. A reopened panel consumes that draft without adopting the old request.
+ const [draft,setDraft]=useState(saved?.draft||saved?.pendingDraft||''),[pendingDraft,setPendingDraft]=useState(''),[messages,setMessages]=useState<Message[]>(()=>saved?.messages??[]),[memory,setMemory]=useState(()=>saved?.memory??normalizeMemory(null)),[events,setEvents]=useState<Event[]>(()=>saved?.events??[]);
  const [activeAction,setActiveAction]=useState<AyaCadTool|null>(null);
  const [busy,setBusy]=useState(false),[model,setModel]=useState(''),[error,setError]=useState(''),[models,setModels]=useState<{name:string;size:number;label?:string}[]>([]);
  const [runtimeBusy,setRuntimeBusy]=useState(false);
@@ -46,9 +49,10 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
  useLayoutEffect(()=>{contextRef.current=context;if(request.current&&requestSnapshot.current!==context.snapshot)cancelPending.current?.('LOCAL_CONTEXT_CHANGED');},[context]);
  function cancel(){cancelPending.current?.('LOCAL_CANCELLED');void window.dentayaDesktop?.localAyaCancel?.();}
 
- useLayoutEffect(()=>{cacheSession(scope,{messages:messages.slice(-64),memory,events:events.slice(-8)});},[scope,messages,memory,events]);
+ useLayoutEffect(()=>{cacheSession(scope,{draft,pendingDraft,messages:messages.slice(-64),memory,events:events.slice(-8)});},[scope,draft,pendingDraft,messages,memory,events]);
  useEffect(()=>{
   if(!scope)return;
+  // Late tool results update evidence/history, never the reopened composer's draft.
   const update=(session:Session)=>{if(live.current){setMessages(session.messages);setMemory(session.memory);setEvents(session.events);}};
   const listeners=sessionListeners.get(scope)??new Set<(session:Session)=>void>();listeners.add(update);sessionListeners.set(scope,listeners);
   return()=>{listeners.delete(update);if(!listeners.size)sessionListeners.delete(scope);};
@@ -72,9 +76,10 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
   return()=>{live.current=false;gate.invalidate();window.removeEventListener('focus',focus);if(request.current){cancelPending.current?.('LOCAL_CANCELLED');void window.dentayaDesktop?.localAyaCancel?.();}};
  },[]);
  useEffect(()=>{if(!runtimeBusy)return;const timer=setInterval(()=>void refreshModels(),1500);return()=>clearInterval(timer);},[runtimeBusy]);
- async function send(text=draft,previous=messages,actionEvents=events){
+ // The bounded automatic QC interpretation must never replace an unsent question.
+ async function send(text=draft,previous=messages,actionEvents=events,preserveDraft=false){
   const prompt=text.trim();if(!prompt||prompt.length>8000||lock.current||contextRef.current.isSaving)return;
-  lock.current=true;followBottom.current=true;setBusy(true);setDraft('');setError('');
+  lock.current=true;followBottom.current=true;setBusy(true);setPendingDraft(preserveDraft?'':prompt);if(!preserveDraft)setDraft('');setError('');
   const requestId=crypto.randomUUID(),captured=contextRef.current;
   request.current=requestId;requestSnapshot.current=captured.snapshot??'';
   const base=previous.slice(-64);setMessages([...base,{role:'user',content:prompt,cadScope:captured.scope}]);
@@ -87,13 +92,13 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
    }:undefined});
    if(!live.current||request.current!==requestId)return;
    // A response for another geometry/task cannot change this task's memory or offer executable tools.
-   if(captured.scope!==contextRef.current.scope||captured.snapshot!==contextRef.current.snapshot){setDraft(prompt);setError(copy.stale);return;}
+   if(captured.scope!==contextRef.current.scope||captured.snapshot!==contextRef.current.snapshot){if(!preserveDraft)setDraft(prompt);setError(copy.stale);return;}
    setMessages([...base,{role:'user',content:prompt,cadScope:captured.scope},{role:'assistant',content:result.output,engine:result.engine,references:result.references,proposals:result.proposals,cadScope:captured.scope}]);
    if(result.workingMemory)setMemory(result.workingMemory);
-   if(result.cancelled||result.warning)setDraft(prompt);
-   if(result.warning)setError(result.warning==='LOCAL_INVALID_PLAN'?copy.invalid:t('Yerel model yanıt veremedi. Motoru ve model seçimini kontrol edin.'));
-  }catch{if(live.current&&request.current===requestId){const reply=fallbackReply(prompt,{locale,history:base,modelError:'LOCAL_ERROR'});setMessages([...base,{role:'user',content:prompt,cadScope:captured.scope},{role:'assistant',content:reply.output,engine:'core',cadScope:captured.scope}]);setDraft(prompt);}}
-  finally{if(timeout)clearTimeout(timeout);if(request.current===requestId){lock.current=false;request.current='';cancelPending.current=null;if(live.current){setBusy(false);}}}
+   if(!preserveDraft&&(result.cancelled||result.warning))setDraft(prompt);
+   if(result.warning)setError(result.warning==='LOCAL_INVALID_PLAN'?copy.invalid:result.warning.startsWith('AYA_ENGINE_')?ayaSetupError(result.warning,locale):t('Yerel model yanıt veremedi. Motoru ve model seçimini kontrol edin.'));
+  }catch{if(live.current&&request.current===requestId){const reply=fallbackReply(prompt,{locale,history:base,modelError:'LOCAL_ERROR'});setMessages([...base,{role:'user',content:prompt,cadScope:captured.scope},{role:'assistant',content:reply.output,engine:'core',cadScope:captured.scope}]);if(!preserveDraft)setDraft(prompt);}}
+  finally{if(timeout)clearTimeout(timeout);if(request.current===requestId){lock.current=false;request.current='';cancelPending.current=null;if(live.current){setPendingDraft('');setBusy(false);}}}
  }
  async function apply(proposal:AyaProposal){
   if(!onRun||lock.current)return;
@@ -109,14 +114,14 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
   const cached=sessions.get(captured.scope??''),nextEvents=[...(cached?.events??events),...(evidence&&evidence.scope===captured.scope?[evidence]:[])].slice(-8);
   const nextMessages:Message[]=[...(cached?.messages??messages),{role:'assistant',engine:'core',content:copy.toolResult+' · '+copy.tools[proposal.tool]+'\n'+(result.ok?copy.done:copy.failed)+' · '+result.message,cadScope:captured.scope}];
   // Publish the actual result into its original unit, including a panel reopened before completion.
-  const session={messages:nextMessages.slice(-64),memory:cached?.memory??memory,events:nextEvents};
+  const session={draft:cached?.draft??draft,pendingDraft:cached?.pendingDraft??pendingDraft,messages:nextMessages.slice(-64),memory:cached?.memory??memory,events:nextEvents};
   if(captured.scope)cacheSession(captured.scope,session);
   if(!live.current){if(captured.scope)for(const update of sessionListeners.get(captured.scope)??[])update(session);return;}
   setBusy(false);setActiveAction(null);
   if(captured.scope!==contextRef.current.scope)return;
   setEvents(nextEvents);setMessages(nextMessages);if(!result.ok)setError(result.message);
   // One bounded follow-up interprets actual check output, only for the unchanged geometry.
-  if(result.ok&&proposal.tool==='inspect'&&model&&evidence){await new Promise<void>(resolve=>requestAnimationFrame(()=>resolve()));if(live.current&&evidence.scope===contextRef.current.scope&&evidence.snapshot===contextRef.current.snapshot&&evidence.dataToken===contextRef.current.dataToken)void send(copy.interpret,nextMessages,nextEvents);}
+  if(result.ok&&proposal.tool==='inspect'&&model&&evidence){await new Promise<void>(resolve=>requestAnimationFrame(()=>resolve()));if(live.current&&evidence.scope===contextRef.current.scope&&evidence.snapshot===contextRef.current.snapshot&&evidence.dataToken===contextRef.current.dataToken)void send(copy.interpret,nextMessages,nextEvents,true);}
  }
  const checks=cadChecklist(context,t),legacy=nextCadAction(context),legacyActions={setup:{label:t('İş tanımı'),run:onSetup},show:{label:t('Tümünü göster'),run:onShow},place:{label:t('Koleye yerleştir'),run:onPlace},save:{label:t('Kaydet ve çık'),run:onSave},next:{label:t('Sonraki'),run:onNext}};
  const currentProposal=(tool:AyaCadTool):AyaProposal=>({tool,reason:copy.tools[tool],scope:context.scope??'',snapshot:context.snapshot??''});

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {beginAyaMemoryEdit,checkAyaMemoryEdit,createAyaStatusRefreshGate,selectAyaModel} from '../src/lib/aya-ui-state';
 import {addAyaMemory,importAyaKnowledgeFile,readAyaKnowledge,saveAyaKnowledge} from '../src/lib/aya-knowledge';
+import {ayaSessionRevision,readAyaState,saveAyaOptions,saveAyaSessionIfCurrent,deleteAyaSession,type AyaSession} from '../src/lib/aya-local-state';
 
 const memory={goal:'Cuma teslim',decisions:['Önce prova'],openQuestions:['Kurye saati?']};
 const draft={...beginAyaMemoryEdit('session-a',memory),goal:'Kullanıcının tamamlanmamış taslağı'};
@@ -43,6 +44,27 @@ function pendingFile(name='incoming.txt') {
  return {file:{name,size:100,text:()=>text} as File,finish:resolve};
 }
 try {
+ assert.equal(saveAyaOptions({saveHistory:true}),true);
+ const session:AyaSession={id:'revision-session',title:'First goal',updatedAt:100,messages:[{role:'user',content:'Initial question'}],workingMemory:memory};
+ assert.equal(saveAyaSessionIfCurrent(session,null),'saved');
+ const staleRevision=ayaSessionRevision(readAyaState().sessions[0]);
+ const newer={...session,messages:[{role:'user' as const,content:'A newer question in another window'}],workingMemory:incoming};
+ assert.equal(saveAyaSessionIfCurrent(newer,staleRevision),'saved');
+ assert.equal(saveAyaSessionIfCurrent({...session,updatedAt:101},staleRevision),'conflict','A delayed reply cannot replace newer content even when timestamps did not change.');
+ assert.equal(readAyaState().sessions[0].messages[0].content,'A newer question in another window');
+ const currentRevision=ayaSessionRevision(readAyaState().sessions[0]);
+ assert.equal(saveAyaOptions({role:'lab'}),true);
+ assert.equal(saveAyaSessionIfCurrent({...newer,updatedAt:102},currentRevision),'saved','Unrelated preference changes are preserved without creating a conversation conflict.');
+ assert.equal(readAyaState().options.role,'lab');
+ const deletedRevision=ayaSessionRevision(readAyaState().sessions[0]);
+ assert.equal(deleteAyaSession(session.id),true);
+ assert.equal(saveAyaSessionIfCurrent(newer,deletedRevision),'conflict','A stale active window must not resurrect a deleted stored conversation.');
+ assert.equal(readAyaState().sessions.length,0);
+ assert.equal(saveAyaSessionIfCurrent({...newer,id:'separate-copy'},null),'saved','An explicit separate conversation can preserve the local work without replacing the original.');
+ assert.equal(saveAyaOptions({saveHistory:false}),true);
+ assert.equal(saveAyaSessionIfCurrent(newer,null),'disabled');
+ assert.equal(readAyaState().sessions.length,0,'History opt-out remains effective at the time of commit.');
+
  assert.equal(saveAyaKnowledge([note('delete-me')]),true);
  const firstImport=pendingFile(),importing=importAyaKnowledgeFile(firstImport.file);
  assert.equal(saveAyaKnowledge([]),true);assert.equal(addAyaMemory('Concurrent note','Synthetic concurrent content'),true);
@@ -76,4 +98,4 @@ try {
  if(oldWindow)Object.defineProperty(globalThis,'window',oldWindow);else Reflect.deleteProperty(globalThis,'window');
  if(oldStorage)Object.defineProperty(globalThis,'localStorage',oldStorage);else Reflect.deleteProperty(globalThis,'localStorage');
 }
-console.log('PASS: stale session/model-memory editor rejection, preserved draft and explicit reload, busy/length guards, latest status wins and chosen model retention, async notebook import deletion/addition/opt-out preservation, concurrent imports, capacity and deduplication. No browser or model inference.');
+console.log('PASS: stale session/model-memory editor rejection, revision-checked history saves preserve newer/deleted records and history opt-out, explicit separate copy, preserved draft and explicit reload, busy/length guards, latest status wins and chosen model retention, async notebook import deletion/addition/opt-out preservation, concurrent imports, capacity and deduplication. No browser or model inference.');

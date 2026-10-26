@@ -1,0 +1,218 @@
+{
+  "release": "1.0.0-rc.59",
+  "status": "pass",
+  "checkedAt": "2026-10-26T20:25:36+03:00",
+  "nativeModelInferenceVerified": false,
+  "windowsInstallerProduced": false,
+  "liveOrganizationBackendVerified": false,
+  "runs": [
+    {
+      "name": "aya-conversation",
+      "command": "node scripts/verify-aya-conversation-browser.mjs",
+      "exitCode": 0,
+      "seconds": 32.75,
+      "log": "logs/aya-conversation.txt",
+      "sha256": "e882d74c1a0e9f854ff20a0e58b7384ed559b2e2592482fa728d59b436509370"
+    },
+    {
+      "name": "aya-state",
+      "command": "node scripts/verify-aya-state-browser.mjs",
+      "exitCode": 0,
+      "seconds": 42.14,
+      "log": "logs/aya-state.txt",
+      "sha256": "2e5bd83ee3519e5173df6f2cd6c88c9b5b8cb566f10f0b2e0839bb989f7936d5"
+    },
+    {
+      "name": "aya-work",
+      "command": "node scripts/verify-aya-work-browser.mjs",
+      "exitCode": 0,
+      "seconds": 19.34,
+      "log": "logs/aya-work.txt",
+      "sha256": "2993fe092aedf5cea843b2ab5a7e80e3a0b2eb43d5077e9219df1769a60ef08b"
+    },
+    {
+      "name": "cad-daily",
+      "command": "node --import tsx scripts/verify-cad-daily-browser.mjs",
+      "exitCode": 0,
+      "seconds": 245.13,
+      "log": "logs/cad-daily.txt",
+      "sha256": "80d1a0f0f98561f9a747b882188b9f95a54185bb7ac57ef1cb4556283b659072"
+    },
+    {
+      "name": "cad-inspection",
+      "command": "node scripts/verify-cad-inspection-browser.mjs",
+      "exitCode": 0,
+      "seconds": 529.74,
+      "log": "logs/cad-inspection.txt",
+      "sha256": "cb02e0032634b481eb903aad99dd502698405582fb773e66da6091e5a7697ab9"
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "screenshots/AYA_RC49_basic_dialogue.png",
+      "size": 82698,
+      "sha256": "8a7514cc6c38af546bb764a22e343bd9229837dfa5fb33be07b25012ca241dc1"
+    },
+    {
+      "path": "screenshots/AYA_RC49_identity.png",
+      "size": 69172,
+      "sha256": "8898a778be8e4393edbe0963a6e3b064decd2b9b387b45fe0726ff277e7e3a57"
+    },
+    {
+      "path": "screenshots/AYA_RC50_callback_failure_and_stale_proposal.png",
+      "size": 129970,
+      "sha256": "465e0669f5a9cfd11210bfc6895c6d97619fe802b7132f5c1c43d420ad2d6bbb"
+    },
+    {
+      "path": "screenshots/AYA_RC50_memory_and_multistep.png",
+      "size": 80019,
+      "sha256": "8e84d975f0620b9bc643eb0a5fdccb459d34b9c27545f4bab443f2e6f601dbc3"
+    },
+    {
+      "path": "screenshots/AYA_RC50_model_receives_explicit_memory.png",
+      "size": 69946,
+      "sha256": "0f7d45f656425f0ed09dfa445698b3a83b4ae0e9ab94fa113089c622578b1bd0"
+    },
+    {
+      "path": "screenshots/AYA_RC50_offline_place_proposal.png",
+      "size": 96695,
+      "sha256": "b1ab250de535bad2ca8c6a08e4747c66fe37483c0fc04116853e68caf09a57c7"
+    },
+    {
+      "path": "screenshots/AYA_RC54_memory_conflict.png",
+      "size": 115541,
+      "sha256": "cb755a10bfc7b9887697f72fd20a9840934e4ed21d6950f25bd560dbdea3f43d"
+    },
+    {
+      "path": "screenshots/AYA_RC54_unavailable_model_core.png",
+      "size": 60953,
+      "sha256": "fd4282d2431eaa620bfeb864d3a142dcd1bedaceade6ce971076756e7c7150ba"
+    },
+    {
+      "path": "screenshots/AYA_RC56_model_failure_cad_help.png",
+      "size": 90072,
+      "sha256": "6bfd91de82b0bc9b2e3150920956d86e51fbf9c7f00d3c4ba1e0d934a320106a"
+    },
+    {
+      "path": "screenshots/AYA_RC56_scoped_followup.png",
+      "size": 130015,
+      "sha256": "bd0237af41af317bd38416114a2cddf47c8a5e0ba18fb593a6da2ab8e9ef6cad"
+    },
+    {
+      "path": "screenshots/AYA_conversation_desktop.png",
+      "size": 63106,
+      "sha256": "9f02dd4af5370de9d021288a8d387a11e13c7d6681c8a386f2e26c3cbd31b015"
+    },
+    {
+      "path": "screenshots/CAD_Inspection_Desktop.png",
+      "size": 815331,
+      "sha256": "d6e451c17e4cc87cf686ee29c7e5b2e2992037221bf7e378c8497c3eed1a2c8e"
+    },
+    {
+      "path": "screenshots/CAD_Inspection_Mobile.png",
+      "size": 125021,
+      "sha256": "6aee6fa2d85dd477fafea6d3f812b20c9aa911311dc350833dc2ff1b790a3b6a"
+    },
+    {
+      "path": "screenshots/CAD_Section_Measurements.png",
+      "size": 686394,
+      "sha256": "e3942be75e150504405e509874cb650212c02ab7024ad4652d804d03aea767b9"
+    },
+    {
+      "path": "screenshots/RC40_CAD_AYA.png",
+      "size": 240734,
+      "sha256": "6b724d7f87f4e8edfdcec40f3b48a81a1e5139985016f095adec0539ba474cb0"
+    },
+    {
+      "path": "screenshots/RC46_AYA_mobile.png",
+      "size": 60030,
+      "sha256": "0c5b83591e0bc56cf8b4064af2493683d6ea82318872cd192649912305809e00"
+    },
+    {
+      "path": "screenshots/RC51_CAD_daily.png",
+      "size": 226118,
+      "sha256": "bed0151cf3ddb726e21beb96d9719d6a883a6fd4fdc0beb45c51ead01db9ba37"
+    },
+    {
+      "path": "screenshots/RC59_AYA_Deleted_Record_Recovery.png",
+      "size": 103580,
+      "sha256": "16b29173d15104576239025329e68f10cda0c3c0f2d93d6f50a213c507848235"
+    },
+    {
+      "path": "screenshots/RC59_AYA_Diagnostic_Draft.png",
+      "size": 130946,
+      "sha256": "5f9d018fa082e5d6a74a36784dc2af120a8e5c1b6a45eec34aaa9cd4340edafc"
+    },
+    {
+      "path": "screenshots/RC59_AYA_Diagnostic_Isolation.png",
+      "size": 111603,
+      "sha256": "ba34265bdc2e052943733c2df278639bc7706ec1121bf215e31ce707ce075295"
+    },
+    {
+      "path": "screenshots/RC59_AYA_Empty_Memory_Reload.png",
+      "size": 62053,
+      "sha256": "d860a89024e968f680552650db6ca9276e6f97589ecc7d2ae54da199eb60ac25"
+    },
+    {
+      "path": "screenshots/RC59_AYA_Focus_Model_Recovery.png",
+      "size": 120063,
+      "sha256": "145c7aaa31a333e5ab2f04a967308401e901b775f1b85b7ecf51f8d825b5b53b"
+    },
+    {
+      "path": "screenshots/RC59_AYA_Section_Evidence.png",
+      "size": 541780,
+      "sha256": "5a32e236cee50d660ea924161beb2f15ce4165d5596e5030b7424e40b65810b2"
+    },
+    {
+      "path": "screenshots/RC59_AYA_Two_Window_Conflict.png",
+      "size": 93292,
+      "sha256": "3ada0fc71056ce507e75502b0c0ac094fc7f41daa139dd1bf9b2730467875e6f"
+    },
+    {
+      "path": "screenshots/RC59_Background_CAD_Graphite.png",
+      "size": 870196,
+      "sha256": "8480b2d06999ee319b182987a7c26dc0664d4b9497515add69ad4ce2a7c8250b"
+    },
+    {
+      "path": "screenshots/RC59_Background_CAD_Midnight.png",
+      "size": 869201,
+      "sha256": "c0b0b2ea5df5c138190e3e3e8ed4b99f933ece1455d9b75ac1211d3b44295780"
+    },
+    {
+      "path": "screenshots/RC59_CAD_AYA_Draft_Preserved.png",
+      "size": 285776,
+      "sha256": "041c11e2f0f5d217ebde7630955b9b4b8a967acbefe29c4e0de2792b9b4d9c71"
+    },
+    {
+      "path": "screenshots/RC59_CAD_Current_Shell_QC.png",
+      "size": 277712,
+      "sha256": "8cf9de00ae4a97ff9ded0ad6d0b4c45f80c65fb711d557194d9bfb70118084d8"
+    },
+    {
+      "path": "screenshots/RC59_CAD_Stale_QC.png",
+      "size": 195887,
+      "sha256": "2503da57976b8d7c32bd125614f422d431f8a2929f2c308966c2c633bccedb0f"
+    },
+    {
+      "path": "screenshots/RC59_Host_Action_Receipt.png",
+      "size": 277993,
+      "sha256": "3dbece50abb811ad52e0d4dfe5a3f4c5ff585316b9aab623e62fd89a6586734d"
+    },
+    {
+      "path": "screenshots/loading-ready-mobile.png",
+      "size": 23220,
+      "sha256": "f2d65dc5fb59e1475f5ccefca76e84166d181a73ac60815142683c7524f62709"
+    }
+  ],
+  "scope": {
+    "modelCalls": "mock; actual native inference blocked",
+    "ayaCadCallbacks": "actual renderer/typedhost callbacks in CADdaily+inspection; model bridge mocked; committedhostreceiptscheckedviarealnormalizer",
+    "applicationBackend": "intercepted synthetic API fixtures; no real organization acceptance",
+    "cadDesign": "real WebGL/kernel/manualsculpt+undo+save/unit/recovery/STLguards; synthetic implant/scan fixture; no new three-preparation browser or clinical/intaglio acceptance",
+    "sectionContours": "current actual displayed-mesh section+host post-action context; large previews simplified, not wall/internal fit",
+    "backgroundPalettes": "four RC57 reference presets retained; current actual WebGL clear-colour/canvas/history/geometry checks, no new full72appearance/per-language suite",
+    "desktopFocus": "RC58 folder navigation retained; no new fulldesktop/operations/professional-shell browser acceptance in RC59",
+    "desktopWindows": "not run",
+    "unchangedAssets": "120 SVG logos,5 games,72appearance choices and CAD anatomy retained; current sourcechecks +actualCADdaily/inspection; separate three-preparation browser and fullappearance/language matrix notrerun"
+  }
+}

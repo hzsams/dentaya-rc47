@@ -81,6 +81,7 @@ try {
    const result={ok:true,output:model.mode==='pending'?'Gecikmiş model yanıtı':'Mevcut üniteye ait kontrol önerisi',workingMemory:{goal:input.workingMemory?.goal||'46 ünitesinin gerçek kontrol sonuçlarını incele',decisions:['Kontrol kullanıcının onayı ile çalışır'],openQuestions:[]},proposals:input.prompt.startsWith('Yeni kontrol sonuçlarını')?[]:[{tool:'inspect',reason:'Mevcut ünite için geometri kontrolünü hesapla',scope:input.cadContext.scope,snapshot:input.cadContext.snapshot}]};
    if(model.mode==='pending')return new Promise(resolve=>model.pending.push(()=>resolve(result)));
    if(model.mode==='invalid')return {ok:false,error:'LOCAL_INVALID_PLAN'};
+   if(model.mode==='engine-memory')return {ok:false,error:'AYA_ENGINE_MEMORY'};
    return result;
   },localAyaCancel:async()=>{model.cancels++;return {ok:true};}};
   const exp=Math.floor(Date.now()/1000)+86400,payload=btoa(JSON.stringify({sub:userId,exp,aud:'authenticated',role:'authenticated'}));
@@ -187,7 +188,9 @@ try {
  // The knowledge notebook also contains a textarea. Opening during autosave
  // must focus the message composer after it becomes enabled.
  await page.waitForFunction(()=>document.activeElement===document.querySelector('.cad-aya-panel > form textarea'));
+ await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).fill('Bu ünite için henüz göndermediğim soru');
  await page.keyboard.press('Escape');assert.equal(await aya.count(),0);assert.equal(await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).evaluate(button=>document.activeElement===button),true,'Closing the sidebar restores keyboard focus');await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();await page.setViewportSize({width:1600,height:1000});
+ assert.equal(await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).inputValue(),'Bu ünite için henüz göndermediğim soru','Closing and reopening the same CAD unit preserves an unsent draft');
  const ask=async text=>{await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).fill(text);await aya.getByRole('button',{name:'Gönder',exact:true}).click();await aya.getByRole('button',{name:'Gönder',exact:true}).waitFor();};
  // RC50 uses the scoped CAD dialogue for explicit current-workspace reviews.
  // A catalogue placement definition is not evidence of a live scene assessment.
@@ -209,6 +212,9 @@ try {
  const inspectProposal=aya.locator('[data-proposal-tool=inspect]').last();await inspectProposal.waitFor();
  const preInspect=await page.evaluate(()=>window.rc47CadModel.calls.at(-1).cadContext);
  assert.equal(await page.locator('.cad-history-count').textContent(),historyBefore);assert.equal(writes.length,writesBefore,'A model suggestion must not execute CAD or save automatically');
+ // An automatic result interpretation must not consume the user's next unsent question.
+ const unsentCadDraft='Bir sonraki sorum: bu ünitenin formunu nasıl korurum?';
+ await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).fill(unsentCadDraft);
  // Two clicks in the same event turn must still dispatch only one operation.
  await inspectProposal.getByRole('button',{name:'Uygula',exact:true}).evaluate(button=>{button.click();button.click();});
  await page.waitForFunction(()=>window.rc47CadModel.calls.length===2);await aya.getByRole('button',{name:'Gönder',exact:true}).waitFor();
@@ -218,16 +224,34 @@ try {
  const currentInspect=normalizeWorkspace(interpreted.cadContext).recentActions.at(-1);
  assert.equal(currentInspect?.tool,'inspect','The actual model-side normalizer retains the completed host QC receipt');assert.equal(currentInspect.ok,true);
  assert.equal(currentInspect.snapshot,interpreted.cadContext.snapshot);assert.equal(currentInspect.dataToken,interpreted.cadContext.dataToken);assert.notEqual(currentInspect.snapshot,preInspect.snapshot,'Receipt binds the committed post-action snapshot, not the proposal snapshot');
- if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC58_Host_Action_Receipt.png'),animations:'disabled',timeout:15000});}
+ if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC59_Host_Action_Receipt.png'),animations:'disabled',timeout:15000});}
  assert.ok(await inspectProposal.getByRole('button').isDisabled(),'Applied suggestions become stale');
+ assert.equal(await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).inputValue(),unsentCadDraft,'Successful automatic QC interpretation preserves the unsent question');
+ await aya.getByRole('button',{name:'Kapat',exact:true}).click();await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();
+ assert.equal(await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).inputValue(),unsentCadDraft,'The scoped session also preserves the draft after a model follow-up');
+ await aya.getByRole('combobox',{name:'Kurulu yerel model',exact:true}).waitFor();
+ const beforeInvalidInterpretation=await page.evaluate(()=>window.rc47CadModel.calls.length);await page.evaluate(()=>{window.rc47CadModel.mode='invalid';});await aya.locator('[data-aya-tool=inspect]').click();await page.waitForFunction(count=>window.rc47CadModel.calls.length===count+1,beforeInvalidInterpretation);await aya.getByRole('button',{name:'Gönder',exact:true}).waitFor();
+ assert.equal(await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).inputValue(),unsentCadDraft,'Invalid automatic QC output cannot replace the draft with the synthetic interpretation prompt');
+ const beforeEngineInterpretation=await page.evaluate(()=>window.rc47CadModel.calls.length);await page.evaluate(()=>{window.rc47CadModel.mode='engine-memory';});await aya.locator('[data-aya-tool=inspect]').click();await page.waitForFunction(count=>window.rc47CadModel.calls.length===count+1,beforeEngineInterpretation);await aya.getByRole('button',{name:'Gönder',exact:true}).waitFor();
+ assert.match(await aya.getByRole('alert').textContent(),/bellek ayıramadı/,'CAD exposes the same safe actionable engine diagnosis as the main chat');
+ assert.equal(await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).inputValue(),unsentCadDraft);
+ await page.evaluate(()=>{window.rc47CadModel.mode='pending';});await aya.locator('[data-aya-tool=inspect]').click();await aya.getByRole('button',{name:'Durdur',exact:true}).waitFor();await aya.getByRole('button',{name:'Durdur',exact:true}).click();await aya.getByRole('button',{name:'Gönder',exact:true}).waitFor();
+ assert.equal(await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).inputValue(),unsentCadDraft,'Cancelling automatic QC interpretation preserves the original user draft');
+ await page.evaluate(()=>{for(const resolve of window.rc47CadModel.pending.splice(0))resolve();window.rc47CadModel.mode='ok';});
+ if(process.env.DENTAYA_SCREENSHOT_DIR){await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC59_CAD_AYA_Draft_Preserved.png'),animations:'disabled',timeout:15000});}
+ console.log('PASS: CAD drafts survive close/reopen and success, invalid output, engine failure, or cancellation during bounded QC interpretation.');
  // Invalid model output and cancellation retain the prompt and leave CAD usable.
  await page.evaluate(()=>{window.rc47CadModel.mode='invalid';});await ask('Hedefi değiştirmeden kontrol et');assert.equal(await aya.getByRole('textbox').inputValue(),'Hedefi değiştirmeden kontrol et');
  await page.evaluate(()=>{window.rc47CadModel.mode='pending';});
  await aya.getByRole('textbox').fill('İptal edilecek soru');await aya.getByRole('button',{name:'Gönder',exact:true}).click();await aya.getByRole('button',{name:'Durdur',exact:true}).click();try{await aya.getByRole('button',{name:'Gönder',exact:true}).waitFor();}catch(error){console.error('Cancel diagnostic',await page.evaluate(()=>({calls:window.rc47CadModel.calls.map(c=>c.prompt),cancels:window.rc47CadModel.cancels,pending:window.rc47CadModel.pending.length})));throw error;}assert.equal(await aya.getByRole('textbox').inputValue(),'İptal edilecek soru');
  // A closed panel and a late bridge response must not commit a reply or its memory.
  await aya.getByRole('textbox').fill('Kapalı panele gecikecek soru');await aya.getByRole('button',{name:'Gönder',exact:true}).click();await page.waitForFunction(()=>window.rc47CadModel.pending.length===2);await aya.getByRole('button',{name:'Kapat',exact:true}).click();
+ await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();
+ assert.equal(await aya.getByRole('textbox').inputValue(),'Kapalı panele gecikecek soru','Closing cancels the pending request and restores its original question for retry');
+ await aya.getByRole('textbox').fill('Yeniden açtıktan sonra yazdığım yeni taslak');
  await page.evaluate(()=>{for(const resolve of window.rc47CadModel.pending.splice(0))resolve();window.rc47CadModel.mode='ok';});
- await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();assert.doesNotMatch(await aya.getByRole('log').textContent(),/Gecikmiş model yanıtı/);
+ assert.doesNotMatch(await aya.getByRole('log').textContent(),/Gecikmiş model yanıtı/);
+ assert.equal(await aya.getByRole('textbox').inputValue(),'Yeniden açtıktan sonra yazdığım yeni taslak','A late response from the closed panel cannot overwrite the reopened panel draft');
  // Unit switches isolate working memory and discard an outstanding plan.
  await page.evaluate(()=>{window.rc47CadModel.mode='pending';});await aya.getByRole('textbox').fill('Eski dişe ait gecikmiş öneri');await aya.getByRole('button',{name:'Gönder',exact:true}).click();await page.waitForFunction(()=>window.rc47CadModel.pending.length===1);
  await page.getByRole('button',{name:'Diş 47',exact:true}).click();await page.evaluate(()=>{for(const resolve of window.rc47CadModel.pending.splice(0))resolve();window.rc47CadModel.mode='ok';});
@@ -262,7 +286,7 @@ try {
  await page.getByRole('tab',{name:'Kontrol',exact:true}).click();await page.locator('[data-cad-qc-report]').waitFor();
  await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();await ask('Bu güncel shell kontrolünü yorumla');
  const shellEvidence=await page.evaluate(()=>window.rc47CadModel.calls.at(-1).cadContext.report);assert.ok(shellEvidence.triangles>0);assert.ok(Number.isFinite(shellEvidence.minimumWallEstimateMm));assert.equal(shellEvidence.wallMethod,'shell-offset-estimate');
- if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC58_CAD_Current_Shell_QC.png'),animations:'disabled',style:'nextjs-portal{visibility:hidden!important}'});}
+ if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC59_CAD_Current_Shell_QC.png'),animations:'disabled',style:'nextjs-portal{visibility:hidden!important}'});}
  await aya.getByRole('button',{name:'Kapat',exact:true}).click();await openShell();await page.getByRole('button',{name:'Mesh repair',exact:true}).click();await page.locator('[data-cad-shell-report]').waitFor();
  await page.getByRole('button',{name:"Shell'i temizle",exact:true}).click();await page.getByRole('tab',{name:'Kontrol',exact:true}).click();await page.locator('[data-cad-qc-report]').waitFor();
  await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();await ask('Shell temizlendikten sonraki güncel kontrolü yorumla');
@@ -290,7 +314,7 @@ try {
  snapshot=await save();assert.deepEqual(unitMesh(snapshot),edited,'Manual redo restores the same deterministic sculpted geometry');
  console.log('PASS: AYA undo and manual redo use real history; geometry changes invalidate a pending model reply and old evidence.');
  await showCurrentQc();
- await page.getByRole('button',{name:'Diş 47',exact:true}).click();await selectStage('design');await page.getByRole('tab',{name:'Kontrol',exact:true}).click();await page.locator('[data-cad-qc-stale]').waitFor();assert.equal(await page.locator('[data-cad-qc-report]').count(),0,'Another unit never shows the prior unit QC metrics');if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC58_CAD_Stale_QC.png'),animations:'disabled',style:'nextjs-portal{visibility:hidden!important}'});}await page.getByRole('tab',{name:'Serbest',exact:true}).click();
+ await page.getByRole('button',{name:'Diş 47',exact:true}).click();await selectStage('design');await page.getByRole('tab',{name:'Kontrol',exact:true}).click();await page.locator('[data-cad-qc-stale]').waitFor();assert.equal(await page.locator('[data-cad-qc-report]').count(),0,'Another unit never shows the prior unit QC metrics');if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC59_CAD_Stale_QC.png'),animations:'disabled',style:'nextjs-portal{visibility:hidden!important}'});}await page.getByRole('tab',{name:'Serbest',exact:true}).click();
  snapshot=await save();assert.equal(snapshot.units['unit-47-1'].anchor.placed,true);assert.ok(Math.abs(snapshot.units['unit-47-1'].anchor.position[0]+16)<.001);
  await page.getByRole('button',{name:'Diş 46',exact:true}).click();snapshot=await save();assert.deepEqual(unitMesh(snapshot),edited);
  assert.ok(await page.locator('.cad-history-actions button[aria-label="Geri al"]').isEnabled());

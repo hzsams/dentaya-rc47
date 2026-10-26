@@ -13,6 +13,16 @@ const {CONTEXT_MARKER}=require('../electron/aya/agent.cjs');
  await fs.writeFile(dest+'.part',content.subarray(0,8));let request;
  await verifiedDownload(spec,dest,{fetchImpl:async(url,options)=>{request=options;return new Response(content.subarray(8),{status:206,headers:{'content-range':`bytes 8-${content.length-1}/${content.length}`}});}});
  assert.equal(request.headers.Range,'bytes=8-');assert.equal((await fs.readFile(dest)).toString(),content.toString());
+ // Even a fully cached file remains a cancellable operation; cancellation must
+ // not turn into a successful installation after asynchronous hash verification.
+ const cachedAbort=new AbortController();cachedAbort.abort();let cachedFetches=0;
+ await assert.rejects(verifiedDownload(spec,dest,{signal:cachedAbort.signal,fetchImpl:async()=>{cachedFetches++;throw Error('Cached verification must not fetch');}}),error=>error.name==='AbortError');assert.equal(cachedFetches,0);assert.deepEqual(await fs.readFile(dest),content);
+ const verificationAbort=new AbortController(),readStream=require('node:fs').createReadStream;
+ try{
+  require('node:fs').createReadStream=(...args)=>{const stream=readStream(...args);if(args[0]===dest)stream.once('end',()=>verificationAbort.abort());return stream;};
+  await assert.rejects(verifiedDownload(spec,dest,{signal:verificationAbort.signal}),error=>error.name==='AbortError');
+ }finally{require('node:fs').createReadStream=readStream;}
+ assert.deepEqual(await fs.readFile(dest),content,'Cancelled checksum verification leaves the existing verified file intact');
  // Cancellation keeps only a partial payload, which still needs the full checksum on resume.
  await fs.rm(dest);const downloadAbort=new AbortController();
  await assert.rejects(verifiedDownload(spec,dest,{signal:downloadAbort.signal,onProgress:()=>downloadAbort.abort(),fetchImpl:async()=>new Response(new ReadableStream({start(controller){controller.enqueue(content.subarray(0,8));}}))}),/abort/i);
@@ -70,6 +80,24 @@ const {CONTEXT_MARKER}=require('../electron/aya/agent.cjs');
   assert.doesNotMatch(JSON.stringify({failed,status:await runtime.status()}),/PRIVATE|patient|Bearer|native detail/,'Native paths, process keys and raw output never leave runtime diagnostics');
  }
  bootFailure=null;mode='normal';assert.equal((await api.chat({model:s.models[0].name,prompt:'Tekrar dene'},7)).ok,true);assert.equal((await runtime.status()).error,'','Successful retry clears the prior startup diagnosis');runtime.stop();
+ // Cancelling before or during asynchronous startup cannot resurrect the native
+ // child after Stop, window cancellation or application shutdown.
+ const managedInput={model:s.models[0].name,messages:[],options:{maxTokens:64,creativity:0}},spawnCount=spawned;
+ const alreadyAborted=new AbortController();alreadyAborted.abort();
+ await assert.rejects(runtime.chat({...managedInput,signal:alreadyAborted.signal}),error=>error.name==='AbortError');assert.equal(spawned,spawnCount,'An already cancelled request never spawns the engine');
+ const pendingModelRead=runtime.chat(managedInput);runtime.stop();
+ await assert.rejects(pendingModelRead,/LOCAL_CANCELLED/);assert.equal(spawned,spawnCount,'Stop while model metadata is loading prevents a later native child');assert.equal(runtime.isBusy(),false);assert.equal((await runtime.status()).error,'','Cancellation is not a startup failure');
+ const net=require('node:net'),createServer=net.createServer;let releasePort,portWaiting;
+ const portRequested=new Promise(resolve=>{portWaiting=resolve;});
+ try{
+  net.createServer=()=>({once(){return this;},listen(_port,_host,callback){releasePort=callback;portWaiting();},address:()=>({port:34567}),close(callback){callback();}});
+  const pendingPort=runtime.chat(managedInput);await portRequested;runtime.stop();releasePort();
+  await assert.rejects(pendingPort,/LOCAL_CANCELLED/);assert.equal(spawned,spawnCount,'Stop during loopback port allocation prevents a later native child');
+ }finally{net.createServer=createServer;}
+ assert.equal((await api.chat({model:s.models[0].name,prompt:'Stop sonrasında yeniden başla'},7)).ok,true,'Explicit Stop still permits a later fresh request');runtime.stop();
+ let disposedSpawns=0;const disposedRuntime=createManagedAya({directory:dir,engineBinary:path.join(dir,'engine/llama-server.exe'),spawnImpl:()=>{disposedSpawns++;throw Error('A disposed runtime must not spawn');}});
+ const pendingShutdown=disposedRuntime.chat(managedInput);disposedRuntime.dispose();
+ await assert.rejects(pendingShutdown,/LOCAL_CANCELLED/);await assert.rejects(disposedRuntime.chat(managedInput),/LOCAL_CANCELLED/);assert.equal(disposedSpawns,0);assert.equal((await disposedRuntime.status()).running,false);assert.equal((await disposedRuntime.installAll(7)).error,'LOCAL_CANCELLED');assert.equal((await disposedRuntime.importModel(modelFile)).error,'LOCAL_CANCELLED');
  assert.equal((await runtime.importModel(path.join(dir,'missing.gguf'))).ok,false);
  assert.equal(answerOwned('hesapla (12,5 + 2,5) * 4').output,'hesapla (12,5 + 2,5) * 4 = 60'.replace('hesapla ',''));
  assert.equal(calculate('1/0'),null,'Invalid arithmetic never produces a numeric result');
@@ -77,6 +105,6 @@ const {CONTEXT_MARKER}=require('../electron/aya/agent.cjs');
  assert.match(answerOwned('Temel model sıfırdan eğitildi mi?').output,/sıfırdan eğitilmedi/);
  const cad=normalizeCad({unit:'46',upperReady:true,lowerReady:true,openingMm:99,positions:[1],patientName:'PRIVATE'});assert.equal(cad.openingMm,12);assert.ok(!JSON.stringify(cad).includes('PRIVATE'));assert.ok(!('positions' in cad));
  const note={id:'test',kind:'document',title:'Dökümhane',content:'Başlangıç bilgisi.\n'.repeat(300)+'Kalibrasyon kodu Z8T4.'};assert.match(ownedContext({prompt:'Kalibrasyon kodu',knowledge:[note]}).personalKnowledge[0].content,/Z8T4/);assert.equal(ownedContext({prompt:'Kalibrasyon kodu',knowledge:[note],useMemory:false}).references.length,0);
- console.log(JSON.stringify({pass:true,checksumAndResume:true,redirectRejection:true,archiveTraversalRejection:true,ggufImport:true,tokenBudget:true,loopbackStreaming:true,explicitMemory:true,cadMetadataWhitelist:true,startupDiagnosis:{bounded:true,rawDetailsExcluded:true,retry:true,lateHandshakeRejected:true,cases:10},foundationTrainingClaim:false,nativeInference:'mocked in this check; separate native log'},null,2));
+ console.log(JSON.stringify({pass:true,checksumAndResume:true,cachedVerificationCancellation:true,redirectRejection:true,archiveTraversalRejection:true,ggufImport:true,tokenBudget:true,loopbackStreaming:true,explicitMemory:true,cadMetadataWhitelist:true,startupDiagnosis:{bounded:true,rawDetailsExcluded:true,retry:true,lateHandshakeRejected:true,cases:10},startupCancellation:{preAborted:true,modelRead:true,portAllocation:true,stopRetry:true,disposeFinal:true},foundationTrainingClaim:false,nativeInference:'mocked in this check; separate native log'},null,2));
  }finally{runtime?.dispose();await fs.rm(dir,{recursive:true,force:true});}
 })().catch(e=>{console.error(e);process.exitCode=1;});

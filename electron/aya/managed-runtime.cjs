@@ -28,11 +28,14 @@ async function trustedResponse(url,options={},fetchImpl=fetch){
 }
 async function hashFile(file){const hash=crypto.createHash('sha256');for await(const chunk of fs.createReadStream(file))hash.update(chunk);return hash.digest('hex');}
 async function verifiedDownload(spec,destination,{signal,onProgress=()=>{},fetchImpl=fetch}={}){
+ signal?.throwIfAborted();
  const partial=destination+'.part';await fsp.mkdir(path.dirname(destination),{recursive:true});
- if(fs.existsSync(destination)&&(await fsp.stat(destination)).size===spec.bytes&&await hashFile(destination)===spec.sha256)return destination;
+ if(fs.existsSync(destination)&&(await fsp.stat(destination)).size===spec.bytes&&await hashFile(destination)===spec.sha256){signal?.throwIfAborted();return destination;}
+ signal?.throwIfAborted();
  let offset=0;try{offset=(await fsp.stat(partial)).size;}catch{}
- if(offset>=spec.bytes){if(offset===spec.bytes&&await hashFile(partial)===spec.sha256){await fsp.rename(partial,destination);return destination;}await fsp.rm(partial,{force:true});offset=0;}
+ if(offset>=spec.bytes){if(offset===spec.bytes&&await hashFile(partial)===spec.sha256){signal?.throwIfAborted();await fsp.rename(partial,destination);return destination;}await fsp.rm(partial,{force:true});offset=0;}
  const hash=crypto.createHash('sha256');if(offset)for await(const chunk of fs.createReadStream(partial))hash.update(chunk);
+ signal?.throwIfAborted();
  let response=await trustedResponse(spec.url,{headers:offset?{Range:'bytes='+offset+'-'}:{},signal},fetchImpl);
  if(offset&&response.status===200){offset=0;await response.body?.cancel().catch(()=>{});response=await trustedResponse(spec.url,{signal},fetchImpl);}
  // Restarted responses need a fresh digest; retained ranges hash the existing prefix.
@@ -42,6 +45,7 @@ async function verifiedDownload(spec,destination,{signal,onProgress=()=>{},fetch
  const file=await fsp.open(partial,offset?'a':'w'),reader=response.body.getReader();let bytes=offset;
  try{while(true){if(signal?.aborted)throw signal.reason;const {done,value}=await reader.read();if(done)break;bytes+=value.byteLength;if(bytes>spec.bytes)throw Error('AYA_DOWNLOAD_SIZE');digest.update(value);await file.writeFile(value);onProgress(bytes,spec.bytes);}}
  finally{await file.close();await reader.cancel().catch(()=>{});}
+ signal?.throwIfAborted();
  if(bytes!==spec.bytes||digest.digest('hex')!==spec.sha256){await fsp.rm(partial,{force:true});throw Error('AYA_DOWNLOAD_CHECKSUM');}
  await fsp.rename(partial,destination);return destination;
 }
@@ -59,13 +63,14 @@ async function extractEngine(archive,destination){
 function createManagedAya({directory,fetchImpl=fetch,spawnImpl=spawn,platform=process.platform,engineBinary}={}){
  if(!directory)throw Error('AYA_DIRECTORY_REQUIRED');const root=path.join(directory,'aya-local'),engineDir=path.join(root,'engine'),modelsDir=path.join(root,'models');
  const binary=()=>engineBinary||path.join(engineDir,platform==='win32'?'llama-server.exe':'llama-server');
- let child=null,startPromise=null,activeModel='',base='',key='',install=null,stopping=false;
+ let child=null,startPromise=null,activeModel='',base='',key='',install=null,stopping=false,lifecycle=0,disposed=false;
  let progress={running:false,status:'',completed:0,total:0},lastError='';
  async function records(){try{const raw=JSON.parse(await fsp.readFile(path.join(root,'models.json'),'utf8'));return Array.isArray(raw)?raw.slice(0,16).filter(m=>m&&/^aya-local:[a-z0-9][a-z0-9.-]{0,79}$/.test(m.id)&&/^[a-zA-Z0-9_.-]+\.gguf$/.test(m.file)&&typeof m.name==='string'&&m.name.length<=160&&Number.isSafeInteger(m.size)&&m.size>1024&&m.size<=12*1024**3&&/^[a-f0-9]{64}$/.test(m.sha256)):[];}catch{return [];}}
  async function modelList(){const list=[];for(const r of await records())try{if((await fsp.stat(path.join(modelsDir,r.file))).size===r.size)list.push(r);}catch{}return list;}
  async function saveRecords(list){await fsp.mkdir(root,{recursive:true});const file=path.join(root,'models.json');await fsp.writeFile(file+'.tmp',JSON.stringify(list),{mode:0o600});await fsp.rename(file+'.tmp',file);}
  async function status(){const installed=fs.existsSync(binary()),models=await modelList();return {installed,running:Boolean(child&&base),version:ENGINE.version,error:lastError,models:models.map(m=>({name:m.id,label:m.name,size:m.size})),progress:{...progress}};}
  async function installAll(owner){
+  if(disposed)return {ok:false,error:'LOCAL_CANCELLED'};
   if(install||startPromise||child)return {ok:false,error:'LOCAL_BUSY'};
   if(platform!=='win32')return {ok:false,error:'AYA_WINDOWS_REQUIRED'};
   const controller=new AbortController();install={owner,controller};lastError='';progress={running:true,status:'engine',completed:0,total:ENGINE.bytes+MODEL.bytes};
@@ -77,12 +82,13 @@ function createManagedAya({directory,fetchImpl=fetch,spawnImpl=spawn,platform=pr
    await fsp.rm(engineDir,{force:true,recursive:true});await fsp.rename(stage,engineDir);
    progress={running:true,status:'model',completed:ENGINE.bytes,total:ENGINE.bytes+MODEL.bytes};
    await verifiedDownload(MODEL,path.join(modelsDir,MODEL.name),{signal:controller.signal,fetchImpl,onProgress:(n)=>{progress={running:true,status:'model',completed:ENGINE.bytes+n,total:ENGINE.bytes+MODEL.bytes};}});
-   const previous=await records();await saveRecords([{id:MODEL.id,file:MODEL.name,name:MODEL.label,size:MODEL.bytes,sha256:MODEL.sha256},...previous.filter(m=>m.id!==MODEL.id)]);
+   const previous=await records();controller.signal.throwIfAborted();await saveRecords([{id:MODEL.id,file:MODEL.name,name:MODEL.label,size:MODEL.bytes,sha256:MODEL.sha256},...previous.filter(m=>m.id!==MODEL.id)]);controller.signal.throwIfAborted();
    progress={running:false,status:'ready',completed:ENGINE.bytes+MODEL.bytes,total:ENGINE.bytes+MODEL.bytes};
   }catch(e){lastError=controller.signal.aborted?'LOCAL_CANCELLED':e.code==='ENOSPC'?'AYA_DISK_FULL':e.message||'AYA_INSTALL_FAILED';progress={...progress,running:false,status:controller.signal.aborted?'cancelled':'failed'};}finally{install=null;}})();return {ok:true};
  }
  function cancelInstall(owner){if(install?.owner===owner)install.controller.abort();return {ok:true};}
  async function importModel(file){
+  if(disposed)return {ok:false,error:'LOCAL_CANCELLED'};
   if(install||startPromise||child)return {ok:false,error:'LOCAL_BUSY'};
   try{const stat=await fsp.stat(file);if(!stat.isFile()||stat.size<1024||stat.size>12*1024**3||!file.toLowerCase().endsWith('.gguf'))throw Error('AYA_GGUF_INVALID');
    const handle=await fsp.open(file,'r'),magic=Buffer.alloc(8);try{await handle.read(magic,0,8,0);}finally{await handle.close();}
@@ -92,25 +98,32 @@ function createManagedAya({directory,fetchImpl=fetch,spawnImpl=spawn,platform=pr
    const previous=await records();await saveRecords([{id,file:target,name,size:stat.size,sha256:sha},...previous.filter(m=>m.id!==id)].slice(0,16));return {ok:true};
   }catch(e){return {ok:false,error:e.code==='ENOSPC'?'AYA_DISK_FULL':e.message||'AYA_GGUF_INVALID'};}
  }
- function stop(){stopping=true;const previous=child;child=null;activeModel='';base='';key='';previous?.kill();}
+ function stopProcess(){stopping=true;const previous=child;child=null;activeModel='';base='';key='';previous?.kill();}
+ // Stop/dispose must invalidate startup even while it is awaiting model I/O or
+ // a loopback port, before there is a child process available to kill.
+ function stop(){lifecycle++;stopProcess();}
  async function ensureStarted(model,signal){
+  const generation=lifecycle;
+  const checkCurrent=()=>{signal?.throwIfAborted();if(disposed||generation!==lifecycle)throw Error('LOCAL_CANCELLED');};
+  checkCurrent();
   if(child&&activeModel===model&&base)return;
-  if(startPromise){await startPromise;if(child&&activeModel===model&&base)return;}
+  if(startPromise){await startPromise;checkCurrent();if(child&&activeModel===model&&base)return;}
   let stderrTail='',spawnCode='',bootComplete=false;
   const task=(async()=>{
-   const record=(await modelList()).find(m=>m.id===model);if(!record)throw Error('MODEL_MISSING');if(!fs.existsSync(binary()))throw Error('AYA_ENGINE_MISSING');
-   stop();stopping=false;const token=crypto.randomBytes(32).toString('hex');
+   const record=(await modelList()).find(m=>m.id===model);checkCurrent();if(!record)throw Error('MODEL_MISSING');if(!fs.existsSync(binary()))throw Error('AYA_ENGINE_MISSING');
+   stopProcess();stopping=false;const token=crypto.randomBytes(32).toString('hex');
    const port=await new Promise((resolve,reject)=>{const socket=net.createServer();socket.once('error',reject);socket.listen(0,'127.0.0.1',()=>{const port=socket.address().port;socket.close(()=>resolve(port));});});
+   checkCurrent();
    const origin='http://127.0.0.1:'+port,modelFile=path.join(modelsDir,record.file);
    let proc;try{proc=spawnImpl(binary(),['-m',modelFile,'--host','127.0.0.1','--port',String(port),'--api-key',token,'--alias','aya-local','--ctx-size','8192','--parallel','1','--threads',String(Math.max(1,Math.min(8,(os.availableParallelism?.()||os.cpus().length)-1))),'--n-gpu-layers','0','--jinja','--no-webui','--no-context-shift'],{cwd:path.dirname(binary()),windowsHide:true,shell:false,stdio:['ignore','ignore','pipe']});}catch(error){spawnCode=error.code;throw Error('AYA_ENGINE_START_FAILED');}
    child=proc;let bootError=false;proc.once('error',error=>{spawnCode=error.code;bootError=true;});proc.once('exit',()=>{if(child===proc){child=null;base='';activeModel='';key='';}});proc.stderr?.on('data',chunk=>{if(!bootComplete)stderrTail=(stderrTail+(Buffer.isBuffer(chunk)?chunk.subarray(-8192).toString('utf8'):String(chunk).slice(-8192))).slice(-8192);});
    const deadline=Date.now()+120000;
-   while(Date.now()<deadline){if(signal?.aborted){stop();throw signal.reason;}if(stopping||bootError||child!==proc)throw Error('AYA_ENGINE_START_FAILED');
+   while(Date.now()<deadline){checkCurrent();if(stopping||bootError||child!==proc)throw Error('AYA_ENGINE_START_FAILED');
     try{const r=await fetchImpl(origin+'/v1/models',{headers:{Authorization:'Bearer '+token},redirect:'error',signal:AbortSignal.any([signal||new AbortController().signal,AbortSignal.timeout(1500)])});if(r.ok){const v=await r.json();if(v.data?.some(m=>m.id==='aya-local')&&child===proc&&!bootError&&!stopping&&!signal?.aborted){base=origin;key=token;activeModel=model;lastError='';bootComplete=true;stderrTail='';return;}}}catch{}
     await new Promise(resolve=>setTimeout(resolve,200));
    }
-   stop();throw Error('LOCAL_TIMEOUT');
-  })().catch(error=>{stop();if(signal?.aborted)throw error;const code=['MODEL_MISSING','AYA_ENGINE_MISSING','LOCAL_TIMEOUT'].includes(error.message)?error.message:engineStartError(stderrTail,spawnCode);stderrTail='';lastError=code;throw Error(code);});startPromise=task;try{await task;}finally{if(startPromise===task)startPromise=null;}
+   stopProcess();throw Error('LOCAL_TIMEOUT');
+  })().catch(error=>{if(generation===lifecycle)stopProcess();if(signal?.aborted)throw signal.reason;if(disposed||generation!==lifecycle||error.message==='LOCAL_CANCELLED')throw Error('LOCAL_CANCELLED');const code=['MODEL_MISSING','AYA_ENGINE_MISSING','LOCAL_TIMEOUT'].includes(error.message)?error.message:engineStartError(stderrTail,spawnCode);stderrTail='';lastError=code;throw Error(code);});startPromise=task;try{await task;checkCurrent();}finally{if(startPromise===task)startPromise=null;}
  }
  async function chat({model,messages,options,responseSchema,signal,onToken=()=>{},onContext=()=>{}}){
   await ensureStarted(model,signal);
@@ -138,6 +151,6 @@ function createManagedAya({directory,fetchImpl=fetch,spawnImpl=spawn,platform=pr
   if(responseSchema&&finishReason!=='stop')throw Error('LOCAL_INVALID_PLAN');
   if(!done||!output.trim())throw Error('LOCAL_EMPTY_RESPONSE');return {output:output.trim(),metrics:{milliseconds:Date.now()-started,tokens}};
  }
- return {status,installAll,cancelInstall,importModel,chat,stop,dispose:()=>{install?.controller.abort();stop();},isBusy:()=>Boolean(install||startPromise)};
+ return {status,installAll,cancelInstall,importModel,chat,stop,dispose:()=>{disposed=true;install?.controller.abort();stop();},isBusy:()=>Boolean(install||startPromise)};
 }
 module.exports={createManagedAya,verifiedDownload,extractEngine,trustedResponse,ENGINE,MODEL};

@@ -20,7 +20,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from "@/lib/i18n/UiLink";
 import { useTranslation } from '@/lib/i18n';
 import AyaPreferencesPanel from './AyaPreferencesPanel';
-import { useAyaState, readAyaState, saveAyaSession, deleteAyaSession, type AyaMessage } from '@/lib/aya-local-state';
+import { useAyaState, readAyaState, ayaSessionRevision, saveAyaSessionIfCurrent, deleteAyaSession, type AyaMessage } from '@/lib/aya-local-state';
 import { playExperienceCue } from '@/lib/experience-audio';
 type Message = AyaMessage;
 type LocalStatus = Awaited<ReturnType<NonNullable<NonNullable<Window['dentayaDesktop']>['localAyaStatus']>>>;
@@ -41,12 +41,14 @@ export default function AyaChat() {
     const [sessionId, setSessionId] = useState(''), [loaded, setLoaded] = useState(false), [guideMode, setGuideMode] = useState(false);
     const [retryRequest,setRetryRequest]=useState<{prompt:string;forceModel:boolean;preserveDraft:boolean}|null>(null);
     const [diagnosticResult,setDiagnosticResult]=useState<Message|null>(null);
+    const [saveConflict,setSaveConflict]=useState<'changed'|'missing'|null>(null);
     const [status, setStatus] = useState<LocalStatus>(empty), [model, setModel] = useState(''), [draft, setDraft] = useState(''), [messages, setMessages] = useState<Message[]>([]), [busy, setBusy] = useState(false), [error, setError] = useState(''), [checking, setChecking] = useState(false), [detailed, setDetailed] = useState(false), [desktop, setDesktop] = useState(false), [verified, setVerified] = useState(false), [lastModelFailure,setLastModelFailure]=useState(false);
     const statusRequests=useRef(createAyaStatusRefreshGate());
     const modelPreference=useRef('');
     const requestId=useRef(''),cancelRequest=useRef<(()=>void)|null>(null);
     const lock = useRef(false), live = useRef(true), end = useRef<HTMLDivElement | null>(null);
     const memoryEdit=useRef<{sessionId:string;baseline:string}|null>(null);
+    const persistedSession=useRef<{id:string;revision:string|null}>({id:'',revision:null});
     async function refresh() {
         const api = window.dentayaDesktop;
         if (!api?.localAyaStatus||!live.current)
@@ -76,7 +78,9 @@ export default function AyaChat() {
         const statusGate=statusRequests.current;
         live.current = true;
         const saved = readAyaState().sessions[0];
-        setSessionId(saved?.id || crypto.randomUUID());
+        const initialId=saved?.id || crypto.randomUUID();
+        persistedSession.current={id:initialId,revision:ayaSessionRevision(saved)};
+        setSessionId(initialId);
         setMessages(saved?.messages || []);
         setWorkingMemory(normalizeMemory(saved?.workingMemory));
         setLoaded(true);
@@ -109,14 +113,23 @@ export default function AyaChat() {
     useEffect(() => {
         const edit=memoryEdit.current;
         memoryEdit.current=null;
-        if (!loaded || !options.saveHistory)return;
+        if (!loaded)return;
+        if(!options.saveHistory){persistedSession.current={id:sessionId,revision:ayaSessionRevision(readAyaState().sessions.find(session=>session.id===sessionId))};setSaveConflict(null);return;}
         if (messages.length||workingMemory.goal||workingMemory.decisions.length||workingMemory.openQuestions.length) {
-            if(!saveAyaSession({ id: sessionId, title: (messages[0]?.content||workingMemory.goal||copy.newChat).slice(0, 70), updatedAt: Date.now(), messages, workingMemory }))setError(copy.storageError);
+            const expected=persistedSession.current.id===sessionId?persistedSession.current.revision:null;
+            const result=saveAyaSessionIfCurrent({ id: sessionId, title: (messages[0]?.content||workingMemory.goal||copy.newChat).slice(0, 70), updatedAt: Date.now(), messages, workingMemory },expected);
+            if(result==='saved'){persistedSession.current={id:sessionId,revision:ayaSessionRevision(readAyaState().sessions.find(session=>session.id===sessionId))};setSaveConflict(null);}
+            else if(result==='conflict')setSaveConflict(readAyaState().sessions.some(session=>session.id===sessionId)?'changed':'missing');
+            else if(result==='failed')setError(copy.storageError);
         } else if(edit?.sessionId===sessionId) {
             const stored=readAyaState().sessions.find(session=>session.id===sessionId);
             // A deliberate local reset may remove its own memory-only record.
             // Keep a newer record written elsewhere, and never create empty sessions.
-            if(stored&&!stored.messages.length&&JSON.stringify(normalizeMemory(stored.workingMemory))===edit.baseline&&!deleteAyaSession(sessionId))setError(copy.storageError);
+            if(stored&&ayaSessionRevision(stored)!==persistedSession.current.revision)setSaveConflict('changed');
+            else if(stored&&!stored.messages.length&&JSON.stringify(normalizeMemory(stored.workingMemory))===edit.baseline){
+                if(!deleteAyaSession(sessionId))setError(copy.storageError);
+                else {persistedSession.current={id:sessionId,revision:null};setSaveConflict(null);}
+            }
         }
     }, [loaded, sessionId, messages, workingMemory, options.saveHistory, copy.storageError, copy.newChat]);
     useEffect(() => { end.current?.scrollIntoView({ block: 'nearest' }); }, [messages, diagnosticResult, busy]);
@@ -210,7 +223,17 @@ export default function AyaChat() {
     const statusText = busy ? copy.answering : checking ? copy.checking : usingModel ? lastModelFailure ? copy.modelFailed : verified ? copy.modelVerified : copy.modelReady : copy.coreStatus;
     function prepare(text:string) { setDraft(text); document.getElementById('aya-local-message')?.focus(); }
     function changeMemory(memory:ReturnType<typeof normalizeMemory>) { memoryEdit.current={sessionId,baseline:JSON.stringify(normalizeMemory(workingMemory))};setWorkingMemory(memory); }
-    function newConversation() { memoryEdit.current=null;setMessages([]); setWorkingMemory(normalizeMemory(null)); setSessionId(crypto.randomUUID()); setDraft(''); setError(''); setRetryRequest(null);setDiagnosticResult(null);setVerified(false); setLastModelFailure(false); document.getElementById('aya-local-message')?.focus(); }
+    function newConversation() { const id=crypto.randomUUID();persistedSession.current={id,revision:null};setSaveConflict(null);memoryEdit.current=null;setMessages([]); setWorkingMemory(normalizeMemory(null)); setSessionId(id); setDraft(''); setError(''); setRetryRequest(null);setDiagnosticResult(null);setVerified(false); setLastModelFailure(false); document.getElementById('aya-local-message')?.focus(); }
+    function openConversation(id:string,preserveDraft=false) {
+        if(lock.current)return;
+        const stored=readAyaState().sessions.find(session=>session.id===id);
+        if(!stored){setSaveConflict('missing');return;}
+        persistedSession.current={id,revision:ayaSessionRevision(stored)};memoryEdit.current=null;setSaveConflict(null);setRetryRequest(null);setDiagnosticResult(null);setSessionId(id);setMessages(stored.messages);setWorkingMemory(normalizeMemory(stored.workingMemory));if(!preserveDraft)setDraft('');setError('');setVerified(false);setLastModelFailure(false);
+    }
+    function saveSeparateConversation() {
+        if(lock.current)return;
+        const id=crypto.randomUUID();persistedSession.current={id,revision:null};memoryEdit.current=null;setSessionId(id);setSaveConflict(null);
+    }
     function responseMode(core:boolean) {
         setGuideMode(core);
         try { localStorage.setItem('dentaya:aya-response-mode',core?'core':'automatic'); } catch { /* The current session remains usable. */ }
@@ -239,6 +262,7 @@ export default function AyaChat() {
                     <UiNode as="div" ref={end}/>
                 </UiNode>
                 {error&&<UiNode as="div" role="alert" className="aya-chat-error" translateChildren={false}><UiNode as="p">{error==='LOCAL_RUNTIME_MISSING'?copy.statusError:error}</UiNode>{retryRequest&&!busy&&(retryRequest.preserveDraft||draft.trim())&&<UiNode as="div" translateChildren={false}><UiNode as="button" type="button" onClick={()=>void (retryRequest.preserveDraft?send(retryRequest.prompt,retryRequest.forceModel,true):send())}>{copy.retry}</UiNode>{!retryRequest.preserveDraft&&<UiNode as="button" type="button" onClick={()=>prepare(draft)}>{copy.edit}</UiNode>}</UiNode>}</UiNode>}
+                {saveConflict&&<UiNode as="div" role="alert" className="aya-chat-error aya-session-conflict" translateChildren={false}><UiNode as="p">{saveConflict==='missing'?copy.sessionMissing:copy.sessionConflict}</UiNode><UiNode as="div" translateChildren={false}><UiNode as="button" type="button" disabled={busy||saveConflict==='missing'} onClick={()=>openConversation(sessionId,true)}>{copy.reloadConversation}</UiNode><UiNode as="button" type="button" disabled={busy||(!messages.length&&!workingMemory.goal&&!workingMemory.decisions.length&&!workingMemory.openQuestions.length)} onClick={saveSeparateConversation}>{copy.saveConversationCopy}</UiNode></UiNode></UiNode>}
                 <UiNode as="form" className="aya-chat-composer" translateChildren={false} onSubmit={e=>{e.preventDefault();void send();}}>
                     <UiNode as="label" className="sr-only" htmlFor="aya-local-message">{copy.message}</UiNode><UiNode as="textarea" id="aya-local-message" value={draft} disabled={busy} maxLength={8000} rows={3} placeholder={copy.placeholder} onChange={e=>setDraft(e.target.value)} onKeyDown={e=>{if(options.enterSends&&e.key==='Enter'&&!e.shiftKey&&!e.nativeEvent.isComposing){e.preventDefault();void send();}}}/>
                     <UiNode as="div" translateChildren={false}><UiNode as="span" className="aya-composer-hint">{options.enterSends?copy.enterHelp:copy.buttonHelp}</UiNode><UiNode as="span">{draft.length.toLocaleString(intlLocale())} / {(8000).toLocaleString(intlLocale())}</UiNode>{busy?<UiNode as="button" key="stop" type="button" onClick={e=>{e.preventDefault();stop();}}>{copy.stop}</UiNode>:<UiNode as="button" key="send" type="submit" disabled={!draft.trim()}>{copy.send} ↑</UiNode>}</UiNode>
@@ -253,7 +277,7 @@ export default function AyaChat() {
                     {panel==='memory'&&<><AyaWorkingMemoryPanel key={sessionId} sessionId={sessionId} memory={workingMemory} busy={busy} onChange={changeMemory}/><AyaKnowledgePanel/></>}
                     {panel==='library'&&<AyaQuestionLibrary disabled={busy} onChoose={question=>{prepare(question);if(window.innerWidth<850)setSettingsOpen(false);}}/>}
                     {panel==='preferences'&&<AyaPreferencesPanel/>}
-                    {panel==='history'&&<UiNode as="section" className="aya-session-history" translateChildren={false}><UiNode as="h3">{copy.history}</UiNode>{!options.saveHistory?<UiNode as="p">{copy.historyOff}</UiNode>:!sessions.length?<UiNode as="p">{copy.historyEmpty}</UiNode>:sessions.map(x=><UiNode as="div" key={x.id} className="aya-history-item" translateChildren={false}><UiNode as="button" type="button" className="aya-history-open" disabled={busy} aria-label={copy.openConversation+': '+x.title} onClick={()=>{memoryEdit.current=null;setRetryRequest(null);setDiagnosticResult(null);setSessionId(x.id);setMessages(x.messages);setWorkingMemory(normalizeMemory(x.workingMemory));setDraft('');setError('');setVerified(false);setLastModelFailure(false);}}><UserText>{x.title}</UserText><UiNode as="small">{new Intl.DateTimeFormat(intlLocale(),{dateStyle:'medium',timeStyle:'short'}).format(x.updatedAt)}</UiNode></UiNode><UiNode as="button" type="button" disabled={busy} onClick={()=>{deleteAyaSession(x.id);if(x.id===sessionId)newConversation();}}>{copy.remove}</UiNode></UiNode>)}</UiNode>}
+                    {panel==='history'&&<UiNode as="section" className="aya-session-history" translateChildren={false}><UiNode as="h3">{copy.history}</UiNode>{!options.saveHistory?<UiNode as="p">{copy.historyOff}</UiNode>:!sessions.length?<UiNode as="p">{copy.historyEmpty}</UiNode>:sessions.map(x=><UiNode as="div" key={x.id} className="aya-history-item" translateChildren={false}><UiNode as="button" type="button" className="aya-history-open" disabled={busy} aria-label={copy.openConversation+': '+x.title} onClick={()=>openConversation(x.id)}><UserText>{x.title}</UserText><UiNode as="small">{new Intl.DateTimeFormat(intlLocale(),{dateStyle:'medium',timeStyle:'short'}).format(x.updatedAt)}</UiNode></UiNode><UiNode as="button" type="button" disabled={busy} onClick={()=>{if(!deleteAyaSession(x.id)){setError(copy.storageError);return;}if(x.id===sessionId)newConversation();}}>{copy.remove}</UiNode></UiNode>)}</UiNode>}
                 </UiNode>
             </UiNode>}
         </UiNode>

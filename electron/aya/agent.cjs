@@ -154,8 +154,15 @@ function readAgentReply(raw,input){
  }
  return {output:text(value.answer,12000),workingMemory:updateMemory(value,input),proposals};
 }
-const historyTerms=value=>[...new Set(text(value,4000).toLocaleLowerCase('tr').normalize('NFKD').replace(/\p{M}/gu,'').replace(/ı/g,'i').match(/[\p{L}\p{N}]{4,}/gu)??[])].filter(w=>!['bunu','bunun','daha','icin','nasil','misin','what','this','that','with','about','please'].includes(w));
+const historyTerms=value=>[...new Set((typeof value==='string'?shortenHistory(value,4000):'').toLocaleLowerCase('tr').normalize('NFKD').replace(/\p{M}/gu,'').replace(/ı/g,'i').match(/[\p{L}\p{N}]{4,}/gu)??[])].filter(w=>!['bunu','bunun','daha','icin','nasil','misin','what','this','that','with','about','please','history','shortened'].includes(w));
 function historyRelevance(content,query){const words=historyTerms(content);return query.reduce((score,term)=>score+(words.some(w=>w===term||Math.min(w.length,term.length)>=5&&(w.startsWith(term)||term.startsWith(w)))?1:0),0);}
+function shortenHistory(content,limit){
+ const value=content.trim();if(value.length<=limit)return value;
+ // Final corrections and negative constraints often occur at the end of a long
+ // task. Keep both ends, and make the omitted middle visible to the model.
+ const marker='\n[history shortened]\n',opening=Math.ceil((limit-marker.length)*.65),ending=limit-marker.length-opening;
+ return value.slice(0,opening)+marker+value.slice(-ending);
+}
 function normalizeHistory(input,context={}){
  const list=(Array.isArray(input)?input:[]).filter(m=>object(m)&&(m.role==='user'||m.role==='assistant')&&typeof m.content==='string');
  // Keep the goal, recent exchanges and relevant older user/assistant pairs in order.
@@ -168,7 +175,7 @@ function normalizeHistory(input,context={}){
   for(let i=list.length-9;i>=2&&indices.size<14;i--)indices.add(i);
   selected=[...indices].sort((a,b)=>a-b).map(i=>list[i]);
  }
- return selected.map(m=>({role:m.role,content:text(m.content,2400)}));
+ return selected.map(m=>({role:m.role,content:shortenHistory(m.content,2400)}));
 }
 // Keep the original user goal and latest exchange while evicting older turns first.
 // Managed inference supplies its actual tokenizer; Ollama uses a conservative UTF-8 bound.
@@ -199,9 +206,10 @@ async function fitMessagesToBudget(input,{countTokens,maxTokens,maxContextTokens
   // Retain the latest exchange as a pair, shortening its middle only after
   // optional evidence has gone. Never truncate the current request or live CAD.
   const retained=messages.map((m,i)=>({i,length:m.content.length})).filter(item=>item.i>anchor&&item.i!==contextIndex&&item.i<messages.length-1&&item.length>600).sort((a,b)=>b.length-a.length);
-  if(retained.length){const {i,length}=retained[0],marker='\n[history shortened]\n',target=Math.max(600,Math.floor(length/2)),start=Math.ceil((target-marker.length)*.65),end=target-marker.length-start;messages[i].content=messages[i].content.slice(0,start)+marker+messages[i].content.slice(-end);continue;}
-  // Condense a long original task only after dropping retrieval, always retaining its opening.
-  if(anchor>0&&anchor<messages.length-1&&messages[anchor].content.length>400){messages[anchor].content=messages[anchor].content.slice(0,Math.max(400,Math.floor(messages[anchor].content.length/2)));continue;}
+  if(retained.length){const {i,length}=retained[0];messages[i].content=shortenHistory(messages[i].content,Math.max(600,Math.floor(length/2)));continue;}
+  // Condense a long original task only after dropping retrieval, retaining its
+  // opening and final corrections rather than silently losing either end.
+  if(anchor>0&&anchor<messages.length-1&&messages[anchor].content.length>400){messages[anchor].content=shortenHistory(messages[anchor].content,Math.max(400,Math.floor(messages[anchor].content.length/2)));continue;}
   // A current prompt plus irreducible live evidence cannot safely fit this model's context.
   throw Error('INVALID_PROMPT');
  }
