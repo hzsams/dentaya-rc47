@@ -1,0 +1,54 @@
+{
+  "checkedAtUTC": "2026-10-26T11:59:17.505624+00:00",
+  "sourceHead": "134b45ec71be134f297b7003bf52cc90aebc02fa",
+  "sourceRelease": "RC58 working tree based on RC57",
+  "workScope": "RC58 current native runtime, grammar and pinned-model feasibility",
+  "nativeInference": false,
+  "mock": false,
+  "model": {
+    "id": "aya-local:qwen3-1.7b-q8",
+    "name": "Qwen3-1.7B-Q8_0.gguf",
+    "label": "AYA Local \u00b7 Qwen3 1.7B",
+    "url": "https://huggingface.co/Qwen/Qwen3-1.7B-GGUF/resolve/90862c4b9d2787eaed51d12237eafdfe7c5f6077/Qwen3-1.7B-Q8_0.gguf",
+    "sha256": "061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+    "bytes": 1834426016,
+    "available": false,
+    "downloadVerified": false
+  },
+  "officialURLCheck": {
+    "method": "HEAD",
+    "tlsVerificationUnchanged": true,
+    "protocols": "HTTPS only, including redirects",
+    "attempts": [
+      {
+        "sandbox": "default",
+        "exitCode": 7,
+        "httpStatus": "000",
+        "error": "Failed to connect to proxy port 8080: Could not connect to server"
+      },
+      {
+        "sandbox": "network-authorized",
+        "exitCode": 56,
+        "httpStatus": "000",
+        "proxyStatus": 403,
+        "error": "CONNECT tunnel failed, response 403",
+        "proxyResponseDateUTC": "2026-10-26T11:53:21Z",
+        "headersFile": "/workspace/dentaya-rc58-validation/model-head-network.headers"
+      }
+    ],
+    "alternateMirrorsUsed": false,
+    "pinsChanged": false,
+    "modelPayloadDownloaded": false
+  },
+  "disk": {
+    "path": "/workspace",
+    "availableBytes": 19955486720,
+    "declaredModelBytes": 1834426016,
+    "fitsDeclaredModel": true
+  },
+  "limitations": [
+    "HTTP CONNECT proxy rejection is not an origin Hugging Face response.",
+    "Official model payload was not reachable or downloaded; model SHA-256 could not be verified.",
+    "No actual model inference, Turkish semantic acceptance or real CAD/model loop was run."
+  ]
+}

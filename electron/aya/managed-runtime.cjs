@@ -6,6 +6,16 @@ const {unzipSync}=require('fflate');
 const {fitMessagesToBudget}=require('./agent.cjs');
 const ENGINE={version:'b9380',url:'https://github.com/ggml-org/llama.cpp/releases/download/b9380/llama-b9380-bin-win-cpu-x64.zip',sha256:'cd44b61422671f0565cae98d856a70d55ef10392197a49246671f85bacb50dc3',bytes:16067676};
 const MODEL={id:'aya-local:qwen3-1.7b-q8',name:'Qwen3-1.7B-Q8_0.gguf',label:'AYA Local · Qwen3 1.7B',url:'https://huggingface.co/Qwen/Qwen3-1.7B-GGUF/resolve/90862c4b9d2787eaed51d12237eafdfe7c5f6077/Qwen3-1.7B-Q8_0.gguf',sha256:'061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a',bytes:1834426016};
+// Native output may contain local paths or the process key. Retain only a bounded
+// startup tail in memory and expose a fixed diagnosis, never the native text.
+function engineStartError(stderr,spawnCode){
+ if(spawnCode==='EACCES'||spawnCode==='EPERM'||/permission denied|access is denied/i.test(stderr))return 'AYA_ENGINE_PERMISSION';
+ if(/out of memory|bad_alloc|cannot allocate memory|failed to allocate|not enough memory/i.test(stderr))return 'AYA_ENGINE_MEMORY';
+ if(['ENOENT','ENOEXEC'].includes(spawnCode)||/error while loading shared libraries|cannot open shared object|(?:missing|not found).*\.dll|\.dll.*(?:missing|not found)|dll initialization failed|wrong elf class|exec format error/i.test(stderr))return 'AYA_ENGINE_LIBRARY';
+ if(/address already in use|failed to bind|could(?:n't| not) bind/i.test(stderr))return 'AYA_ENGINE_PORT';
+ if(/failed to load model|error loading model|invalid (?:model|magic)|unknown model architecture|unsupported model|tensor.*(?:missing|mismatch)|failed to (?:read|open).*gguf/i.test(stderr))return 'AYA_ENGINE_MODEL_LOAD';
+ return 'AYA_ENGINE_START_FAILED';
+}
 const downloadHost=h=>h==='github.com'||h==='release-assets.githubusercontent.com'||h==='objects.githubusercontent.com'||h==='huggingface.co'||h.endsWith('.huggingface.co')||h.endsWith('.hf.co');
 async function trustedResponse(url,options={},fetchImpl=fetch){
  for(let redirects=0;redirects<8;redirects++){
@@ -86,20 +96,21 @@ function createManagedAya({directory,fetchImpl=fetch,spawnImpl=spawn,platform=pr
  async function ensureStarted(model,signal){
   if(child&&activeModel===model&&base)return;
   if(startPromise){await startPromise;if(child&&activeModel===model&&base)return;}
+  let stderrTail='',spawnCode='',bootComplete=false;
   const task=(async()=>{
    const record=(await modelList()).find(m=>m.id===model);if(!record)throw Error('MODEL_MISSING');if(!fs.existsSync(binary()))throw Error('AYA_ENGINE_MISSING');
    stop();stopping=false;const token=crypto.randomBytes(32).toString('hex');
    const port=await new Promise((resolve,reject)=>{const socket=net.createServer();socket.once('error',reject);socket.listen(0,'127.0.0.1',()=>{const port=socket.address().port;socket.close(()=>resolve(port));});});
    const origin='http://127.0.0.1:'+port,modelFile=path.join(modelsDir,record.file);
-   const proc=spawnImpl(binary(),['-m',modelFile,'--host','127.0.0.1','--port',String(port),'--api-key',token,'--alias','aya-local','--ctx-size','8192','--parallel','1','--threads',String(Math.max(1,Math.min(8,(os.availableParallelism?.()||os.cpus().length)-1))),'--n-gpu-layers','0','--jinja','--no-webui','--no-context-shift'],{cwd:path.dirname(binary()),windowsHide:true,shell:false,stdio:['ignore','ignore','pipe']});
-   child=proc;let bootError=false;proc.once('error',()=>{bootError=true;});proc.once('exit',()=>{if(child===proc){child=null;base='';activeModel='';key='';}});proc.stderr?.on('data',()=>{});
+   let proc;try{proc=spawnImpl(binary(),['-m',modelFile,'--host','127.0.0.1','--port',String(port),'--api-key',token,'--alias','aya-local','--ctx-size','8192','--parallel','1','--threads',String(Math.max(1,Math.min(8,(os.availableParallelism?.()||os.cpus().length)-1))),'--n-gpu-layers','0','--jinja','--no-webui','--no-context-shift'],{cwd:path.dirname(binary()),windowsHide:true,shell:false,stdio:['ignore','ignore','pipe']});}catch(error){spawnCode=error.code;throw Error('AYA_ENGINE_START_FAILED');}
+   child=proc;let bootError=false;proc.once('error',error=>{spawnCode=error.code;bootError=true;});proc.once('exit',()=>{if(child===proc){child=null;base='';activeModel='';key='';}});proc.stderr?.on('data',chunk=>{if(!bootComplete)stderrTail=(stderrTail+(Buffer.isBuffer(chunk)?chunk.subarray(-8192).toString('utf8'):String(chunk).slice(-8192))).slice(-8192);});
    const deadline=Date.now()+120000;
    while(Date.now()<deadline){if(signal?.aborted){stop();throw signal.reason;}if(stopping||bootError||child!==proc)throw Error('AYA_ENGINE_START_FAILED');
-    try{const r=await fetchImpl(origin+'/v1/models',{headers:{Authorization:'Bearer '+token},redirect:'error',signal:AbortSignal.any([signal||new AbortController().signal,AbortSignal.timeout(1500)])});if(r.ok){const v=await r.json();if(v.data?.some(m=>m.id==='aya-local')){base=origin;key=token;activeModel=model;return;}}}catch{}
+    try{const r=await fetchImpl(origin+'/v1/models',{headers:{Authorization:'Bearer '+token},redirect:'error',signal:AbortSignal.any([signal||new AbortController().signal,AbortSignal.timeout(1500)])});if(r.ok){const v=await r.json();if(v.data?.some(m=>m.id==='aya-local')&&child===proc&&!bootError&&!stopping&&!signal?.aborted){base=origin;key=token;activeModel=model;lastError='';bootComplete=true;stderrTail='';return;}}}catch{}
     await new Promise(resolve=>setTimeout(resolve,200));
    }
    stop();throw Error('LOCAL_TIMEOUT');
-  })();startPromise=task;try{await task;}finally{if(startPromise===task)startPromise=null;}
+  })().catch(error=>{stop();if(signal?.aborted)throw error;const code=['MODEL_MISSING','AYA_ENGINE_MISSING','LOCAL_TIMEOUT'].includes(error.message)?error.message:engineStartError(stderrTail,spawnCode);stderrTail='';lastError=code;throw Error(code);});startPromise=task;try{await task;}finally{if(startPromise===task)startPromise=null;}
  }
  async function chat({model,messages,options,responseSchema,signal,onToken=()=>{},onContext=()=>{}}){
   await ensureStarted(model,signal);

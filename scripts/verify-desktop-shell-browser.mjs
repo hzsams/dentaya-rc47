@@ -22,9 +22,10 @@ const finance = { id: id(7), case_id: ids.case, patient_price: 1250.5, discount_
 const conversation = { id: ids.conversation, clinic_org_id: ids.clinic, lab_org_id: ids.lab, status: 'active', last_message_at: timestamp, clinic_last_read_at: timestamp, lab_last_read_at: timestamp, created_at: timestamp };
 const messages = Array.from({ length: 36 }, (_, index) => ({ id: id(100 + index), conversation_id: ids.conversation, sender_user_id: ids.user, sender_org_id: ids.lab, sender_name: 'Sentetik Teknisyen', sender_role: 'technician', body: `Sentetik çalışma mesajı ${String(index + 1).padStart(2, '0')}`, context_case_id: null, demo_mode: false, created_at: new Date(Date.parse(timestamp) + index * 1000).toISOString() }));
 const errors = [], interceptedWrites = [], checks = [], layoutSamples = [];
+const moduleDestinations = ['/workspace', '/cases', '/patients', '/appointments', '/ai', '/scans', '/scan-studio', '/design', '/cad-library', '/training', '/operations', '/logistics', '/community', '/messages', '/notifications', '/clinic', '/labs', '/finance', '/team', '/settings', '/pilot-flow', '/pilot-check', '/ops-health', '/release-check'];
 let browser, server, serverExit = null, logs = '', debugPage;
 
-async function installFixture(context, authenticated = true, { locale = 'tr', theme = 'midnight' } = {}) {
+async function installFixture(context, authenticated = true, { locale = 'tr', theme = 'midnight', organizationType = 'clinic', emptyCases = false } = {}) {
   context.on('page', page => {
     page.setDefaultTimeout(30_000);
     page.on('pageerror', error => errors.push({ url: page.url(), error: error.message }));
@@ -40,13 +41,13 @@ async function installFixture(context, authenticated = true, { locale = 'tr', th
     if (url.pathname.includes('/auth/')) rows = authenticated ? { user } : { user: null };
     else {
       if (!['GET', 'HEAD'].includes(method)) interceptedWrites.push({ table, method, payload: request.postDataJSON() });
-      if (table === 'memberships') rows = authenticated ? [{ id: id(8), organization_id: ids.clinic, user_id: ids.user, role: 'owner', status: 'active' }] : [];
+      if (table === 'memberships') rows = authenticated ? [{ id: id(8), organization_id: organizationType === 'laboratory' ? ids.lab : ids.clinic, user_id: ids.user, role: 'owner', status: 'active' }] : [];
       else if (table === 'profiles') rows = [{ id: ids.user, full_name: 'Sentetik Kullanıcı', email: user.email, phone: '' }];
       else if (table === 'organizations') rows = organizations.filter(row => !url.searchParams.get('id')?.startsWith('eq.') || url.searchParams.get('id') === `eq.${row.id}`);
       else if (table === 'user_preferences') rows = [{ theme, motion_level: 'reduced', compact_mode: false, surface_style: 'soft', font_scale: 'normal', custom_accent: null, use_custom_accent: false }];
       else if (table === 'user_onboarding') rows = [{ user_id: ids.user, organization_id: ids.clinic, completed: true, dismissed: true, current_step: 1 }];
       else if (table === 'patients') rows = [patient];
-      else if (table === 'cases') rows = [caseRow];
+      else if (table === 'cases') rows = emptyCases ? [] : [caseRow];
       else if (table === 'clinic_case_finance') rows = [finance];
       else if (table === 'lab_case_quotes') rows = [{ id: id(9), case_id: ids.case, amount: 300, currency: 'EUR', status: 'sent', notes: null, basis: {}, updated_at: timestamp }];
       else if (table === 'organization_conversations') rows = [conversation];
@@ -134,7 +135,162 @@ async function layout(page, route, viewport, { mobile = false } = {}) {
   }
   if (bounds.module) assert.ok(bounds.module.left >= -1 && bounds.module.right <= bounds.width + 1, `Real module fits horizontally: ${description}`);
   layoutSamples.push({ route, viewport, ...bounds });
-  await page.screenshot({ path: path.join(screenshotDirectory, `desktop-${route.slice(1)}-${viewport.width}.png`), animations: 'disabled', caret: 'initial', style: 'nextjs-portal{visibility:hidden!important}' });
+  await page.screenshot({ path: path.join(screenshotDirectory, `RC58_Desktop_${route.slice(1)}_${viewport.width}.png`), animations: 'disabled', caret: 'initial', style: 'nextjs-portal{visibility:hidden!important}' });
+}
+
+async function screenshot(page, name) {
+  await page.screenshot({ path: path.join(screenshotDirectory, `RC58_${name}.png`), animations: 'disabled', caret: 'initial', style: 'nextjs-portal{visibility:hidden!important}' });
+}
+
+async function folderNavigation(page) {
+  const modules = page.locator('.desktop-modules-button');
+  assert.equal(await modules.count(), 1, 'One upper-left module button opens the folder menu');
+  const triggerBounds = await modules.boundingBox();
+  assert.ok(triggerBounds && triggerBounds.x < 180 && triggerBounds.y < 45, 'The module button is reachable at the upper left');
+  await modules.click();
+  const menu = page.locator('.desktop-module-menu');
+  await menu.waitFor({ state: 'visible' });
+  const search = menu.locator('input[type="search"]');
+  await search.fill('');
+  const folder = id => menu.locator(`button[data-folder-id="${id}"]`);
+  const clinic = folder('clinic'), records = folder('clinic/records');
+  assert.equal(await clinic.getAttribute('aria-expanded'), 'true', 'Opening Patients reveals its active parent folder');
+  assert.equal(await records.getAttribute('aria-expanded'), 'true', 'Opening Patients reveals its nested active folder');
+  assert.equal(await menu.locator('a[href="/patients"][aria-current="page"]').isVisible(), true, 'The active patient destination remains visible');
+  assert.equal(await menu.locator('.desktop-module-tree').first().evaluate(node => node.tagName), 'UL', 'The module hierarchy uses an actual list');
+  assert.equal(await records.evaluate(node => Boolean(node.closest('li')?.querySelector(':scope > ul'))), true, 'Nested module folders contain child lists');
+
+  await clinic.focus();
+  await page.keyboard.press('ArrowLeft');
+  assert.equal(await clinic.getAttribute('aria-expanded'), 'false', 'Left arrow collapses a folder');
+  assert.equal(await menu.locator('a[href="/patients"]').isVisible(), false, 'Collapsed folders hide their destination rows');
+  await page.keyboard.press('ArrowRight');
+  assert.equal(await clinic.getAttribute('aria-expanded'), 'true', 'Right arrow expands a folder');
+  await page.keyboard.press('ArrowRight');
+  assert.equal(await clinic.evaluate(node => node !== document.activeElement && Boolean(node.closest('li')?.contains(document.activeElement))), true, 'Right arrow enters the first child of an open folder');
+  if (await page.evaluate(() => document.activeElement?.getAttribute('aria-expanded') === 'true')) await page.keyboard.press('ArrowLeft');
+  await page.keyboard.press('ArrowLeft');
+  assert.equal(await clinic.evaluate(node => node === document.activeElement), true, 'Left arrow from a child returns to its parent');
+  const controls = menu.locator('.desktop-module-tree').first().locator('button:visible,a:visible');
+  await page.keyboard.press('End');
+  assert.equal(await controls.last().evaluate(node => node === document.activeElement), true, 'End reaches the final visible module row');
+  await page.keyboard.press('Home');
+  assert.equal(await controls.first().evaluate(node => node === document.activeElement), true, 'Home reaches the first visible module row');
+
+  // Expand every branch through its visible folder controls before checking the
+  // inventory. This checks the complete real route set without relying on
+  // whether collapsed child lists remain mounted.
+  for (let remaining = 40; remaining > 0; remaining--) {
+    const closed = menu.locator('.desktop-module-folder[aria-expanded="false"]:visible').first();
+    if (!await closed.count()) break;
+    await closed.click();
+  }
+  const destinations = await menu.locator('a.desktop-module-leaf').evaluateAll(nodes => nodes.map(node => node.getAttribute('href')).sort());
+  assert.deepEqual(destinations, [...moduleDestinations].sort(), 'Folder navigation retains every existing module destination exactly once');
+  const workTracking = menu.locator('a[href="/operations"]');
+  assert.match(await workTracking.textContent(), /İş takibi/);
+  assert.equal(await workTracking.evaluate(node => Boolean(node.closest('li')?.parentElement?.closest('li')?.querySelector('button[data-folder-id="management/work"]'))), true, 'Work tracking belongs inside the management work folder');
+
+  await records.click();
+  await clinic.click();
+  await search.fill('RC Kontrolü');
+  await menu.locator('a[href="/release-check"]').waitFor({ state: 'visible' });
+  for (const id of ['workspace', 'workspace/tools', 'workspace/tools/system']) assert.equal(await folder(id).getAttribute('aria-expanded'), 'true', `Search opens matching parent ${id}`);
+  assert.equal(await menu.locator('a.desktop-module-leaf:visible').count(), 1, 'Deep search shows only the matching destination');
+  assert.equal(await menu.locator('a[href="/patients"]').isVisible(), false, 'Nested search filters unrelated destinations');
+  await screenshot(page, 'Module_Folders_Nested_Search');
+  await search.fill('Hastalar');
+  await menu.locator('a[href="/patients"]').waitFor({ state: 'visible' });
+  assert.equal(await clinic.getAttribute('aria-expanded'), 'true', 'Search reopens a collapsed matching parent');
+  assert.equal(await records.getAttribute('aria-expanded'), 'true', 'Search reopens a collapsed matching child folder');
+  await search.fill('');
+  assert.equal(await clinic.getAttribute('aria-expanded'), 'false', 'Clearing search restores the user-collapsed parent');
+  assert.equal(await records.getAttribute('aria-expanded'), 'false', 'Clearing search restores the user-collapsed child');
+  await search.fill('Randevular');
+  await menu.locator('a[href="/appointments"]').click();
+  await page.waitForURL('**/appointments');
+  await page.locator('.planner-week>button').last().waitFor();
+  await menu.waitFor({ state: 'hidden' });
+  assert.equal(new URL(page.url()).pathname, '/appointments', 'Selecting a nested leaf opens the real appointments module');
+  await modules.click();
+  await menu.waitFor({ state: 'visible' });
+  assert.equal(await search.inputValue(), '', 'An actual pathname change clears the previous module search');
+  assert.equal(await folder('clinic/planning').getAttribute('aria-expanded'), 'true', 'The newly active destination opens its own folder path');
+  assert.equal(await menu.locator('a[href="/appointments"][aria-current="page"]').isVisible(), true, 'The newly active appointment leaf is visible after reopening');
+  await screenshot(page, 'Module_Folders_Desktop');
+  await search.fill('Mesajlar');
+  await menu.locator('a[href="/messages"]').click();
+  await page.waitForURL('**/messages');
+  await page.locator('.message-composer textarea').waitFor();
+  await menu.waitFor({ state: 'hidden' });
+  await modules.click();
+  await menu.waitFor({ state: 'visible' });
+  assert.equal(await search.inputValue(), '', 'Cross-folder leaf navigation clears the old search without manual clearing');
+  for (const id of ['workspace', 'workspace/communication']) assert.equal(await folder(id).getAttribute('aria-expanded'), 'true', `Cross-folder navigation opens the new active parent ${id}`);
+  assert.equal(await menu.locator('a[href="/messages"][aria-current="page"]').isVisible(), true, 'The actual new destination remains visible and current after reopening');
+  assert.equal(await folder('clinic/planning').getAttribute('aria-expanded'), 'true', 'Moving to another folder preserves previously opened branches');
+  await folder('workspace').click();
+  await search.fill('RC Kontrolü');
+  await page.keyboard.press('Escape');
+  await menu.waitFor({ state: 'hidden' });
+  await modules.click();
+  await menu.waitFor({ state: 'visible' });
+  assert.equal(await search.inputValue(), 'RC Kontrolü', 'Reopening on the same pathname preserves the current search');
+  await search.fill('');
+  assert.equal(await folder('workspace').getAttribute('aria-expanded'), 'false', 'Reopening on the same pathname preserves an explicit folder collapse');
+  assert.equal(await menu.locator('a[href="/messages"]').isVisible(), false, 'Collapsed child ULs remain hidden after clearing and reopening');
+  await page.keyboard.press('Escape');
+  await menu.waitFor({ state: 'hidden' });
+  checks.push('single upper-left module button; nested UL/LI folders; preserved 24 destinations; active ancestry; keyboard collapse/expand/parent/Home/End; nested search and restored folds; real appointments and cross-folder Messages navigation reset old search and reveal new active paths; same-path reopening preserves search and user collapse');
+}
+
+async function mobileFolderNavigation(page) {
+  await page.setViewportSize({ width: 390, height: 844 });
+  const modules = page.locator('.desktop-modules-button');
+  await modules.click();
+  const menu = page.locator('.desktop-module-menu');
+  await menu.waitFor({ state: 'visible' });
+  assert.equal(await menu.evaluate(node => node.matches(':modal')), true, 'Mobile opens the same native folder dialog');
+  const bounds = await menu.boundingBox();
+  assert.ok(bounds && bounds.x >= -1 && bounds.y >= -1 && bounds.x + bounds.width <= 391 && bounds.y + bounds.height <= 845, 'Mobile folder menu stays within the viewport');
+  await menu.locator('input[type="search"]').fill('Mesajlar');
+  await menu.locator('a[href="/messages"]').waitFor({ state: 'visible' });
+  assert.equal(await menu.locator('button[data-folder-id="workspace/communication"]').getAttribute('aria-expanded'), 'true', 'Mobile search opens the nested communication folder');
+  await screenshot(page, 'Module_Folders_Mobile');
+  await menu.locator('a[href="/messages"]').click();
+  await page.waitForURL('**/messages');
+  await page.locator('.message-composer textarea').waitFor();
+  await menu.waitFor({ state: 'hidden' });
+  assert.equal(await page.locator('.desktop-modules-button').isVisible(), true, 'The mobile module button remains available after leaf navigation');
+  checks.push('390px mobile native folder menu fits viewport, nested search and real Messages leaf navigation');
+}
+
+async function cadFolderNavigation(context) {
+  const page = await context.newPage(); debugPage = page;
+  await page.goto(`${base}/design`);
+  const trigger = page.locator('.cad-main-header .cad-module-command');
+  await trigger.waitFor({ state: 'visible' });
+  assert.equal(await page.locator('.desktop-titlebar').count(), 0, 'CAD retains its existing header without shared application chrome');
+  assert.equal(await page.locator('.module-navigation').count(), 0, 'CAD receives no extra module sidebar');
+  await trigger.click();
+  const menu = page.locator('.desktop-module-menu');
+  await menu.waitFor({ state: 'visible' });
+  assert.equal(await menu.evaluate(node => node.matches(':modal')), true, 'The existing CAD module command opens the shared native folder dialog');
+  await menu.locator('input[type="search"]').fill('CAD çalışma alanı');
+  assert.equal(await menu.locator('button[data-folder-id="lab/design"]').getAttribute('aria-expanded'), 'true', 'CAD search reveals the design folder');
+  await menu.locator('a[href="/design"]').waitFor({ state: 'visible' });
+  await screenshot(page, 'Module_Folders_CAD');
+  await page.keyboard.press('Escape');
+  await menu.waitFor({ state: 'hidden' });
+  await page.waitForFunction(() => document.activeElement?.matches('.cad-module-command'));
+  await page.keyboard.press('Alt+m');
+  await menu.waitFor({ state: 'visible' });
+  await menu.locator('input[type="search"]').fill('Genel bakış');
+  await menu.locator('a[href="/workspace"]').click();
+  await page.waitForURL('**/workspace');
+  await page.locator('.desktop-titlebar').waitFor();
+  await menu.waitFor({ state: 'hidden' });
+  checks.push('existing CAD module command shares folder menu; CAD retains its own header and no sidebar; CAD Escape focus and Alt+M; real Workspace leaf navigation');
 }
 
 async function keyboardAndPreferences(page) {
@@ -187,9 +343,22 @@ async function keyboardAndPreferences(page) {
   await reduced.check();
   assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('dentaya:workspace-chrome-v1')).reducedMotion), true);
   assert.equal(await page.locator('html').getAttribute('data-workspace-reduced-motion'), 'true');
+  const navigation = preferences.locator('.workspace-options input[type="checkbox"]').first();
+  await navigation.uncheck();
   await page.keyboard.press('Escape');
   await preferences.waitFor({ state: 'hidden' });
-  checks.push('Alt+M module menu and search; queued close preserves newer focus; single navigation owner; Ctrl+K search and active descendant; modal Escape/focus restoration; Ctrl+, local preferences');
+  assert.equal(await page.locator('.desktop-module-navigation:visible').count(), 0, 'The optional activity rail can be hidden in preferences');
+  await modules.click();
+  await moduleMenu.waitFor({ state: 'visible' });
+  assert.equal(await moduleMenu.evaluate(node => node.matches(':modal')), true, 'Hiding the optional rail preserves the upper-left folder menu');
+  await page.keyboard.press('Escape');
+  await moduleMenu.waitFor({ state: 'hidden' });
+  await page.keyboard.press('Control+,');
+  await preferences.waitFor();
+  await navigation.check();
+  await page.keyboard.press('Escape');
+  await preferences.waitFor({ state: 'hidden' });
+  checks.push('Alt+M module menu and search; queued close preserves newer focus; single navigation owner; Ctrl+K search and active descendant; modal Escape/focus restoration; Ctrl+, local preferences; folder menu remains available with activity rail hidden');
 }
 
 async function mobileActionReachable(page, route) {
@@ -290,6 +459,10 @@ try {
   }
   await page.setViewportSize({ width: 1440, height: 1000 });
   await ready(page, '/patients');
+  await folderNavigation(page);
+  await mobileFolderNavigation(page);
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await ready(page, '/patients');
   await keyboardAndPreferences(page);
   await page.reload();
   await page.locator('.patient-card').waitFor();
@@ -326,18 +499,24 @@ try {
   checks.push('real patient search/create entry, appointment planner/form, finance record controls, bounded message composer, local AYA calculation');
   checks.push('persisted reduced motion; light and dark presets; Arabic RTL desktop and mobile');
 
+  const cadContext = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });
+  await installFixture(cadContext, true, { organizationType: 'laboratory', emptyCases: true });
+  await cadFolderNavigation(cadContext);
+  await cadContext.close();
+  debugPage = page;
+
   const submissions = interceptedWrites.filter(write => !(
     write.table === 'organization_conversations' && write.method === 'PATCH' && Object.keys(write.payload).every(key => key === 'clinic_last_read_at')
     || write.table === 'user_onboarding' && write.method === 'PATCH' && Number.isInteger(write.payload.current_step) && Object.keys(write.payload).every(key => ['current_step', 'updated_at'].includes(key))
   ));
   assert.deepEqual(submissions, [], 'Visual and navigation verification never submits case, patient, finance or message records');
   assert.deepEqual(errors, [], 'No runtime, hydration or React lifecycle errors');
-  const report = { pass: true, routes, desktopViewports: ['1366×768', '1440×1000'], mobileViewport: '390×844', checks, samples: layoutSamples.length, screenshots: screenshotDirectory, backend: 'synthetic intercepted HTTP only; no live clinic/backend verification', automaticReadReceiptsIntercepted: interceptedWrites.filter(write => write.table === 'organization_conversations').length, automaticOnboardingSyncIntercepted: interceptedWrites.filter(write => write.table === 'user_onboarding').length, cadGeometryLifecycle: 'separate verify-cad-daily-browser test', pageErrors: 0 };
+  const report = { pass: true, release: 'RC58', routes, folderDestinations: moduleDestinations.length, cadNavigationRoute: '/design', desktopViewports: ['1366×768', '1440×1000'], mobileViewport: '390×844', checks, samples: layoutSamples.length, screenshots: screenshotDirectory, backend: 'synthetic intercepted HTTP only; no live clinic/backend verification', automaticReadReceiptsIntercepted: interceptedWrites.filter(write => write.table === 'organization_conversations').length, automaticOnboardingSyncIntercepted: interceptedWrites.filter(write => write.table === 'user_onboarding').length, cadGeometryLifecycle: 'separate verify-cad-daily-browser test', pageErrors: 0 };
   await fs.writeFile(path.join(screenshotDirectory, 'desktop-shell-browser-report.json'), JSON.stringify({ ...report, layoutSamples }, null, 2));
   console.log(JSON.stringify(report, null, 2));
 } catch (error) {
   if (debugPage && !debugPage.isClosed()) {
-    await debugPage.screenshot({ path: path.join(screenshotDirectory, 'desktop-shell-failure.png'), animations: 'disabled', timeout: 15_000 }).catch(() => {});
+    await debugPage.screenshot({ path: path.join(screenshotDirectory, 'RC58_Desktop_Shell_Failure.png'), animations: 'disabled', timeout: 15_000 }).catch(() => {});
     console.error(JSON.stringify(await debugPage.evaluate(() => ({ url: location.href, heading: [...document.querySelectorAll('h1')].map(node => node.textContent), width: innerWidth, documentWidth: document.documentElement.scrollWidth, activeElement: document.activeElement?.outerHTML, openDialogs: [...document.querySelectorAll('dialog[open]')].map(node => node.outerHTML.slice(0, 400)), titlebar: document.querySelector('.desktop-titlebar')?.textContent, statusbar: document.querySelector('.desktop-statusbar')?.textContent })).catch(() => null), null, 2));
   }
   console.error(logs);

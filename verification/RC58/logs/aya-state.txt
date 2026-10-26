@@ -1,0 +1,25 @@
+{
+  "pass": true,
+  "sessionEditorIsolation": true,
+  "pendingReplyMemoryConflict": true,
+  "userDraftPreserved": true,
+  "explicitMemoryReload": true,
+  "lateStatusCannotOverwriteReady": true,
+  "mainFocusRecoversEngineChanges": true,
+  "explicitModelChoiceSurvivesUnavailable": true,
+  "recoveredStatusClearsTransportError": true,
+  "cadInstallAndUnavailableUseCore": true,
+  "cadBusyPollingRecovers": true,
+  "memoryOnlyResetPersists": true,
+  "emptySessionNotCreated": true,
+  "newerStoredMemoryPreserved": true,
+  "modelCallsAreMock": true,
+  "cadCallbacksAreSynthetic": true,
+  "nativeInference": false,
+  "screenshots": [
+    "/workspace/dentaya-rc58-validation/AYA_RC54_memory_conflict.png",
+    "/workspace/dentaya-rc58-validation/RC58_AYA_Focus_Model_Recovery.png",
+    "/workspace/dentaya-rc58-validation/AYA_RC54_unavailable_model_core.png",
+    "/workspace/dentaya-rc58-validation/RC58_AYA_Empty_Memory_Reload.png"
+  ]
+}

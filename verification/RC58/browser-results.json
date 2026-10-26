@@ -1,0 +1,362 @@
+{
+  "release": "1.0.0-rc.58",
+  "status": "pass",
+  "checkedAt": "2026-10-26T15:33:06+03:00",
+  "nativeModelInferenceVerified": false,
+  "windowsInstallerProduced": false,
+  "liveOrganizationBackendVerified": false,
+  "runs": [
+    {
+      "name": "aya-conversation",
+      "command": "node scripts/verify-aya-conversation-browser.mjs",
+      "exitCode": 0,
+      "seconds": 38.76,
+      "log": "logs/aya-conversation.txt",
+      "sha256": "e882d74c1a0e9f854ff20a0e58b7384ed559b2e2592482fa728d59b436509370"
+    },
+    {
+      "name": "aya-state",
+      "command": "node scripts/verify-aya-state-browser.mjs",
+      "exitCode": 0,
+      "seconds": 23.52,
+      "log": "logs/aya-state.txt",
+      "sha256": "2b16298511df9f640a34a8524061137911e814d97c6e630c4d1f8f7679c6bdd3"
+    },
+    {
+      "name": "aya-work",
+      "command": "node scripts/verify-aya-work-browser.mjs",
+      "exitCode": 0,
+      "seconds": 24.66,
+      "log": "logs/aya-work.txt",
+      "sha256": "ed459b3520fb8a0299e5450da099ad968e7e4c4ae61ba9028194d87a8fb523f8"
+    },
+    {
+      "name": "desktop-shell",
+      "command": "node scripts/verify-desktop-shell-browser.mjs",
+      "exitCode": 0,
+      "seconds": 84.63,
+      "log": "logs/desktop-shell.txt",
+      "sha256": "98fc5bcefa01ebcef2e1a58e58ec8fe4486964caf28eb32cf8833d6c75e2ddaf"
+    },
+    {
+      "name": "professional-shell",
+      "command": "node scripts/verify-professional-shell-browser.mjs",
+      "exitCode": 0,
+      "seconds": 14.27,
+      "log": "logs/professional-shell.txt",
+      "sha256": "feea258e8aaa49ad9a43422aad55e4d2e882955855e02e1530ee2c5f0928847d"
+    },
+    {
+      "name": "operations-workspace",
+      "command": "node scripts/verify-operations-workspace-browser.mjs",
+      "exitCode": 0,
+      "seconds": 22.97,
+      "log": "logs/operations-workspace.txt",
+      "sha256": "a47d61aebfbcd3e2970e5657a33da882c8c4d6f6f7b295a85cd82092fdd1c56f"
+    },
+    {
+      "name": "cad-daily",
+      "command": "node --import tsx scripts/verify-cad-daily-browser.mjs",
+      "exitCode": 0,
+      "seconds": 245.1,
+      "log": "logs/cad-daily.txt",
+      "sha256": "be39e39d73b86fb6a46d38f9f4fa9a471dea66d75caf3170f5957cb4b84f9f04"
+    },
+    {
+      "name": "cad-inspection",
+      "command": "node scripts/verify-cad-inspection-browser.mjs",
+      "exitCode": 0,
+      "seconds": 547.13,
+      "log": "logs/cad-inspection.txt",
+      "sha256": "cb02e0032634b481eb903aad99dd502698405582fb773e66da6091e5a7697ab9"
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "screenshots/AYA_RC49_basic_dialogue.png",
+      "size": 82698,
+      "sha256": "8a7514cc6c38af546bb764a22e343bd9229837dfa5fb33be07b25012ca241dc1"
+    },
+    {
+      "path": "screenshots/AYA_RC49_identity.png",
+      "size": 69172,
+      "sha256": "8898a778be8e4393edbe0963a6e3b064decd2b9b387b45fe0726ff277e7e3a57"
+    },
+    {
+      "path": "screenshots/AYA_RC50_memory_and_multistep.png",
+      "size": 80019,
+      "sha256": "8e84d975f0620b9bc643eb0a5fdccb459d34b9c27545f4bab443f2e6f601dbc3"
+    },
+    {
+      "path": "screenshots/AYA_RC50_model_receives_explicit_memory.png",
+      "size": 69946,
+      "sha256": "0f7d45f656425f0ed09dfa445698b3a83b4ae0e9ab94fa113089c622578b1bd0"
+    },
+    {
+      "path": "screenshots/AYA_RC50_offline_place_proposal.png",
+      "size": 96695,
+      "sha256": "b1ab250de535bad2ca8c6a08e4747c66fe37483c0fc04116853e68caf09a57c7"
+    },
+    {
+      "path": "screenshots/AYA_RC54_memory_conflict.png",
+      "size": 115541,
+      "sha256": "cb755a10bfc7b9887697f72fd20a9840934e4ed21d6950f25bd560dbdea3f43d"
+    },
+    {
+      "path": "screenshots/AYA_RC54_unavailable_model_core.png",
+      "size": 60953,
+      "sha256": "fd4282d2431eaa620bfeb864d3a142dcd1bedaceade6ce971076756e7c7150ba"
+    },
+    {
+      "path": "screenshots/AYA_RC56_scoped_followup.png",
+      "size": 130015,
+      "sha256": "bd0237af41af317bd38416114a2cddf47c8a5e0ba18fb593a6da2ab8e9ef6cad"
+    },
+    {
+      "path": "screenshots/AYA_conversation_desktop.png",
+      "size": 63106,
+      "sha256": "9f02dd4af5370de9d021288a8d387a11e13c7d6681c8a386f2e26c3cbd31b015"
+    },
+    {
+      "path": "screenshots/CAD_Inspection_Desktop.png",
+      "size": 815331,
+      "sha256": "d6e451c17e4cc87cf686ee29c7e5b2e2992037221bf7e378c8497c3eed1a2c8e"
+    },
+    {
+      "path": "screenshots/CAD_Inspection_Mobile.png",
+      "size": 125021,
+      "sha256": "6aee6fa2d85dd477fafea6d3f812b20c9aa911311dc350833dc2ff1b790a3b6a"
+    },
+    {
+      "path": "screenshots/CAD_Section_Measurements.png",
+      "size": 686394,
+      "sha256": "e3942be75e150504405e509874cb650212c02ab7024ad4652d804d03aea767b9"
+    },
+    {
+      "path": "screenshots/RC40_CAD_AYA.png",
+      "size": 241087,
+      "sha256": "a6c4fb0e3559883c1fd4e9c7abf71b1407d513cbfbcdf3ecf577c4ae40b676ca"
+    },
+    {
+      "path": "screenshots/RC46_AYA_mobile.png",
+      "size": 60030,
+      "sha256": "0c5b83591e0bc56cf8b4064af2493683d6ea82318872cd192649912305809e00"
+    },
+    {
+      "path": "screenshots/RC51_CAD_daily.png",
+      "size": 226297,
+      "sha256": "ee8defb011a124b42c8201bb680069d18d03bd3a10a1c80ca64637672914c2dd"
+    },
+    {
+      "path": "screenshots/RC58_AYA_Diagnostic_Draft.png",
+      "size": 130946,
+      "sha256": "5f9d018fa082e5d6a74a36784dc2af120a8e5c1b6a45eec34aaa9cd4340edafc"
+    },
+    {
+      "path": "screenshots/RC58_AYA_Diagnostic_Isolation.png",
+      "size": 111603,
+      "sha256": "ba34265bdc2e052943733c2df278639bc7706ec1121bf215e31ce707ce075295"
+    },
+    {
+      "path": "screenshots/RC58_AYA_Empty_Memory_Reload.png",
+      "size": 62053,
+      "sha256": "d860a89024e968f680552650db6ca9276e6f97589ecc7d2ae54da199eb60ac25"
+    },
+    {
+      "path": "screenshots/RC58_AYA_Focus_Model_Recovery.png",
+      "size": 120063,
+      "sha256": "145c7aaa31a333e5ab2f04a967308401e901b775f1b85b7ecf51f8d825b5b53b"
+    },
+    {
+      "path": "screenshots/RC58_AYA_Section_Evidence.png",
+      "size": 541780,
+      "sha256": "5a32e236cee50d660ea924161beb2f15ce4165d5596e5030b7424e40b65810b2"
+    },
+    {
+      "path": "screenshots/RC58_Background_CAD_Graphite.png",
+      "size": 868246,
+      "sha256": "b7a6a7d43d127945f7bdb2a8f447cf1d03ae8de4dc3823744bb2ce518cc830f1"
+    },
+    {
+      "path": "screenshots/RC58_Background_CAD_Midnight.png",
+      "size": 867475,
+      "sha256": "296914f9608ec03d4383c66b45a49446f2c8da2b4c711a41a8b8de20fc484e78"
+    },
+    {
+      "path": "screenshots/RC58_CAD_Current_Shell_QC.png",
+      "size": 277550,
+      "sha256": "695709a6dd89a814145857530e44f095451719ebb32b856f261e924ebc006981"
+    },
+    {
+      "path": "screenshots/RC58_CAD_Stale_QC.png",
+      "size": 198327,
+      "sha256": "58936d1cdbdcada4cc16a9bccbb835dc78e84824eb577a074d76814e725a04a1"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_ai_1366.png",
+      "size": 106925,
+      "sha256": "1284f94823049db9dad5dbf1a3d969e8b022c69cc2d8daabc472f141b6ca2d1c"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_ai_1440.png",
+      "size": 132007,
+      "sha256": "5bae315a86c748628a69b8b5af99aed5ac3f0a70ea1bfa973e6b0a9bf21a90ac"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_ai_390.png",
+      "size": 46432,
+      "sha256": "32a7343a455c0c294ef751934bda893cfca665edf4c743972917c4ccc40dbdf2"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_appointments_1366.png",
+      "size": 123520,
+      "sha256": "a27ff08bd8ea66b50f1dbacdfb0a60735de91d93125763c68eeea57ed76c48ac"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_appointments_1440.png",
+      "size": 143256,
+      "sha256": "4560936953b47a1523e8f06f05df6dd7c819fd87b51d714d1b6c4ab36426c41c"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_appointments_390.png",
+      "size": 48717,
+      "sha256": "808d57bc7bef0afeece141eb305f5d73931a08583115c8eb0a828bef483748ee"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_finance_1366.png",
+      "size": 150973,
+      "sha256": "a8753bfabb7316c0150f0e41da993cf55b034c3b22af7d5c7e43f370c2ee3ce2"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_finance_1440.png",
+      "size": 181843,
+      "sha256": "782ba5188516ba6fb4745d07ce26c5014728edd2974a04f2885843bcadd55c1c"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_finance_390.png",
+      "size": 55338,
+      "sha256": "162c46c65c5e4d653f0420b7d409ac3d0b6c857930bba59f59bd2f487ba860d1"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_messages_1366.png",
+      "size": 147065,
+      "sha256": "841a3077e822a5de049225241af5e7a585879a80b52b77d24b6be9ed5700c491"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_messages_1440.png",
+      "size": 190414,
+      "sha256": "9d29a8a40cb83c3a2a6d0e71f54658f27cdb4a2cab6f2af1dec811e7699c79a4"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_messages_390.png",
+      "size": 63067,
+      "sha256": "e056c62a37cdffb1f9f261403ec0960daeb44e355983a82f8d9634bd0c4d34e4"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_patients-light_1440.png",
+      "size": 117726,
+      "sha256": "92e793dee81bf10715a219d889453d3de7e5b634c78fd7e6a53729d7b3841844"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_patients-rtl_1440.png",
+      "size": 124487,
+      "sha256": "9ce908181ff4639152f019f091bff4f0574fb03b8eb9de34b9a03adcfa21c3a0"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_patients-rtl_390.png",
+      "size": 48683,
+      "sha256": "b73b03b98f1b685e9a9d227e8a68fed15edea5dae4ef9c5043d3129cc12bcfe8"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_patients_1366.png",
+      "size": 106847,
+      "sha256": "0375c98adff1155b75f5e3b07228ccf851224829e0ff61a13df666267b8f45fe"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_patients_1440.png",
+      "size": 119486,
+      "sha256": "f0837094ac158ef3bd4f98e9edb4e5d5971863745c2d0c73e3855d571d231b09"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_patients_390.png",
+      "size": 45553,
+      "sha256": "25170d1eba1cee450b9068c3a282c52545505ac752a98d727e285ecdbcefe4e5"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_workspace-guest_1440.png",
+      "size": 151349,
+      "sha256": "87371cca1466286dd18d44f82cef9331b9eec438fc2b62aa5705462aec8ce7b4"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_workspace_1366.png",
+      "size": 134797,
+      "sha256": "2fbaba0e669bcb2debf77b445e83c2d4ae982844aa3975dad69489093017f5b0"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_workspace_1440.png",
+      "size": 148155,
+      "sha256": "5efe94d7e4e5cc7f7ee5c081a6380c89959686cf4e8ea995865c5cc9389ed008"
+    },
+    {
+      "path": "screenshots/RC58_Desktop_workspace_390.png",
+      "size": 56094,
+      "sha256": "038940490db83a32b27e7a90548c44332b979648c2949c90dc35001c9d8a1049"
+    },
+    {
+      "path": "screenshots/RC58_Host_Action_Receipt.png",
+      "size": 275428,
+      "sha256": "4efa5acc1b19fc3679545826b78f670a331908e68e707b2490151d7dfa79bf10"
+    },
+    {
+      "path": "screenshots/RC58_Module_Folders_CAD.png",
+      "size": 151970,
+      "sha256": "1c405a3cf0ea267fb24df8ad91f592c42164278f142d3f65405e1f9798c2de66"
+    },
+    {
+      "path": "screenshots/RC58_Module_Folders_Desktop.png",
+      "size": 174100,
+      "sha256": "65a8ffdf39b4992c1bad7048c6efc6d75995d10537ccf31cbf851100f7300757"
+    },
+    {
+      "path": "screenshots/RC58_Module_Folders_Mobile.png",
+      "size": 88947,
+      "sha256": "5458addb200c5fbc59875385ab2fe3dab40948c48f2e76831f35365edf3bd394"
+    },
+    {
+      "path": "screenshots/RC58_Module_Folders_Nested_Search.png",
+      "size": 152722,
+      "sha256": "0057a9fb66f98f0d134d817cabc2aa376af0e471c2c33f6197d283c0cb028a19"
+    },
+    {
+      "path": "screenshots/RC58_Operations_Workspace.png",
+      "size": 157554,
+      "sha256": "b0bb1df7a42b7e44f19a5750f4a41ea4c2f8b9baf79e16c273a0305fb2f48ef4"
+    },
+    {
+      "path": "screenshots/RC58_Operations_Workspace_Mobile.png",
+      "size": 54650,
+      "sha256": "652837ccc30cdc14e848d7c2f13e860217f72610b7876a867b3075a7a56eb78b"
+    },
+    {
+      "path": "screenshots/RC58_Professional_shell_mobile.png",
+      "size": 50645,
+      "sha256": "ca44f4fb64f305f8dd17abeb69704ababdc7967156799660fb55c2a79c5661bc"
+    },
+    {
+      "path": "screenshots/loading-ready-mobile.png",
+      "size": 23220,
+      "sha256": "f2d65dc5fb59e1475f5ccefca76e84166d181a73ac60815142683c7524f62709"
+    }
+  ],
+  "scope": {
+    "modelCalls": "mock; actual native inference blocked",
+    "ayaCadCallbacks": "actual renderer/typedhost callbacks in CADdaily+inspection; model bridge mocked; committedhostreceiptscheckedviarealnormalizer",
+    "applicationBackend": "intercepted synthetic API fixtures; no real organization acceptance",
+    "cadDesign": "real WebGL/kernel/manualsculpt+undo+save/unit/recovery/STLguards; synthetic implant/scan fixture; no new three-preparation browser or clinical/intaglio acceptance",
+    "sectionContours": "current actual displayed-mesh section+host post-action context; large previews simplified, not wall/internal fit",
+    "backgroundPalettes": "four RC57 reference presets retained; current actual WebGL clear-colour/canvas/history/geometry checks, no new full72appearance/per-language suite",
+    "desktopFocus": "upper-left nested folder menu preserves24destinations/search/activepath/keyboard/focus; actualdesktop/mobile/CAD+professional-shell fixture regressions",
+    "desktopWindows": "not run",
+    "unchangedAssets": "120 SVG logos,5 games,72appearance choices and CAD anatomy retained; current sourcechecks +actualCADdaily/inspection; RC57 three-preparation browser and full appearance matrix notrerun"
+  }
+}

@@ -283,11 +283,12 @@ try {
   await page.locator('.desktop-titlebar-actions').getByRole('button',{name:'Görünüm ve tercihler',exact:true}).click();
   const preferences=page.getByRole('dialog',{name:'Sana göre DentAYA',exact:true});
   await preferences.getByRole('button',{name:'Çalışma düzeni',exact:true}).click();
-  await preferences.getByRole('checkbox',{name:'Sol menüyü göster',exact:false}).uncheck();
+  await preferences.getByRole('checkbox',{name:'Hızlı erişim şeridini göster',exact:false}).uncheck();
   await preferences.getByRole('button',{name:'Ayarları kapat',exact:true}).click();
   assert.equal(await sidebar.count(),0);
   await page.locator('.desktop-modules-button').click();
   const moduleMenu=page.locator('.desktop-module-menu');
+  await moduleMenu.locator('input[type="search"]').fill('CAD çalışma alanı');
   assert.ok(await moduleMenu.locator('a[href="/design"]').isVisible(),'Hidden sidebar still has one usable module menu');
   await page.keyboard.press('Escape');
   await moduleMenu.waitFor({state:'hidden'});

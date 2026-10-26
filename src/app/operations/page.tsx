@@ -8,11 +8,10 @@ import QuickLink from "@/app/ModuleQuickLink";
 import Link from "@/lib/i18n/UiLink";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { useRouter } from "next/navigation";
-import AyaRobot from "@/app/ai/AyaRobot";
 import DentayaIcon, { type DentayaIconName } from "@/app/DentayaIcon";
 import { dy, useDentayaThemeRuntime } from "@/app/dentaya-theme";
 import { dentayaError } from "@/lib/dentaya-errors";
-import { buildOperationsAttention, buildOperationsMetrics, defaultOperationsSettings, operationsAyaSummary, operationsHealthScore, type OperationsAttention, type OperationsCase, type OperationsOrgType, type OperationsReview, type OperationsSettings, type OperationsShipment, } from "@/lib/operations-center";
+import { buildOperationsAttention, buildOperationsMetrics, defaultOperationsSettings, type OperationsAttention, type OperationsCase, type OperationsOrgType, type OperationsReview, type OperationsSettings, type OperationsShipment, } from "@/lib/operations-center";
 import { supabase } from "@/lib/supabase";
 type Organization = {
     id: string;
@@ -47,10 +46,12 @@ export default function OperationsPage() {
     const [capacityDraft, setCapacityDraft] = useState("24");
     const [warningDraft, setWarningDraft] = useState("80");
     const [savingCapacity, setSavingCapacity] = useState(false);
+    const [capacityReady, setCapacityReady] = useState(false);
     const capacityLock = useRef(false);
     const capacityEdited = useRef(false);
     const [settingsVersion, setSettingsVersion] = useState<string | null>(null);
     const loadData = useCallback(async (org: Organization, showSpinner = false) => {
+        setCapacityReady(false);
         if (showSpinner)
             setRefreshing(true);
         setMessage("");
@@ -105,6 +106,7 @@ export default function OperationsPage() {
                 setCapacityDraft(String(nextSettings.daily_case_capacity));
                 setWarningDraft(String(nextSettings.warning_load_percent));
             }
+            setCapacityReady(true);
         }
         catch (error) {
             setMessage(dentayaError(error, "Operasyon verileri yüklenemedi."));
@@ -200,13 +202,9 @@ export default function OperationsPage() {
             return `${uiText(item.title)} ${uiText(item.detail)} ${item.title} ${item.detail}`.toLocaleLowerCase(intlLocale()).includes(normalized);
         });
     }, [attention, filter, query, uiText, intlLocale]);
-    const ayaSummary = organization
-        ? operationsAyaSummary(organization.org_type, metrics, settings)
-        : "Operasyon verileri hazırlanıyor.";
-    const healthScore = operationsHealthScore(metrics, settings);
     const canManage = membership ? ["owner", "admin"].includes(membership.role) : false;
     async function saveCapacity() {
-        if (!organization || !userId || !canManage || capacityLock.current)
+        if (!organization || !userId || !canManage || !capacityReady || refreshing || capacityLock.current)
             return;
         const capacity = Number(capacityDraft);
         const warning = Number(warningDraft);
@@ -239,52 +237,25 @@ export default function OperationsPage() {
         } catch (error) { setMessage(dentayaError(error, "Kapasite ayarı kaydedilemedi.")); }
         finally { capacityLock.current = false; setSavingCapacity(false); }
     }
-    if (loading) return <LoadingExperience title="Operasyon merkezi hazırlanıyor…"/>;
-    return (<UiNode as="main" id="main-content" style={ui.page}>
+    if (loading) return <LoadingExperience title="İş takibi"/>;
+    return (<UiNode as="main" id="main-content" className="operations-workspace" style={ui.page}>
       <style>{responsiveCss}</style>
 
       <UiNode as="header" style={ui.header}>
         <UiNode as="div">
-          <UiNode as="p" style={ui.kicker}>OPERASYON KONTROL MERKEZİ</UiNode>
-          <UiNode as="h1" style={ui.title}>Günün bütün akışı tek ekranda.</UiNode>
-          <UiNode as="p" style={ui.sub}>
-            <UserText>{organization?.name ?? "DentAYA"}</UserText> · vaka, CAD, üretim, QC ve kurye darboğazlarını canlı izleyin.
-          </UiNode>
+          <UiNode as="h1" style={ui.title}>İş takibi</UiNode>
+          <UiNode as="p" style={ui.sub}><UserText>{organization?.name ?? "DentAYA"}</UserText></UiNode>
         </UiNode>
         <UiNode as="div" style={ui.actions}>
           <UiNode as="button" type="button" style={ui.secondaryButton} onClick={() => { if (organization && (!capacityEdited.current || window.confirm(uiText(copy("Kaydedilmemiş kapasite ayarından vazgeçip güncel veriyi yüklemek istiyor musunuz?"))))) { capacityEdited.current = false; void loadData(organization, true); } }} disabled={refreshing || savingCapacity}>
             {refreshing ? "Yenileniyor…" : "Veriyi Yenile"}
           </UiNode>
-          <Link href="/ai?prompt=Bugün%20önce%20hangi%20operasyonlara%20müdahale%20etmeliyim%3F" style={ui.primaryLink}>
-            AYA’ya Sor
-          </Link>
-          <Link href="/" style={ui.secondaryLink}>{uiText("Ana Sayfa")}</Link>
         </UiNode>
       </UiNode>
 
-      {message ? <UiNode as="div" style={ui.notice}>{message}</UiNode> : null}
+      {message ? <UiNode as="div" role="status" style={ui.notice}>{message}</UiNode> : null}
 
-      <UiNode as="section" className="operations-hero-grid" style={ui.heroGrid}>
-        <UiNode as="article" style={ui.ayaCard}>
-          <UiNode as="div" style={ui.ayaTop}>
-            <UiNode as="div">
-              <UiNode as="p" style={ui.kicker}>AYA · GÜNLÜK ÖNCELİK</UiNode>
-              <UiNode as="h2" style={ui.cardTitle}>{healthScore >= 85 ? "Akış dengeli" : healthScore >= 60 ? "Müdahale gereken işler var" : "Kritik operasyon sinyalleri"}</UiNode>
-            </UiNode>
-            <UiNode as="div" style={ui.scoreBubble}>{healthScore}</UiNode>
-          </UiNode>
-          <UiNode as="div" style={ui.robotWrap}>
-            <AyaRobot state={healthScore < 60 ? "alert" : healthScore < 85 ? "thinking" : "ready"} score={100 - healthScore} modelMode="local" statusText={ayaSummary}/>
-          </UiNode>
-          <UiNode as="p" style={ui.ayaText}>{ayaSummary}</UiNode>
-          <UiNode as="div" style={ui.ayaFooter}>
-            <UiNode as="span">{metrics.overdueCases} termin riski</UiNode>
-            <UiNode as="span">{metrics.lateShipments} geciken teslimat</UiNode>
-            <UiNode as="span">{metrics.revisionCases} {uiText(" revizyon")}</UiNode>
-          </UiNode>
-        </UiNode>
-
-        <UiNode as="section" className="operations-metrics" style={ui.metricsGrid}>
+      <UiNode as="section" className="operations-metrics" style={ui.metricsGrid}>
           <Metric icon="case" label={uiText("Aktif Vaka")} value={metrics.activeCases} detail={`${metrics.urgentCases} öncelikli`}/>
           <Metric icon="calendar" label="Termin Geçti" value={metrics.overdueCases} detail="aktif vakalar" tone={metrics.overdueCases ? "critical" : "normal"}/>
           <Metric icon="design" label={uiText("Revizyon")} value={metrics.revisionCases} detail="CAD kuyruğu" tone={metrics.revisionCases ? "warning" : "normal"}/>
@@ -293,14 +264,13 @@ export default function OperationsPage() {
           <Metric icon="logistics" label="Aktif Teslimat" value={metrics.activeShipments} detail={`${metrics.lateShipments} gecikmiş`} tone={metrics.lateShipments ? "critical" : "normal"}/>
           <Metric icon="logistics" label="Alım Bekliyor" value={metrics.pickupWaiting} detail="kurye akışı"/>
           <Metric icon="case" label="Bugün Tamamlandı" value={metrics.deliveredToday} detail="teslim edilen vaka" tone="success"/>
-        </UiNode>
       </UiNode>
 
       {organization?.org_type === "laboratory" ? (<UiNode as="section" id="capacity" style={ui.capacityCard}>
           <UiNode as="div" style={ui.capacityTop}>
             <UiNode as="div">
-              <UiNode as="p" style={ui.kicker}>LAB KAPASİTESİ</UiNode>
-              <UiNode as="h2" style={ui.cardTitle}>{metrics.capacityLoad}/{settings.daily_case_capacity} aktif iş yükü</UiNode>
+              <UiNode as="h2" style={ui.cardTitle}>LAB KAPASİTESİ</UiNode>
+              <UiNode as="p" style={ui.capacityLoad}>{metrics.capacityLoad}/{settings.daily_case_capacity} aktif iş yükü</UiNode>
               <UiNode as="p" style={ui.muted}>Tasarım, onay, üretim, QC ve hazır kuyruğu kapasite hesabına dahil.</UiNode>
             </UiNode>
             <UiNode as="strong" style={{ ...ui.capacityPercent, color: metrics.capacityPercent >= settings.warning_load_percent ? "#f0bd6a" : dy.accent }}>
@@ -309,9 +279,9 @@ export default function OperationsPage() {
           </UiNode>
           <UiNode as="div" style={ui.capacityTrack}><UiNode as="span" style={{ ...ui.capacityFill, width: `${Math.min(100, metrics.capacityPercent)}%` }}/></UiNode>
           {canManage ? (<UiNode as="div" className="capacity-controls" style={ui.capacityControls}>
-              <UiNode as="label" style={ui.fieldLabel}>Günlük kapasite<UiNode as="input" value={capacityDraft} disabled={savingCapacity} onChange={(event) => { capacityEdited.current = true; setCapacityDraft(event.target.value); }} inputMode="numeric" style={ui.input}/></UiNode>
-              <UiNode as="label" style={ui.fieldLabel}>Uyarı eşiği %<UiNode as="input" value={warningDraft} disabled={savingCapacity} onChange={(event) => { capacityEdited.current = true; setWarningDraft(event.target.value); }} inputMode="numeric" style={ui.input}/></UiNode>
-              <UiNode as="button" type="button" onClick={() => void saveCapacity()} disabled={savingCapacity} style={ui.smallPrimary}>
+              <UiNode as="label" style={ui.fieldLabel}>Günlük kapasite<UiNode as="input" value={capacityDraft} disabled={savingCapacity || !capacityReady} onChange={(event) => { capacityEdited.current = true; setCapacityDraft(event.target.value); }} inputMode="numeric" style={ui.input}/></UiNode>
+              <UiNode as="label" style={ui.fieldLabel}>Uyarı eşiği %<UiNode as="input" value={warningDraft} disabled={savingCapacity || !capacityReady} onChange={(event) => { capacityEdited.current = true; setWarningDraft(event.target.value); }} inputMode="numeric" style={ui.input}/></UiNode>
+              <UiNode as="button" type="button" onClick={() => void saveCapacity()} disabled={savingCapacity || !capacityReady} style={ui.smallPrimary}>
                 {savingCapacity ? uiText("Kaydediliyor…") : "Kapasiteyi Kaydet"}
               </UiNode>
             </UiNode>) : null}
@@ -320,7 +290,6 @@ export default function OperationsPage() {
       <UiNode as="section" style={ui.pipelinePanel}>
         <UiNode as="div" style={ui.panelHeader}>
           <UiNode as="div">
-            <UiNode as="p" style={ui.kicker}>AKIŞ BORU HATTI</UiNode>
             <UiNode as="h2" style={ui.cardTitle}>Vaka hangi aşamada?</UiNode>
           </UiNode>
           <Link href="/cases" style={ui.textLink}>Tüm vakaları aç →</Link>
@@ -345,20 +314,19 @@ export default function OperationsPage() {
       <UiNode as="section" style={ui.attentionPanel}>
         <UiNode as="div" style={ui.panelHeader}>
           <UiNode as="div">
-            <UiNode as="p" style={ui.kicker}>ÖNCELİK KUYRUĞU</UiNode>
-            <UiNode as="h2" style={ui.cardTitle}>Önce bunlara müdahale et</UiNode>
+            <UiNode as="h2" style={ui.cardTitle}>ÖNCELİK KUYRUĞU</UiNode>
           </UiNode>
           <UiNode as="div" style={ui.filterWrap}>
-            <UiNode as="input" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Vaka / gönderi ara" style={ui.search}/>
+            <UiNode as="input" value={query} onChange={(event) => setQuery(event.target.value)} aria-label="Vaka / gönderi ara" placeholder="Vaka / gönderi ara" style={ui.search}/>
             <UiNode as="div" style={ui.filters}>
-              {(["all", "critical", "case", "shipment"] as ViewFilter[]).map((item) => (<UiNode as="button" key={item} type="button" onClick={() => setFilter(item)} style={{ ...ui.filter, ...(filter === item ? ui.filterActive : {}) }}>
+              {(["all", "critical", "case", "shipment"] as ViewFilter[]).map((item) => (<UiNode as="button" key={item} type="button" aria-pressed={filter === item} onClick={() => setFilter(item)} style={{ ...ui.filter, ...(filter === item ? ui.filterActive : {}) }}>
                   {item === "all" ? uiText("Tümü") : item === "critical" ? "Kritik" : item === "case" ? uiText("Vaka") : "Kurye"}
                 </UiNode>))}
             </UiNode>
           </UiNode>
         </UiNode>
 
-        {filteredAttention.length ? (<UiNode as="div" style={ui.attentionList}>
+        {filteredAttention.length ? (<UiNode as="div" className="operations-attention-list" style={ui.attentionList}>
             {filteredAttention.slice(0, 20).map((item) => <AttentionRow key={item.id} item={item}/>)}
           </UiNode>) : (<UiNode as="div" style={ui.empty}>Bu filtrede bekleyen kritik iş yok.</UiNode>)}
       </UiNode>
@@ -401,44 +369,33 @@ function AttentionRow({ item }: {
     </Link>);
 }
 const responsiveCss = `
-  *{box-sizing:border-box}
-  .operations-hero-grid{grid-template-columns:minmax(290px,.8fr) minmax(0,1.4fr)}
+  .operations-workspace,.operations-workspace *{box-sizing:border-box}
   .operations-metrics{grid-template-columns:repeat(4,minmax(0,1fr))}
   .pipeline-grid{grid-template-columns:repeat(8,minmax(88px,1fr))}
   .quick-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
   .capacity-controls{grid-template-columns:repeat(2,minmax(150px,220px)) auto}
-  @media(max-width:1100px){.operations-hero-grid{grid-template-columns:1fr}.operations-metrics{grid-template-columns:repeat(4,minmax(0,1fr))}.pipeline-grid{grid-template-columns:repeat(4,minmax(100px,1fr))}.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  @media(max-width:720px){.operations-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.pipeline-grid{grid-template-columns:repeat(2,minmax(100px,1fr))}.quick-grid{grid-template-columns:1fr}.capacity-controls{grid-template-columns:1fr}.operations-hero-grid{display:block!important}.operations-hero-grid>section{margin-top:12px}}
+  @media(max-width:1100px){.pipeline-grid{grid-template-columns:repeat(4,minmax(100px,1fr))}.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:720px){.operations-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.pipeline-grid{grid-template-columns:repeat(2,minmax(100px,1fr))}.quick-grid{grid-template-columns:1fr}.capacity-controls{grid-template-columns:1fr}}
 `;
 const ui: Record<string, CSSProperties> = {
-    page: { minHeight: "100vh", padding: "clamp(18px,3vw,34px)", background: dy.bg, color: dy.text, fontFamily: dy.fontFamily },
-    center: { minHeight: "70vh", display: "grid", placeItems: "center", color: dy.muted },
-    header: { display: "flex", justifyContent: "space-between", gap: 20, alignItems: "flex-end", flexWrap: "wrap", marginBottom: 18 },
-    kicker: { margin: "0 0 7px", color: dy.accent, fontWeight: 900, fontSize: 11, letterSpacing: ".14em" },
-    title: { margin: 0, fontSize: "clamp(32px,5vw,58px)", letterSpacing: "-.045em", lineHeight: .98, maxWidth: 820 },
-    sub: { margin: "12px 0 0", color: dy.muted, lineHeight: 1.6, maxWidth: 760 },
+    page: { minHeight: "100%", maxWidth: 1480, margin: "0 auto", padding: "clamp(14px,2vw,24px)", background: dy.bg, color: dy.text, fontFamily: dy.fontFamily },
+    header: { display: "flex", justifyContent: "space-between", gap: 16, alignItems: "center", flexWrap: "wrap", marginBottom: 16 },
+    title: { margin: 0, fontSize: 26, letterSpacing: "-.025em", lineHeight: 1.25 },
+    sub: { margin: "4px 0 0", color: dy.muted, fontSize: 13, overflowWrap: "anywhere" },
     actions: { display: "flex", gap: 8, flexWrap: "wrap" },
-    primaryLink: { minHeight: 42, display: "inline-grid", placeItems: "center", padding: "0 14px", borderRadius: 11, background: dy.accent, color: dy.accentContrast, textDecoration: "none", fontWeight: 900 },
-    secondaryLink: { minHeight: 42, display: "inline-grid", placeItems: "center", padding: "0 14px", borderRadius: 11, background: dy.surface, border: `1px solid ${dy.border}`, color: dy.text, textDecoration: "none", fontWeight: 800 },
-    secondaryButton: { minHeight: 42, padding: "0 14px", borderRadius: 11, background: dy.surface, border: `1px solid ${dy.border}`, color: dy.text, fontWeight: 800, cursor: "pointer" },
-    notice: { marginBottom: 14, padding: "11px 13px", borderRadius: 11, border: `1px solid ${dy.border}`, background: dy.surface2, color: dy.muted },
-    heroGrid: { display: "grid", gap: 12, marginBottom: 12 },
-    ayaCard: { padding: 18, borderRadius: 20, border: `1px solid ${dy.border}`, background: `linear-gradient(160deg,${dy.surface},${dy.surface2})`, boxShadow: `0 22px 55px ${dy.shadow}` },
-    ayaTop: { display: "flex", justifyContent: "space-between", gap: 12, alignItems: "flex-start" },
-    cardTitle: { margin: 0, fontSize: "clamp(22px,3vw,31px)", letterSpacing: "-.025em" },
-    scoreBubble: { width: 54, height: 54, borderRadius: 17, display: "grid", placeItems: "center", background: dy.accentSoft, color: dy.accent, fontWeight: 950, fontSize: 20, border: `1px solid ${dy.border}` },
-    robotWrap: { display: "grid", placeItems: "center", minHeight: 144 },
-    ayaText: { margin: "5px 0 12px", lineHeight: 1.6, color: dy.text },
-    ayaFooter: { display: "flex", gap: 8, flexWrap: "wrap", color: dy.muted, fontSize: 11 },
-    metricsGrid: { display: "grid", gap: 10 },
-    metricCard: { minHeight: 128, padding: 14, borderRadius: 16, border: `1px solid ${dy.border}`, background: dy.surface, display: "grid", alignContent: "start", gap: 4 },
-    metricIcon: { width: 34, height: 34, display: "grid", placeItems: "center", borderRadius: 10, background: dy.surface2, marginBottom: 2 },
-    metricLabel: { color: dy.muted, fontSize: 11, fontWeight: 850 },
-    metricValue: { fontSize: 30, lineHeight: 1 },
+    secondaryButton: { minHeight: 38, padding: "0 12px", borderRadius: 7, background: dy.surface, border: `1px solid ${dy.border}`, color: dy.text, fontWeight: 700, cursor: "pointer" },
+    notice: { marginBottom: 12, padding: "10px 12px", borderRadius: 7, border: `1px solid ${dy.border}`, background: dy.surface2, color: dy.muted },
+    cardTitle: { margin: 0, fontSize: 16, fontWeight: 750, letterSpacing: "-.01em" },
+    metricsGrid: { display: "grid", gap: 8, marginBottom: 12 },
+    metricCard: { minHeight: 100, padding: 12, borderRadius: 8, border: `1px solid ${dy.border}`, background: dy.surface, display: "grid", gridTemplateColumns: "1fr auto", alignContent: "start", alignItems: "center", gap: 4 },
+    metricIcon: { gridColumn: 2, gridRow: "1 / 3", display: "grid", placeItems: "center" },
+    metricLabel: { color: dy.muted, fontSize: 11, fontWeight: 700 },
+    metricValue: { gridColumn: 1, fontSize: 27, lineHeight: 1.1 },
     metricDetail: { color: dy.muted, fontSize: 11 },
-    capacityCard: { marginBottom: 12, padding: 18, borderRadius: 18, border: `1px solid ${dy.border}`, background: dy.surface },
+    capacityCard: { marginBottom: 12, padding: 16, borderRadius: 8, border: `1px solid ${dy.border}`, background: dy.surface },
+    capacityLoad: { margin: "7px 0 0", fontWeight: 700, fontSize: 16 },
     capacityTop: { display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" },
-    capacityPercent: { fontSize: 34 },
+    capacityPercent: { fontSize: 27 },
     muted: { margin: "7px 0 0", color: dy.muted, lineHeight: 1.5, fontSize: 13 },
     capacityTrack: { height: 9, marginTop: 14, background: dy.surface2, borderRadius: 999, overflow: "hidden" },
     capacityFill: { display: "block", height: "100%", borderRadius: 999, background: dy.accent },
@@ -446,24 +403,23 @@ const ui: Record<string, CSSProperties> = {
     fieldLabel: { display: "grid", gap: 5, color: dy.muted, fontSize: 11, fontWeight: 800 },
     input: { minHeight: 39, width: "100%", borderRadius: 9, border: `1px solid ${dy.border}`, background: dy.input, color: dy.text, padding: "0 10px", outline: "none" },
     smallPrimary: { minHeight: 39, border: 0, borderRadius: 9, padding: "0 13px", background: dy.accent, color: dy.accentContrast, fontWeight: 900, cursor: "pointer" },
-    pipelinePanel: { marginBottom: 12, padding: 18, borderRadius: 18, border: `1px solid ${dy.border}`, background: dy.surface },
+    pipelinePanel: { marginBottom: 12, padding: 16, borderRadius: 8, border: `1px solid ${dy.border}`, background: dy.surface },
     panelHeader: { display: "flex", justifyContent: "space-between", gap: 14, alignItems: "flex-end", flexWrap: "wrap", marginBottom: 14 },
     textLink: { color: dy.accent, textDecoration: "none", fontWeight: 850, fontSize: 13 },
     pipelineGrid: { display: "grid", gap: 8 },
-    pipelineStep: { minHeight: 88, padding: 12, borderRadius: 13, background: dy.surface2, border: `1px solid ${dy.border}`, display: "grid", alignContent: "center", textAlign: "center" },
-    pipelineValue: { fontSize: 25 },
+    pipelineStep: { minHeight: 65, padding: 10, borderRadius: 6, background: dy.surface2, border: `1px solid ${dy.border}`, display: "grid", alignContent: "center", textAlign: "center" },
+    pipelineValue: { fontSize: 21 },
     pipelineLabel: { marginTop: 3, color: dy.muted, fontSize: 11, fontWeight: 800 },
-    attentionPanel: { marginBottom: 12, padding: 18, borderRadius: 18, border: `1px solid ${dy.border}`, background: dy.surface },
+    attentionPanel: { marginBottom: 12, padding: 16, borderRadius: 8, border: `1px solid ${dy.border}`, background: dy.surface },
     filterWrap: { display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" },
-    search: { minHeight: 38, minWidth: 210, borderRadius: 9, border: `1px solid ${dy.border}`, background: dy.input, color: dy.text, padding: "0 11px", outline: "none" },
+    search: { minHeight: 38, minWidth: 0, width: "min(240px,100%)", borderRadius: 7, border: `1px solid ${dy.border}`, background: dy.input, color: dy.text, padding: "0 11px", outline: "none" },
     filters: { display: "flex", gap: 5, flexWrap: "wrap" },
     filter: { minHeight: 36, padding: "0 10px", borderRadius: 9, border: `1px solid ${dy.border}`, background: dy.surface2, color: dy.muted, cursor: "pointer", fontWeight: 800 },
     filterActive: { color: dy.accent, borderColor: dy.accent, background: dy.accentSoft },
     attentionList: { display: "grid", gap: 7 },
-    attentionRow: { minHeight: 62, display: "grid", gridTemplateColumns: "8px 1fr auto", gap: 12, alignItems: "center", padding: "10px 12px", borderRadius: 12, border: `1px solid ${dy.border}`, background: dy.surface2, color: dy.text, textDecoration: "none" },
-    signal: { width: 8, height: 34, borderRadius: 999 },
-    attentionCopy: { display: "grid", gap: 3, minWidth: 0 },
+    attentionRow: { minHeight: 54, display: "grid", gridTemplateColumns: "4px 1fr auto", gap: 10, alignItems: "center", padding: "9px 11px", borderRadius: 6, border: `1px solid ${dy.border}`, background: dy.surface2, color: dy.text, textDecoration: "none", fontSize: 13 },
+    signal: { width: 4, height: 28, borderRadius: 999 },
+    attentionCopy: { display: "grid", gap: 3, minWidth: 0, overflowWrap: "anywhere" },
     empty: { padding: 22, textAlign: "center", color: dy.muted, borderRadius: 12, background: dy.surface2 },
     quickGrid: { display: "grid", gap: 10 },
-    quickCard: { padding: 15, minHeight: 86, display: "flex", gap: 12, alignItems: "center", borderRadius: 15, border: `1px solid ${dy.border}`, background: dy.surface, color: dy.text, textDecoration: "none" },
 };

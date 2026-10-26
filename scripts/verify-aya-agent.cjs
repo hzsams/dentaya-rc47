@@ -42,6 +42,13 @@ function rejects(change,input={}){assert.throws(()=>parse({...plan,...change},in
  const blank={...plan,goal:'',decisions:[],openQuestions:[]};
  assert.deepEqual(parse(blank,memoryInput).workingMemory,normalizeMemory(plan),'Empty model fields must not erase prior session memory');
  assert.deepEqual(parse({...blank,decisions:['Kole korunacak','Kontur korunacak']},memoryInput).workingMemory.decisions,['Kole korunacak','Kontur korunacak']);
+ const fullMemory={goal:'Agreed goal',decisions:['D1','D2','D3','D4','D5'],openQuestions:['Q1','Q2','Q3']},fullInput={prompt:'Add another agreed point',workingMemory:fullMemory},fullBefore=JSON.stringify(fullMemory);
+ rejects({...blank,decisions:['D6']},fullInput);
+ rejects({...blank,openQuestions:['Q4']},fullInput);
+ assert.equal(JSON.stringify(fullMemory),fullBefore,'Overflow must reject atomically without evicting any older agreement');
+ assert.deepEqual(parse({...blank,decisions:['D5'],openQuestions:['Q3']},fullInput).workingMemory,fullMemory,'Repeating existing evidence does not consume capacity');
+ const revisedList=['D1','D2','D3','D4','Revised D5'];
+ assert.deepEqual(parse({...blank,memoryUpdate:'patch',memoryPatch:{goal:'keep',decisions:'replace',openQuestions:'keep'},decisions:revisedList},fullInput).workingMemory,{...fullMemory,decisions:revisedList},'A deliberate complete field revision remains available at capacity');
  const resolved=parse({...plan,memoryUpdate:'replace',openQuestions:[]},memoryInput);assert.deepEqual(resolved.workingMemory.openQuestions,[],'A deliberate revision can resolve an open question');
  const changed=parse({...plan,memoryUpdate:'replace',goal:'Randevu planını düzenle',decisions:['Sabah çalışılacak'],openQuestions:[]},memoryInput);assert.deepEqual(changed.workingMemory,{goal:'Randevu planını düzenle',decisions:['Sabah çalışılacak'],openQuestions:[]},'A new goal does not inherit obsolete CAD decisions');
  rejects({...blank,memoryUpdate:'replace'},memoryInput);

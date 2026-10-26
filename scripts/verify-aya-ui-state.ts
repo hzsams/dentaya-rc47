@@ -28,6 +28,9 @@ const third=gate.begin();assert.equal(gate.isCurrent(second),false,'An older fin
 gate.invalidate();assert.equal(gate.isCurrent(third),false,'Cleanup invalidates pending status results.');
 const afterRemount=gate.begin();assert.equal(gate.isCurrent(third),false);assert.equal(gate.isCurrent(afterRemount),true);
 assert.equal(selectAyaModel('missing',[{name:'available'}]),'available');assert.equal(selectAyaModel('missing',[]),'');
+assert.equal(selectAyaModel('',[{name:'first-model'},{name:'chosen-model'}],'chosen-model'),'chosen-model','A temporary empty runtime list cannot discard the explicit model preference on recovery.');
+assert.equal(selectAyaModel('current-model',[{name:'first-model'},{name:'current-model'}],'missing-model'),'current-model','An available current model survives a missing saved preference.');
+assert.equal(selectAyaModel('',[{name:'first-model'}],'missing-model'),'first-model','A genuinely removed preferred model falls back to an installed model.');
 
 const oldWindow=Object.getOwnPropertyDescriptor(globalThis,'window'),oldStorage=Object.getOwnPropertyDescriptor(globalThis,'localStorage');
 const store=new Map<string,string>();

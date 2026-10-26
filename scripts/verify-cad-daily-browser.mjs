@@ -7,6 +7,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import * as THREE from 'three';
 import { STLExporter } from 'three/examples/jsm/exporters/STLExporter.js';
 import { decodeCadWorkspace } from '../src/lib/cad-project-state.ts';
+import { normalizeWorkspace } from '../electron/aya/agent.cjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const { chromium } = await import(process.env.DENTAYA_PLAYWRIGHT_MODULE ? pathToFileURL(process.env.DENTAYA_PLAYWRIGHT_MODULE).href : 'playwright');
 const userId='11111111-1111-4111-8111-111111111111',orgId='22222222-2222-4222-8222-222222222222',caseId='33333333-3333-4333-8333-333333333333',secondCaseId='99999999-9999-4999-8999-999999999999';
@@ -106,6 +107,7 @@ try {
  const navigateModule=async href=>{
   await page.locator('.cad-main-header').getByRole('button',{name:'Modüller',exact:true}).click();
   const modules=page.locator('.desktop-module-menu');await modules.waitFor({state:'visible'});
+  await modules.locator('input[type="search"]').fill(href==='/design'?'CAD çalışma alanı':href==='/ai'?'AYA çalışma asistanı':'Çalışma alanı');
   await modules.locator(`a[href="${href}"]`).click();await modules.waitFor({state:'hidden'});
  };
  const selectStage=async stage=>{
@@ -205,6 +207,7 @@ try {
  const historyBefore=await page.locator('.cad-history-count').textContent(),writesBefore=writes.length;
  await ask('Şu anki dişe bakıp gerçek kontrolü önerebilir misin?');
  const inspectProposal=aya.locator('[data-proposal-tool=inspect]').last();await inspectProposal.waitFor();
+ const preInspect=await page.evaluate(()=>window.rc47CadModel.calls.at(-1).cadContext);
  assert.equal(await page.locator('.cad-history-count').textContent(),historyBefore);assert.equal(writes.length,writesBefore,'A model suggestion must not execute CAD or save automatically');
  // Two clicks in the same event turn must still dispatch only one operation.
  await inspectProposal.getByRole('button',{name:'Uygula',exact:true}).evaluate(button=>{button.click();button.click();});
@@ -212,6 +215,10 @@ try {
  const interpreted=await page.evaluate(()=>window.rc47CadModel.calls.at(-1));
  assert.equal(interpreted.cadContext.unit,'46');assert.equal(interpreted.cadContext.report.contactReference,'unavailable');assert.equal(interpreted.cadContext.report.collisionSamples,undefined);assert.equal(interpreted.cadContext.recentActions.at(-1).tool,'inspect');assert.equal(interpreted.cadContext.recentActions.at(-1).ok,true);assert.equal(interpreted.workingMemory.goal,'46 ünitesinin gerçek kontrol sonuçlarını incele');
  assert.ok(interpreted.cadContext.report.triangles>0,'The next model turn receives the actual kernel report');
+ const currentInspect=normalizeWorkspace(interpreted.cadContext).recentActions.at(-1);
+ assert.equal(currentInspect?.tool,'inspect','The actual model-side normalizer retains the completed host QC receipt');assert.equal(currentInspect.ok,true);
+ assert.equal(currentInspect.snapshot,interpreted.cadContext.snapshot);assert.equal(currentInspect.dataToken,interpreted.cadContext.dataToken);assert.notEqual(currentInspect.snapshot,preInspect.snapshot,'Receipt binds the committed post-action snapshot, not the proposal snapshot');
+ if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC58_Host_Action_Receipt.png'),animations:'disabled',timeout:15000});}
  assert.ok(await inspectProposal.getByRole('button').isDisabled(),'Applied suggestions become stale');
  // Invalid model output and cancellation retain the prompt and leave CAD usable.
  await page.evaluate(()=>{window.rc47CadModel.mode='invalid';});await ask('Hedefi değiştirmeden kontrol et');assert.equal(await aya.getByRole('textbox').inputValue(),'Hedefi değiştirmeden kontrol et');
@@ -231,6 +238,17 @@ try {
  await page.locator('.cad-main-header').getByRole('button',{name:'Kaydediliyor…',exact:true}).waitFor();await aya.getByRole('button',{name:'Kapat',exact:true}).click();await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();assert.ok(await aya.getByRole('textbox').isDisabled(),'Reopened panel cannot start another model request during save');
  finishAyaSave();holdWrite=null;await aya.getByRole('log').getByText(/CAD işlem sonucu · Kaydet/).waitFor();await page.waitForFunction(()=>!document.querySelector('.cad-aya-panel textarea')?.disabled);
  await ask('Kaydın gerçek sonucunu dikkate alarak devam et');assert.equal((await page.evaluate(()=>window.rc47CadModel.calls.at(-1))).cadContext.recentActions.at(-1).tool,'save');assert.equal((await page.evaluate(()=>window.rc47CadModel.calls.at(-1))).cadContext.recentActions.at(-1).ok,true,JSON.stringify({event:(await page.evaluate(()=>window.rc47CadModel.calls.at(-1))).cadContext.recentActions.at(-1),status:await page.locator('.cad-status-bar').textContent()}));
+ const savedContext=await page.evaluate(()=>window.rc47CadModel.calls.at(-1).cadContext);
+ assert.equal(normalizeWorkspace(savedContext).recentActions.at(-1)?.tool,'save','A reopened panel passes the actual committed save receipt through model normalization');
+ // An asynchronous callback belongs to its original ownership generation even
+ // when the user leaves and returns to the same unit before completion.
+ await settleAutosave();let finishLateSave;holdWrite=new Promise(resolve=>{finishLateSave=resolve;});await aya.locator('[data-aya-tool=save]').click();
+ await page.locator('.cad-main-header').getByRole('button',{name:'Kaydediliyor…',exact:true}).waitFor();
+ await page.getByRole('button',{name:'Diş 47',exact:true}).click();await page.getByRole('button',{name:'Diş 46',exact:true}).click();
+ finishLateSave();holdWrite=null;await page.waitForFunction(()=>!document.querySelector('.cad-aya-panel textarea')?.disabled);
+ await ask('Üniteye döndükten sonra güncel durumu değerlendir');
+ const returnedContext=await page.evaluate(()=>window.rc47CadModel.calls.at(-1).cadContext);
+ assert.equal(returnedContext.scope,savedContext.scope);assert.equal(normalizeWorkspace(returnedContext).recentActions.filter(event=>event.tool==='save').length,0,'A late save result cannot be relabelled as evidence for a unit left and reopened while pending');
  await aya.getByRole('button',{name:'Kapat',exact:true}).click();
  console.log('PASS: click-only CAD tools, actual report follow-up, replay/double-click guards, invalid JSON recovery, cancellation, late close, pending save reopen and unit memory boundaries (mock local bridge).');
  const menu=page.locator('[data-cad-menu=app]');await menu.locator('summary').click();await page.getByRole('button',{name:'Uzman',exact:true}).click();
@@ -244,7 +262,7 @@ try {
  await page.getByRole('tab',{name:'Kontrol',exact:true}).click();await page.locator('[data-cad-qc-report]').waitFor();
  await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();await ask('Bu güncel shell kontrolünü yorumla');
  const shellEvidence=await page.evaluate(()=>window.rc47CadModel.calls.at(-1).cadContext.report);assert.ok(shellEvidence.triangles>0);assert.ok(Number.isFinite(shellEvidence.minimumWallEstimateMm));assert.equal(shellEvidence.wallMethod,'shell-offset-estimate');
- if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC57_CAD_Current_Shell_QC.png'),animations:'disabled',style:'nextjs-portal{visibility:hidden!important}'});}
+ if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC58_CAD_Current_Shell_QC.png'),animations:'disabled',style:'nextjs-portal{visibility:hidden!important}'});}
  await aya.getByRole('button',{name:'Kapat',exact:true}).click();await openShell();await page.getByRole('button',{name:'Mesh repair',exact:true}).click();await page.locator('[data-cad-shell-report]').waitFor();
  await page.getByRole('button',{name:"Shell'i temizle",exact:true}).click();await page.getByRole('tab',{name:'Kontrol',exact:true}).click();await page.locator('[data-cad-qc-report]').waitFor();
  await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();await ask('Shell temizlendikten sonraki güncel kontrolü yorumla');
@@ -272,7 +290,7 @@ try {
  snapshot=await save();assert.deepEqual(unitMesh(snapshot),edited,'Manual redo restores the same deterministic sculpted geometry');
  console.log('PASS: AYA undo and manual redo use real history; geometry changes invalidate a pending model reply and old evidence.');
  await showCurrentQc();
- await page.getByRole('button',{name:'Diş 47',exact:true}).click();await selectStage('design');await page.getByRole('tab',{name:'Kontrol',exact:true}).click();await page.locator('[data-cad-qc-stale]').waitFor();assert.equal(await page.locator('[data-cad-qc-report]').count(),0,'Another unit never shows the prior unit QC metrics');if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC57_CAD_Stale_QC.png'),animations:'disabled',style:'nextjs-portal{visibility:hidden!important}'});}await page.getByRole('tab',{name:'Serbest',exact:true}).click();
+ await page.getByRole('button',{name:'Diş 47',exact:true}).click();await selectStage('design');await page.getByRole('tab',{name:'Kontrol',exact:true}).click();await page.locator('[data-cad-qc-stale]').waitFor();assert.equal(await page.locator('[data-cad-qc-report]').count(),0,'Another unit never shows the prior unit QC metrics');if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC58_CAD_Stale_QC.png'),animations:'disabled',style:'nextjs-portal{visibility:hidden!important}'});}await page.getByRole('tab',{name:'Serbest',exact:true}).click();
  snapshot=await save();assert.equal(snapshot.units['unit-47-1'].anchor.placed,true);assert.ok(Math.abs(snapshot.units['unit-47-1'].anchor.position[0]+16)<.001);
  await page.getByRole('button',{name:'Diş 46',exact:true}).click();snapshot=await save();assert.deepEqual(unitMesh(snapshot),edited);
  assert.ok(await page.locator('.cad-history-actions button[aria-label="Geri al"]').isEnabled());

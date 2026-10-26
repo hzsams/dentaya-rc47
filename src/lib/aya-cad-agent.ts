@@ -1,8 +1,8 @@
 import {TOOL_IDS,type AyaCadTool,type AyaProposal} from '../../electron/aya/agent.cjs';
-import type {AyaCadContext,AyaCadEvidence} from './aya-cad-assistance';
+import type {AyaCadContext,AyaCadEvidence,AyaCadActionEvidence} from './aya-cad-assistance';
 import type {CadKernelReport} from '../app/design/DesignViewport';
 
-export type AyaActionResult={ok:boolean;message:string};
+export type AyaActionResult={ok:boolean;message:string;evidence?:AyaCadActionEvidence};
 export function cadStateToken(value:unknown){
  const s=JSON.stringify(value);let hash=14695981039346656037n;
  for(let i=0;i<s.length;i++)hash=BigInt.asUintN(64,(hash^BigInt(s.charCodeAt(i)))*1099511628211n);
@@ -36,6 +36,26 @@ export function ayaProposalBlock(proposal:AyaProposal,context:AyaCadContext):'st
  if(!context.scope||!context.snapshot||proposal.scope!==context.scope||proposal.snapshot!==context.snapshot)return 'stale';
  if(!TOOL_IDS.includes(proposal.tool)||!context.availableTools?.includes(proposal.tool)||context.isSaving)return 'unavailable';
  return null;
+}
+/** The host publishes committed state; a completed callback cannot adopt another unit's state. */
+export function createAyaActionReceiptGate(){
+ let current:AyaCadContext|null=null,generation=0,mounted=false,sourceChanging=false;
+ type Ticket={generation:number;proposal:AyaProposal;completed:boolean};
+ return {
+  publish(context:AyaCadContext,changingSource=false){
+   if(!mounted||current?.scope!==context.scope||sourceChanging!==changingSource)generation++;
+   current=context;mounted=true;sourceChanging=changingSource;
+  },
+  invalidate(){mounted=false;current=null;generation++;},
+  isActive:()=>mounted,
+  begin(proposal:AyaProposal):Ticket|null{return current&&!sourceChanging&&!ayaProposalBlock(proposal,current)?{generation,proposal:{...proposal},completed:false}:null;},
+  complete(ticket:Ticket|null,result:AyaActionResult):AyaCadActionEvidence|undefined{
+   if(!ticket||ticket.completed)return;
+   ticket.completed=true;
+   if(!mounted||sourceChanging||ticket.generation!==generation||!current||current.isSaving||ticket.proposal.scope!==current.scope||!current.snapshot||!current.dataToken)return;
+   return {tool:ticket.proposal.tool,ok:result.ok,result:result.message,scope:current.scope,snapshot:current.snapshot,dataToken:current.dataToken};
+  }
+ };
 }
 /** Dispatcher gets only typed host callbacks. The model never supplies code or numeric geometry parameters. */
 export async function executeAyaProposal(proposal:AyaProposal,context:AyaCadContext,handlers:Partial<Record<AyaCadTool,()=>AyaActionResult|Promise<AyaActionResult>>>):Promise<AyaActionResult>{

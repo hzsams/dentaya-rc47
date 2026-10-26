@@ -4,6 +4,9 @@ assert.match(ayaSetupError('AYA_DISK_FULL','tr'),/disk alanı.*Yer aç/);
 assert.match(ayaSetupError('AYA_GGUF_INVALID','tr'),/GGUF v2\/v3/);
 assert.match(ayaSetupError('AYA_WINDOWS_REQUIRED','tr'),/Windows.*Ollama/);
 assert.match(ayaSetupError('AYA_ENGINE_MISSING','tr'),/motor eksik.*Ollama/);
+for(const [code,expected] of Object.entries({AYA_ENGINE_MEMORY:/bellek.*küçük/,AYA_ENGINE_MODEL_LOAD:/yükleyemedi.*GGUF/,AYA_ENGINE_LIBRARY:/gereken dosyalar.*kurulumunu/,AYA_ENGINE_PERMISSION:/izin.*erişim/,AYA_ENGINE_PORT:/bağlantı noktasını.*yeniden/,AYA_ENGINE_START_FAILED:/başlatılamadı.*kurulumunu/})){
+ assert.match(ayaSetupError(code,'tr'),expected);assert.equal(ayaSetupError(code,'de'),ayaSetupError(code,'en'));assert.doesNotMatch(ayaSetupError(code,'en'),/AYA_ENGINE_/);
+}
 assert.match(ayaSetupError('MODEL_MISSING','tr'),/dosyası bulunamadı/);
 assert.match(ayaSetupError('LOCAL_BUSY','tr'),/başka bir işlemde/);
 for(const error of ['AYA_DOWNLOAD_CHECKSUM','AYA_DOWNLOAD_SIZE','AYA_ENGINE_ARCHIVE'])assert.match(ayaSetupError(error,'tr'),/bütünlüğü doğrulanamadı.*doğrulanmadan kullanılmaz/);
@@ -12,4 +15,4 @@ assert.equal(ayaSetupError('AYA_DISK_FULL','de'),ayaSetupError('AYA_DISK_FULL','
 assert.match(ayaSetupError('AYA_DISK_FULL','en'),/Free up space/);
 const nativeDetail='Could not access C:\\private\\model.gguf at https://secret.invalid';
 assert.doesNotMatch(ayaSetupError(nativeDetail,'tr'),/private|secret|https:|C:/,'Raw native error details never become setup instructions');
-console.log('PASS: actionable disk/GGUF/platform/integrity/network/engine/busy/missing-model guidance, English fallback and private native-detail exclusion.');
+console.log('PASS: actionable disk/GGUF/platform/integrity/network/engine/startup/busy/missing-model guidance, English fallback and private native-detail exclusion.');

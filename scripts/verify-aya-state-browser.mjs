@@ -30,11 +30,12 @@ try{
  page.on('pageerror',error=>errors.push(error.message));page.on('console',message=>{if(/hydration|maximum update depth|unique "key"/i.test(message.text()))errors.push(message.text());});
  await page.addInitScript(()=>{
   const state=window.rc54State={mode:'ready',pendingReply:null,pendingStatus:null,polls:0,calls:[]};
-  const ready={ok:true,models:[{name:'synthetic-local-model',size:1000}],progress:{running:false,status:'ready',completed:0,total:0}};
+  const ready={ok:true,models:[{name:'synthetic-local-model',size:1000},{name:'synthetic-preferred-model',size:900}],progress:{running:false,status:'ready',completed:0,total:0}};
   const installing={ok:true,models:[],progress:{running:true,status:'model',completed:10,total:100}};
   window.dentayaDesktop={
    onOpenPreferences:()=>()=>{},onLocalAyaToken:()=>()=>{},
    localAyaStatus:async()=>{
+    if(state.mode==='status-error')throw Error('Synthetic temporary status transport failure');
     if(state.mode==='unavailable')return {...ready,ok:false,models:[]};
     if(state.mode==='busy')return {...ready,ok:false,error:'LOCAL_BUSY'};
     if(state.mode==='installing')return installing;
@@ -84,6 +85,31 @@ try{
  assert.equal(await setup.getByRole('combobox',{name:'Kurulu yerel model',exact:true}).inputValue(),'synthetic-local-model','Late polling cannot remove a newly ready selected model');
  assert.match(await main.locator('.aya-status').textContent(),/Yerel model/);
  assert.equal(await setup.getByRole('button',{name:'İndirmeyi durdur',exact:true}).count(),0,'A late status cannot revive finished installation');
+ // Main chat must notice engine changes made in another desktop window and
+ // restore the user's explicit model choice after a temporary empty list.
+ await setup.getByRole('combobox',{name:'Kurulu yerel model',exact:true}).selectOption('synthetic-preferred-model');
+ await page.evaluate(()=>{window.rc54State.mode='unavailable';window.dispatchEvent(new Event('focus'));});
+ await page.waitForFunction(()=>!document.querySelector('#main-test .aya-status--model'));
+ assert.equal(await input.isDisabled(),false,'A model disappearing in another window does not lock the composer');
+ const callsWhileUnavailable=await page.evaluate(()=>window.rc54State.calls.length);
+ await askCore('12 cm kaç mm?');
+ assert.equal(await page.evaluate(()=>window.rc54State.calls.length),callsWhileUnavailable,'Main chat uses Core after focus detects an unavailable model');
+ await page.evaluate(()=>{window.rc54State.mode='ready';window.dispatchEvent(new Event('focus'));});
+ await page.waitForFunction(()=>document.querySelector('#main-test .aya-status--model'));
+ // The native details element closes when its model list becomes available;
+ // reopen it before querying its accessible controls, as after polling above.
+ if(!await setup.evaluate(node=>node.open))await setup.locator(':scope>summary').click();
+ assert.equal(await setup.getByRole('combobox',{name:'Kurulu yerel model',exact:true}).inputValue(),'synthetic-preferred-model','Recovery retains the chosen model instead of silently switching to the first installed model');
+ await page.evaluate(()=>{window.rc54State.mode='status-error';window.dispatchEvent(new Event('focus'));});
+ await main.locator('.aya-chat-error').waitFor();assert.match(await main.locator('.aya-chat-error').textContent(),/Yerel motor kontrol edilemedi/);
+ await page.evaluate(()=>{window.rc54State.mode='ready';window.dispatchEvent(new Event('focus'));});
+ await page.waitForFunction(()=>document.querySelector('#main-test .aya-status--model')&&!document.querySelector('#main-test .aya-chat-error'));
+ await input.fill('Diğer pencerede hazır olan seçili modelle devam edelim');await main.locator('.aya-chat-composer button[type=submit]').click();
+ await page.waitForFunction(()=>window.rc54State.pendingReply);
+ assert.equal(await page.evaluate(()=>window.rc54State.calls.at(-1).model),'synthetic-preferred-model','The recovered selection is used for the next real bridge request');
+ await page.evaluate(()=>{window.rc54State.pendingReply({ok:true,output:'Seçili model ile sentetik devam yanıtı'});window.rc54State.pendingReply=null;});
+ await page.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);
+ await screenshot(main.locator('.aya-conversation-shell'),'RC58_AYA_Focus_Model_Recovery.png');
  const cad=page.locator('#cad-test');
  await page.evaluate(()=>{window.rc54State.mode='installing';window.dispatchEvent(new Event('focus'));});
  await page.waitForFunction(()=>!document.querySelector('#cad-test select[aria-label="Kurulu yerel model"]'));
@@ -118,7 +144,7 @@ try{
  assert.equal(await main.locator('.aya-goal-preview').count(),0,'Reload cannot restore memory cleared from a memory-only conversation');
  assert.equal(await main.locator('.aya-message').count(),0);
  assert.equal(await page.evaluate(()=>window.rc50Work.readAyaState().sessions.length),0,'Reload does not save a fresh empty record');
- await screenshot(main.locator('.aya-conversation-shell'),'RC57_AYA_Empty_Memory_Reload.png');
+ await screenshot(main.locator('.aya-conversation-shell'),'RC58_AYA_Empty_Memory_Reload.png');
  await main.getByRole('button',{name:'Sohbet ayarları',exact:true}).click();await main.getByRole('button',{name:'Bellek ve notlar',exact:true}).click();
  await saveGoal('BU PENCERENİN HEDEFİ');await page.waitForFunction(()=>window.rc50Work.readAyaState().sessions.length===1);
  await page.evaluate(()=>{
@@ -130,7 +156,7 @@ try{
  assert.equal(await page.evaluate(()=>window.rc50Work.readAyaState().sessions[0]?.workingMemory.goal),'DİĞER PENCERENİN YENİ HEDEFİ','A local empty reset cannot delete a newer stored edit from another window');
  assert.deepEqual(errors,[],'State transitions produce no React/hydration/page errors');
  await browser.close();browser=null;await stopServer();await fs.rm(route,{recursive:true,force:true});owned=false;await fs.rm(path.join(root,'.next/dev/types'),{recursive:true,force:true});
- console.log(JSON.stringify({pass:true,sessionEditorIsolation:true,pendingReplyMemoryConflict:true,userDraftPreserved:true,explicitMemoryReload:true,lateStatusCannotOverwriteReady:true,cadInstallAndUnavailableUseCore:true,cadBusyPollingRecovers:true,memoryOnlyResetPersists:true,emptySessionNotCreated:true,newerStoredMemoryPreserved:true,modelCallsAreMock:true,cadCallbacksAreSynthetic:true,nativeInference:false,screenshots},null,2));
+ console.log(JSON.stringify({pass:true,sessionEditorIsolation:true,pendingReplyMemoryConflict:true,userDraftPreserved:true,explicitMemoryReload:true,lateStatusCannotOverwriteReady:true,mainFocusRecoversEngineChanges:true,explicitModelChoiceSurvivesUnavailable:true,recoveredStatusClearsTransportError:true,cadInstallAndUnavailableUseCore:true,cadBusyPollingRecovers:true,memoryOnlyResetPersists:true,emptySessionNotCreated:true,newerStoredMemoryPreserved:true,modelCallsAreMock:true,cadCallbacksAreSynthetic:true,nativeInference:false,screenshots},null,2));
 }catch(error){console.error(logs);throw error;}finally{
  await browser?.close();await stopServer();if(owned)await fs.rm(route,{recursive:true,force:true});await fs.rm(path.join(root,'.next/dev/types'),{recursive:true,force:true});
 }

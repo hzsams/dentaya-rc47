@@ -1,5 +1,5 @@
-DentAYA RC57 — TAM KAYNAK GÜNCELLEME PAKETİ
-Sürüm: 1.0.0-rc.57 / AYA Core 0.13.0
+DentAYA RC58 — TAM KAYNAK GÜNCELLEME PAKETİ
+Sürüm: 1.0.0-rc.58 / AYA Core 0.14.0
 
 1. GitHub kaynak ZIP'ini yeni klasöre çıkarın; package.json bulunan klasörü açın.
 2. CMD için package.json yanında .env.local dosyası gerekir. Vaka/sunucu kaydı için mevcut çalışan dosyanızı kopyalayın. Mevcut kayıt ve kişisel ayarlarınızı koruyun.
@@ -9,16 +9,19 @@ Sürüm: 1.0.0-rc.57 / AYA Core 0.13.0
 3. Windows'ta DENTAYA_GUNCELLE_DERLE.cmd dosyasına çift tıklayın.
    Node.js 22.12+ ve npm 11+ gerekir. Tek CMD giriş noktası budur.
 4. Komut LOCALAPPDATA/DentAYA/Builds altında ayrı çalışma klasörü kullanır. OneDrive'daki .next ve node_modules kopyalanmaz. Eksik Electron dağıtımı, DLL kilidi tekrarları ve tanılama önlemleri korunur.
-5. Başarılı Windows derlemesinin ürettiği DentAYA-Setup-1.0.0-rc.57.exe dosyasını çalıştırın. Kesin çıktı yolu dist-desktop/latest-build.json içindedir.
+5. Başarılı Windows derlemesinin ürettiği DentAYA-Setup-1.0.0-rc.58.exe dosyasını çalıştırın. Kesin çıktı yolu dist-desktop/latest-build.json içindedir.
 
-Bu ZIP hazır Windows EXE'si içermez. Güncel kaynak, tarayıcı ve üretim derleme kontrollerinin gerçek sonuçları RC57_KONTROL_RAPORU.md içindedir. Windows üzerinde gerçek paketleme ve yerel model kabulü yapılmış sayılmaz. Sonuçları ve sınırları RC57_KONTROL_RAPORU.md dosyasından okuyun; önceki sürümün sonuçlarını yeni sürüme ait saymayın.
+Bu ZIP hazır Windows EXE'si içermez. Güncel kaynak, tarayıcı ve üretim derleme kontrollerinin gerçek sonuçları RC58_KONTROL_RAPORU.md içindedir. Windows üzerinde gerçek paketleme ve yerel model kabulü yapılmış sayılmaz. Sonuçları ve sınırları RC58_KONTROL_RAPORU.md dosyasından okuyun; önceki sürümün sonuçlarını yeni sürüme ait saymayın.
 
-RC57, aydınlık Studio panellerini, mor başlıkları ve CAD'de koyu sağ komut şeridini kullanır.
+RC58, aydınlık Studio panellerini, mor başlıkları ve CAD'de koyu sağ komut şeridini kullanır.
 Uygulamanın giriş adresi doğrudan İş yöneticisini açar; ayrı web sitesi bu kaynak değişikliğinin kapsamında değildir.
-CAD dışındaki simgeli etkinlik şeridi ana modüllere erişir. Modül menüsü Alt+M, mevcut hızlı arama Ctrl+K, görünüm tercihleri Ctrl+, ile açılır.
+Sol üstteki Modüller düğmesi klasör/alt klasör menüsünü açar. CAD dışındaki isteğe bağlı hızlı erişim şeridi korunur. Modül menüsü Alt+M, mevcut hızlı arama Ctrl+K, görünüm tercihleri Ctrl+, ile açılır.
 CAD'de nesneler ve parametreler soldadır; ortak uygulama başlığı gösterilmez. Panel taşıma ve konum sıfırlama seçenekleri korunur.
 Yeni CAD sahnesi düz Studio arka planıyla, ızgara ve eksenler kapalı başlar. Önceden açıkça seçilen sahne tercihleri korunur.
 Zorunlu 5 saniyelik yükleme/okuma beklemesi yoktur. İşlem hazır olduğunda yükleme görünümü kapanır; bilgi kartları ve oyunlar isteğe bağlıdır.
+
+Arka plan adları: Neon Midnight, Graphite Turquoise, Deep Turquoise, Deep Coral. Ayarlar > Görünüm içinden seçilir; mevcut seçiminiz otomatik değişmez.
+İş takibi: Modüller > Yönetim > İşler ve finans > İş takibi. Robot kaldırılmıştır; kapasite, vaka ve teslimat kayıtları korunur.
 
 Kuron/kapşon için önce ham tarama modelindeki üniteyi ve koleyi seçin. Kole olmadan başlangıç kuronu gizlidir. İlk yerleştirme ham preparasyon yüksekliğini örnekler; servikal tabanı kolede tutar. Başka bir kuron yerleştirme hedefi değildir. İç uyum ayrıca incelenmelidir.
 Lab Yöneticisi ana sayfada soldadır; tam iş kuyruğu dokuz görünüm ve sayfalama sunar. Arama açık sayfayla sınırlıdır.
@@ -27,6 +30,7 @@ Mini oyun sayısı 5'tir; Işık Matrisi ve Mine Dizisi önceki oyunlara eklenmi
 Doğal yüzey için Model görünümü > Doğal seçin. Teknik ve kişisel yüzey tercihleri korunur.
 
 AYA'da kesit ölçümlerini yorumlatmak için İnceleme > Kesit > Kesit çizgileri ve ölçümleri seçeneğini açın. Değişen ünite/düzlem eski kanıtı geçersizleştirir. Model testi yazılmamış mesajı silmez.
+Model testi ayrı ve geçicidir; konuşma geçmişini, kişisel notu ve çalışma belleğini modele göndermez veya değiştirmez.
 AYA motor/modeli uygulama içinden kurulur; uyumlu GGUF eklenebilir.
 Model hazırken yeni ifadeler ve tanımlar modele gider. Çevrimdışı rehber ayrıca seçilebilir, model yokken açık kalır. Buluta otomatik geçiş yoktur.
 500 kaynaklı TR/EN bilgi kartı ve ayrı 1008 soru-cevap kataloğu bulunur; 30.000 gerçek kart hedefi tamamlanmadı.
@@ -37,6 +41,6 @@ Geliştirme: npm ci / npm run verify
 Yerel arayüz: npm run dev -- --hostname 127.0.0.1 --port 3010
 Yerel sohbet hesap/API anahtarı gerektirmez; gerçek vaka ve sunucu kaydı mevcut Supabase bağlantısını kullanır. Yeni migration yoktur. Üretim web sitesine dağıtım yapılmaz.
 
-Kullanım: RC57_KULLANIM.md
-Kontrol ve sınırlamalar: RC57_KONTROL_RAPORU.md
+Kullanım: RC58_KULLANIM.md
+Kontrol ve sınırlamalar: RC58_KONTROL_RAPORU.md
 İlk devir kayıtları: CODEX_BASLANGIC_PROMPTU.md / CODEX_DEVIR_NOTLARI.md

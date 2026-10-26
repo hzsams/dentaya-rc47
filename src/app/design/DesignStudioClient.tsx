@@ -11,7 +11,7 @@ import { cadSetupFromCase } from "@/lib/cad-job-setup";
 import { CAD_GUIDED_TASKS, cadStagePolicy, cadViewsForScene, cadTransitionBlock, cadTaskTransitionBlock, cadTaskForStage, cadTaskIndex, CAD_STAGE_ORDER, cadActivationAllowed, uniqueCadCommands, stagePanel, toolPanel, type CadPanelTab, type CadWorkflowStage } from '@/lib/cad-workflow';
 import { LanguageSelect } from '../LanguageSettings';
 import CadAyaPanel from "./CadAyaPanel";
-import {cadStateToken,summarizeAyaReport,availableAyaTools,createAyaActionDispatcher,type AyaActionResult} from '@/lib/aya-cad-agent';
+import {cadStateToken,summarizeAyaReport,availableAyaTools,createAyaActionDispatcher,createAyaActionReceiptGate,type AyaActionResult} from '@/lib/aya-cad-agent';
 import type {AyaCadContext} from '@/lib/aya-cad-assistance';
 import {summarizeAyaSection,type CadSectionInspectionReceipt} from '@/lib/cad-section-evidence';
 import type {AyaProposal,AyaCadTool} from '../../../electron/aya/agent.cjs';
@@ -32,6 +32,7 @@ import {cadWorkingStlFilename} from '@/lib/cad-export';
 import {CAD_INSPECTION_DEFAULTS,normalizeCadInspection} from '@/lib/cad-inspection';
 import "./cad-workspace.css";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode, } from "react";
+import {flushSync} from 'react-dom';
 import Link from "@/lib/i18n/UiLink";
 import { BrandLogo } from "@/app/BrandLogo";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -370,7 +371,8 @@ export default function DesignStudioClient() {
     const [hasUnsavedChanges,setHasUnsavedChanges]=useState(true);
     const [ayaOpen,setAyaOpen]=useState(false);
     const [ayaEpoch,setAyaEpoch]=useState(0);
-    const ayaContextRef=useRef<AyaCadContext|null>(null),ayaDispatch=useRef(createAyaActionDispatcher());
+    const ayaContextRef=useRef<AyaCadContext|null>(null),ayaDispatch=useRef(createAyaActionDispatcher()),ayaReceipts=useRef(createAyaActionReceiptGate());
+    useLayoutEffect(()=>{const receipts=ayaReceipts.current;return()=>receipts.invalidate();},[]);
     const setKernelReport=useCallback((report:CadKernelReport|null)=>{setStoredKernelReport(report);setKernelReportToken(report?cadStateToken([qcBaseTokenRef.current,geometryEpochRef.current]):'');},[]);
 
     const [libraryTarget,setLibraryTarget]=useState<string|null>(null);
@@ -1750,10 +1752,11 @@ export default function DesignStudioClient() {
         report:currentAyaReport
     };
     ayaContext.availableTools=availableAyaTools(ayaContext,{inspection:workspaceMode==='expert',tools:activeTools,views:activeViews,internalFit:cadActivationAllowed('command:internal-fit',activeStepId,workspaceMode,hasBridge,panelTab),canNext:activeTaskIndex<CAD_GUIDED_TASKS.length-1&&jobSetup.complete&&Boolean(activeSource)&&marginPoints.length>=3});
-    useLayoutEffect(()=>{ayaContextRef.current=ayaContext;qcBaseTokenRef.current=qcBaseToken;});
+    useLayoutEffect(()=>{ayaContextRef.current=ayaContext;qcBaseTokenRef.current=qcBaseToken;ayaReceipts.current.publish(ayaContext,contextLoading);});
     async function runAyaAction(proposal:AyaProposal):Promise<AyaActionResult>{
         const current=ayaContextRef.current,copy=ayaAgentText(locale);
         if(!current)return {ok:false,message:copy.unavailable};
+        const ticket=ayaReceipts.current.begin(proposal);
         const ready=()=>({ok:true,message:copy.activated});
         const handlers:Partial<Record<AyaCadTool,()=>AyaActionResult|Promise<AyaActionResult>>>={
             setup:()=>{setSetupOpen(true);return {ok:true,message:copy.opened};},
@@ -1776,8 +1779,12 @@ export default function DesignStudioClient() {
         for(const view of ['natural','contact','thickness','undercut','section'] as const)handlers[('view-'+view) as AyaCadTool]=()=>{if(!cadReady||!activeViews.includes(view))return {ok:false,message:copy.unavailable};selectViewMode(view);return ready();};
         for(const next of ['margin','measure','add','reduce','smooth'] as const)handlers[('tool-'+next) as AyaCadTool]=()=>{if(!cadReady||!activeTools.includes(next))return {ok:false,message:copy.unavailable};selectManualTool(next);return ready();};
         const result=await ayaDispatch.current(proposal,()=>ayaContextRef.current,handlers);
-        if(result.ok)setAyaEpoch(v=>v+1);
-        return result;
+        // This runs after the actual event callback, never during render/effects.
+        // Commit its queued host changes before binding the result to live evidence.
+        if(!ayaReceipts.current.isActive())return result;
+        flushSync(()=>setAyaEpoch(v=>result.ok?v+1:v));
+        const evidence=ayaReceipts.current.complete(ticket,result);
+        return evidence?{...result,evidence}:result;
     }
     if (loading) return <LoadingExperience title="DentAYA CAD açılıyor…"/>;
     if (blocked) {

@@ -1,0 +1,1 @@
+{"pass":true,"status":"pass","backend":"synthetic intercepted Supabase HTTP","liveBackendVerified":false,"robotRemoved":true,"compactWorkspace":true,"capacityPermissions":true,"optimisticConcurrency":true,"offlineDraft":true,"duplicateWriteGuard":true,"queueFilters":true,"mobileOverflow":false}

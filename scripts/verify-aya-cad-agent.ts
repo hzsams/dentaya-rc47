@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-import {availableAyaTools,ayaProposalBlock,cadStateToken,createAyaActionDispatcher,executeAyaProposal,summarizeAyaReport} from '../src/lib/aya-cad-agent';
+import {availableAyaTools,ayaProposalBlock,cadStateToken,createAyaActionDispatcher,createAyaActionReceiptGate,executeAyaProposal,summarizeAyaReport} from '../src/lib/aya-cad-agent';
+import {normalizeWorkspace} from '../electron/aya/agent.cjs';
 import type {AyaCadContext} from '../src/lib/aya-cad-assistance';
 import type {AyaProposal} from '../electron/aya/agent.cjs';
 import type {CadKernelReport} from '../src/app/design/DesignViewport';
@@ -37,6 +38,37 @@ current=context;assert.equal((await gate(proposal,()=>current,{inspect:()=>{coun
 const failedGate=createAyaActionDispatcher();
 assert.equal((await failedGate(proposal,()=>context,{inspect:()=>({ok:false,message:'Actual failure'})})).ok,false);
 assert.equal((await failedGate(proposal,()=>context,{inspect:()=>({ok:true,message:'Retry succeeded'})})).ok,true,'Failed callbacks do not falsely consume an action');
+// The real host changes snapshot after every successful callback. Pre-action
+// stamps were visible in raw bridge tests but disappeared during normalization.
+const receipts=createAyaActionReceiptGate();receipts.publish(context);
+const receiptTicket=receipts.begin(proposal),postAction={...context,snapshot:'committed:2',dataToken:'data:2'};
+receipts.publish(postAction);
+const actual={ok:true,message:'Actual current QC callback'},receipt=receipts.complete(receiptTicket,actual)!;
+assert.equal(receipt.snapshot,postAction.snapshot);assert.equal(receipt.dataToken,postAction.dataToken);
+assert.deepEqual(normalizeWorkspace({...postAction,recentActions:[receipt]})?.recentActions,[receipt],'Committed callback results survive the same normalizer used before local inference');
+assert.deepEqual(normalizeWorkspace({...context,recentActions:[receipt]})?.recentActions,[],'A post-action receipt is not evidence for earlier geometry');
+assert.equal(receipts.complete(receiptTicket,actual),undefined,'A completed callback ticket is consumed once');
+for(const changed of [{scope:'other:source:46'},{scope:'project:other:46'},{scope:'project:source:47'}]){
+ receipts.publish(context);const late=receipts.begin(proposal);
+ receipts.publish({...context,...changed});receipts.publish(context);
+ assert.equal(receipts.complete(late,actual),undefined,'Leaving and returning cannot attach a late callback to a new ownership generation');
+}
+receipts.publish(context);const loadingTicket=receipts.begin(proposal);
+receipts.publish(context,true);receipts.publish(context,false);
+assert.equal(receipts.complete(loadingTicket,actual),undefined,'Even an aborted source change invalidates an outstanding receipt');
+receipts.publish(context);const unmounted=receipts.begin(proposal);receipts.invalidate();
+assert.equal(receipts.isActive(),false);assert.equal(receipts.complete(unmounted,actual),undefined,'Unmounted save-and-exit cannot publish current evidence');
+receipts.publish(context);const savingTicket=receipts.begin({...proposal,tool:'save'});
+receipts.publish({...context,isSaving:true});
+assert.equal(receipts.complete(savingTicket,actual),undefined,'A callback cannot declare current saved evidence while the host is still saving');
+receipts.publish(context);const saveTicket=receipts.begin({...proposal,tool:'save'});
+receipts.publish({...context,isSaving:true});receipts.publish({...postAction,unsaved:false,saveFailed:false});
+const savedReceipt=receipts.complete(saveTicket,{ok:true,message:'Actual saved version'})!;
+assert.deepEqual(normalizeWorkspace({...postAction,unsaved:false,recentActions:[savedReceipt]})?.recentActions,[savedReceipt],'Own saving state commits do not invalidate a completed save');
+assert.deepEqual(normalizeWorkspace({...postAction,unsaved:true,recentActions:[savedReceipt]})?.recentActions,[],'New unsaved edits outrank the earlier successful save');
+receipts.publish(context);const failedTicket=receipts.begin({...proposal,tool:'save'}),failedContext={...postAction,saveFailed:true};receipts.publish(failedContext);
+const failedReceipt=receipts.complete(failedTicket,{ok:false,message:'Actual network failure'})!;
+assert.deepEqual(normalizeWorkspace({...failedContext,recentActions:[failedReceipt]})?.recentActions,[failedReceipt],'A real failed callback is retained with committed failure state');
 const report={mesh:{triangleCount:60,boundaryEdges:4,nonManifoldEdges:0,connectedComponents:1,degenerateTriangles:0,watertight:false,warnings:['Open mesh']},contact:{collisionCount:3,contactCount:4,sampleCount:10,minimumSignedDistanceMm:-.1},margin:{pointCount:32,closureGapMm:0,projectedRatio:1},connectorCount:0,connectorWarnings:[],crownShell:null,undercut:null} as unknown as CadKernelReport;
 const missing=summarizeAyaReport(report,'data:1',false,1);
 assert.equal(missing.contactReference,'unavailable');assert.equal(missing.collisionSamples,undefined);assert.equal(missing.minimumWallEstimateMm,undefined);assert.equal(missing.boundaryEdges,4);assert.equal(missing.wallMethod,'shell-offset-estimate');

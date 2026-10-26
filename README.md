@@ -1,6 +1,12 @@
-# DentAYA RC57
+# DentAYA RC58
 
-Sürüm `1.0.0-rc.57`, AYA Core `0.13.0`. RC57, aydınlık panelleri ve erik moru başlıklarıyla DentAYA Studio düzenini korur. CAD; nesneler ve parametreler solda, mevcut komutlar koyu sağ araç şeridinde, geniş 3B alan ortada olacak şekilde düzenlenir. Ortak uygulama başlığı CAD'de gösterilmez. Özgün DentAYA varlıkları kullanılır; exocad/3Shape çalışma ergonomisi referanstır.
+Sürüm `1.0.0-rc.58`, AYA Core `0.14.0`. RC58, aydınlık panelleri ve erik moru başlıklarıyla DentAYA Studio düzenini korur. CAD; nesneler ve parametreler solda, mevcut komutlar koyu sağ araç şeridinde, geniş 3B alan ortada olacak şekilde düzenlenir. Ortak uygulama başlığı CAD'de gösterilmez. Özgün DentAYA varlıkları kullanılır; exocad/3Shape çalışma ergonomisi referanstır.
+
+RC58, sol üstteki Modüller düğmesinden açılan klasör ve alt klasör listesini kullanır. Klinik, Laboratuvar, Yönetim ve Çalışma alanı altında 24 mevcut hedef korunur. Arama eşleşen üst klasörleri açar; klavye, mobil, CAD ve değişmiş çalışma denetimleri mevcut akışı kullanır.
+
+Operasyon merkezindeki robot bileşeni ve dokuz robot görseli kaldırıldı. Gerekli kurum metrikleri, öncelik kuyruğu, vaka aşamaları ve laboratuvar kapasitesi **Yönetim → İşler ve finans → İş takibi** altında kompakt bir çalışma ekranında kalır. Bu ekran yerel model çıktısı veya AYA puanı göstermez.
+
+AYA model testi sohbetten ayrıdır: konuşma, kişisel not ve çalışma belleği testi beslemez; test sonucu kaydedilmiş planı değiştirmez. Pencereye geri dönünce motor durumu güncellenir, geçici model yokluğundan sonra seçilmiş model korunur. İşlem sonuçları gerçek CAD işlemi sonrası host durumuyla doğrulanır; geciken sonuç başka üniteye taşınmaz. Dolu belleğe ekleme eski kararları sessizce düşürmez. Bunlar yerel model entegrasyonu iyileştirmeleridir; model eğitimi veya tamamlanmış gerçek model kabulü değildir.
 
 RC57, AYA'yı görüntülenen CAD kesitinin gerçek uzunluk/alan sonuçlarına bağlar. Kaynak, ünite veya düzlem değişince eski sonuç kullanılamaz; aynı alanı veren ters kesitte bile yeni düzlem bilgisi taşınır. Açık, çakışan veya sınırlandırılmış kesitte alan uydurulmaz. Büyük tarama önizlemesinin ölçümü tam çözünürlüklü ölçüm gibi sunulmaz. Eski QC sayıları ünite/geometri değişiminden sonra arayüzden kaldırılır.
 
@@ -36,7 +42,7 @@ CAD uzman modunda İnceleme paneli; kamera/imleç hedefli gerçek fener, ışık
 
 Ayarlar'da 120 özgün logo bulunur; hacim, metalik yüzey, kenar ışığı ve gölge SVG katmanlarıyla üretilir. Her seçeneğin açık/koyu, simge ve yazı biçimleri ile Windows ICO varlığı vardır. Bunlar hacim etkili çizimlerdir; 3B mesh dosyaları değildir. İlk 18 logo kimliği, tercih aktarımı ve masaüstü simgesi akışı korunur.
 
-Başlangıç: [KURULUM.txt](KURULUM.txt). Kullanım: [RC57_KULLANIM.md](RC57_KULLANIM.md). Güncel kontroller ve sınırlar: [RC57_KONTROL_RAPORU.md](RC57_KONTROL_RAPORU.md). Önceki RC raporları tarihsel kayıttır; yeni sürümün doğrulaması sayılmaz.
+Başlangıç: [KURULUM.txt](KURULUM.txt). Kullanım: [RC58_KULLANIM.md](RC58_KULLANIM.md). Güncel kontroller ve sınırlar: [RC58_KONTROL_RAPORU.md](RC58_KONTROL_RAPORU.md). Önceki RC raporları tarihsel kayıttır; yeni sürümün doğrulaması sayılmaz.
 
 [120 logonun görünümü](public/brand/DentAYA_Premium_Atelier.webp). Bilgi kartı sayısı **500**, kaynak grubu **60**; ayrı AYA soru kataloğu **1008** kayıttır. [Yeni kartların kaynakları](BILGI_KARTLARI_RC53_KAYNAKLAR.md) ve [katalog/30.000 hedefi](DENTAL_BILGI_KATALOGU_RAPORU.md). 30.000 gerçek içerik hedefi tamamlanmadı; kapasite testinin sentetik verileri ürüne eklenmez.
 

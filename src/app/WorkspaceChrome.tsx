@@ -33,7 +33,7 @@ const MODULES: Record<string, [
     appointments: ["Randevular", "Takvim ve günlük plan"], finance: ["Finans", "Teklifler ve ödeme takibi"],
     messages: ["Mesajlar", "Ekip ve vaka görüşmeleri"], notifications: ["Bildirimler", "Güncellemeler ve bekleyen işler"],
     team: ["Ekip", "Üyeler ve çalışma alanı erişimi"], labs: ["Laboratuvar", "Laboratuvar bağlantıları"],
-    logistics: ["Lojistik", "Teslimat ve sevkiyat takibi"], operations: ["Operasyon", "Günlük iş akışı"],
+    logistics: ["Lojistik", "Teslimat ve sevkiyat takibi"], operations: ["İş takibi", "Günlük iş akışı"],
     settings: ["Ayarlar", "Çalışma alanını kişiselleştir"], clinic: ["Klinik", "Klinik çalışma alanı"], lab: ["Laboratuvar", "Laboratuvar çalışma alanı"],
 };
 type Preferences = {
@@ -136,9 +136,9 @@ export default function WorkspaceChrome({ children }: {
     }
     return <>
     {isDesktop ? <UiNode as="div" className={`desktop-shell professional-chrome ${isCad?'desktop-shell--cad':''}`} data-desktop-module={moduleKey}>
-      <UiNode as="header" className="desktop-titlebar" translateChildren={false}>
+      {!isCad&&<UiNode as="header" className="desktop-titlebar" translateChildren={false}>
         <UiNode as="div" className="desktop-brand-area">
-          <UiNode as="button" type="button" className="desktop-icon-button desktop-navigation-toggle" aria-label={desktopCopy.toggleNavigation} aria-expanded={!isCad&&preferences.navigation} onClick={()=>{if(isCad||window.matchMedia('(max-width: 800px)').matches)openModuleMenu();else update({navigation:!preferences.navigation});}}><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"/></svg></UiNode>
+          <UiNode as="button" ref={menuButton} type="button" onClick={openModuleMenu} title={desktopCopy.menuHint} aria-haspopup="dialog" aria-controls="desktop-module-menu" className="desktop-modules-button"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"/></svg><UiNode as="span">{desktopCopy.modules}</UiNode><UiNode as="kbd" translateChildren={false}>{desktopCopy.menuHint}</UiNode></UiNode>
           <Link href="/workspace" className="desktop-brand" aria-label="DentAYA"><BrandLogo width={124} height={28} priority/></Link>
         </UiNode>
         <UiNode as="nav" className="desktop-document-tabs" aria-label={desktopCopy.workspaces} translateChildren={false}>
@@ -148,16 +148,15 @@ export default function WorkspaceChrome({ children }: {
           {!isWorkspace&&!isCad&&!isAya&&<Link href={pathname} aria-current="page"><UiNode as="span">{moduleLabel}</UiNode></Link>}
         </UiNode>
         <UiNode as="div" className="desktop-titlebar-actions">
-          <UiNode as="button" ref={menuButton} type="button" onClick={openModuleMenu} title={desktopCopy.menuHint} className="desktop-modules-button"><DentayaIcon name="home" size={15}/><UiNode as="span">{desktopCopy.modules}</UiNode><UiNode as="kbd" translateChildren={false}>{desktopCopy.menuHint}</UiNode></UiNode>
           <UiNode as="button" type="button" onClick={openPreferences} aria-label={desktopCopy.preferences} title={copy.appearance}><DentayaIcon name="settings" size={17}/></UiNode>
         </UiNode>
-      </UiNode>
+      </UiNode>}
       <UiNode as="div" className={`desktop-workspace module-workspace ${isCad||!preferences.navigation?'module-workspace--wide':''}`}>
         {!isCad&&preferences.navigation&&<UiNode as="aside" className="module-navigation desktop-module-navigation" aria-label={desktopCopy.modules} translateChildren={false}>
           <UiNode as="nav" className="studio-activity-dock" aria-label={desktopCopy.workspaces}>
             {([['/workspace', desktopCopy.workManager, 'case'], ['/design', desktopCopy.design, 'design'], ['/patients', uiText('Hastalar'), 'patient'], ['/scans', uiText('Taramalar'), 'scan'], ['/messages', uiText('Mesajlar'), 'message'], ['/finance', uiText('Finans'), 'finance'], ['/ai', 'AYA', 'ai']] as [string, string, DentayaIconName][]).map(([href,label,icon]) => <Link href={href} key={href} aria-current={pathname===href||pathname.startsWith(href+'/')?'page':undefined} title={label}><UiNode as="span" className="studio-dock-icon" data-icon={icon}><DentayaIcon name={icon} size={25}/></UiNode><UiNode as="span">{label}</UiNode></Link>)}
           </UiNode>
-          <UiNode as="div" className="studio-dock-bottom"><UiNode as="button" type="button" title={desktopCopy.modules} aria-label={desktopCopy.modules} onClick={openModuleMenu}><DentayaIcon name="guide" size={22}/></UiNode><Link href="/settings" title={uiText('Ayarlar')} aria-label={uiText('Ayarlar')}><DentayaIcon name="settings" size={23}/></Link></UiNode>
+          <UiNode as="div" className="studio-dock-bottom"><Link href="/settings" title={uiText('Ayarlar')} aria-label={uiText('Ayarlar')}><DentayaIcon name="settings" size={23}/></Link></UiNode>
         </UiNode>}
         <UiNode as="div" className="module-body desktop-document">
           <UiNode as="div" className={`module-content desktop-content ${isWorkspace?'desktop-content--manager':''} ${isCad?'desktop-content--cad':''} ${isAya?'desktop-content--aya':''}`}>
@@ -171,7 +170,7 @@ export default function WorkspaceChrome({ children }: {
         <UiNode as="span" className="desktop-network-status"><UiNode as="i" data-online={online} aria-hidden="true"/>{online?desktopCopy.networkAvailable:desktopCopy.offline}</UiNode>
         <UiNode as="code">{DENTAYA_RELEASE.version.replace('1.0.0-rc.','RC')}</UiNode>
       </UiNode>}
-      <UiNode as="dialog" ref={moduleMenu} className="desktop-module-menu" aria-label={desktopCopy.modules} onKeyDown={event=>{if(event.key==='Escape'){event.preventDefault();moduleMenu.current?.close();}}} onClick={event=>{if(event.target===moduleMenu.current)moduleMenu.current?.close();}} onClose={restoreModuleMenuFocus}>
+      <UiNode as="dialog" ref={moduleMenu} id="desktop-module-menu" className="desktop-module-menu" aria-label={desktopCopy.modules} onKeyDown={event=>{if(event.key==='Escape'){event.preventDefault();moduleMenu.current?.close();}}} onClick={event=>{if(event.target===moduleMenu.current)moduleMenu.current?.close();}} onClose={restoreModuleMenuFocus}>
         <UiNode as="header" translateChildren={false}><UiNode as="strong">{desktopCopy.modules}</UiNode><UiNode as="button" type="button" aria-label={desktopCopy.closeMenu} onClick={()=>moduleMenu.current?.close()}>✕</UiNode></UiNode>
         <UiNode as="div" onClick={event=>{if((event.target as HTMLElement).closest('a'))moduleMenu.current?.close();}}><ModuleNavigation pathname={pathname}/></UiNode>
       </UiNode>
@@ -182,7 +181,7 @@ export default function WorkspaceChrome({ children }: {
       <UiNode as="div" className="workspace-settings-inner"><UiNode as="header"><UiNode as="div"><UiNode as="small">ÇALIŞMA ALANIN</UiNode><UiNode as="h2" id="workspace-settings-title">{uiText("Sana göre DentAYA")}</UiNode><UiNode as="p">{uiText("Ekrandan ayrılmadan düzenle.")}</UiNode></UiNode><UiNode as="button" autoFocus aria-label={uiText("Ayarları kapat")} onClick={() => dialog.current?.close()}>✕</UiNode></UiNode>
       <UiNode as="nav" aria-label={uiText("Ayar kategorileri")}>{[["appearance", "Renk ve görünüm"], ["brand", "Logo ve masaüstü"], ["work", "Çalışma düzeni"], ["experience", "Geçiş ve ses"], ["language", "Dil ve bölge"], ["aya", "AYA yerel"]].map(([id, label]) => <UiNode as="button" key={id} aria-pressed={tab === id} onClick={() => setTab(id)}>{uiText(label)}</UiNode>)}</UiNode>
       <UiNode as="div" className="workspace-settings-content">{tab === "language" ? <LanguageSettings /> : tab === "appearance" ? <CustomizationPanel /> : tab === "brand" ? <LogoPicker /> : tab === "experience" ? <ExperienceSettings /> : tab === "aya" ? <AyaPreferencesPanel /> : <UiNode as="div" className="workspace-options"><UiNode as="h3">Daha rahat bir çalışma alanı</UiNode><UiNode as="p">Tercihler bu cihazdaki modül ekranlarında uygulanır.</UiNode>
-        {([["navigation", "Sol menüyü göster", "Ana sayfa, vakalar ve mesajlara hızlı erişim."], ["compact", "Sıkı yerleşim", "Modül çerçevesindeki boşlukları azalt."], ["reducedMotion", "Hareketi azalt", "Animasyon ve geçişleri azalt."]] as const).map(([id, label, detail]) => <UiNode as="label" key={id}><UiNode data-dy-copy-stack as="span"><UiNode as="strong">{uiText(label)}</UiNode><UiNode as="small">{uiText(detail)}</UiNode></UiNode><UiNode as="input" type="checkbox" checked={preferences[id]} onChange={e => update({ [id]: e.target.checked })}/></UiNode>)}
+        {([["navigation", desktopCopy.activityRail, desktopCopy.activityRailDetail], ["compact", "Sıkı yerleşim", "Modül çerçevesindeki boşlukları azalt."], ["reducedMotion", "Hareketi azalt", "Animasyon ve geçişleri azalt."]] as const).map(([id, label, detail]) => <UiNode as="label" key={id}><UiNode data-dy-copy-stack as="span"><UiNode as="strong">{uiText(label)}</UiNode><UiNode as="small">{uiText(detail)}</UiNode></UiNode><UiNode as="input" type="checkbox" checked={preferences[id]} onChange={e => update({ [id]: e.target.checked })}/></UiNode>)}
         <UiNode as="p">{uiText("Hızlı ayarlar: ")}<UiNode as="kbd">Ctrl</UiNode> + <UiNode as="kbd">,</UiNode> · Kapat: <UiNode as="kbd">Esc</UiNode></UiNode><Link href="/settings" onClick={() => dialog.current?.close()}>Tüm ayarlara git →</Link><UiNode as="p" role="status">{message}</UiNode>
       </UiNode>}</UiNode></UiNode>
     </UiNode>}

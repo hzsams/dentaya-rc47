@@ -25,8 +25,8 @@ for(const spec of specs){const geometry=new THREE.CylinderGeometry(1.5,2.25,3.6,
 group.updateMatrixWorld(true);const sourceCenter=new THREE.Box3().setFromObject(group,true).getCenter(new THREE.Vector3()),stl=new STLExporter().parse(group);
 const margin=spec=>{const rotation=new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,0,1),spec.axis);return Array.from({length:48},(_,i)=>new THREE.Vector3(2.5*Math.cos(i*Math.PI/24),2.2*Math.sin(i*Math.PI/24),0).applyQuaternion(rotation).add(spec.center).sub(sourceCenter));};
 const units=specs.map(spec=>({id:'unit-'+spec.code,tooth_code:spec.code,anatomy_code:spec.code,role:'abutment',design_type:spec.type,tooth_form:'natural',morphology_style:'balanced',material:'Zirkonya',attachment_type:'none',temporary:false,notes:''}));
-const caseRow={id:caseId,case_number:'CAD-RC57-RESTORATION',patient_id:'44444444-4444-4444-8444-444444444444',patient_reference:'SYNTHETIC',title:'Kuron ve kapşon preparasyon yerleşimi',case_type:'Kron',status:'design',priority:'normal',due_date:null,tooth_codes:specs.map(s=>s.code),material:'Zirkonya',shade:'A2',clinical_notes:''};
-let project={id:'55555555-5555-4555-8555-555555555555',case_id:caseId,lab_org_id:orgId,source_scan_id:'scan-preparations',title:'RC57 full design fixture',restoration_type:'Kron',tooth_codes:caseRow.tooth_codes,material:'Zirkonya',shade:'A2',workflow_stage:'margin',status:'working',settings:{render_palette:'natural',margin_offset_mm:.02,job_setup:{version:1,complete:true,active_unit_id:units[0].id,units,updated_at:null},unit_margins:Object.fromEntries(specs.map(s=>['unit-'+s.code,margin(s)])),unit_parameters:Object.fromEntries(specs.map(s=>['unit-'+s.code,{insertion_axis_x:s.axis.x,insertion_axis_y:s.axis.y,insertion_axis_z:s.axis.z}])),insertion_axis_x:specs[0].axis.x,insertion_axis_y:specs[0].axis.y,insertion_axis_z:specs[0].axis.z},margin_points:margin(specs[0]),measurements:[],updated_at:new Date().toISOString()};
+const caseRow={id:caseId,case_number:'CAD-RC58-RESTORATION',patient_id:'44444444-4444-4444-8444-444444444444',patient_reference:'SYNTHETIC',title:'Kuron ve kapşon preparasyon yerleşimi',case_type:'Kron',status:'design',priority:'normal',due_date:null,tooth_codes:specs.map(s=>s.code),material:'Zirkonya',shade:'A2',clinical_notes:''};
+let project={id:'55555555-5555-4555-8555-555555555555',case_id:caseId,lab_org_id:orgId,source_scan_id:'scan-preparations',title:'RC58 full design fixture',restoration_type:'Kron',tooth_codes:caseRow.tooth_codes,material:'Zirkonya',shade:'A2',workflow_stage:'margin',status:'working',settings:{render_palette:'natural',margin_offset_mm:.02,job_setup:{version:1,complete:true,active_unit_id:units[0].id,units,updated_at:null},unit_margins:Object.fromEntries(specs.map(s=>['unit-'+s.code,margin(s)])),unit_parameters:Object.fromEntries(specs.map(s=>['unit-'+s.code,{insertion_axis_x:s.axis.x,insertion_axis_y:s.axis.y,insertion_axis_z:s.axis.z}])),insertion_axis_x:specs[0].axis.x,insertion_axis_y:specs[0].axis.y,insertion_axis_z:specs[0].axis.z},margin_points:margin(specs[0]),measurements:[],updated_at:new Date().toISOString()};
 const errors=[],measurements=[],screenshots=[],exports=[];let server,browser,logs='',exitCode=null,clock=0;
 async function stop(){if(!server||server.exitCode!==null||server.signalCode)return;await new Promise(resolve=>{const timer=setTimeout(()=>server.kill('SIGKILL'),5000);server.once('exit',()=>{clearTimeout(timer);resolve();});server.kill('SIGTERM');});}
 try{
@@ -79,7 +79,7 @@ try{
   const snapshot=await save(),record=snapshot.units['unit-'+spec.code];assert.ok(record.key.endsWith(':anatomy-rc55'));assert.equal(record.anchor.placed,true);
   const crownHeight=Math.max(...record.placementBase.filter((_,n)=>n%3===2));assert.ok(crownHeight>2&&crownHeight<12,'There is a bounded anatomical crown body, not an entire tooth/root');
   // This scan fixture's insertion direction is Z; global front/back are its occlusal views.
-  await camera(spec.code==='16'?'Arkadan':'Önden');await picture('RC57_'+spec.code+'_'+spec.type+'_occlusal.png');await camera('İzometrik');await picture('RC57_'+spec.code+'_'+spec.type+'_placed.png');
+  await camera(spec.code==='16'?'Arkadan':'Önden');await picture('RC58_'+spec.code+'_'+spec.type+'_occlusal.png');await camera('İzometrik');await picture('RC58_'+spec.code+'_'+spec.type+'_placed.png');
   await anatomyTab();
   for(const height of [.84,1.2]){
    const input=page.getByRole('spinbutton',{name:'Tüberkül yüksekliği sayısal değer',exact:true});await input.fill(String(height));await input.press('Enter');await frames();
@@ -96,11 +96,11 @@ try{
    const sculpted=(await state()).geometry.hash;assert.notEqual(sculpted,original,'A real manual brush stroke must modify the placed crown');
    await page.locator('.cad-history-actions button[aria-label="Geri al"]').click();await frames();assert.equal((await state()).geometry.hash,original);
    await page.locator('.cad-history-actions button[aria-label="Yinele"]').click();await frames();assert.equal((await state()).geometry.hash,sculpted);
-   await picture('RC57_manual_crown_design.png');
+   await picture('RC58_manual_crown_design.png');
   }
   await page.getByRole('tab',{name:'Son kontrol',exact:true}).click();await idle();
   const [download]=await Promise.all([page.waitForEvent('download'),page.locator('[data-cad-download-stl]').click()]);
-  assert.equal(download.suggestedFilename(),'CAD-RC57-RESTORATION-DentAYA-unit-'+spec.code+'.stl');
+  assert.equal(download.suggestedFilename(),'CAD-RC58-RESTORATION-DentAYA-unit-'+spec.code+'.stl');
   const file=await download.path(),bytes=await fs.readFile(file),exported=new STLLoader().parse(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)),qc=analyzeCadMesh(exported);
   assert.equal(qc.watertight,true);assert.equal(qc.connectedComponents,1);assert.equal(qc.degenerateTriangles,0);
   const currentRecord=(await save()).units['unit-'+spec.code];assert.equal(qc.triangleCount,currentRecord.geometry.indices.length/3,'Only the active restoration is exported, never the scan or another unit');
@@ -115,7 +115,7 @@ try{
  const aya=page.getByRole('dialog',{name:'AYA çalışma asistanı',exact:true});
  async function askAya(prompt){const count=await aya.locator('.cad-aya-messages article').count();await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).fill(prompt);await aya.getByRole('button',{name:'Gönder',exact:true}).click();const reply=aya.locator('.cad-aya-messages article').nth(count+1);await reply.waitFor();return reply;}
  const anatomy=await askAya('Bu kron çok yapay görünüyor, anatomik formu nasıl değiştirebilirim?');assert.equal(await anatomy.locator('[data-proposal-tool=library]').count(),1);
- const seating=await askAya('Bu kuron preparasyonun üstüne oturmuyor; nereden kontrol etmeliyim?');assert.match(await seating.textContent(),/iç yüzey uyumu onayı değildir/);assert.equal(await seating.locator('[data-proposal-tool=inspect]').count(),1);await picture('RC57_AYA_placement_guidance.png');
+ const seating=await askAya('Bu kuron preparasyonun üstüne oturmuyor; nereden kontrol etmeliyim?');assert.match(await seating.textContent(),/iç yüzey uyumu onayı değildir/);assert.equal(await seating.locator('[data-proposal-tool=inspect]').count(),1);await picture('RC58_AYA_placement_guidance.png');
  const negative=await askAya('Bu kronu daha doğal yapma.');assert.equal(await negative.locator('[data-proposal-tool]').count(),0);
  assert.equal((await state()).geometry.hash,beforeAya.geometry.hash,'AYA advice cannot alter the real restoration without Apply');assert.deepEqual((await state()).history,beforeAya.history);
  await aya.getByRole('button',{name:'Kapat',exact:true}).click();
@@ -142,7 +142,7 @@ try{
  project={...project,workflow_stage:'margin',margin_points:[],settings:{...project.settings,show_design:true,job_setup:{...project.settings.job_setup,active_unit_id:'unit-48',units:[{...units[0],id:'unit-48',tooth_code:'48',anatomy_code:'48'}]},unit_margins:{},source_margins:{},unit_workflow:{}}};
  await page.reload();await page.waitForFunction(()=>{const node=document.querySelector('[data-cad-render-state]');return node&&JSON.parse(node.dataset.cadRenderState).design;},{},{timeout:65000});await idle();
  const render=await page.locator('[data-cad-render-state]').evaluate(node=>JSON.parse(node.dataset.cadRenderState));assert.equal(render.design.visible,false,'An unregistered starter is hidden instead of floating at the model center');assert.equal(render.state.renderedUnits,0);assert.ok(render.lower.visible,'The actual scan remains visible for choosing the restoration target');
- await page.getByRole('button',{name:'Tümünü göster',exact:true}).click();await frames();assert.equal((await page.locator('[data-cad-render-state]').evaluate(node=>JSON.parse(node.dataset.cadRenderState))).design.visible,false,'Show all cannot invent a restoration target');await picture('RC57_raw_model_before_margin.png');
+ await page.getByRole('button',{name:'Tümünü göster',exact:true}).click();await frames();assert.equal((await page.locator('[data-cad-render-state]').evaluate(node=>JSON.parse(node.dataset.cadRenderState))).design.visible,false,'Show all cannot invent a restoration target');await picture('RC58_raw_model_before_margin.png');
  await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();
  const hidden=await askAya('Kuron görünmüyor, nasıl gösterebilirim?');assert.match(await hidden.textContent(),/ham modelde doğru dişi ve koleyi doğrula/);assert.equal(await hidden.locator('[data-proposal-tool=show-all]').count(),0);assert.ok(await page.getByRole('button',{name:'Marjin çiz',exact:true}).getAttribute('aria-pressed')==='true'||await hidden.locator('[data-proposal-tool=tool-margin]').count()===1,'AYA either keeps the already selected margin tool or offers that actual tool');await aya.getByRole('button',{name:'Kapat',exact:true}).click();
  await page.locator('[data-cad-menu=app]>summary').click();await page.getByRole('button',{name:'Uzman',exact:true}).click();await page.getByRole('tab',{name:'İç yüzey',exact:true}).click();

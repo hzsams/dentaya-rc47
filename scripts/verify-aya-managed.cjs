@@ -25,11 +25,11 @@ const {CONTEXT_MARKER}=require('../electron/aya/agent.cjs');
  assert.deepEqual((await fs.readdir(path.join(dir,'engine'))).sort(),['ggml.dll','llama-server.exe']);
  await fs.writeFile(archive,zipSync({'../llama-server.exe':new Uint8Array([1])}));await assert.rejects(extractEngine(archive,path.join(dir,'evil')),/ARCHIVE/);
  const gguf=Buffer.alloc(2048);gguf.write('GGUF');gguf.writeUInt32LE(3,4);const modelFile=path.join(dir,'test.gguf');await fs.writeFile(modelFile,gguf);
- let spawned=0,killed=0,payload,templatePayload,allRequests=[],chunks=0,mode='normal';
+ let spawned=0,killed=0,payload,templatePayload,allRequests=[],chunks=0,mode='normal',bootFailure=null;
  const plan={answer:'Önce güncel raporu alalım.',goal:'46 kron kontrolü',decisions:['Kole korunacak'],openQuestions:[],actions:[]};
- runtime=createManagedAya({directory:dir,engineBinary:path.join(dir,'engine/llama-server.exe'),spawnImpl:(binary,args,opts)=>{spawned++;assert.equal(opts.shell,false);assert.equal(args[args.indexOf('--host')+1],'127.0.0.1');assert.ok(args.includes('--no-webui'));assert.ok(args.includes('--no-context-shift'));assert.ok(args.includes('--api-key'));const p=new EventEmitter();p.stderr=new EventEmitter();p.kill=()=>{killed++;p.emit('exit',0);};return p;},fetchImpl:async(url,options)=>{
+ runtime=createManagedAya({directory:dir,engineBinary:path.join(dir,'engine/llama-server.exe'),spawnImpl:(binary,args,opts)=>{spawned++;assert.equal(opts.shell,false);assert.equal(args[args.indexOf('--host')+1],'127.0.0.1');assert.ok(args.includes('--no-webui'));assert.ok(args.includes('--no-context-shift'));assert.ok(args.includes('--api-key'));if(bootFailure?.sync)throw Object.assign(Error('PRIVATE spawn detail'),{code:bootFailure.spawnCode});const p=new EventEmitter();p.stderr=new EventEmitter();p.kill=()=>{killed++;p.emit('exit',0);};if(bootFailure)setImmediate(()=>{p.stderr.emit('data',Buffer.from((bootFailure.stderr||'')+'\nPRIVATE C:\\patient\\model.gguf Bearer '+args[args.indexOf('--api-key')+1]));if(bootFailure.spawnCode)p.emit('error',Object.assign(Error('PRIVATE spawn detail'),{code:bootFailure.spawnCode}));else p.emit('exit',1);});return p;},fetchImpl:async(url,options)=>{
   const u=new URL(url);assert.equal(u.hostname,'127.0.0.1');assert.match(options.headers.Authorization,/^Bearer [a-f0-9]{64}$/);allRequests.push(u.pathname);
-  if(u.pathname==='/v1/models')return Response.json({data:[{id:'aya-local'}]});
+  if(u.pathname==='/v1/models'){if(bootFailure?.readyAfterExit)return new Promise(resolve=>setImmediate(()=>resolve(Response.json({data:[{id:'aya-local'}]}))));if(bootFailure)throw Error('Not ready');return Response.json({data:[{id:'aya-local'}]});}
   if(u.pathname==='/apply-template'){templatePayload=JSON.parse(options.body);return Response.json({prompt:templatePayload.messages.map(m=>m.content).join('\n')});}
   if(u.pathname==='/tokenize'){const request=JSON.parse(options.body);assert.equal(request.add_special,true);assert.equal(request.parse_special,true);const context=JSON.parse(templatePayload.messages[1].content.slice(CONTEXT_MARKER.length));return Response.json({tokens:Array.from({length:mode==='trim-documents'&&context.documents.length?9000:Math.ceil(request.content.length/2)},()=>1)});}
   payload=JSON.parse(options.body);
@@ -51,6 +51,25 @@ const {CONTEXT_MARKER}=require('../electron/aya/agent.cjs');
  mode='unconfirmed-plan';assert.equal((await api.chat({agent:true,model:s.models[0].name,prompt:'Kontrol'},7)).error,'LOCAL_INVALID_PLAN','A DONE marker without a normal model stop cannot confirm a plan');
  mode='incomplete';assert.equal((await api.chat({model:s.models[0].name,prompt:'Kontrol'},7)).error,'LOCAL_EMPTY_RESPONSE');
  runtime.stop();assert.equal(killed,1);assert.equal((await runtime.status()).running,false);
+ // Failed native startup reports a bounded, fixed diagnosis and remains retryable.
+ // These process/transport fixtures are not native model inference.
+ for(const failure of [
+  {stderr:'ggml: failed to allocate buffer: out of memory',error:'AYA_ENGINE_MEMORY'},
+  {stderr:'llama_model_load: error loading model: invalid magic',error:'AYA_ENGINE_MODEL_LOAD'},
+  {stderr:'invalid magic',readyAfterExit:true,error:'AYA_ENGINE_MODEL_LOAD'},
+  {stderr:'error while loading shared libraries: libggml.so: cannot open shared object file',error:'AYA_ENGINE_LIBRARY'},
+  {stderr:'Permission denied',error:'AYA_ENGINE_PERMISSION'},
+  {stderr:'server: failed to bind: address already in use',error:'AYA_ENGINE_PORT'},
+  {stderr:'unclassified native failure',error:'AYA_ENGINE_START_FAILED'},
+  {stderr:'out of memory'+'x'.repeat(9000),error:'AYA_ENGINE_START_FAILED'},
+  {spawnCode:'ENOENT',error:'AYA_ENGINE_LIBRARY'},
+  {spawnCode:'EACCES',sync:true,error:'AYA_ENGINE_PERMISSION'},
+ ]){
+  bootFailure=failure;const failed=await api.chat({model:s.models[0].name,prompt:'Kontrol'},7);
+  assert.equal(failed.error,failure.error);assert.equal((await runtime.status()).error,failure.error);assert.equal((await runtime.status()).running,false);assert.equal(runtime.isBusy(),false);
+  assert.doesNotMatch(JSON.stringify({failed,status:await runtime.status()}),/PRIVATE|patient|Bearer|native detail/,'Native paths, process keys and raw output never leave runtime diagnostics');
+ }
+ bootFailure=null;mode='normal';assert.equal((await api.chat({model:s.models[0].name,prompt:'Tekrar dene'},7)).ok,true);assert.equal((await runtime.status()).error,'','Successful retry clears the prior startup diagnosis');runtime.stop();
  assert.equal((await runtime.importModel(path.join(dir,'missing.gguf'))).ok,false);
  assert.equal(answerOwned('hesapla (12,5 + 2,5) * 4').output,'hesapla (12,5 + 2,5) * 4 = 60'.replace('hesapla ',''));
  assert.equal(calculate('1/0'),null,'Invalid arithmetic never produces a numeric result');
@@ -58,6 +77,6 @@ const {CONTEXT_MARKER}=require('../electron/aya/agent.cjs');
  assert.match(answerOwned('Temel model sıfırdan eğitildi mi?').output,/sıfırdan eğitilmedi/);
  const cad=normalizeCad({unit:'46',upperReady:true,lowerReady:true,openingMm:99,positions:[1],patientName:'PRIVATE'});assert.equal(cad.openingMm,12);assert.ok(!JSON.stringify(cad).includes('PRIVATE'));assert.ok(!('positions' in cad));
  const note={id:'test',kind:'document',title:'Dökümhane',content:'Başlangıç bilgisi.\n'.repeat(300)+'Kalibrasyon kodu Z8T4.'};assert.match(ownedContext({prompt:'Kalibrasyon kodu',knowledge:[note]}).personalKnowledge[0].content,/Z8T4/);assert.equal(ownedContext({prompt:'Kalibrasyon kodu',knowledge:[note],useMemory:false}).references.length,0);
- console.log(JSON.stringify({pass:true,checksumAndResume:true,redirectRejection:true,archiveTraversalRejection:true,ggufImport:true,tokenBudget:true,loopbackStreaming:true,explicitMemory:true,cadMetadataWhitelist:true,foundationTrainingClaim:false,nativeInference:'mocked in this check; separate native log'},null,2));
+ console.log(JSON.stringify({pass:true,checksumAndResume:true,redirectRejection:true,archiveTraversalRejection:true,ggufImport:true,tokenBudget:true,loopbackStreaming:true,explicitMemory:true,cadMetadataWhitelist:true,startupDiagnosis:{bounded:true,rawDetailsExcluded:true,retry:true,lateHandshakeRejected:true,cases:10},foundationTrainingClaim:false,nativeInference:'mocked in this check; separate native log'},null,2));
  }finally{runtime?.dispose();await fs.rm(dir,{recursive:true,force:true});}
 })().catch(e=>{console.error(e);process.exitCode=1;});

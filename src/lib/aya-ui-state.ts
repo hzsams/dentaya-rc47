@@ -9,8 +9,8 @@ export function createAyaStatusRefreshGate() {
   invalidate:()=>{revision++;},
  };
 }
-export function selectAyaModel(current:string,models:ReadonlyArray<{name:string}>) {
- return models.some(model=>model.name===current)?current:models[0]?.name??'';
+export function selectAyaModel(current:string,models:ReadonlyArray<{name:string}>,preferred='') {
+ return models.some(model=>model.name===current)?current:models.some(model=>model.name===preferred)?preferred:models[0]?.name??'';
 }
 
 export type AyaMemoryEdit={sessionId:string;baseline:string;goal:string;decisions:string;questions:string};

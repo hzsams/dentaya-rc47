@@ -103,7 +103,10 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
   let result:AyaActionResult;
   try{result=await onRun(proposal);}catch{result={ok:false,message:copy.failed};}
   lock.current=false;
-  const cached=sessions.get(captured.scope??''),nextEvents=[...(cached?.events??events),{tool:proposal.tool,ok:result.ok,result:result.message,scope:captured.scope??'',snapshot:captured.snapshot??'',dataToken:captured.dataToken??''}].slice(-8);
+  const evidence=result.evidence;
+  // Only the host can bind a completed callback to its committed post-action state.
+  // A result without that provenance remains visible as history, not current evidence.
+  const cached=sessions.get(captured.scope??''),nextEvents=[...(cached?.events??events),...(evidence&&evidence.scope===captured.scope?[evidence]:[])].slice(-8);
   const nextMessages:Message[]=[...(cached?.messages??messages),{role:'assistant',engine:'core',content:copy.toolResult+' · '+copy.tools[proposal.tool]+'\n'+(result.ok?copy.done:copy.failed)+' · '+result.message,cadScope:captured.scope}];
   // Publish the actual result into its original unit, including a panel reopened before completion.
   const session={messages:nextMessages.slice(-64),memory:cached?.memory??memory,events:nextEvents};
@@ -113,7 +116,7 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
   if(captured.scope!==contextRef.current.scope)return;
   setEvents(nextEvents);setMessages(nextMessages);if(!result.ok)setError(result.message);
   // One bounded follow-up interprets actual check output, only for the unchanged geometry.
-  if(result.ok&&proposal.tool==='inspect'&&model){await new Promise<void>(resolve=>requestAnimationFrame(()=>resolve()));if(live.current&&captured.scope===contextRef.current.scope&&captured.dataToken===contextRef.current.dataToken)void send(copy.interpret,nextMessages,nextEvents);}
+  if(result.ok&&proposal.tool==='inspect'&&model&&evidence){await new Promise<void>(resolve=>requestAnimationFrame(()=>resolve()));if(live.current&&evidence.scope===contextRef.current.scope&&evidence.snapshot===contextRef.current.snapshot&&evidence.dataToken===contextRef.current.dataToken)void send(copy.interpret,nextMessages,nextEvents);}
  }
  const checks=cadChecklist(context,t),legacy=nextCadAction(context),legacyActions={setup:{label:t('İş tanımı'),run:onSetup},show:{label:t('Tümünü göster'),run:onShow},place:{label:t('Koleye yerleştir'),run:onPlace},save:{label:t('Kaydet ve çık'),run:onSave},next:{label:t('Sonraki'),run:onNext}};
  const currentProposal=(tool:AyaCadTool):AyaProposal=>({tool,reason:copy.tools[tool],scope:context.scope??'',snapshot:context.snapshot??''});
