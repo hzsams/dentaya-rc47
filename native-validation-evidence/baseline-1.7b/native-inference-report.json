@@ -1,0 +1,545 @@
+{
+  "nativeInference": true,
+  "mock": false,
+  "syntheticCadFixture": true,
+  "platform": "win32",
+  "stage": "inference",
+  "engineVersion": "version: 9380 (d205df681)\r\nbuilt with Clang 19.1.5 for Windows x86_64",
+  "engineBinarySHA256": "052539ab0e0f77725efa10e7ae857153fcdbdfdfe8dc59d711c64a3c916c627d",
+  "model": {
+    "bytes": 1834426016,
+    "sha256": "061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+    "verified": true
+  },
+  "checks": [
+    {
+      "name": "natural-identity",
+      "kind": "conversation",
+      "prompt": "Sana nasıl seslenmeliyim ve bu uygulamada bana ne için yardımcı oluyorsun?",
+      "reply": {
+        "ok": true,
+        "output": "AYA'ya nasıl seslenmeliyim ve bu uygulamada bana ne için yardımcı oluyorsun? AYA, genellikle \"AYA\" diye seslenirim. Bu uygulama, bana işlerinizi kolaylaştırmak ve doğru bilgi vermek için yardımcı olur. Sana yardımcı olabilirim: işlerinizi izlemek, bilgileri kontrol etmek, hesaplamalar yapmak, dönüştürmeleri yapmak, CAD araçlarını kullanmak ve diğer işlerinizi yönetmek. Sana yardımcı olabilirim.",
+        "metrics": {
+          "milliseconds": 26186,
+          "tokens": 137
+        },
+        "model": "aya-local:061b54daade076b5d3362dac252678d1",
+        "references": []
+      },
+      "streamedUpdates": 136,
+      "streamedCharacters": 397,
+      "wallMilliseconds": 29732
+    },
+    {
+      "name": "novel-non-dental-request",
+      "kind": "conversation",
+      "prompt": "Bir rüzgâr çanının ağzından, yağmuru ilk kez duyan çocuklara üç yeni cümle kur. Konuyu diş veya yazılıma bağlama.",
+      "reply": {
+        "ok": true,
+        "output": "AYA  \nBu soruyu çözmek için bir rüzgâr çanısı, yağmuru ilk kez duyan çocuklara üç yeni cümle kurmak istiyorum. Konuyu diş veya yazılıma bağlamak istiyorum.  \n\nİlk cümle: Rüzgâr çanısı, dişlerin kırılmasından sonra, yağmurun ilk kez duynuğunda, bir dişin kırıldığını gösterir.  \nİkinci cümle: Rüzgâr çanısı, dişlerin kırılmasından sonra, yağmurun ilk kez duynuğunda, bir dişin kırıldığını anlatır.  \nÜçüncü cümle: Rüzgâr çanısı, dişlerin kırılmasından sonra, yağmurun ilk kez duynuğunda, bir dişin kırıldığını anlatır.",
+        "metrics": {
+          "milliseconds": 16803,
+          "tokens": 209
+        },
+        "model": "aya-local:061b54daade076b5d3362dac252678d1",
+        "references": []
+      },
+      "streamedUpdates": 208,
+      "streamedCharacters": 517,
+      "wallMilliseconds": 16826
+    },
+    {
+      "name": "novel-natural-language",
+      "kind": "conversation",
+      "prompt": "Bu akşamki çalışma planımız şu: önce 46 numaralı implant üstü kronu inceleyeceğiz. Kararımız, dış konturu koruyup oklüzal yüksekliği elle azaltmak. Hedefi ve kararı aklında tut; henüz işlem yapma.",
+      "reply": {
+        "ok": true,
+        "output": "AYA  \nBu akşamki çalışma planınızda 46 numaralı implant üstü kronunu incelemek ve dış konturu koruyup oklüzal yüksekliği elle azaltmak hedefi ve kararını belirlemek istiyorsunuz. İşlemi henüz başlatmak için hazırlık yapmanız gerekir.  \nİşlemi yapmadan önce, implantın dış konturu ve oklüzal yüksekliği ile ilgili bilgileri doğrulayınız.  \nİşlemi başlatmak için gerekli olan bilgileri ve CAD araçlarını hazır tutunuz.  \nİşlemi yapmadan önce, implantın dış konturu ve oklüzal yüksekliği ile ilgili bilgileri doğrulayınız.",
+        "metrics": {
+          "milliseconds": 14568,
+          "tokens": 173
+        },
+        "model": "aya-local:061b54daade076b5d3362dac252678d1",
+        "references": []
+      },
+      "streamedUpdates": 172,
+      "streamedCharacters": 519,
+      "wallMilliseconds": 14589
+    },
+    {
+      "name": "separate-memory-extraction",
+      "kind": "memory",
+      "prompt": "Bu akşamki çalışma planımız şu: önce 46 numaralı implant üstü kronu inceleyeceğiz. Kararımız, dış konturu koruyup oklüzal yüksekliği elle azaltmak. Hedefi ve kararı aklında tut; henüz işlem yapma.",
+      "reply": {
+        "ok": true,
+        "output": "Memory updated",
+        "metrics": {
+          "milliseconds": 24020,
+          "tokens": 121
+        },
+        "workingMemory": {
+          "goal": "To proceed with the evaluation of the 46th implant upper crown and determine whether to retain the external contour and reduce the occlusal height manually.",
+          "decisions": [
+            "Evaluate the 46th implant upper crown",
+            "Determine whether to retain the external contour and reduce the occlusal height manually"
+          ],
+          "openQuestions": [
+            "What are the specific details of the 46th implant upper crown?",
+            "Are there any additional information or documentation available about the implant?"
+          ]
+        },
+        "proposals": [],
+        "model": "aya-local:061b54daade076b5d3362dac252678d1",
+        "references": []
+      },
+      "streamedUpdates": 0,
+      "streamedCharacters": 0,
+      "wallMilliseconds": 24043
+    },
+    {
+      "name": "working-memory-follow-up",
+      "kind": "conversation",
+      "prompt": "Az önce hangi diş ve hangi biçim kararını konuşmuştuk? Sadece hatırladıklarını söyle.",
+      "reply": {
+        "ok": true,
+        "output": "Diş: 46. diş, biçim: dış konturunu koruyor ve occlusal yüksekliği azaltıyor.",
+        "metrics": {
+          "milliseconds": 7540,
+          "tokens": 30
+        },
+        "model": "aya-local:061b54daade076b5d3362dac252678d1",
+        "references": []
+      },
+      "streamedUpdates": 29,
+      "streamedCharacters": 76,
+      "wallMilliseconds": 7560
+    },
+    {
+      "name": "natural-partial-memory-correction",
+      "kind": "conversation",
+      "prompt": "Çalışma hedefini şimdilik kaldır; dış kontur hakkında anlaştığımız kararı ve varsa açık soruları aynen koru.",
+      "reply": {
+        "ok": true,
+        "output": "AYA  \nÇalışma hedefini kaldırıldı. Dış kontur hakkındaki karar ve açık sorular aynen korunmuştur.",
+        "metrics": {
+          "milliseconds": 3721,
+          "tokens": 32
+        },
+        "model": "aya-local:061b54daade076b5d3362dac252678d1",
+        "references": []
+      },
+      "streamedUpdates": 31,
+      "streamedCharacters": 97,
+      "wallMilliseconds": 3741
+    },
+    {
+      "name": "separate-partial-memory-correction",
+      "kind": "memory",
+      "prompt": "Çalışma hedefini şimdilik kaldır; dış kontur hakkında anlaştığımız kararı ve varsa açık soruları aynen koru.",
+      "reply": {
+        "ok": true,
+        "output": "Memory updated",
+        "metrics": {
+          "milliseconds": 14332,
+          "tokens": 130
+        },
+        "workingMemory": {
+          "goal": "To proceed with the evaluation of the 46th implant upper crown and determine whether to retain the external contour and reduce the occlusal height manually.",
+          "decisions": [
+            "Evaluate the 46th implant upper crown",
+            "Determine whether to retain the external contour and reduce the occlusal height manually"
+          ],
+          "openQuestions": [
+            "What are the specific details of the 46th implant upper crown?",
+            "Are there any additional information or documentation available about the implant?"
+          ]
+        },
+        "proposals": [],
+        "model": "aya-local:061b54daade076b5d3362dac252678d1",
+        "references": []
+      },
+      "streamedUpdates": 0,
+      "streamedCharacters": 0,
+      "wallMilliseconds": 14352
+    }
+  ],
+  "transport": [
+    {
+      "stream": true,
+      "thinking": {
+        "enable_thinking": false
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ]
+    },
+    {
+      "stream": true,
+      "thinking": {
+        "enable_thinking": false
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ]
+    },
+    {
+      "stream": true,
+      "thinking": {
+        "enable_thinking": false
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ]
+    },
+    {
+      "stream": true,
+      "responseFormat": {
+        "type": "json_object",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "answer",
+            "goal",
+            "decisions",
+            "openQuestions",
+            "actions"
+          ],
+          "properties": {
+            "answer": {
+              "type": "string",
+              "minLength": 1
+            },
+            "goal": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "memoryUpdate": {
+              "type": "string",
+              "enum": [
+                "merge",
+                "replace",
+                "clear",
+                "patch"
+              ]
+            },
+            "memoryPatch": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "goal",
+                "decisions",
+                "openQuestions"
+              ],
+              "properties": {
+                "goal": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "set",
+                    "clear"
+                  ]
+                },
+                "decisions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                },
+                "openQuestions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                }
+              }
+            },
+            "decisions": {
+              "type": "array",
+              "maxItems": 5,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "openQuestions": {
+              "type": "array",
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "actions": {
+              "type": "array",
+              "maxItems": 0,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "tool",
+                  "reason"
+                ],
+                "properties": {
+                  "tool": {
+                    "type": "string",
+                    "enum": [
+                      "inspect",
+                      "setup",
+                      "library",
+                      "place",
+                      "save",
+                      "save-exit",
+                      "undo",
+                      "redo",
+                      "fit-camera",
+                      "show-all",
+                      "isolate",
+                      "recorded-bite",
+                      "view-natural",
+                      "view-contact",
+                      "view-thickness",
+                      "view-undercut",
+                      "view-section",
+                      "tool-margin",
+                      "tool-measure",
+                      "tool-add",
+                      "tool-reduce",
+                      "tool-smooth",
+                      "internal-fit",
+                      "next",
+                      "inspection",
+                      "flashlight-on",
+                      "flashlight-off"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "thinking": {
+        "enable_thinking": false
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ]
+    },
+    {
+      "stream": true,
+      "thinking": {
+        "enable_thinking": false
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ]
+    },
+    {
+      "stream": true,
+      "thinking": {
+        "enable_thinking": false
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ]
+    },
+    {
+      "stream": true,
+      "responseFormat": {
+        "type": "json_object",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "answer",
+            "goal",
+            "decisions",
+            "openQuestions",
+            "actions"
+          ],
+          "properties": {
+            "answer": {
+              "type": "string",
+              "minLength": 1
+            },
+            "goal": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "memoryUpdate": {
+              "type": "string",
+              "enum": [
+                "merge",
+                "replace",
+                "clear",
+                "patch"
+              ]
+            },
+            "memoryPatch": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "goal",
+                "decisions",
+                "openQuestions"
+              ],
+              "properties": {
+                "goal": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "set",
+                    "clear"
+                  ]
+                },
+                "decisions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                },
+                "openQuestions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                }
+              }
+            },
+            "decisions": {
+              "type": "array",
+              "maxItems": 5,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "openQuestions": {
+              "type": "array",
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "actions": {
+              "type": "array",
+              "maxItems": 0,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "tool",
+                  "reason"
+                ],
+                "properties": {
+                  "tool": {
+                    "type": "string",
+                    "enum": [
+                      "inspect",
+                      "setup",
+                      "library",
+                      "place",
+                      "save",
+                      "save-exit",
+                      "undo",
+                      "redo",
+                      "fit-camera",
+                      "show-all",
+                      "isolate",
+                      "recorded-bite",
+                      "view-natural",
+                      "view-contact",
+                      "view-thickness",
+                      "view-undercut",
+                      "view-section",
+                      "tool-margin",
+                      "tool-measure",
+                      "tool-add",
+                      "tool-reduce",
+                      "tool-smooth",
+                      "internal-fit",
+                      "next",
+                      "inspection",
+                      "flashlight-on",
+                      "flashlight-off"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "thinking": {
+        "enable_thinking": false
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ]
+    }
+  ],
+  "caseCounts": {
+    "attempted": 7,
+    "succeeded": 7,
+    "conversation": {
+      "attempted": 5,
+      "succeeded": 5,
+      "streamedUpdates": 576
+    },
+    "memory": {
+      "attempted": 2,
+      "succeeded": 2
+    },
+    "cad": {
+      "attempted": 0,
+      "succeeded": 0
+    }
+  },
+  "semanticReviewRequired": true,
+  "semanticReview": {
+    "status": "pending",
+    "criteria": [
+      "Identity: answer name and purpose directly in natural prose without a canned response.",
+      "Novel non-dental request: fulfill the requested perspective and content without forcing a CAD workflow.",
+      "New wording: remember unit 46 and preserve outer contour while manually reducing occlusal height.",
+      "Separate memory extraction: retain explicit user decisions rather than facts invented by the assistant reply.",
+      "Memory-only follow-up: recover the unit and contour decision without replaying user history.",
+      "Partial memory correction: clear only the requested goal, preserving decisions and open questions.",
+      "Missing antagonist/report: do not grant closure safety or invent exact wall thickness; propose an available check.",
+      "Tool result: distinguish a closed single-component mesh and a shell offset estimate from production clearance. Save failure must remain a failure with local recovery preserved."
+    ]
+  },
+  "contractPass": false,
+  "blocked": false,
+  "error": "A novel partial reset can clear the goal\n+ actual - expected\n\n+ 'To proceed with the evaluation of the 46th implant upper crown and determine whether to retain the external contour and reduce the occlusal height manually.'\n- ''\n"
+}

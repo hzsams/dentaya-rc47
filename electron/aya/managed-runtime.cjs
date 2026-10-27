@@ -5,7 +5,7 @@ const {spawn}=require('node:child_process');
 const {unzipSync}=require('fflate');
 const {fitMessagesToBudget}=require('./agent.cjs');
 const ENGINE={version:'b9380',url:'https://github.com/ggml-org/llama.cpp/releases/download/b9380/llama-b9380-bin-win-cpu-x64.zip',sha256:'cd44b61422671f0565cae98d856a70d55ef10392197a49246671f85bacb50dc3',bytes:16067676};
-const MODEL={id:'aya-local:qwen3-1.7b-q8',name:'Qwen3-1.7B-Q8_0.gguf',label:'AYA Local · Qwen3 1.7B',url:'https://huggingface.co/Qwen/Qwen3-1.7B-GGUF/resolve/90862c4b9d2787eaed51d12237eafdfe7c5f6077/Qwen3-1.7B-Q8_0.gguf',sha256:'061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a',bytes:1834426016};
+const MODEL={id:'aya-local:qwen3-4b-q4',name:'Qwen3-4B-Q4_K_M.gguf',label:'AYA Local · Qwen3 4B',url:'https://huggingface.co/Qwen/Qwen3-4B-GGUF/resolve/bc640142c66e1fdd12af0bd68f40445458f3869b/Qwen3-4B-Q4_K_M.gguf',sha256:'7485fe6f11af29433bc51cab58009521f205840f5b4ae3a32fa7f92e8534fdf5',bytes:2497280256};
 // Native output may contain local paths or the process key. Retain only a bounded
 // startup tail in memory and expose a fixed diagnosis, never the native text.
 function engineStartError(stderr,spawnCode){
