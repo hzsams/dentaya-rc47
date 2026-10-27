@@ -162,7 +162,7 @@ export default function AyaChat() {
         }
     }, [loaded, sessionId, messages, workingMemory, options.saveHistory, copy.storageError, copy.newChat]);
     useEffect(()=>{
-        if(loaded)ayaChatWorkspace.remember({id:sessionId,messages,workingMemory,draft,pendingQuestion,revision:persistedSession.current.revision,updatedAt:Date.now()},options.saveHistory);
+        if(loaded)ayaChatWorkspace.remember({id:sessionId,messages,workingMemory,draft,pendingQuestion,revision:persistedSession.current.revision,updatedAt:Date.now()},readAyaState().options.saveHistory);
     },[loaded,sessionId,messages,workingMemory,draft,pendingQuestion,options.saveHistory]);
     useEffect(() => { end.current?.scrollIntoView({ block: 'nearest' }); }, [messages, diagnosticResult, streamingReply, busy]);
     function choose(value: string) {
@@ -374,7 +374,7 @@ export default function AyaChat() {
                     {busy&&!streamingReply?.text&&<UiNode as="p" className="aya-thinking" role="status">{copy.answering}…</UiNode>}
                     <UiNode as="div" ref={end}/>
                 </UiNode>
-                {recoveredQuestion&&<UiNode as="div" role="status" className="aya-draft-recovery" translateChildren={false}><UiNode as="p">{workspaceCopy.interrupted}</UiNode><UiNode as="button" type="button" disabled={interactionBusy||!draft.trim()} onClick={()=>void send()}>{copy.retry}</UiNode></UiNode>}
+                {recoveredQuestion&&<UiNode as="div" role="status" className="aya-chat-error aya-draft-recovery" translateChildren={false}><UiNode as="p">{workspaceCopy.interrupted}</UiNode><UiNode as="button" type="button" disabled={interactionBusy||!draft.trim()} onClick={()=>void send()}>{copy.retry}</UiNode></UiNode>}
                 {error&&<UiNode as="div" role="alert" className="aya-chat-error" translateChildren={false}><UiNode as="p">{error==='LOCAL_RUNTIME_MISSING'?copy.statusError:error}</UiNode>{!usingModel&&<UiNode as="button" type="button" onClick={()=>{setPanel('setup');setSettingsOpen(true);}}>{copy.configureModel}</UiNode>}{retryRequest&&!interactionBusy&&(retryRequest.preserveDraft||draft.trim())&&<UiNode as="div" translateChildren={false}><UiNode as="button" type="button" onClick={()=>void (retryRequest.preserveDraft?send(retryRequest.prompt,retryRequest.forceModel,true):send())}>{copy.retry}</UiNode>{!retryRequest.preserveDraft&&<UiNode as="button" type="button" onClick={()=>prepare(draft)}>{copy.edit}</UiNode>}</UiNode>}</UiNode>}
                 {saveConflict&&<UiNode as="div" role="alert" className="aya-chat-error aya-session-conflict" translateChildren={false}><UiNode as="p">{saveConflict==='missing'?copy.sessionMissing:copy.sessionConflict}</UiNode><UiNode as="div" translateChildren={false}><UiNode as="button" type="button" disabled={interactionBusy||saveConflict==='missing'} onClick={()=>openConversation(sessionId,true)}>{copy.reloadConversation}</UiNode><UiNode as="button" type="button" disabled={interactionBusy||(!messages.length&&!workingMemory.goal&&!workingMemory.decisions.length&&!workingMemory.openQuestions.length)} onClick={saveSeparateConversation}>{copy.saveConversationCopy}</UiNode></UiNode></UiNode>}
                 <UiNode as="form" className="aya-chat-composer" translateChildren={false} onSubmit={e=>{e.preventDefault();void send();}}>
