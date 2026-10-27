@@ -1,0 +1,18 @@
+.aya-engine-setup { min-width:0; }
+.aya-engine-setup h3 { margin:0 0 10px;font-size:13px; }
+.aya-setup-steps { list-style:none;margin:12px 0;padding:0;border:1px solid var(--dy-border);border-radius:5px;overflow:hidden;background:var(--dy-surface); }
+.aya-setup-steps li { display:grid;grid-template-columns:135px minmax(0,1fr);gap:12px;padding:11px 12px;border-bottom:1px solid var(--dy-border);font-size:11px;line-height:1.6; }
+.aya-setup-steps li:last-child { border-bottom:0; }
+.aya-setup-steps span { color:var(--dy-muted);overflow-wrap:anywhere; }
+.aya-setup-steps span[data-ready=true] { color:var(--dy-text); }
+.aya-engine-actions { display:flex;flex-wrap:wrap;gap:6px;margin:10px 0; }
+.aya-setup-progress { margin:10px 0;padding:10px;background:var(--dy-surface);border:1px solid var(--dy-border);border-radius:4px; }
+.aya-setup-progress p { margin:0 0 7px; }
+.aya-setup-progress progress { display:block;width:100%;height:10px;accent-color:var(--dy-accent); }
+.aya-setup-bytes { display:block;font-size:10px;font-variant-numeric:tabular-nums;color:var(--dy-muted);margin-top:6px; }
+.aya-other-models { margin-top:14px;border-top:1px solid var(--dy-border);padding-top:10px; }
+.aya-other-models summary { cursor:pointer;font-weight:600;font-size:11px;padding-block:4px; }
+.aya-other-models>button { margin-top:10px; }
+.aya-ollama-setup { margin-top:12px; }
+.aya-engine-setup :is(button,summary,select):focus-visible { outline:2px solid var(--dy-accent);outline-offset:3px; }
+@media(max-width:520px){.aya-setup-steps li{grid-template-columns:minmax(0,1fr);gap:4px;}}

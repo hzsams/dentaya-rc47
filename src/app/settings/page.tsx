@@ -7,7 +7,7 @@ import UiNode from "@/lib/i18n/UiNode";
 import { useTranslation } from '@/lib/i18n';
 import { useEffect, useState, type CSSProperties, } from "react";
 import Link from "@/lib/i18n/UiLink";
-import { useRouter } from "next/navigation";
+import GuestLocalSettings from './GuestLocalSettings';
 import ExperienceSettings from "@/app/ExperienceSettings";
 import AyaPreferencesPanel from "@/app/ai/AyaPreferencesPanel";
 import LanguageSettings from "../LanguageSettings";
@@ -99,7 +99,6 @@ const emptyLab: LabForm = {
 export default function SettingsPage() {
     const { t: uiText } = useTranslation();
     useDentayaThemeRuntime();
-    const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [org, setOrg] = useState<Org | null>(null);
     const [membership, setMembership] = useState<Membership | null>(null);
@@ -158,7 +157,7 @@ export default function SettingsPage() {
             const { data: auth } = await supabase.auth.getSession();
             const user = auth.session?.user;
             if (!user) {
-                router.replace("/workspace");
+                if(active)setLoading(false);
                 return;
             }
             setUserId(user.id);
@@ -278,7 +277,7 @@ export default function SettingsPage() {
         return () => {
             active = false;
         };
-    }, [router]);
+    }, []);
     function updatePrefs(next: Partial<DentayaPreferences>) {
         const updated = {
             ...prefs,
@@ -597,6 +596,7 @@ export default function SettingsPage() {
         }
     }
     if (loading) return <LoadingExperience title="Ayarlar yükleniyor…"/>;
+    if (!userId) return <GuestLocalSettings/>;
     return (<UiNode as="main" className="settings-studio" style={s.page}>
       <ConnectionStatus />
       <UiNode as="header" className="settings-titlebar" style={s.header}>
