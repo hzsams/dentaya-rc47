@@ -45,6 +45,13 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           node scripts/verify-source-integrity.mjs
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Check the runner's full NSIS extraction support
+        shell: pwsh
+        run: |
+          $sevenZip = Join-Path $env:ProgramFiles '7-Zip/7z.exe'
+          if (-not (Test-Path $sevenZip -PathType Leaf)) { throw 'Full 7-Zip is missing from the Windows runner' }
+          $formats = & $sevenZip i
+          if ($LASTEXITCODE -ne 0 -or -not ($formats -match 'Nsis')) { throw 'Full 7-Zip lacks the NSIS decoder required to verify the installer payload' }
       - name: Install the exact lockfile dependencies
         run: npm ci --no-audit --no-fund
       - name: Run all source checks and production build
@@ -63,6 +70,7 @@ jobs:
       - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: verified-windows-installer
+          overwrite: true
           path: |
             ci-artifacts/windows-release/DentAYA-Setup-*.exe
             ci-artifacts/windows-release/SHA256SUMS.txt
@@ -107,12 +115,13 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force ci-artifacts/native | Out-Null
-          node -e "const fs=require('node:fs');fs.writeFileSync('ci-artifacts/native/source-provenance.json',JSON.stringify({commit:process.env.GITHUB_SHA,version:require('./package.json').version,runId:process.env.GITHUB_RUN_ID,job:'windows-native'},null,2)+'\n')"
+          node -e "const fs=require('node:fs');fs.writeFileSync('ci-artifacts/native/source-provenance.json',JSON.stringify({commit:process.env.GITHUB_SHA,version:require('./package.json').version,runId:process.env.GITHUB_RUN_ID,runAttempt:process.env.GITHUB_RUN_ATTEMPT,job:'windows-native'},null,2)+'\n')"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         if: always()
         with:
           name: windows-native-evidence
+          overwrite: true
           path: |
             ci-artifacts/native/native-inference-report.json
             ci-artifacts/native/windows-native-result.json

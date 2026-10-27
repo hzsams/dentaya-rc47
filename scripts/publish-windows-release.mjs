@@ -41,7 +41,7 @@ export async function prepareWindowsRelease({project = process.cwd(), releaseDir
   check(smoke.pass === true && smoke.commit === commit && smoke.version === source.version && smoke.freshProfile === true && smoke.packagedServer === true && smoke.bridgeIpc === true && smoke.rendererExceptions === 0, 'Actual desktop smoke did not pass for this source.');
   for (const route of ['/workspace', '/ai', '/settings']) check(smoke.routes?.some(item => item.requested === route && item.documentReady === true && item.bridge === true && item.ipc === true && item.unauthenticated === true), `Desktop route was not checked: ${route}`);
   const provenance = await json(path.join(nativeDir, 'source-provenance.json'));
-  check(provenance.commit === commit && provenance.version === source.version && provenance.job === 'windows-native' && /^\d+$/.test(provenance.runId), 'Native evidence belongs to another source or CI run.');
+  check(provenance.commit === commit && provenance.version === source.version && provenance.job === 'windows-native' && /^\d+$/.test(provenance.runId) && /^\d+$/.test(provenance.runAttempt), 'Native evidence belongs to another source or CI run.');
   const native = await json(path.join(nativeDir, 'windows-native-result.json'));
   const inference = await json(path.join(nativeDir, 'native-inference-report.json'));
   check(native.release === source.version && native.provenance === 'controlled-windows-native' && ['passed', 'failed', 'blocked'].includes(native.status), 'Actual Windows native result is missing.');
@@ -59,13 +59,16 @@ export async function prepareWindowsRelease({project = process.cwd(), releaseDir
     assets.push({name, file, data, sha256: sha256(data)});
   }
   const body = `Windows installer verified against source commit ${commit}. The executable extracted from this installer passed fresh-profile desktop checks for /workspace, /ai and /settings, including the real desktop bridge.\n\nReal Windows native AYA contract result: **${native.status}**. The attached reports contain the actual result. Model weights are downloaded separately and are absent from this installer and these assets.\n\nSemantic response quality still requires human review, including when the native contract passes. Clinical/production acceptance is not completed by these checks.\n\nVerify the installer with SHA256SUMS.txt before installing.`;
-  return {commit, tag, version: source.version, nativeStatus: native.status, body, assets};
+  return {commit, tag, version: source.version, runId: provenance.runId, runAttempt: provenance.runAttempt, nativeStatus: native.status, body, assets};
 }
 
 export async function publishWindowsRelease(input, {env = process.env, request = fetch, prepare = prepareWindowsRelease} = {}) {
   check(env.GITHUB_REF === `refs/tags/${input.tag}` && env.GITHUB_SHA === input.commit, 'Publishing is restricted to the exact tag workflow commit.');
   check(/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(env.GITHUB_REPOSITORY ?? '') && typeof env.GITHUB_TOKEN === 'string' && env.GITHUB_TOKEN.length > 0, 'GitHub release credentials or repository are missing.');
   const release = await prepare(input);
+  // A failed publishing job can be rerun using its already verified build and
+  // native jobs; evidence still has to belong to this exact workflow run.
+  check(release.runId === env.GITHUB_RUN_ID && Number.isSafeInteger(Number(release.runAttempt)) && Number(release.runAttempt) >= 1 && Number(release.runAttempt) <= Number(env.GITHUB_RUN_ATTEMPT), 'Native evidence belongs to another workflow run or a later attempt.');
   const base = `https://api.github.com/repos/${env.GITHUB_REPOSITORY}`;
   const headers = {Authorization: `Bearer ${env.GITHUB_TOKEN}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28'};
   const api = async (url, options = {}, allowed = []) => {

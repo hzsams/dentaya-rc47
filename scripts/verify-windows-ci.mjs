@@ -48,7 +48,7 @@ async function releaseFixture(t, nativeStatus = 'failed') {
   const smokeFile = await f.json('release/desktop-smoke-report.json', {schemaVersion: 1, pass: true, commit, version, freshProfile: true, packagedServer: true, bridgeIpc: true, rendererExceptions: 0, routes: ['/workspace', '/ai', '/settings'].map(requested => ({requested, documentReady: true, bridge: true, ipc: true, unauthenticated: true}))});
   const receipt = {schemaVersion: 1, pass: true, commit, tag, version, buildId: 'build-62', installer: {file: installerName, bytes: pe.length, sha256: sha256(pe), machine: 0x14c}, source: {manifestSha256: sha256(await fs.readFile(manifestFile))}, payload: {extractedFromInstaller: true, nextBuildId: 'build-62'}, desktopSmoke: {pass: true, freshProfile: true, report: 'desktop-smoke-report.json', sha256: sha256(await fs.readFile(smokeFile))}};
   await f.json('release/windows-build-receipt.json', receipt);
-  await f.json('native/source-provenance.json', {commit, version, runId: '12345', job: 'windows-native'});
+  await f.json('native/source-provenance.json', {commit, version, runId: '12345', runAttempt: '1', job: 'windows-native'});
   const native = {release: version, provenance: 'controlled-windows-native', status: nativeStatus, semanticReviewRequired: true, semanticAcceptance: 'pending-human-review', weightsIncludedInInstaller: false, nativeInferenceObserved: nativeStatus === 'passed'};
   await f.json('native/windows-native-result.json', native);
   await f.json('native/native-inference-report.json', {mock: false, semanticReviewRequired: true, nativeInference: nativeStatus === 'passed', contractPass: nativeStatus === 'passed', caseCounts: {attempted: nativeStatus === 'passed' ? 9 : 0, succeeded: nativeStatus === 'passed' ? 9 : 0}});
@@ -108,7 +108,7 @@ test('publisher creates a draft, uploads verified bytes and publishes only after
     assert.equal(JSON.parse(options.body).draft, false);
     return {ok: true, status: 200, json: async () => ({html_url: 'https://github.com/owner/repo/releases/tag/' + tag})};
   };
-  const result = await publishWindowsRelease(f.input, {env: {GITHUB_REF: `refs/tags/${tag}`, GITHUB_SHA: commit, GITHUB_REPOSITORY: 'owner/repo', GITHUB_TOKEN: 'unit-test-token'}, prepare: async () => prepared, request});
+  const result = await publishWindowsRelease(f.input, {env: {GITHUB_REF: `refs/tags/${tag}`, GITHUB_SHA: commit, GITHUB_RUN_ID: '12345', GITHUB_RUN_ATTEMPT: '2', GITHUB_REPOSITORY: 'owner/repo', GITHUB_TOKEN: 'unit-test-token'}, prepare: async () => prepared, request});
   assert.equal(result.nativeStatus, 'failed');
   assert.equal(calls.length, 11);
 });
@@ -121,6 +121,12 @@ test('publisher refuses a changed upload and leaves the release as a draft', asy
     if (options.method === 'PATCH') published = true;
     return {ok: true, json: async () => ({id: 1, upload_url: 'https://uploads.github.com/repos/owner/repo/releases/1/assets{?name,label}'})};
   };
-  await assert.rejects(publishWindowsRelease({commit, tag}, {env: {GITHUB_REF: `refs/tags/${tag}`, GITHUB_SHA: commit, GITHUB_REPOSITORY: 'owner/repo', GITHUB_TOKEN: 'unit-test-token'}, prepare: async () => ({tag, commit, assets: [{name: 'installer.exe', data: Buffer.from('x'), sha256: 'expected'}]}), request}), /expected asset bytes/);
+  await assert.rejects(publishWindowsRelease({commit, tag}, {env: {GITHUB_REF: `refs/tags/${tag}`, GITHUB_SHA: commit, GITHUB_RUN_ID: '12345', GITHUB_RUN_ATTEMPT: '1', GITHUB_REPOSITORY: 'owner/repo', GITHUB_TOKEN: 'unit-test-token'}, prepare: async () => ({tag, commit, runId: '12345', runAttempt: '1', assets: [{name: 'installer.exe', data: Buffer.from('x'), sha256: 'expected'}]}), request}), /expected asset bytes/);
   assert.equal(published, false);
+});
+
+test('publisher rejects native evidence from another workflow run before calling GitHub', async () => {
+  let called = false;
+  await assert.rejects(publishWindowsRelease({commit, tag}, {env: {GITHUB_REF: `refs/tags/${tag}`, GITHUB_SHA: commit, GITHUB_RUN_ID: '12345', GITHUB_RUN_ATTEMPT: '1', GITHUB_REPOSITORY: 'owner/repo', GITHUB_TOKEN: 'unit-test-token'}, prepare: async () => ({runId: '99999', runAttempt: '1'}), request: async () => {called = true;}}), /another workflow run/);
+  assert.equal(called, false);
 });
