@@ -136,6 +136,7 @@ body:has(.desktop-shell) .workspace-settings-inner>header :is(small,p) { color: 
 body:has(.desktop-shell) .workspace-settings-inner>header button { color: #fff; }
 body:has(.desktop-shell) .workspace-settings-inner>nav { gap: 4px; padding: 12px 16px; background: var(--dy-surface2); }
 body:has(.desktop-shell) .workspace-settings-inner>nav button { padding: 9px 13px; border-radius: 5px; font-size: 13px; }
+.workspace-settings button[role=tab][aria-selected=true] { border-color:var(--dy-accent,#6de2cf);background:color-mix(in srgb,var(--dy-accent,#6de2cf) 13%,transparent); }
 body:has(.desktop-shell) .workspace-settings-content { padding: 22px; background: var(--dy-surface); }
 .desktop-shell .aya-page { max-width: none; }
 .desktop-content--aya .aya-conversation-shell { max-width: none; margin: 0; }

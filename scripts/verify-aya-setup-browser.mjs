@@ -45,6 +45,9 @@ try{
  });
  await page.goto(url);await page.waitForFunction(()=>window.rc60Setup?.refreshes>0);
  const main=page.locator('#aya-setup-test');
+ const setupProgress=main.getByRole('progressbar',{name:'Kurulum ilerlemesi',exact:true});
+ assert.equal(await setupProgress.getAttribute('value'),'10');assert.equal(await setupProgress.getAttribute('max'),'100');
+ assert.match(await main.locator('.aya-setup-bytes').textContent(),/10 B \/ 100 B.*10%/,'Accessible transfer progress shows actual completed and total bytes');
  const cancel=main.getByRole('button',{name:'İndirmeyi durdur',exact:true}),refresh=main.getByRole('button',{name:'Motoru ve modelleri yenile',exact:true});
  const unlocked=()=>page.waitForFunction(()=>Array.from(document.querySelectorAll('button')).some(button=>button.textContent==='Motoru ve modelleri yenile'&&!button.disabled));
  await cancel.click();await main.getByRole('alert').waitFor();assert.match(await main.getByRole('alert').textContent(),/başka bir işlemde/);
@@ -74,6 +77,7 @@ try{
  if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC60_AYA_Setup_Cancel_Recovery.png'),animations:'disabled'});}
  // The optional larger model has its own loopback Ollama availability/progress.
  // An offline runtime never offers an action that would pretend to install it.
+ await main.locator('.aya-other-models>summary').click();
  const pull4B=main.getByRole('button',{name:'Ollama ile 4B modeli indir',exact:true}),cancel4B=main.getByRole('button',{name:'4B indirmeyi durdur',exact:true});
  await page.evaluate(()=>{window.rc60Setup.status={ok:false,models:[],progress:{running:false,status:'',completed:0,total:0},ollama:{online:false,progress:{running:false,status:'',completed:0,total:0}}};});
  await refresh.click();await unlocked();assert.equal(await pull4B.count(),0,'An offline Ollama has no enabled model-pull shortcut');assert.equal(await cancel4B.count(),0);
@@ -87,6 +91,7 @@ try{
  assert.equal(await page.evaluate(()=>window.rc60Setup.refreshes),beforePull.refreshes+1,'Model-pull acknowledgement refreshes actual Ollama progress once');
  assert.equal(await page.evaluate(()=>window.rc60Setup.status.progress.running),false,'Managed progress remains separate from the Ollama pull');
  assert.equal(await page.evaluate(()=>window.rc60Setup.status.ollama.progress.running),true);assert.equal(await pull4B.isDisabled(),true);assert.equal(await cancel4B.isEnabled(),true);
+ const ollamaProgress=main.getByRole('progressbar',{name:'Ollama indirme ilerlemesi',exact:true});assert.equal(await ollamaProgress.getAttribute('value'),'250');assert.equal(await ollamaProgress.getAttribute('max'),'2500');
  await page.evaluate(()=>{window.rc60Setup.ollamaMode='cancel-foreign';});await cancel4B.click();await main.getByRole('alert').waitFor();await unlocked();
  assert.match(await main.getByRole('alert').textContent(),/başka bir işlemde/);assert.equal(await cancel4B.isEnabled(),true);
  assert.equal(await page.evaluate(()=>window.rc60Setup.status.ollama.progress.running),true,'A rejected Ollama cancellation cannot claim the transfer stopped');
@@ -100,6 +105,9 @@ try{
  assert.doesNotMatch(await main.getByRole('alert').textContent(),/PRIVATE|private\.invalid|model\.gguf/,'Ollama transport exceptions do not expose paths or URLs');
  assert.equal(await page.evaluate(()=>window.rc60Setup.refreshes),beforePullError+1);assert.equal(await pull4B.isEnabled(),true,'A failed Ollama request releases the setup lock');
  await page.evaluate(()=>{window.rc60Setup.ollamaMode='pull-pending';});await refresh.click();await unlocked();assert.equal(await main.getByRole('alert').count(),0);
+ await page.evaluate(()=>{window.rc60Setup.status={...window.rc60Setup.status,progress:{running:true,status:'engine',completed:2048,total:0}};});await refresh.click();await unlocked();
+ assert.equal(await setupProgress.getAttribute('value'),null,'Unknown transfer totals use an indeterminate progress bar');
+ assert.match(await main.locator('.aya-setup-bytes').first().textContent(),/2,05 KB.*toplam boyut bekleniyor/);assert.doesNotMatch(await main.locator('.aya-setup-bytes').first().textContent(),/%/,'Unknown totals do not claim a percentage');
  if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC61_AYA_Optional_Ollama_4B_Setup.png'),animations:'disabled'});}
  assert.deepEqual(errors,[],'Rejected cancellation/refresh has no unhandled rejection or React error');
  console.log(JSON.stringify({pass:true,realSetupComponent:true,foreignCancelShowsBusy:true,noFalseCancellationSuccess:true,sameTurnDoubleClickGuard:true,cancelAcknowledgementRefresh:true,rejectedCancelRefreshes:true,privateTransportDetailsExcluded:true,statusFailureReleasesLock:true,recoveryClearsError:true,optionalOllama4B:{offlineActionHidden:true,onlineActionAvailable:true,pullDoubleClickGuard:true,pullAcknowledgementRefresh:true,separateProgress:true,foreignCancelShowsBusy:true,cancelDoubleClickGuard:true,cancelAcknowledgementRefresh:true,privateTransportDetailsExcluded:true,failureReleasesLock:true},unhandledRejections:0,desktopIPC:'mock',nativeInference:false},null,2));

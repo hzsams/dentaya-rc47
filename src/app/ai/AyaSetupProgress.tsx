@@ -7,7 +7,7 @@ export default function AyaSetupProgress({progress,label,stage,locale}:{progress
  const completed=Number.isFinite(progress.completed)?Math.max(0,progress.completed):0;
  const total=Number.isFinite(progress.total)&&progress.total>0?progress.total:0;
  const percent=total>0?Math.min(100,Math.round(completed/total*100)):null;
- const bytes=(value:number)=>`${new Intl.NumberFormat(locale,{maximumFractionDigits:2}).format(value/1_000_000)} MB`;
+ const bytes=(value:number)=>{const unit=value>=1_000_000_000?'GB':value>=1_000_000?'MB':value>=1_000?'KB':'B';const divisor=unit==='GB'?1_000_000_000:unit==='MB'?1_000_000:unit==='KB'?1_000:1;return `${new Intl.NumberFormat(locale,{maximumFractionDigits:2}).format(value/divisor)} ${unit}`;};
  return <UiNode as="div" className="aya-setup-progress" translateChildren={false}>
   <UiNode as="p" id={id} role="status">{stage}</UiNode>
   {(progress.running||total>0)&&<><UiNode as="progress" aria-label={label} aria-describedby={id} max={total||undefined} value={total?Math.min(completed,total):undefined}/><UiNode as="span" className="aya-setup-bytes">{bytes(completed)} / {total?bytes(total):copy.unknownTotal}{percent===null?'':` · ${percent}%`}</UiNode></>}

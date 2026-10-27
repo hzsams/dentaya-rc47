@@ -14,5 +14,11 @@
 .aya-other-models summary { cursor:pointer;font-weight:600;font-size:11px;padding-block:4px; }
 .aya-other-models>button { margin-top:10px; }
 .aya-ollama-setup { margin-top:12px; }
+.aya-acceptance-panel { margin-top:16px;padding-top:14px;border-top:1px solid var(--dy-border); }
+.aya-acceptance-transcript summary { cursor:pointer;padding:8px 0;font-weight:600; }
+.aya-acceptance-transcript article { padding:12px 0;border-top:1px solid var(--dy-border); }
+.aya-acceptance-transcript h4 { margin:0 0 10px; }
+.aya-acceptance-transcript pre { white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;font-size:11px;padding:10px;border:1px solid var(--dy-border);border-radius:4px;background:var(--dy-surface);max-height:320px;overflow:auto; }
+.aya-acceptance-transcript ul { padding-inline-start:18px;font-size:10px;color:var(--dy-muted); }
 .aya-engine-setup :is(button,summary,select):focus-visible { outline:2px solid var(--dy-accent);outline-offset:3px; }
 @media(max-width:520px){.aya-setup-steps li{grid-template-columns:minmax(0,1fr);gap:4px;}}

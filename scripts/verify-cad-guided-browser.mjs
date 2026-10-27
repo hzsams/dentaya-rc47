@@ -282,7 +282,7 @@ try {
   assert.equal(await sidebar.locator('a[href="/design"]').count(),1);
   await page.locator('.desktop-titlebar-actions').getByRole('button',{name:'Görünüm ve tercihler',exact:true}).click();
   const preferences=page.getByRole('dialog',{name:'Sana göre DentAYA',exact:true});
-  await preferences.getByRole('button',{name:'Çalışma düzeni',exact:true}).click();
+  await preferences.getByRole('tab',{name:'Çalışma düzeni',exact:true}).click();
   await preferences.getByRole('checkbox',{name:'Hızlı erişim şeridini göster',exact:false}).uncheck();
   await preferences.getByRole('button',{name:'Ayarları kapat',exact:true}).click();
   assert.equal(await sidebar.count(),0);
