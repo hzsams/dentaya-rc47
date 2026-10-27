@@ -43,7 +43,7 @@ jobs:
           @'
           const fs=require('node:fs'),crypto=require('node:crypto');
           fs.mkdirSync('native-validation-evidence',{recursive:true});
-          const names=['electron/aya-local.cjs','electron/aya/managed-runtime.cjs','electron/aya/core.cjs','electron/aya/agent.cjs','scripts/verify-aya-native.cjs','scripts/run-windows-aya-native.cjs'];
+          const names=['electron/aya-local.cjs','electron/aya/managed-runtime.cjs','electron/aya/core.cjs','electron/aya/dialogue.cjs','electron/aya/agent.cjs','scripts/verify-aya-native.cjs','scripts/run-windows-aya-native.cjs'];
           const hashes=Object.fromEntries(names.map(name=>[name,crypto.createHash('sha256').update(fs.readFileSync(name)).digest('hex')]));
           fs.writeFileSync('native-validation-evidence/source-info.json',JSON.stringify({testedCommit:process.env.GITHUB_SHA,runnerOS:process.platform,node:process.version,runId:process.env.GITHUB_RUN_ID,sourceHashes:hashes},null,2)+'\n');
           (async()=>{try{const r=await fetch('https://huggingface.co/api/models/Qwen/Qwen3-4B-GGUF/revision/bc640142c66e1fdd12af0bd68f40445458f3869b?blobs=true',{signal:AbortSignal.timeout(20000)});const data=r.ok?await r.json():null;fs.writeFileSync('native-validation-evidence/official-model-metadata.json',JSON.stringify({httpStatus:r.status,revision:data?.sha,files:data?.siblings?.filter(f=>f.rfilename.endsWith('.gguf')).map(f=>({name:f.rfilename,lfs:f.lfs}))},null,2)+'\n');}catch{fs.writeFileSync('native-validation-evidence/official-model-metadata.json',JSON.stringify({error:'OFFICIAL_METADATA_UNAVAILABLE'})+'\n');}})();
