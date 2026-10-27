@@ -105,13 +105,20 @@ export default function CasesPage() {
     const [caseBusy, setCaseBusy] = useState(false);
     const caseSubmitLock = useRef(false);
     const caseRequestId = useRef<RequestIdentity | null>(null);
+    const pageLive = useRef(true);
+    const activeScope = useRef('');
+    const activeUser = useRef('');
+    const caseFormOpen = useRef(false);
+    const caseFormVersion = useRef(0);
     useEffect(() => {
+        pageLive.current=true;
         let mounted = true;
         let caseChannel: RealtimeChannel | null = null;
         let patientChannel: RealtimeChannel | null = null;
         async function initialize() {
             const { data: authData, } = await supabase.auth
                 .getSession();
+            if(!mounted)return;
             const user = authData.session?.user;
             if (!user) {
                 router.replace("/workspace");
@@ -142,6 +149,9 @@ export default function CasesPage() {
                 return;
             }
             const currentOrg = orgData as Organization;
+            if(!mounted)return;
+            activeUser.current=user.id;
+            activeScope.current=`${user.id}:${currentOrg.id}`;
             setOrganization(currentOrg);
             if (currentOrg.org_type ===
                 "courier") {
@@ -187,9 +197,14 @@ export default function CasesPage() {
             }
             setLoading(false);
         }
+        const {data:authSubscription}=supabase.auth.onAuthStateChange((_event,session)=>{
+            if(activeUser.current&&session?.user.id!==activeUser.current){activeScope.current='';caseFormVersion.current++;}
+        });
         initialize();
         return () => {
             mounted = false;
+            pageLive.current=false;activeScope.current='';
+            authSubscription.subscription.unsubscribe();
             if (caseChannel) {
                 supabase.removeChannel(caseChannel);
             }
@@ -327,6 +342,8 @@ export default function CasesPage() {
         }));
     }
     function openCreate() {
+        if(caseSubmitLock.current||caseFormOpen.current)return;
+        caseFormOpen.current=true;caseFormVersion.current++;caseRequestId.current=null;
         setCaseForm({
             ...emptyCaseForm,
             patientId: patients[0]?.id ??
@@ -337,8 +354,12 @@ export default function CasesPage() {
         setMessage("");
         setShowCreate(true);
     }
+    function closeCreate() {
+        if(caseSubmitLock.current)return;
+        caseFormOpen.current=false;caseFormVersion.current++;setShowCreate(false);
+    }
     async function createCase() {
-        if (caseSubmitLock.current) {
+        if (caseSubmitLock.current||!caseFormOpen.current||!organization||!activeScope.current) {
             return;
         }
         if (!caseForm.patientId) {
@@ -386,53 +407,52 @@ export default function CasesPage() {
         }
         caseSubmitLock.current =
             true;
-        const identity = requestIdentity(caseRequestId.current, { patient: patient.id, caseForm });
+        const submittedForm=caseForm,submittedScope=activeScope.current,submittedVersion=caseFormVersion.current;
+        const identity = requestIdentity(caseRequestId.current, { scope:submittedScope, organization:organization.id, patient: patient.id, caseForm:submittedForm });
         caseRequestId.current = identity;
         const requestId = identity.id;
+        const current=()=>pageLive.current&&activeScope.current===submittedScope&&caseFormVersion.current===submittedVersion&&caseRequestId.current===identity;
         setCaseBusy(true);
         setMessage("");
+        try {
         const { data, error, } = await supabase.rpc("create_case_from_patient", {
             p_patient_id: patient.id,
-            p_lab_org_id: caseForm.labOrgId,
-            p_title: `${caseForm.caseType} · ${patient.first_name} ${patient.last_name}`,
-            p_case_type: caseForm.caseType,
+            p_lab_org_id: submittedForm.labOrgId,
+            p_title: `${submittedForm.caseType} · ${patient.first_name} ${patient.last_name}`,
+            p_case_type: submittedForm.caseType,
             p_tooth_codes: toothCodes,
-            p_material: caseForm.material.trim() ||
+            p_material: submittedForm.material.trim() ||
                 null,
-            p_shade: caseForm.shade.trim() ||
+            p_shade: submittedForm.shade.trim() ||
                 null,
-            p_due_date: caseForm.dueDate ||
+            p_due_date: submittedForm.dueDate ||
                 null,
-            p_clinical_notes: writeToothPlan(caseForm.clinicalNotes, caseForm.toothPlan, toothCodes),
-            p_priority: caseForm.priority,
+            p_clinical_notes: writeToothPlan(submittedForm.clinicalNotes, submittedForm.toothPlan, toothCodes),
+            p_priority: submittedForm.priority,
             p_request_id: requestId,
         });
+        if(!current())return;
         if (error) {
             setMessage(dentayaError(error));
-            setCaseBusy(false);
-            caseSubmitLock.current =
-                false;
             return;
         }
         const caseId = typeof data ===
             "string"
             ? data
             : "";
-        setCaseBusy(false);
-        caseSubmitLock.current =
-            false;
         if (!caseId) {
             setMessage(workflowText(getLocale(), "Vaka kaydı doğrulanamadı. Bilgileriniz korundu; tekrar deneyin."));
             return;
         }
         caseRequestId.current = null;
+        caseFormOpen.current=false;caseFormVersion.current++;
         setShowCreate(false);
-        if (caseId) {
-            router.push(`/cases/${caseId}`);
-            return;
-        }
-        if (organization) {
-            await loadCases(organization);
+        router.push(`/cases/${caseId}`);
+        } catch(error) {
+            if(current())setMessage(dentayaError(error));
+        } finally {
+            caseSubmitLock.current=false;
+            if(pageLive.current)setCaseBusy(false);
         }
     }
     const patientMap = useMemo(() => new Map(patients.map((patient) => [
@@ -598,7 +618,7 @@ export default function CasesPage() {
               <Link href="/scan-studio" style={secondaryLink}>{uiText("Tarama Stüdyosu")}</Link>
               <Link href="/labs" style={secondaryLink}>Laboratuvarlar</Link>
               <Link href="/finance" style={secondaryLink}>Muhasebe</Link>
-              <NotificationCenter /><UiNode as="button" type="button" onClick={openCreate} style={primaryButton}>{uiText("Yeni Vaka")}</UiNode>
+              <NotificationCenter /><UiNode as="button" type="button" disabled={caseBusy} onClick={openCreate} style={primaryButton}>{uiText("Yeni Vaka")}</UiNode>
             </>)}
 
           {!isClinic && (<>
@@ -609,7 +629,7 @@ export default function CasesPage() {
         </UiNode>
       </UiNode>
 
-      {message && (<UiNode as="div" style={messageBox}>
+      {message&&!showCreate && (<UiNode as="div" style={messageBox}>
           {message}
         </UiNode>)}
 
@@ -731,13 +751,13 @@ export default function CasesPage() {
         </UiNode>)}
 
       {showCreate && (<UiNode as="div" style={modalOverlay}>
-          <UiNode as="section" style={modalCard}>
+          <UiNode as="section" role="dialog" aria-modal="true" aria-labelledby="case-create-title" style={modalCard}>
             <UiNode as="div" style={modalHeader}>
               <UiNode as="div">
                 <UiNode as="p" style={eyebrow}>
                   {uiText(" YENİ VAKA ")}</UiNode>
 
-                <UiNode as="h2" style={modalTitle}>
+                <UiNode as="h2" id="case-create-title" style={modalTitle}>
                   Laboratuvara gönder
                 </UiNode>
 
@@ -748,11 +768,11 @@ export default function CasesPage() {
                 </UiNode>
               </UiNode>
 
-              <UiNode as="button" type="button" onClick={() => setShowCreate(false)} style={closeButton}>
+              <UiNode as="button" type="button" disabled={caseBusy} onClick={closeCreate} style={closeButton}>
                 {uiText(" Kapat ")}</UiNode>
             </UiNode>
 
-            <UiNode as="div" className="case-modal-grid" style={modalGrid}>
+            <UiNode as="fieldset" disabled={caseBusy} className="case-modal-grid" style={{...modalGrid,border:0,padding:0,margin:0,minWidth:0}}>
               <UiNode as="label" style={field}>
                 <UiNode as="span" style={fieldLabel}>
                   {uiText(" Hasta ")}</UiNode>
@@ -886,8 +906,9 @@ export default function CasesPage() {
                 bulunamadı.
               </UiNode>)}
 
+            {message&&<UiNode as="div" role="alert" style={messageBox}>{message}</UiNode>}
             <UiNode as="div" style={modalActions}>
-              <UiNode as="button" type="button" onClick={() => setShowCreate(false)} style={secondaryButton}>
+              <UiNode as="button" type="button" disabled={caseBusy} onClick={closeCreate} style={secondaryButton}>
                 Vazgeç
               </UiNode>
 

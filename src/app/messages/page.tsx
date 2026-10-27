@@ -448,7 +448,7 @@ export default function MessagesPage() {
           <UiNode as="div" style={ui.templateRow}>{TEMPLATES.map(t => <UiNode as="button" key={t} type="button" onClick={() => setDraft(t)} style={ui.template}>{t}</UiNode>)}</UiNode>
 
           <UiNode as="div" className="message-composer" style={ui.composer}>
-            <UiNode as="textarea" maxLength={4000} disabled={selected.status !== "active"} value={draft} onChange={e => setDraft(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) {
+            <UiNode as="textarea" maxLength={4000} disabled={selected.status !== "active"} value={draft} onChange={e => setDraft(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey&&!e.nativeEvent.isComposing&&e.nativeEvent.keyCode!==229) {
             e.preventDefault();
             void send();
         } }} placeholder="Mesaj yaz… Enter ile gönder, Shift+Enter ile yeni satır aç." style={ui.textarea}/>
