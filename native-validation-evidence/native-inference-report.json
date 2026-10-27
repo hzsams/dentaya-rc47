@@ -18,17 +18,17 @@
       "prompt": "Sana nasıl seslenmeliyim ve bu uygulamada bana ne için yardımcı oluyorsun?",
       "reply": {
         "ok": true,
-        "output": "AYA\n\nSeslenmeyi ve işlevselliği anlatabilmek için doğrudan ve kısa bir şekilde konuşmalısın. Bu uygulama, diş hekimliği ve diş tıbbi işlemlerle ilgili işlevlerde yardımcı olmak amacıyla geliştirildi. AYA, diş tıbbi süreçlerde kullanılan terimleri, akışları, kontrol listelerini, görev transferlerini, hesaplamaları ve dönüştürmeleri anlamak ve uygulamak için yardımcı olur. Ancak, bu uygulama, kişisel bilgileri, tıbbi kayıtları veya diş tıbbi tedavi planlarını saklamaz. Sadece diş tıbbi süreçlerle ilgili bilgileri ve işlevleri desteklemek amacıyla kullanılır.",
+        "output": "AYA, bu uygulamada sana **dental (diş) bilgi, diş hekimliği, diş tıbbi bilgiler, diş tıbbi terimler, diş tıbbi süreçler, diş tıbbi işlemler, diş tıbbi kayıtlar, diş tıbbi analizler, diş tıbbi değerlendirme, diş tıbbi tedavi, diş tıbbi önleme, diş tıbbi tedavi planları, diş tıbbi değerlendirme, diş tıbbi analizler, diş tıbbi bilgiler** gibi konular hakkında yardımcı olmaya çalışır. \n\nSana **doğrudan, kısa ve net** şekilde cevaplar verir. Sana **sadece diş tıbbi bilgiler, diş tıbbi terimler, diş tıbbi süreçler, diş tıbbi işlemler, diş tıbbi kayıtlar, diş tıbbi analizler, diş tıkbı değerlendirme, diş tıbbi tedavi, diş tıbbi önleme, diş tıbbi tedavi planları, diş tıbbi değerlendirme, diş tıbbi analizler, diş tıbbi bilgiler** gibi konular hakkında bilgi verir. \n\nSana **sadece diş tıbbi bilgiler, diş tıbbi terimler, diş tıbbi süreçler, diş tıbbi işlemler, diş tıbbi kayıtlar, diş tıbbi analizler, diş tıbbi değerlendirme, diş tıbbi tedavi, diş tıbbi önleme, diş tıbbi tedavi planları, diş tıbbi değerlendirme, diş tıbbi analizler, diş tıbbi bilgiler** gibi konular hakkında bilgi verir. \n\nSana **sadece diş tıbbi bilgiler, diş tıbbi terimler, diş tıbbi süreçler, diş tıbbi işlemler, diş tıbbi kayıtlar, diş tıbbi analizler, diş tıbbi değerlendirme, diş tıbbi tedavi, diş tıbbi önleme, diş tıbbi tedavi planları, diş tıbbi değerlendirme, diş tıbbi analizler, diş tıbbi bilgiler** gibi konular hakkında bilgi verir.",
         "metrics": {
-          "milliseconds": 40364,
-          "tokens": 197
+          "milliseconds": 100403,
+          "tokens": 606
         },
         "model": "aya-local:7485fe6f11af29433bc51cab58009521",
         "references": []
       },
-      "streamedUpdates": 196,
-      "streamedCharacters": 562,
-      "wallMilliseconds": 43149
+      "streamedUpdates": 605,
+      "streamedCharacters": 1419,
+      "wallMilliseconds": 103800
     },
     {
       "name": "novel-non-dental-request",
@@ -36,17 +36,17 @@
       "prompt": "Bir rüzgâr çanının ağzından, yağmuru ilk kez duyan çocuklara üç yeni cümle kur. Konuyu diş veya yazılıma bağlama.",
       "reply": {
         "ok": true,
-        "output": "AYA\n\nRüzgâr çanının ağzından ilk yağmurun çocuklara hitap eden üç cümle:  \n1. \"İlk yağmur, kollarını sarmalayan soğuk bir sel.\"  \n2. \"Çocuklar, yağmurun ilk damlasını sıklıkla duyar.\"  \n3. \"Rüzgâr çanı, yağmurun sesini ilk kez duyuran çocuklara seslendirir.\"  \n\nBu cümleler, diş tıraşı sırasında kullanılan bir yazılımın kullanıcıya hitap etmesini sağlayabilir.",
+        "output": "AYA\nÜç yeni cümle kurma isteği alındı. Konuyu diş veya yazılıma bağlamak gerekir.\n\nRüzgâr çanının ağzından ilk yağmurun çocuklara hitap eden bir diş yazılımı, çocuklara ilk yağmurun hissini tanıtmak için geliştirilmiştir. Bu sistem, çocuklara ilk yağmurun hissini tanıtmak amacıyla diş doktorları tarafından kullanılır.\n\nDiş yazılımı, çocuklara ilk yağmurun hissini tanıtmak için özel olarak geliştirilmiştir. Bu sistem, diş hekimleri tarafından kullanılarak çocuklara ilk yağmurun hissini tanıtmak amaçlı oluşturulmuştur.\n\nDiş yazılımı, çocuklara ilk yağmurun hissini tanıtmak için özel olarak geliştirilmiştir. Bu sistem, diş hekimleri tarafından kullanılarak çocuklara ilk yağmurun hissini tanıtmak amaçlı oluşturulmuştur.",
         "metrics": {
-          "milliseconds": 24259,
-          "tokens": 134
+          "milliseconds": 32065,
+          "tokens": 217
         },
         "model": "aya-local:7485fe6f11af29433bc51cab58009521",
         "references": []
       },
-      "streamedUpdates": 133,
-      "streamedCharacters": 361,
-      "wallMilliseconds": 24276
+      "streamedUpdates": 216,
+      "streamedCharacters": 725,
+      "wallMilliseconds": 32089
     },
     {
       "name": "novel-natural-language",
@@ -54,17 +54,17 @@
       "prompt": "Bu akşamki çalışma planımız şu: önce 46 numaralı implant üstü kronu inceleyeceğiz. Kararımız, dış konturu koruyup oklüzal yüksekliği elle azaltmak. Hedefi ve kararı aklında tut; henüz işlem yapma.",
       "reply": {
         "ok": true,
-        "output": "AYA  \nBu akşamki çalışma planını anladım. 46 numaralı implant üstü kronun dış konturunu koruyarak oklüzal yüksekliğini azaltmak amaçlı inceleyeceğiz. Hedef ve kararları unutmayalım, henüz işlem yapmadan önce bu noktaları gözden geçireceğiz. Daha fazla bilgi veya talimat varsa bana bildir.",
+        "output": "AYA  \nBu akşamki çalışma planımız şu: önce 46 numaralı implant üstü kronu inceleyeceğiz. Kararımız, dış konturu koruyup oklüzal yüksekliği elle azaltmak. Hedefi ve kararı aklında tut; henüz işlem yapma.",
         "metrics": {
-          "milliseconds": 18480,
-          "tokens": 98
+          "milliseconds": 11674,
+          "tokens": 68
         },
         "model": "aya-local:7485fe6f11af29433bc51cab58009521",
         "references": []
       },
-      "streamedUpdates": 97,
-      "streamedCharacters": 289,
-      "wallMilliseconds": 18498
+      "streamedUpdates": 67,
+      "streamedCharacters": 202,
+      "wallMilliseconds": 11692
     },
     {
       "name": "separate-memory-extraction",
@@ -74,14 +74,12 @@
         "ok": true,
         "output": "Memory updated",
         "metrics": {
-          "milliseconds": 19989,
-          "tokens": 79
+          "milliseconds": 24795,
+          "tokens": 47
         },
         "workingMemory": {
-          "goal": "46 numaralı implant üstü kronun dış konturunu koruyarak oklüzal yüksekliğini azaltmak",
-          "decisions": [
-            "dış konturu koruyup oklüzal yüksekliği elle azaltmak"
-          ],
+          "goal": "",
+          "decisions": [],
           "openQuestions": []
         },
         "proposals": [],
@@ -90,69 +88,7 @@
       },
       "streamedUpdates": 0,
       "streamedCharacters": 0,
-      "wallMilliseconds": 20006
-    },
-    {
-      "name": "working-memory-follow-up",
-      "kind": "conversation",
-      "prompt": "Az önce hangi diş ve hangi biçim kararını konuşmuştuk? Sadece hatırladıklarını söyle.",
-      "reply": {
-        "ok": true,
-        "output": "46 numaralı implant üstü kronun dış konturunu koruyarak oklüzal yüksekliğini azaltmak.",
-        "metrics": {
-          "milliseconds": 7740,
-          "tokens": 29
-        },
-        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
-        "references": []
-      },
-      "streamedUpdates": 28,
-      "streamedCharacters": 86,
-      "wallMilliseconds": 7755
-    },
-    {
-      "name": "natural-partial-memory-correction",
-      "kind": "conversation",
-      "prompt": "Çalışma hedefini şimdilik kaldır; dış kontur hakkında anlaştığımız kararı ve varsa açık soruları aynen koru.",
-      "reply": {
-        "ok": true,
-        "output": "AYA  \nÇalışma hedefini kaldırdım. Dış kontur hakkında anlaştığımız kararı ve varsa açık soruları aynen koruyorum. Daha fazla bilgi veya talimat varsa lütfen paylaştırın.",
-        "metrics": {
-          "milliseconds": 11082,
-          "tokens": 60
-        },
-        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
-        "references": []
-      },
-      "streamedUpdates": 59,
-      "streamedCharacters": 169,
-      "wallMilliseconds": 11099
-    },
-    {
-      "name": "separate-partial-memory-correction",
-      "kind": "memory",
-      "prompt": "Çalışma hedefini şimdilik kaldır; dış kontur hakkında anlaştığımız kararı ve varsa açık soruları aynen koru.",
-      "reply": {
-        "ok": true,
-        "output": "Memory updated",
-        "metrics": {
-          "milliseconds": 8091,
-          "tokens": 33
-        },
-        "workingMemory": {
-          "goal": "46 numaralı implant üstü kronun dış konturunu koruyarak oklüzal yüksekliğini azaltmak",
-          "decisions": [
-            "dış konturu koruyup oklüzal yüksekliği elle azaltmak"
-          ],
-          "openQuestions": []
-        },
-        "proposals": [],
-        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
-        "references": []
-      },
-      "streamedUpdates": 0,
-      "streamedCharacters": 0,
-      "wallMilliseconds": 8109
+      "wallMilliseconds": 24820
     }
   ],
   "transport": [
@@ -201,179 +137,17 @@
             "goal",
             "decisions",
             "openQuestions",
-            "actions"
+            "actions",
+            "memoryUpdate",
+            "memoryPatch"
           ],
           "properties": {
             "answer": {
               "type": "string",
-              "minLength": 1
-            },
-            "goal": {
-              "type": "string",
-              "maxLength": 500
-            },
-            "memoryUpdate": {
-              "type": "string",
               "enum": [
-                "merge",
-                "replace",
-                "clear",
-                "patch"
+                "Memory updated"
               ]
             },
-            "memoryPatch": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "goal",
-                "decisions",
-                "openQuestions"
-              ],
-              "properties": {
-                "goal": {
-                  "type": "string",
-                  "enum": [
-                    "keep",
-                    "set",
-                    "clear"
-                  ]
-                },
-                "decisions": {
-                  "type": "string",
-                  "enum": [
-                    "keep",
-                    "replace"
-                  ]
-                },
-                "openQuestions": {
-                  "type": "string",
-                  "enum": [
-                    "keep",
-                    "replace"
-                  ]
-                }
-              }
-            },
-            "decisions": {
-              "type": "array",
-              "maxItems": 5,
-              "items": {
-                "type": "string",
-                "maxLength": 240
-              }
-            },
-            "openQuestions": {
-              "type": "array",
-              "maxItems": 3,
-              "items": {
-                "type": "string",
-                "maxLength": 240
-              }
-            },
-            "actions": {
-              "type": "array",
-              "maxItems": 0,
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                  "tool",
-                  "reason"
-                ],
-                "properties": {
-                  "tool": {
-                    "type": "string",
-                    "enum": [
-                      "inspect",
-                      "setup",
-                      "library",
-                      "place",
-                      "save",
-                      "save-exit",
-                      "undo",
-                      "redo",
-                      "fit-camera",
-                      "show-all",
-                      "isolate",
-                      "recorded-bite",
-                      "view-natural",
-                      "view-contact",
-                      "view-thickness",
-                      "view-undercut",
-                      "view-section",
-                      "tool-margin",
-                      "tool-measure",
-                      "tool-add",
-                      "tool-reduce",
-                      "tool-smooth",
-                      "internal-fit",
-                      "next",
-                      "inspection",
-                      "flashlight-on",
-                      "flashlight-off"
-                    ]
-                  },
-                  "reason": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 500
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "thinking": {
-        "enable_thinking": false
-      },
-      "roles": [
-        "system",
-        "user",
-        "user"
-      ]
-    },
-    {
-      "stream": true,
-      "thinking": {
-        "enable_thinking": false
-      },
-      "roles": [
-        "system",
-        "user",
-        "user"
-      ]
-    },
-    {
-      "stream": true,
-      "thinking": {
-        "enable_thinking": false
-      },
-      "roles": [
-        "system",
-        "user",
-        "user"
-      ]
-    },
-    {
-      "stream": true,
-      "responseFormat": {
-        "type": "json_object",
-        "schema": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "answer",
-            "goal",
-            "decisions",
-            "openQuestions",
-            "actions"
-          ],
-          "properties": {
-            "answer": {
-              "type": "string",
-              "minLength": 1
-            },
             "goal": {
               "type": "string",
               "maxLength": 500
@@ -381,9 +155,6 @@
             "memoryUpdate": {
               "type": "string",
               "enum": [
-                "merge",
-                "replace",
-                "clear",
                 "patch"
               ]
             },
@@ -501,16 +272,16 @@
     }
   ],
   "caseCounts": {
-    "attempted": 7,
-    "succeeded": 7,
+    "attempted": 4,
+    "succeeded": 4,
     "conversation": {
-      "attempted": 5,
-      "succeeded": 5,
-      "streamedUpdates": 513
+      "attempted": 3,
+      "succeeded": 3,
+      "streamedUpdates": 888
     },
     "memory": {
-      "attempted": 2,
-      "succeeded": 2
+      "attempted": 1,
+      "succeeded": 1
     },
     "cad": {
       "attempted": 0,
@@ -533,5 +304,5 @@
   },
   "contractPass": false,
   "blocked": false,
-  "error": "A novel partial reset can clear the goal\n+ actual - expected\n\n+ '46 numaralı implant üstü kronun dış konturunu koruyarak oklüzal yüksekliğini azaltmak'\n- ''\n"
+  "error": "Working memory must retain the user's unit"
 }
