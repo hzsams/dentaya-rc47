@@ -13,7 +13,9 @@ const BASE_URL = app.isPackaged
   : DEV_URL;
 
 // Eski Electron cache kilitleriyle karışmaması için ayrı uygulama verisi.
-const desktopUserData = path.join(app.getPath("appData"), "DentAYA-Desktop");
+const desktopUserData = app.commandLine.getSwitchValue("user-data-dir")
+  ? path.resolve(app.commandLine.getSwitchValue("user-data-dir"))
+  : path.join(app.getPath("appData"), "DentAYA-Desktop");
 app.setPath("userData", desktopUserData);
 app.commandLine.appendSwitch("disable-http-cache");
 
