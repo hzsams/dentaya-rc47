@@ -6,7 +6,7 @@ import {fileURLToPath,pathToFileURL} from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const route=path.join(root,'src/app/rc62-aya-acceptance-preview'),url='http://127.0.0.1:3073/rc62-aya-acceptance-preview';
 const {chromium}=await import(process.env.DENTAYA_PLAYWRIGHT_MODULE?pathToFileURL(process.env.DENTAYA_PLAYWRIGHT_MODULE).href:'playwright');
-let server,browser,owned=false,logs='',exitCode=null;const errors=[];
+let server,browser,page,owned=false,logs='',exitCode=null;const errors=[];
 async function stopServer(){if(!server||server.exitCode!==null||server.signalCode)return;await new Promise(resolve=>{const timer=setTimeout(()=>server.kill('SIGKILL'),5000);server.once('exit',()=>{clearTimeout(timer);resolve();});server.kill('SIGTERM');});}
 try{
  try{const old=await fs.readFile(path.join(route,'page.tsx'),'utf8');assert.ok(old.includes('RC62 AYA acceptance fixture'),'Refusing to overwrite user source');}catch(error){if(error.code!=='ENOENT')throw error;}
@@ -16,7 +16,7 @@ try{
  const deadline=Date.now()+60000;let ready=false;
  while(Date.now()<deadline){if(exitCode!==null)throw Error(logs);try{if((await fetch(url)).ok){ready=true;break;}}catch{}await new Promise(resolve=>setTimeout(resolve,250));}assert.ok(ready,logs);
  browser=await chromium.launch({headless:true,...(process.env.DENTAYA_CHROMIUM_PATH?{executablePath:process.env.DENTAYA_CHROMIUM_PATH}:{}),args:['--no-sandbox','--disable-dev-shm-usage']});
- const page=await browser.newPage({viewport:{width:1366,height:900},acceptDownloads:true});page.on('pageerror',error=>errors.push(error.message));
+ page=await browser.newPage({viewport:{width:1366,height:900},acceptDownloads:true});page.on('pageerror',error=>errors.push(error.message));
  await page.addInitScript(()=>{
   const state=window.rc62Acceptance={calls:[],cancels:0,mode:'gate',pendingGate:null,pendingChat:null,pendingCancelAck:null};
   for(const [key,value] of Object.entries({'dentaya:aya-core:v1':'PRIVATE_HISTORY_AND_MEMORY','dentaya:aya-knowledge:v1':'PRIVATE_NOTEBOOK'}))localStorage.setItem(key,value);
@@ -53,8 +53,8 @@ try{
  await page.evaluate(()=>{window.rc62Acceptance.pendingCancelAck();});
  assert.equal(await main.locator('#acceptance-busy').textContent(),'true','Cancel acknowledgement alone cannot release the still-pending native chat');
  await page.evaluate(()=>{window.rc62Acceptance.pendingChat({ok:false,error:'LOCAL_CANCELLED'});window.rc62Acceptance.pendingChat=null;});
- await page.waitForFunction(()=>document.querySelector('#acceptance-busy')?.textContent==='false');assert.equal(await page.evaluate(()=>window.rc62Acceptance.cancels),1,'One cancellation sends one native cancel request');assert.equal(await main.locator('#ordinary-draft').inputValue(),'UNSENT_PRIVATE_DRAFT');
+ await page.waitForFunction(()=>document.querySelector('#acceptance-busy')?.textContent==='false');assert.equal(await main.getByRole('alert').count(),0,'User cancellation has a stopped status without a generic failure alert');assert.equal(await page.evaluate(()=>window.rc62Acceptance.cancels),1,'One cancellation sends one native cancel request');assert.equal(await main.locator('#ordinary-draft').inputValue(),'UNSENT_PRIVATE_DRAFT');
  assert.equal(await main.locator('.aya-acceptance-transcript article').count(),0,'Cancelling a new acceptance run never redisplays the previous completed report');
  if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC62_AYA_Acceptance_Isolated.png'),animations:'disabled'});}
  assert.deepEqual(errors,[]);console.log(JSON.stringify({pass:true,explicitStart:true,sameTurnDoubleClick:true,preflightBusyCoordinator:true,nineSyntheticSteps:true,fullRawTranscriptAndExport:true,isolatedHistoryNotebookDraft:true,cancel:true,desktopIPC:'mock',nativeInference:false,semanticReviewRequired:true},null,2));
-}catch(error){console.error(logs);throw error;}finally{await browser?.close();await stopServer();if(owned)await fs.rm(route,{recursive:true,force:true});await fs.rm(path.join(root,'.next/dev/types'),{recursive:true,force:true});}
+}catch(error){console.error(logs);if(page&&!page.isClosed())console.error(JSON.stringify(await page.evaluate(()=>({fixture:window.rc62Acceptance,status:[...document.querySelectorAll('[role=status],[role=alert]')].map(n=>n.textContent),busy:document.querySelector('#acceptance-busy')?.textContent,errors:document.querySelector('nextjs-portal')?.textContent})).catch(()=>null),null,2));console.error(errors);throw error;}finally{await browser?.close();await stopServer();if(owned)await fs.rm(route,{recursive:true,force:true});await fs.rm(path.join(root,'.next/dev/types'),{recursive:true,force:true});}

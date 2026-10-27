@@ -4,7 +4,7 @@ import {createAyaAcceptanceRunner,AYA_ACCEPTANCE_STEP_COUNT,type AyaAcceptanceRe
 import UiNode from '@/lib/i18n/UiNode';
 import UserText from '@/lib/i18n/UserText';
 import {useTranslation} from '@/lib/i18n';
-import {ayaAcceptanceText} from '@/lib/i18n/aya-acceptance';
+import {ayaAcceptanceCheckText,ayaAcceptanceText} from '@/lib/i18n/aya-acceptance';
 import {ayaSetupError} from '@/lib/aya-setup-status';
 type Props={model:string;disabled:boolean;beforeAcceptance?:()=>Promise<boolean>;onAcceptanceBusyChange?:(busy:boolean)=>void;onRunningChange?:(busy:boolean)=>void};
 export default function AyaAcceptancePanel({model,disabled,beforeAcceptance,onAcceptanceBusyChange,onRunningChange}:Props){
@@ -39,6 +39,6 @@ export default function AyaAcceptancePanel({model,disabled,beforeAcceptance,onAc
   {!model&&<UiNode as="p">{copy.awaiting}</UiNode>}
   {running&&<UiNode as="div" className="aya-setup-progress"><UiNode as="p" role="status">{cancelling?copy.stopping:copy.running} · {Math.min(AYA_ACCEPTANCE_STEP_COUNT,completed+1)} / {AYA_ACCEPTANCE_STEP_COUNT}</UiNode><UiNode as="progress" aria-label={copy.progress} max={AYA_ACCEPTANCE_STEP_COUNT} value={completed}/></UiNode>}
   {error&&<UiNode as="p" role="alert">{error}</UiNode>}
-  {report&&<><UiNode as="p" role="status">{copy[report.status]}</UiNode>{report.error&&<UiNode as="p" role="alert">{ayaSetupError(report.error,locale)}</UiNode>}<UiNode as="details" className="aya-acceptance-transcript"><UiNode as="summary">{copy.transcript} · {report.steps.length} / {AYA_ACCEPTANCE_STEP_COUNT}</UiNode>{report.steps.map((step,index)=><UiNode as="article" key={step.id}><UiNode as="h4">{index+1} · {copy[step.kind]}</UiNode><UiNode as="strong">{copy.prompt}</UiNode><UiNode as="pre"><UserText>{step.prompt}</UserText></UiNode><UiNode as="strong">{copy.reply}</UiNode><UiNode as="pre"><UserText>{step.output||copy.empty}</UserText></UiNode><UiNode as="ul">{step.checks.map(check=><UiNode as="li" key={check.id}>{check.category==='contract'?copy.contract:copy.signal} · <UserText>{check.id}</UserText> · {check.pass?copy.pass:copy.fail}</UiNode>)}</UiNode></UiNode>)}</UiNode></>}
+  {report&&<><UiNode as="p" role="status">{copy[report.status]}</UiNode>{report.error&&report.status!=='cancelled'&&<UiNode as="p" role="alert">{ayaSetupError(report.error,locale)}</UiNode>}<UiNode as="details" className="aya-acceptance-transcript"><UiNode as="summary">{copy.transcript} · {report.steps.length} / {AYA_ACCEPTANCE_STEP_COUNT}</UiNode>{report.steps.map((step,index)=><UiNode as="article" key={step.id}><UiNode as="h4">{index+1} · {copy[step.kind]}</UiNode><UiNode as="strong">{copy.prompt}</UiNode><UiNode as="pre"><UserText>{step.prompt}</UserText></UiNode><UiNode as="strong">{copy.reply}</UiNode><UiNode as="pre"><UserText>{step.output||copy.empty}</UserText></UiNode><UiNode as="ul">{step.checks.map(check=><UiNode as="li" key={check.id}>{check.category==='contract'?copy.contract:copy.signal} · <UserText>{ayaAcceptanceCheckText(locale,check.id)}</UserText> · {check.pass?copy.pass:copy.fail}</UiNode>)}</UiNode></UiNode>)}</UiNode></>}
  </UiNode>;
 }
