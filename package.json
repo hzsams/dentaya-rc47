@@ -1,6 +1,6 @@
 {
   "name": "dentaya-production-rc",
-  "version": "1.0.0-rc.59",
+  "version": "1.0.0-rc.60",
   "private": true,
   "type": "module",
   "description": "DentAYA klinik, laboratuvar ve dental CAD çalışma platformu",
@@ -107,7 +107,8 @@
     "verify:mini-games-browser": "node --import tsx scripts/verify-mini-games-browser.mjs",
     "verify:cad-section": "node --import tsx scripts/verify-cad-section.ts",
     "verify:aya-section": "node --import tsx scripts/verify-aya-section-context.ts && node scripts/verify-aya-section.cjs",
-    "verify:operations-workspace-browser": "node scripts/verify-operations-workspace-browser.mjs"
+    "verify:operations-workspace-browser": "node scripts/verify-operations-workspace-browser.mjs",
+    "verify:aya-setup-browser": "node scripts/verify-aya-setup-browser.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.116.0",

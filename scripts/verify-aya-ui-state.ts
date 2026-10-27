@@ -35,8 +35,9 @@ assert.equal(selectAyaModel('',[{name:'first-model'}],'missing-model'),'first-mo
 
 const oldWindow=Object.getOwnPropertyDescriptor(globalThis,'window'),oldStorage=Object.getOwnPropertyDescriptor(globalThis,'localStorage');
 const store=new Map<string,string>();
+let storageWrites=0;
 Object.defineProperty(globalThis,'window',{configurable:true,value:{dispatchEvent(){}}});
-Object.defineProperty(globalThis,'localStorage',{configurable:true,value:{getItem:(key:string)=>store.get(key)??null,setItem:(key:string,value:string)=>store.set(key,value)}});
+Object.defineProperty(globalThis,'localStorage',{configurable:true,value:{getItem:(key:string)=>store.get(key)??null,setItem:(key:string,value:string)=>{storageWrites++;store.set(key,value);}}});
 const note=(id:string)=>({id,title:id,content:'Synthetic note '+id,kind:'memory' as const});
 function pendingFile(name='incoming.txt') {
  let resolve!:(value:string)=>void;
@@ -48,13 +49,24 @@ try {
  const session:AyaSession={id:'revision-session',title:'First goal',updatedAt:100,messages:[{role:'user',content:'Initial question'}],workingMemory:memory};
  assert.equal(saveAyaSessionIfCurrent(session,null),'saved');
  const staleRevision=ayaSessionRevision(readAyaState().sessions[0]);
+ const beforeReadOnly=store.get('dentaya:aya-core:v1'),writesBeforeReadOnly=storageWrites;
+ assert.equal(saveAyaSessionIfCurrent({...session,updatedAt:200},staleRevision),'unchanged','Opening an unchanged stored conversation does not create a new revision.');
+ assert.equal(store.get('dentaya:aya-core:v1'),beforeReadOnly,'A read-only save leaves the exact persisted bytes and updatedAt untouched.');
+ assert.equal(storageWrites,writesBeforeReadOnly,'A no-op save does not write storage or trigger other windows.');
+ assert.equal(ayaSessionRevision(readAyaState().sessions[0]),staleRevision);
+ const otherSession={...session,id:'other-session',title:'Other work',updatedAt:150};
+ assert.equal(saveAyaSessionIfCurrent(otherSession,null),'saved');
+ assert.equal(saveAyaSessionIfCurrent({...session,updatedAt:201},staleRevision),'unchanged');
+ assert.equal(readAyaState().sessions[0].id,'other-session','A read-only open must not move an old conversation ahead of newer work.');
+ assert.equal(deleteAyaSession('other-session'),true);
  const newer={...session,messages:[{role:'user' as const,content:'A newer question in another window'}],workingMemory:incoming};
  assert.equal(saveAyaSessionIfCurrent(newer,staleRevision),'saved');
  assert.equal(saveAyaSessionIfCurrent({...session,updatedAt:101},staleRevision),'conflict','A delayed reply cannot replace newer content even when timestamps did not change.');
+ assert.equal(saveAyaSessionIfCurrent(newer,staleRevision),'conflict','The full revision gate still rejects a stale writer even if its proposed content happens to match.');
  assert.equal(readAyaState().sessions[0].messages[0].content,'A newer question in another window');
  const currentRevision=ayaSessionRevision(readAyaState().sessions[0]);
  assert.equal(saveAyaOptions({role:'lab'}),true);
- assert.equal(saveAyaSessionIfCurrent({...newer,updatedAt:102},currentRevision),'saved','Unrelated preference changes are preserved without creating a conversation conflict.');
+ assert.equal(saveAyaSessionIfCurrent({...newer,updatedAt:102},currentRevision),'unchanged','Unrelated preference changes do not rewrite conversation activity.');
  assert.equal(readAyaState().options.role,'lab');
  const deletedRevision=ayaSessionRevision(readAyaState().sessions[0]);
  assert.equal(deleteAyaSession(session.id),true);
@@ -98,4 +110,4 @@ try {
  if(oldWindow)Object.defineProperty(globalThis,'window',oldWindow);else Reflect.deleteProperty(globalThis,'window');
  if(oldStorage)Object.defineProperty(globalThis,'localStorage',oldStorage);else Reflect.deleteProperty(globalThis,'localStorage');
 }
-console.log('PASS: stale session/model-memory editor rejection, revision-checked history saves preserve newer/deleted records and history opt-out, explicit separate copy, preserved draft and explicit reload, busy/length guards, latest status wins and chosen model retention, async notebook import deletion/addition/opt-out preservation, concurrent imports, capacity and deduplication. No browser or model inference.');
+console.log('PASS: stale session/model-memory editor rejection, no-op conversation saves preserve storage bytes/timestamp/order without writes, revision-checked real edits preserve newer/deleted records and history opt-out, explicit separate copy, preserved draft and explicit reload, busy/length guards, latest status wins and chosen model retention, async notebook import deletion/addition/opt-out preservation, concurrent imports, capacity and deduplication. No browser or model inference.');

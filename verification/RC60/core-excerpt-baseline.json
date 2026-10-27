@@ -1,0 +1,16 @@
+{
+  "defect": "retrieved long-paragraph note cited while matching fact omitted from context",
+  "baselineCommit": "fbd214319bcd4c93d985332abd4c1c416a8f64d3",
+  "sourceFactPresent": true,
+  "baseline": {
+    "references": 1,
+    "excerptCharacters": 2200,
+    "matchingFactPresent": false
+  },
+  "current": {
+    "references": 1,
+    "excerptCharacters": 136,
+    "matchingFactPresent": true
+  },
+  "nativeInference": false
+}

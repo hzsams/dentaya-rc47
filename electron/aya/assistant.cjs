@@ -1,6 +1,6 @@
 /* Browser/Electron shared, deterministic AYA-owned context and evidence layer. */
 'use strict';
-const CORE_VERSION='0.15.0';
+const CORE_VERSION='0.16.0';
 const workTools=require('./work-tools.cjs');
 const conversation=require('./conversation.cjs');
 const {answerDialogue}=require('./dialogue.cjs');
@@ -25,7 +25,33 @@ function ownedContext(input){
  const query=String(input?.prompt||'').slice(0,8000),knowledge=input?.useMemory===false?[]:retrieveKnowledge(query,input?.knowledge);
  return {version:CORE_VERSION,cad:normalizeCad(input?.cadContext),personalKnowledge:knowledge.map(d=>({id:d.id,title:d.title,content:knowledgeExcerpt(d,query),kind:d.kind})),references:knowledge.map(d=>({id:'knowledge-'+d.id,title:d.title,href:'/ai#knowledge'}))};
 }
-function knowledgeExcerpt(doc,query){const terms=words(query),sections=doc.content.match(/[^\n.!?]+[\n.!?]*/g)||[doc.content];let offset=0,best=0,start=0;for(const section of sections){const score=words(section).filter(w=>terms.some(t=>w===t||t.length>3&&w.startsWith(t))).length;if(score>best){best=score;start=Math.max(0,offset-180);}offset+=section.length;}return doc.content.slice(start,start+2200);}
+function knowledgeExcerpt(doc,query){
+ const terms=[...new Set(words(query))],limit=2200;
+ // Retrieval indexes the complete note. Anchor its excerpt to matching words,
+ // including inside one long paragraph, rather than to the paragraph opening.
+ // Segment original text so folding accents cannot shift the source offsets.
+ const hits=[];
+ for(const part of segmenter.segment(doc.content)){
+  if(!part.isWordLike)continue;
+  const word=fold(part.segment),matched=[];
+  for(let i=0;i<terms.length;i++)if(word===terms[i]||terms[i].length>3&&word.startsWith(terms[i])||word.length>3&&terms[i].startsWith(word))matched.push(i);
+  if(matched.length)hits.push({index:part.index,matched});
+ }
+ if(!hits.length)return doc.content.slice(0,limit); // A matching title may identify a short factual note.
+ const counts=new Map();let left=0,right=0,bestTerms=0,bestHits=0,start=0;
+ for(const hit of hits){
+  // Leave context after the last scored word, so its following value is not
+  // selected right at the excerpt boundary and then silently cut away.
+  const candidate=Math.max(0,hit.index-96),end=candidate+limit-96;
+  while(right<hits.length&&hits[right].index<end){for(const term of hits[right++].matched)counts.set(term,(counts.get(term)||0)+1);}
+  while(left<right&&hits[left].index<candidate){for(const term of hits[left++].matched){const count=counts.get(term)-1;if(count)counts.set(term,count);else counts.delete(term);}}
+  const matches=right-left;
+  // Prefer complete query coverage, then denser evidence. For equal passages,
+  // the later one retains a note's final correction instead of only its heading.
+  if(counts.size>bestTerms||counts.size===bestTerms&&matches>=bestHits){bestTerms=counts.size;bestHits=matches;start=candidate;}
+ }
+ return doc.content.slice(start,start+limit);
+}
 function calculate(expression){
  const clean=expression.replace(/×/g,'*').replace(/÷/g,'/').replace(/,/g,'.').replace(/\s/g,'');
  if(clean.length>180||!/^[\d.+*/()-]+$/.test(clean)||!/[+*/-]/.test(clean))return null;
@@ -68,7 +94,7 @@ function answerOwned(prompt,{knowledge=[],cadContext=null,workingMemory=null,his
  const found=retrieveKnowledge(prompt+' '+prior,all);
  if(/hatirliyor|ne hatir|hafiza|bellek|what.*remember|saved.*memor/.test(q)){
   const selected=found.length?found:all.filter(d=>d.kind==='memory').slice(-6);
-  if(selected.length)return response(selected.map(d=>d.title+'\n'+d.content.slice(0,2200)).join('\n\n'),refs(selected));
+  if(selected.length)return response(selected.map(d=>d.title+'\n'+knowledgeExcerpt(d,prompt+' '+prior)).join('\n\n'),refs(selected));
  }
  if(found.length)return response(found.slice(0,options.style==='concise'?1:3).map(d=>d.title+'\n'+knowledgeExcerpt(d,prompt+' '+prior)).join('\n\n'),refs(found.slice(0,options.style==='concise'?1:3)));
  if(includeCatalog&&options.useKnowledge!==false)return conversation.answerCatalog(prompt,{history,options,locale});

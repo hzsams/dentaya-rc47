@@ -1,9 +1,9 @@
 {
-  "release": "1.0.0-rc.59",
+  "release": "1.0.0-rc.60",
   "status": "source-release-candidate",
-  "date": "2026-10-26",
-  "baseRelease": "1.0.0-rc.58",
-  "baseCommit": "0642a3966d2998a47d6f79364abac82aea72b4a6",
+  "date": "2026-10-27",
+  "baseRelease": "1.0.0-rc.59",
+  "baseCommit": "fbd214319bcd4c93d985332abd4c1c416a8f64d3",
   "nativeModelInferenceVerified": false,
   "windowsInstallerProduced": false,
   "liveOrganizationBackendVerified": false,
@@ -17,18 +17,18 @@
   "miniGamesActual": 5,
   "nativeModelWeightsAvailable": false,
   "nativeModelInferenceStatus": "blocked-model-weights",
-  "verification": "RC59_KONTROL_RAPORU.md",
-  "sourceVerification": "verification/RC59/source-verification.json",
+  "verification": "RC60_KONTROL_RAPORU.md",
+  "sourceVerification": "verification/RC60/source-verification.json",
   "files": [
     {
       "path": ".env.example",
       "size": 1010,
-      "sha256": "b110ae5a725002ae999d63aee71d274feacb6495a13c0dc968642a22b447feeb"
+      "sha256": "8b85d884e7671412891b82425768b0d835c64ce673ca950123ee98fe1abc4733"
     },
     {
       "path": ".env.release.example",
       "size": 407,
-      "sha256": "056ba052c9d2ad1ecbc97b14becf4d4dd6d2dcf6df2b18e6e282affe4249dc7a"
+      "sha256": "296247c3d19af38aceea90d80fef5f4816c4a230386a1029d4f22d793c2e9f11"
     },
     {
       "path": ".gitignore",
@@ -42,8 +42,8 @@
     },
     {
       "path": "AGENTS.md",
-      "size": 8221,
-      "sha256": "708bc32f72331bbf9f621e481ee6215732b3be13701e06b9227a523559c3cd99"
+      "size": 8970,
+      "sha256": "d343422f8a016bb85cc132637d04f718fa0afd6d1c8aff527a99d926aacb6bb6"
     },
     {
       "path": "AYA_ACTIONS_QA.md",
@@ -168,7 +168,7 @@
     {
       "path": "DENTAYA_GUNCELLE_DERLE.cmd",
       "size": 3135,
-      "sha256": "d900c1da05594e33efffb16b529111c565178d322f7038b4a0a85da81f5eb49f"
+      "sha256": "7d08c79d06ee8f7b3e7d4a0df599c4fdea1aa01e41b052f9566058e2dfca401e"
     },
     {
       "path": "DentAYA_CAD_Degisiklikler.txt",
@@ -208,7 +208,7 @@
     {
       "path": "KURULUM.txt",
       "size": 5155,
-      "sha256": "209c5f49220eedcceb7a2b12fface68a7c3362cacfd9edd4cab0b1b23db86813"
+      "sha256": "bc767181dcfeac725b3692d075d28e0e290cebf15d4ef1c0c3a27630a3dca37a"
     },
     {
       "path": "LOGO_GUNCELLEME.txt",
@@ -736,6 +736,21 @@
       "sha256": "3e209c1d8f1905812e9e536f6af70c283b5c52a006ace87c5a7cc601ea15309e"
     },
     {
+      "path": "RC60_AYA_1008_SORU_CEVAP.json",
+      "size": 365775,
+      "sha256": "3c65484fe82309390fbf3cfead81f3eade88c3fbbcba12fda2922a6f68844a01"
+    },
+    {
+      "path": "RC60_KONTROL_RAPORU.md",
+      "size": 7873,
+      "sha256": "8f5a8d9b854b050618ed650f3665dd9a70dada704a7a79519c1a904a453293fe"
+    },
+    {
+      "path": "RC60_KULLANIM.md",
+      "size": 3214,
+      "sha256": "1c9799825d1b963cdcd793ce001701c0b621b9c62b0702d91076e692b5a9282d"
+    },
+    {
       "path": "RC6_CHANGELOG.md",
       "size": 805,
       "sha256": "3da664df997388f7c74588f417e0676b263ac4aa225fced31091f5f197b6a03f"
@@ -752,8 +767,8 @@
     },
     {
       "path": "README.md",
-      "size": 10747,
-      "sha256": "e218034988d58f26b10c6345da59bbf7ee47aeea50eeb603d30bf77d81dfed02"
+      "size": 10804,
+      "sha256": "20afe5a17b039cdf19195c1b224bb008c221798bd52f1986deee6e57b558d170"
     },
     {
       "path": "README_BUILD_FIX_01.md",
@@ -1022,8 +1037,8 @@
     },
     {
       "path": "electron/aya/assistant.cjs",
-      "size": 9981,
-      "sha256": "f118061231b0e90288320fc8c39d7c65320a073f93f9505609f877ecf42ae01a"
+      "size": 11382,
+      "sha256": "9412dd6efdd8beef55d1aae4fd8e83250e308d3e0f2e49445e545ec83842fc47"
     },
     {
       "path": "electron/aya/assistant.d.cts",
@@ -1117,8 +1132,8 @@
     },
     {
       "path": "electron/aya/managed-runtime.cjs",
-      "size": 18202,
-      "sha256": "afb7aa8fa1a5b55083516ad98702d362b4f7a620e74aee953f1277bb6c668b7b"
+      "size": 19366,
+      "sha256": "35a95db4d27db8f46d69be5adb9d824d097aad2efb080c058018f71925e8c111"
     },
     {
       "path": "electron/aya/memory-dialogue.cjs",
@@ -2048,12 +2063,12 @@
     {
       "path": "package-lock.json",
       "size": 354831,
-      "sha256": "83004ef0769dd088fbdbeff9b4a48ebd3025d9492e86031a648ff9404d91cc7e"
+      "sha256": "89779ac488aa5ec4b00e3071d6a2f31acfbb06966e3225d01d48bf4ca629fc87"
     },
     {
       "path": "package.json",
-      "size": 10332,
-      "sha256": "28b092c28d5a6b108040f7865f612b3592a95670008cd55f2cd56de8a49e4718"
+      "size": 10409,
+      "sha256": "c6be4e0172df334b2af00d30992cd7aafb6e9f963e1f2fd8c812b74cbb39d12b"
     },
     {
       "path": "public/brand/DentAYA_Premium_Atelier.svg",
@@ -7237,8 +7252,13 @@
     },
     {
       "path": "scripts/fixtures/rc50-aya-work.tsx",
-      "size": 2763,
-      "sha256": "387d68657ec4e23b38511c3012b29bd74154c3922966ac4c119647898f3f283f"
+      "size": 2773,
+      "sha256": "003a32569b414ff4d256f2f511e1b62f5e40d360510b5d3ea8e0670f1767b7fd"
+    },
+    {
+      "path": "scripts/fixtures/rc60-aya-setup.tsx",
+      "size": 1239,
+      "sha256": "46a1647e37c600b6a7423b20d94f3c66ea2332f3024107cbc49fa1bc8da840a3"
     },
     {
       "path": "scripts/import-dental-facts.ts",
@@ -7323,7 +7343,7 @@
     {
       "path": "scripts/verify-aya-conversation-browser.mjs",
       "size": 27849,
-      "sha256": "d3ebe747a46bfc837613c67d0d9330aef2512308983196cbe11421893b917b35"
+      "sha256": "b3d1d925b5e2aa6902348fa983aaa9b2ce2d32bbda6f87bb151aef7247aeda4c"
     },
     {
       "path": "scripts/verify-aya-conversation.ts",
@@ -7332,8 +7352,8 @@
     },
     {
       "path": "scripts/verify-aya-core.cjs",
-      "size": 7709,
-      "sha256": "37fbd5e9ccd7bf17681b1de3ff73721bf4ab2af1f3174471e4ff97fac979577e"
+      "size": 10236,
+      "sha256": "4ccdfe5257f393ebc4d88241030e41c9efbc91c5deb6bae699a17c4108c78fe4"
     },
     {
       "path": "scripts/verify-aya-dialogue.cjs",
@@ -7352,8 +7372,8 @@
     },
     {
       "path": "scripts/verify-aya-managed.cjs",
-      "size": 16692,
-      "sha256": "6bbf2a0eb699f391c25e839eecb421f7dcd6a90580939fcced70988985fde26f"
+      "size": 20948,
+      "sha256": "0d17107f25a4373bc66d2479985e0e3a6005989cb52eea5054fb20b59e3739bc"
     },
     {
       "path": "scripts/verify-aya-memory.cjs",
@@ -7396,14 +7416,19 @@
       "sha256": "492f07ad729a5595fec8703e3d59999a862664f73e334e7eb605c793a85b0800"
     },
     {
+      "path": "scripts/verify-aya-setup-browser.mjs",
+      "size": 7424,
+      "sha256": "d3acb44843df2a132eb20ec3ba72cf30786b9afe33ff400dbcabac2da8bf23ba"
+    },
+    {
       "path": "scripts/verify-aya-setup.ts",
       "size": 2016,
       "sha256": "b6113544d28584b8924c1baab04bdf7b1edd859aa05b5f8dbfab4dd6f16781cb"
     },
     {
       "path": "scripts/verify-aya-state-browser.mjs",
-      "size": 23700,
-      "sha256": "5f04ccae8267027665df741c005260b84a01622265ec3e735e2249b603026de0"
+      "size": 26155,
+      "sha256": "67cac1c99dffff1c33f111583f0256dfd71a16aa06727d31b2d2b76a5a99c030"
     },
     {
       "path": "scripts/verify-aya-tasks.cjs",
@@ -7412,8 +7437,8 @@
     },
     {
       "path": "scripts/verify-aya-ui-state.ts",
-      "size": 9409,
-      "sha256": "6329a726f05006552df6bbca5e657869d3cce9ae70b082889a31b01fa3911dca"
+      "size": 10716,
+      "sha256": "cade13f03af556e71c7d6b0a08da560d42c6301bf868ccca2069c3ab1a7eff48"
     },
     {
       "path": "scripts/verify-aya-work-browser.mjs",
@@ -7447,8 +7472,8 @@
     },
     {
       "path": "scripts/verify-cad-daily-browser.mjs",
-      "size": 57503,
-      "sha256": "45fa1d2651aa80a2594183ee5627ebbf06aaaf0a3bd70859f81c65c7acd867f4"
+      "size": 58476,
+      "sha256": "e93cf889752424f12e0668ee05bf75c3911253efed94cb70b13a72ceb90d7b3e"
     },
     {
       "path": "scripts/verify-cad-daily.ts",
@@ -7632,8 +7657,8 @@
     },
     {
       "path": "scripts/verify-local-aya.cjs",
-      "size": 16114,
-      "sha256": "4194dcc826d555622be9cc02e8597698752b0b64d004fe4087f22c73e6c0e065"
+      "size": 17108,
+      "sha256": "f3ec5bf2339afec93592266e381b73031f5234243cdba9ee43fa6e5c6bbe5d47"
     },
     {
       "path": "scripts/verify-localization.ts",
@@ -7942,8 +7967,8 @@
     },
     {
       "path": "src/app/ai/AyaChat.tsx",
-      "size": 26748,
-      "sha256": "3de8ec8b9bce92c94bbd7e53af9fe581e19a608d94cbe84dd2445f95cb631b53"
+      "size": 26873,
+      "sha256": "da843be527352d92449109de6be7442ba5b4e6c4f83406c2cf865199cde69030"
     },
     {
       "path": "src/app/ai/AyaConnection.tsx",
@@ -7952,8 +7977,8 @@
     },
     {
       "path": "src/app/ai/AyaEngineSetup.tsx",
-      "size": 4096,
-      "sha256": "7ab28528b8e66ea17aaf33fd0003488c0cd7ff569a5935b9c32e7b592fa00f8e"
+      "size": 4275,
+      "sha256": "70c0897a832b7049381cc6d1b060a2831c7b0102f69c8af3fa5f65822a208126"
     },
     {
       "path": "src/app/ai/AyaHealth.tsx",
@@ -8507,8 +8532,8 @@
     },
     {
       "path": "src/lib/aya-local-state.ts",
-      "size": 4788,
-      "sha256": "6888784ddfab217a69a6558fe35dfc6c0b989ea3b1697f0af969287cd36e884b"
+      "size": 5159,
+      "sha256": "2d751bdc30d930ab3ed892d8a6f39cccc9ba5775f0029a522543ff05eb1d8d93"
     },
     {
       "path": "src/lib/aya-platform-copilot.ts",
@@ -9383,7 +9408,7 @@
     {
       "path": "src/lib/release.ts",
       "size": 418,
-      "sha256": "8ec6f2f926e48f5773fa6f0820b5050b6d8ae957070e6a7ba02a9d49924b5f31"
+      "sha256": "da1cf53397c148065c05603f1c9986983b812956922152c5d10bf9915b1b6c50"
     },
     {
       "path": "src/lib/retry.ts",
@@ -9418,7 +9443,7 @@
     {
       "path": "src/lib/supabase.ts",
       "size": 1108,
-      "sha256": "2ad8306cbd4c089c60173957e84c664849bd142f43bc8893f62e8a07afc7d8dd"
+      "sha256": "79431f2f8261f0f715e7386761aacb95eb829573bdcf484c1432ccd7127c7bdc"
     },
     {
       "path": "src/lib/system-messages.ts",
@@ -12514,6 +12539,226 @@
       "path": "verification/RC59/source-verification.json",
       "size": 1835,
       "sha256": "1e73a36c13589f300bc9aa1142877d6206bf5904fa0766f5278daee2f32faef7"
+    },
+    {
+      "path": "verification/RC60/browser-results.json",
+      "size": 7687,
+      "sha256": "5d17ed7b17c4c28995fcb30d5ee5999553ff47650ef13540e14c93155cb35149"
+    },
+    {
+      "path": "verification/RC60/core-excerpt-baseline.json",
+      "size": 425,
+      "sha256": "9143700a50631d6ca3e1be42e5cb28e6c41bb233e1aae373bb33276b0c63ebdb"
+    },
+    {
+      "path": "verification/RC60/core-excerpt-review.json",
+      "size": 1623,
+      "sha256": "8bc04fcb48eb07a8df49825440083f8931cb5042ce434d77fbaa5bd3859aac12"
+    },
+    {
+      "path": "verification/RC60/history-noop-review.json",
+      "size": 1699,
+      "sha256": "eebbcb443b4a50fc5de090fccb74d6c2b8f09af3b902ba13c28567143663d1e6"
+    },
+    {
+      "path": "verification/RC60/logs/aya-conversation.txt",
+      "size": 1050,
+      "sha256": "e882d74c1a0e9f854ff20a0e58b7384ed559b2e2592482fa728d59b436509370"
+    },
+    {
+      "path": "verification/RC60/logs/aya-setup.txt",
+      "size": 423,
+      "sha256": "fcba03cb0a317cf6ab35f7569b7f9ed04c2fadbc5c59dfcacaf4eba11e2ac119"
+    },
+    {
+      "path": "verification/RC60/logs/aya-state.txt",
+      "size": 1562,
+      "sha256": "bdd6ef17a2f6776c564eb8f8f93916758aa64079c821a97f114b3de1fe893cf3"
+    },
+    {
+      "path": "verification/RC60/logs/aya-work.txt",
+      "size": 1398,
+      "sha256": "dc7198062386d612a5afb84e012a88f2e9a721c36aa24a4b9cb42a8341f6d7b5"
+    },
+    {
+      "path": "verification/RC60/logs/cad-daily.txt",
+      "size": 2689,
+      "sha256": "80d1a0f0f98561f9a747b882188b9f95a54185bb7ac57ef1cb4556283b659072"
+    },
+    {
+      "path": "verification/RC60/logs/full-verify.txt",
+      "size": 43583,
+      "sha256": "ab043ce73ba4a1a069b77f64a1921c3447f1197a55f80aae728a9c03478d498a"
+    },
+    {
+      "path": "verification/RC60/logs/loading-reading.txt",
+      "size": 721,
+      "sha256": "0b3794e7ead921d9f187b37c57c539de742c2cfe1684714949adf5acc48d7dc7"
+    },
+    {
+      "path": "verification/RC60/model-access-report.json",
+      "size": 1744,
+      "sha256": "a06339a66cf85edd18d95e4478487230d74170523922c9020baec1723f709f7f"
+    },
+    {
+      "path": "verification/RC60/native-grammar-report.json",
+      "size": 3991,
+      "sha256": "c3057b8310e4523339301004f84d615a829649185a7303113a40b1cc80f9d8dc"
+    },
+    {
+      "path": "verification/RC60/native-inference-report.json",
+      "size": 1277,
+      "sha256": "1fea758b92fd9457b5d5116a8c7666f29b5701d7479c6c8eb511fa7d3b5112f2"
+    },
+    {
+      "path": "verification/RC60/native-runtime-report.json",
+      "size": 6568,
+      "sha256": "74636a6881c3d5c75291da86234c1888219953413c56847d6cf944b4a871763f"
+    },
+    {
+      "path": "verification/RC60/screenshots/AYA_RC49_basic_dialogue.png",
+      "size": 82698,
+      "sha256": "8a7514cc6c38af546bb764a22e343bd9229837dfa5fb33be07b25012ca241dc1"
+    },
+    {
+      "path": "verification/RC60/screenshots/AYA_RC49_identity.png",
+      "size": 69172,
+      "sha256": "8898a778be8e4393edbe0963a6e3b064decd2b9b387b45fe0726ff277e7e3a57"
+    },
+    {
+      "path": "verification/RC60/screenshots/AYA_RC50_callback_failure_and_stale_proposal.png",
+      "size": 129970,
+      "sha256": "465e0669f5a9cfd11210bfc6895c6d97619fe802b7132f5c1c43d420ad2d6bbb"
+    },
+    {
+      "path": "verification/RC60/screenshots/AYA_RC50_memory_and_multistep.png",
+      "size": 80019,
+      "sha256": "8e84d975f0620b9bc643eb0a5fdccb459d34b9c27545f4bab443f2e6f601dbc3"
+    },
+    {
+      "path": "verification/RC60/screenshots/AYA_RC50_model_receives_explicit_memory.png",
+      "size": 69789,
+      "sha256": "cbcd175a36b51d73ec43195563cff19860b319f25c39b40c468956972cf3f60b"
+    },
+    {
+      "path": "verification/RC60/screenshots/AYA_RC50_offline_place_proposal.png",
+      "size": 96695,
+      "sha256": "b1ab250de535bad2ca8c6a08e4747c66fe37483c0fc04116853e68caf09a57c7"
+    },
+    {
+      "path": "verification/RC60/screenshots/AYA_RC54_memory_conflict.png",
+      "size": 115541,
+      "sha256": "cb755a10bfc7b9887697f72fd20a9840934e4ed21d6950f25bd560dbdea3f43d"
+    },
+    {
+      "path": "verification/RC60/screenshots/AYA_RC54_unavailable_model_core.png",
+      "size": 60953,
+      "sha256": "fd4282d2431eaa620bfeb864d3a142dcd1bedaceade6ce971076756e7c7150ba"
+    },
+    {
+      "path": "verification/RC60/screenshots/AYA_RC56_model_failure_cad_help.png",
+      "size": 90072,
+      "sha256": "6bfd91de82b0bc9b2e3150920956d86e51fbf9c7f00d3c4ba1e0d934a320106a"
+    },
+    {
+      "path": "verification/RC60/screenshots/AYA_RC56_scoped_followup.png",
+      "size": 130015,
+      "sha256": "bd0237af41af317bd38416114a2cddf47c8a5e0ba18fb593a6da2ab8e9ef6cad"
+    },
+    {
+      "path": "verification/RC60/screenshots/AYA_conversation_desktop.png",
+      "size": 63106,
+      "sha256": "9f02dd4af5370de9d021288a8d387a11e13c7d6681c8a386f2e26c3cbd31b015"
+    },
+    {
+      "path": "verification/RC60/screenshots/RC40_CAD_AYA.png",
+      "size": 240633,
+      "sha256": "0c1f3d99d9bad073ae0655f7a12ac146dfcd2369bbe375401a6fed477fa405ca"
+    },
+    {
+      "path": "verification/RC60/screenshots/RC46_AYA_mobile.png",
+      "size": 60030,
+      "sha256": "0c5b83591e0bc56cf8b4064af2493683d6ea82318872cd192649912305809e00"
+    },
+    {
+      "path": "verification/RC60/screenshots/RC51_CAD_daily.png",
+      "size": 225270,
+      "sha256": "00b2fe3c9691e8f737859aacaf6ff78867e46704eb2fdb71cde6c60cc2a488a8"
+    },
+    {
+      "path": "verification/RC60/screenshots/RC60_AYA_Deleted_Record_Recovery.png",
+      "size": 103580,
+      "sha256": "16b29173d15104576239025329e68f10cda0c3c0f2d93d6f50a213c507848235"
+    },
+    {
+      "path": "verification/RC60/screenshots/RC60_AYA_Diagnostic_Draft.png",
+      "size": 130946,
+      "sha256": "5f9d018fa082e5d6a74a36784dc2af120a8e5c1b6a45eec34aaa9cd4340edafc"
+    },
+    {
+      "path": "verification/RC60/screenshots/RC60_AYA_Diagnostic_Isolation.png",
+      "size": 111603,
+      "sha256": "ba34265bdc2e052943733c2df278639bc7706ec1121bf215e31ce707ce075295"
+    },
+    {
+      "path": "verification/RC60/screenshots/RC60_AYA_Empty_Memory_Reload.png",
+      "size": 62053,
+      "sha256": "d860a89024e968f680552650db6ca9276e6f97589ecc7d2ae54da199eb60ac25"
+    },
+    {
+      "path": "verification/RC60/screenshots/RC60_AYA_Focus_Model_Recovery.png",
+      "size": 120063,
+      "sha256": "145c7aaa31a333e5ab2f04a967308401e901b775f1b85b7ecf51f8d825b5b53b"
+    },
+    {
+      "path": "verification/RC60/screenshots/RC60_AYA_Read_Only_History.png",
+      "size": 97161,
+      "sha256": "9ae87b871d7ef1aee20beda5b4918de56e1e79d268e63b18cf557d9275e45e1b"
+    },
+    {
+      "path": "verification/RC60/screenshots/RC60_AYA_Setup_Cancel_Recovery.png",
+      "size": 54337,
+      "sha256": "5426d3104a3e116f31b30dc1dfe0ebc07f5cfd4bda05c8a9a3ef258e8426b4da"
+    },
+    {
+      "path": "verification/RC60/screenshots/RC60_AYA_Setup_Other_Window.png",
+      "size": 61526,
+      "sha256": "1376505894e6537cfe7b35d41b23d20fd7605d7012e0e9a58b1addfa259e86e2"
+    },
+    {
+      "path": "verification/RC60/screenshots/RC60_AYA_Two_Window_Conflict.png",
+      "size": 93292,
+      "sha256": "3ada0fc71056ce507e75502b0c0ac094fc7f41daa139dd1bf9b2730467875e6f"
+    },
+    {
+      "path": "verification/RC60/screenshots/RC60_CAD_AYA_Draft_Preserved.png",
+      "size": 285776,
+      "sha256": "041c11e2f0f5d217ebde7630955b9b4b8a967acbefe29c4e0de2792b9b4d9c71"
+    },
+    {
+      "path": "verification/RC60/screenshots/RC60_CAD_Current_Shell_QC.png",
+      "size": 277712,
+      "sha256": "8cf9de00ae4a97ff9ded0ad6d0b4c45f80c65fb711d557194d9bfb70118084d8"
+    },
+    {
+      "path": "verification/RC60/screenshots/RC60_CAD_Stale_QC.png",
+      "size": 198552,
+      "sha256": "47dd7b1d9ce1bf6760142938751f2a2b41ad16c82cbb2ee568964835c608394b"
+    },
+    {
+      "path": "verification/RC60/screenshots/RC60_Host_Action_Receipt.png",
+      "size": 277993,
+      "sha256": "3dbece50abb811ad52e0d4dfe5a3f4c5ff585316b9aab623e62fd89a6586734d"
+    },
+    {
+      "path": "verification/RC60/screenshots/loading-ready-mobile.png",
+      "size": 23220,
+      "sha256": "f2d65dc5fb59e1475f5ccefca76e84166d181a73ac60815142683c7524f62709"
+    },
+    {
+      "path": "verification/RC60/source-verification.json",
+      "size": 1835,
+      "sha256": "e69cbd3dc13cba36d52269fd337c98ec6f210f8d03a3e0fd7ac54b59eccbd9fe"
     },
     {
       "path": "verification/professional/aya.json",

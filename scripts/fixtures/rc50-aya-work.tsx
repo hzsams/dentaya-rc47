@@ -24,7 +24,7 @@ export default function Fixture(){
  useLayoutEffect(()=>{contextRef.current=context;},[context]);
  useEffect(()=>{
   setLocale('tr');
-  Reflect.set(window,'rc50Work',{setContext,readAyaState,saveAyaOptions,actions,getContext:()=>contextRef.current});
+  Reflect.set(window,'rc50Work',{setContext,readAyaState,saveAyaOptions,setLocale,actions,getContext:()=>contextRef.current});
   return()=>{Reflect.deleteProperty(window,'rc50Work');};
  },[actions]);
  async function run(proposal:AyaProposal):Promise<AyaActionResult>{

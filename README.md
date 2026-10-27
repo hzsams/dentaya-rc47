@@ -1,6 +1,6 @@
-# DentAYA RC59
+# DentAYA RC60
 
-Sürüm `1.0.0-rc.59`, AYA Core `0.15.0`. RC59, AYA'nın uzun konuşma bağlamını, saklanan sohbet çakışmalarını, CAD taslağını ve yerel motor iptalini düzeltir. Sonradan gelen düzeltmeler token bütçesinde korunur; başka penceredeki yeni kayıt eski yanıtla sessizce değiştirilmez. Model kurulumu ve gerçek model kabulünün durumu güncel raporda ayrı belirtilir.
+Sürüm `1.0.0-rc.60`, AYA Core `0.16.0`. RC60, uzun kişisel notların ilgili bölümünü gerçek model girdisine taşır; değişmemiş sohbetin başka pencerede açılması veya dil değiştirilmesi gereksiz kayıt çakışması yaratmaz. Yerel kurulumda başka pencerenin indirmesini durdurma isteği doğru sonuç verir; durmuş aktarımlar yeniden denemeye açılır. Gerçek model kabulünün durumu güncel raporda ayrı belirtilir.
 
 Aydınlık panelleri ve erik moru başlıklarıyla DentAYA Studio düzeni korunur. CAD; nesneler ve parametreler solda, mevcut komutlar koyu sağ araç şeridinde, geniş 3B alan ortada olacak şekilde düzenlenir. Ortak uygulama başlığı CAD'de gösterilmez. Özgün DentAYA varlıkları kullanılır; exocad/3Shape çalışma ergonomisi referanstır.
 
@@ -44,7 +44,7 @@ CAD uzman modunda İnceleme paneli; kamera/imleç hedefli gerçek fener, ışık
 
 Ayarlar'da 120 özgün logo bulunur; hacim, metalik yüzey, kenar ışığı ve gölge SVG katmanlarıyla üretilir. Her seçeneğin açık/koyu, simge ve yazı biçimleri ile Windows ICO varlığı vardır. Bunlar hacim etkili çizimlerdir; 3B mesh dosyaları değildir. İlk 18 logo kimliği, tercih aktarımı ve masaüstü simgesi akışı korunur.
 
-Başlangıç: [KURULUM.txt](KURULUM.txt). Kullanım: [RC59_KULLANIM.md](RC59_KULLANIM.md). Güncel kontroller ve sınırlar: [RC59_KONTROL_RAPORU.md](RC59_KONTROL_RAPORU.md). Önceki RC raporları tarihsel kayıttır; yeni sürümün doğrulaması sayılmaz.
+Başlangıç: [KURULUM.txt](KURULUM.txt). Kullanım: [RC60_KULLANIM.md](RC60_KULLANIM.md). Güncel kontroller ve sınırlar: [RC60_KONTROL_RAPORU.md](RC60_KONTROL_RAPORU.md). Önceki RC raporları tarihsel kayıttır; yeni sürümün doğrulaması sayılmaz.
 
 [120 logonun görünümü](public/brand/DentAYA_Premium_Atelier.webp). Bilgi kartı sayısı **500**, kaynak grubu **60**; ayrı AYA soru kataloğu **1008** kayıttır. [Yeni kartların kaynakları](BILGI_KARTLARI_RC53_KAYNAKLAR.md) ve [katalog/30.000 hedefi](DENTAL_BILGI_KATALOGU_RAPORU.md). 30.000 gerçek içerik hedefi tamamlanmadı; kapasite testinin sentetik verileri ürüne eklenmez.
 

@@ -1,0 +1,15 @@
+{
+  "pass": true,
+  "realSetupComponent": true,
+  "foreignCancelShowsBusy": true,
+  "noFalseCancellationSuccess": true,
+  "sameTurnDoubleClickGuard": true,
+  "cancelAcknowledgementRefresh": true,
+  "rejectedCancelRefreshes": true,
+  "privateTransportDetailsExcluded": true,
+  "statusFailureReleasesLock": true,
+  "recoveryClearsError": true,
+  "unhandledRejections": 0,
+  "desktopIPC": "mock",
+  "nativeInference": false
+}

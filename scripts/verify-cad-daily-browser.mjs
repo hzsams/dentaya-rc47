@@ -224,7 +224,7 @@ try {
  const currentInspect=normalizeWorkspace(interpreted.cadContext).recentActions.at(-1);
  assert.equal(currentInspect?.tool,'inspect','The actual model-side normalizer retains the completed host QC receipt');assert.equal(currentInspect.ok,true);
  assert.equal(currentInspect.snapshot,interpreted.cadContext.snapshot);assert.equal(currentInspect.dataToken,interpreted.cadContext.dataToken);assert.notEqual(currentInspect.snapshot,preInspect.snapshot,'Receipt binds the committed post-action snapshot, not the proposal snapshot');
- if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC59_Host_Action_Receipt.png'),animations:'disabled',timeout:15000});}
+ if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC60_Host_Action_Receipt.png'),animations:'disabled',timeout:15000});}
  assert.ok(await inspectProposal.getByRole('button').isDisabled(),'Applied suggestions become stale');
  assert.equal(await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).inputValue(),unsentCadDraft,'Successful automatic QC interpretation preserves the unsent question');
  await aya.getByRole('button',{name:'Kapat',exact:true}).click();await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();
@@ -238,7 +238,7 @@ try {
  await page.evaluate(()=>{window.rc47CadModel.mode='pending';});await aya.locator('[data-aya-tool=inspect]').click();await aya.getByRole('button',{name:'Durdur',exact:true}).waitFor();await aya.getByRole('button',{name:'Durdur',exact:true}).click();await aya.getByRole('button',{name:'Gönder',exact:true}).waitFor();
  assert.equal(await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).inputValue(),unsentCadDraft,'Cancelling automatic QC interpretation preserves the original user draft');
  await page.evaluate(()=>{for(const resolve of window.rc47CadModel.pending.splice(0))resolve();window.rc47CadModel.mode='ok';});
- if(process.env.DENTAYA_SCREENSHOT_DIR){await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC59_CAD_AYA_Draft_Preserved.png'),animations:'disabled',timeout:15000});}
+ if(process.env.DENTAYA_SCREENSHOT_DIR){await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC60_CAD_AYA_Draft_Preserved.png'),animations:'disabled',timeout:15000});}
  console.log('PASS: CAD drafts survive close/reopen and success, invalid output, engine failure, or cancellation during bounded QC interpretation.');
  // Invalid model output and cancellation retain the prompt and leave CAD usable.
  await page.evaluate(()=>{window.rc47CadModel.mode='invalid';});await ask('Hedefi değiştirmeden kontrol et');assert.equal(await aya.getByRole('textbox').inputValue(),'Hedefi değiştirmeden kontrol et');
@@ -286,7 +286,7 @@ try {
  await page.getByRole('tab',{name:'Kontrol',exact:true}).click();await page.locator('[data-cad-qc-report]').waitFor();
  await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();await ask('Bu güncel shell kontrolünü yorumla');
  const shellEvidence=await page.evaluate(()=>window.rc47CadModel.calls.at(-1).cadContext.report);assert.ok(shellEvidence.triangles>0);assert.ok(Number.isFinite(shellEvidence.minimumWallEstimateMm));assert.equal(shellEvidence.wallMethod,'shell-offset-estimate');
- if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC59_CAD_Current_Shell_QC.png'),animations:'disabled',style:'nextjs-portal{visibility:hidden!important}'});}
+ if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC60_CAD_Current_Shell_QC.png'),animations:'disabled',style:'nextjs-portal{visibility:hidden!important}'});}
  await aya.getByRole('button',{name:'Kapat',exact:true}).click();await openShell();await page.getByRole('button',{name:'Mesh repair',exact:true}).click();await page.locator('[data-cad-shell-report]').waitFor();
  await page.getByRole('button',{name:"Shell'i temizle",exact:true}).click();await page.getByRole('tab',{name:'Kontrol',exact:true}).click();await page.locator('[data-cad-qc-report]').waitFor();
  await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();await ask('Shell temizlendikten sonraki güncel kontrolü yorumla');
@@ -314,7 +314,7 @@ try {
  snapshot=await save();assert.deepEqual(unitMesh(snapshot),edited,'Manual redo restores the same deterministic sculpted geometry');
  console.log('PASS: AYA undo and manual redo use real history; geometry changes invalidate a pending model reply and old evidence.');
  await showCurrentQc();
- await page.getByRole('button',{name:'Diş 47',exact:true}).click();await selectStage('design');await page.getByRole('tab',{name:'Kontrol',exact:true}).click();await page.locator('[data-cad-qc-stale]').waitFor();assert.equal(await page.locator('[data-cad-qc-report]').count(),0,'Another unit never shows the prior unit QC metrics');if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC59_CAD_Stale_QC.png'),animations:'disabled',style:'nextjs-portal{visibility:hidden!important}'});}await page.getByRole('tab',{name:'Serbest',exact:true}).click();
+ await page.getByRole('button',{name:'Diş 47',exact:true}).click();await selectStage('design');await page.getByRole('tab',{name:'Kontrol',exact:true}).click();await page.locator('[data-cad-qc-stale]').waitFor();assert.equal(await page.locator('[data-cad-qc-report]').count(),0,'Another unit never shows the prior unit QC metrics');if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC60_CAD_Stale_QC.png'),animations:'disabled',style:'nextjs-portal{visibility:hidden!important}'});}await page.getByRole('tab',{name:'Serbest',exact:true}).click();
  snapshot=await save();assert.equal(snapshot.units['unit-47-1'].anchor.placed,true);assert.ok(Math.abs(snapshot.units['unit-47-1'].anchor.position[0]+16)<.001);
  await page.getByRole('button',{name:'Diş 46',exact:true}).click();snapshot=await save();assert.deepEqual(unitMesh(snapshot),edited);
  assert.ok(await page.locator('.cad-history-actions button[aria-label="Geri al"]').isEnabled());
@@ -373,7 +373,18 @@ try {
  console.log('PASS: delayed recovery lookup and pending recovery choice block writes/navigation/local STL/publication; explicit local exit and recovery retain all geometry.');
  // Publishing must include the exact geometry checkpoint, then accept the RPC timestamp despite JSONB key order.
  await menu.locator('summary').click();await page.getByRole('button',{name:'Uzman',exact:true}).click();await selectStage('review');
- await page.getByRole('button',{name:'STL oluştur ve kliniğin onayına gönder',exact:true}).click();
+ // Changing stage schedules a 900ms autosave. Complete that known transition
+ // before a physical publish click, which must not race a newly disabled button.
+ await settleAutosave();
+ const publish=page.getByRole('button',{name:'STL oluştur ve kliniğin onayına gönder',exact:true});
+ await publish.evaluate(button=>{
+  window.rc60PublicationClickTrace=[];
+  for(const type of ['pointerdown','pointerup','click'])button.addEventListener(type,event=>window.rc60PublicationClickTrace.push({type:event.type,at:event.timeStamp,disabled:button.disabled,saveState:document.querySelector('.cad-save-state')?.getAttribute('data-save-state')}),{once:true,capture:true});
+ });
+ await publish.click();
+ const publicationClicks=await page.evaluate(()=>window.rc60PublicationClickTrace);
+ assert.equal(publicationClicks.filter(event=>event.type==='click').length,1,'The real enabled publish button must receive exactly one native click');
+ assert.ok(publicationClicks.every(event=>!event.disabled&&event.saveState==='saved'),'Publication starts after the stage autosave has settled');
  await page.waitForFunction(()=>document.querySelector('.cad-status-bar')?.textContent?.includes('kliniğin onayına gönderildi'));
  assert.equal(submissions.length,1);assert.deepEqual(unitMesh(await decodeCadWorkspace(submissions[0].p_parameters.settings.cad_workspace)),offlineMesh);
  snapshot=await save();assert.deepEqual(unitMesh(snapshot),offlineMesh);

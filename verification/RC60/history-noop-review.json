@@ -1,0 +1,46 @@
+{
+  "checkedAt": "2026-10-27T04:35:16+03:00",
+  "sourceFrozen": true,
+  "baselineCommit": "fbd214319bcd4c93d985332abd4c1c416a8f64d3",
+  "actualBaselineFailure": "history-noop-baseline.log: opening unchanged session returned saved instead of unchanged",
+  "checks": [
+    {
+      "name": "Node UI/state",
+      "command": "node --import tsx scripts/verify-aya-ui-state.ts",
+      "exitCode": 0,
+      "log": "history-noop-node.log"
+    },
+    {
+      "name": "TypeScript",
+      "command": "npx tsc --noEmit --pretty false",
+      "exitCode": 0
+    },
+    {
+      "name": "Scoped ESLint",
+      "exitCode": 0,
+      "log": "history-noop-lint.log"
+    },
+    {
+      "name": "state browser syntax",
+      "command": "node --check scripts/verify-aya-state-browser.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "scoped whitespace",
+      "exitCode": 0
+    }
+  ],
+  "browserRunByAgent": false,
+  "nativeInference": false,
+  "files": {
+    "src/app/ai/AyaChat.tsx": "da843be527352d92449109de6be7442ba5b4e6c4f83406c2cf865199cde69030",
+    "src/lib/aya-local-state.ts": "2d751bdc30d930ab3ed892d8a6f39cccc9ba5775f0029a522543ff05eb1d8d93",
+    "scripts/verify-aya-ui-state.ts": "cade13f03af556e71c7d6b0a08da560d42c6301bf868ccca2069c3ab1a7eff48",
+    "scripts/verify-aya-state-browser.mjs": "67cac1c99dffff1c33f111583f0256dfd71a16aa06727d31b2d2b76a5a99c030",
+    "scripts/fixtures/rc50-aya-work.tsx": "003a32569b414ff4d256f2f511e1b62f5e40d360510b5d3ea8e0670f1767b7fd"
+  },
+  "limitations": [
+    "Revision check remains optimistic localStorage, not atomic cross-window locking.",
+    "Unsent MAIN chat drafts still reset on route unmount/reload; no new draft cache or disk persistence was added."
+  ]
+}

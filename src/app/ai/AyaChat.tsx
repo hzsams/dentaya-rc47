@@ -117,8 +117,9 @@ export default function AyaChat() {
         if(!options.saveHistory){persistedSession.current={id:sessionId,revision:ayaSessionRevision(readAyaState().sessions.find(session=>session.id===sessionId))};setSaveConflict(null);return;}
         if (messages.length||workingMemory.goal||workingMemory.decisions.length||workingMemory.openQuestions.length) {
             const expected=persistedSession.current.id===sessionId?persistedSession.current.revision:null;
-            const result=saveAyaSessionIfCurrent({ id: sessionId, title: (messages[0]?.content||workingMemory.goal||copy.newChat).slice(0, 70), updatedAt: Date.now(), messages, workingMemory },expected);
-            if(result==='saved'){persistedSession.current={id:sessionId,revision:ayaSessionRevision(readAyaState().sessions.find(session=>session.id===sessionId))};setSaveConflict(null);}
+            const stored=readAyaState().sessions.find(session=>session.id===sessionId);
+            const result=saveAyaSessionIfCurrent({ id: sessionId, title: stored?.title||(messages[0]?.content||workingMemory.goal||copy.newChat).slice(0, 70), updatedAt: Date.now(), messages, workingMemory },expected);
+            if(result==='saved'||result==='unchanged'){persistedSession.current={id:sessionId,revision:ayaSessionRevision(readAyaState().sessions.find(session=>session.id===sessionId))};setSaveConflict(null);}
             else if(result==='conflict')setSaveConflict(readAyaState().sessions.some(session=>session.id===sessionId)?'changed':'missing');
             else if(result==='failed')setError(copy.storageError);
         } else if(edit?.sessionId===sessionId) {

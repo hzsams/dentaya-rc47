@@ -1,0 +1,48 @@
+{
+  "checkedAtUTC": "2026-10-27T01:36:46.775746+00:00",
+  "scope": "long-note grounded excerpts in actual prepared context and local bridge payload; offline recall also uses same excerpt",
+  "changedFiles": [
+    "electron/aya/assistant.cjs",
+    "scripts/verify-aya-core.cjs",
+    "scripts/verify-local-aya.cjs"
+  ],
+  "sourceFrozen": true,
+  "nativeInference": false,
+  "bridgeInference": "mock",
+  "checks": [
+    {
+      "command": "node scripts/verify-aya-core.cjs",
+      "exitCode": 0
+    },
+    {
+      "command": "node scripts/verify-local-aya.cjs",
+      "exitCode": 0
+    },
+    {
+      "command": "node scripts/verify-aya-agent.cjs",
+      "exitCode": 0
+    },
+    {
+      "command": "npx eslint electron/aya/assistant.cjs scripts/verify-aya-core.cjs scripts/verify-local-aya.cjs --max-warnings=0",
+      "exitCode": 0
+    },
+    {
+      "command": "git diff --check -- electron/aya/assistant.cjs scripts/verify-aya-core.cjs scripts/verify-local-aya.cjs",
+      "exitCode": 0
+    }
+  ],
+  "baselineEvidence": "core-excerpt-baseline.json",
+  "bounds": {
+    "perNoteCharacters": 2200,
+    "originalDocumentsUnmodified": true,
+    "knowledgeOptOutRetained": true,
+    "schemaChanged": false,
+    "numericGeometryChanged": false
+  },
+  "limitations": [
+    "Lexical note retrieval is bounded and is not a semantic embedding model.",
+    "Very long evidence is excerpted; not all source text is guaranteed to fit model context.",
+    "Title-only matching short notes retain their value-only body; references still point at the actual retained note.",
+    "Actual model inference remains separate acceptance."
+  ]
+}

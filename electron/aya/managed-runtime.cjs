@@ -27,7 +27,7 @@ async function trustedResponse(url,options={},fetchImpl=fetch){
  throw Error('AYA_DOWNLOAD_REDIRECT');
 }
 async function hashFile(file){const hash=crypto.createHash('sha256');for await(const chunk of fs.createReadStream(file))hash.update(chunk);return hash.digest('hex');}
-async function verifiedDownload(spec,destination,{signal,onProgress=()=>{},fetchImpl=fetch}={}){
+async function verifiedDownload(spec,destination,{signal,onProgress=()=>{},fetchImpl=fetch,idleTimeoutMs=45000}={}){
  signal?.throwIfAborted();
  const partial=destination+'.part';await fsp.mkdir(path.dirname(destination),{recursive:true});
  if(fs.existsSync(destination)&&(await fsp.stat(destination)).size===spec.bytes&&await hashFile(destination)===spec.sha256){signal?.throwIfAborted();return destination;}
@@ -36,18 +36,29 @@ async function verifiedDownload(spec,destination,{signal,onProgress=()=>{},fetch
  if(offset>=spec.bytes){if(offset===spec.bytes&&await hashFile(partial)===spec.sha256){signal?.throwIfAborted();await fsp.rename(partial,destination);return destination;}await fsp.rm(partial,{force:true});offset=0;}
  const hash=crypto.createHash('sha256');if(offset)for await(const chunk of fs.createReadStream(partial))hash.update(chunk);
  signal?.throwIfAborted();
- let response=await trustedResponse(spec.url,{headers:offset?{Range:'bytes='+offset+'-'}:{},signal},fetchImpl);
- if(offset&&response.status===200){offset=0;await response.body?.cancel().catch(()=>{});response=await trustedResponse(spec.url,{signal},fetchImpl);}
- // Restarted responses need a fresh digest; retained ranges hash the existing prefix.
- const digest=offset?hash:crypto.createHash('sha256');
- if(!(response.status===200&&!offset||response.status===206&&offset&&response.headers.get('content-range')?.startsWith('bytes '+offset+'-')))throw Error('AYA_DOWNLOAD_FAILED');
- if(!response.body)throw Error('AYA_DOWNLOAD_FAILED');
- const file=await fsp.open(partial,offset?'a':'w'),reader=response.body.getReader();let bytes=offset;
- try{while(true){if(signal?.aborted)throw signal.reason;const {done,value}=await reader.read();if(done)break;bytes+=value.byteLength;if(bytes>spec.bytes)throw Error('AYA_DOWNLOAD_SIZE');digest.update(value);await file.writeFile(value);onProgress(bytes,spec.bytes);}}
- finally{await file.close();await reader.cancel().catch(()=>{});}
- signal?.throwIfAborted();
- if(bytes!==spec.bytes||digest.digest('hex')!==spec.sha256){await fsp.rm(partial,{force:true});throw Error('AYA_DOWNLOAD_CHECKSUM');}
- await fsp.rename(partial,destination);return destination;
+ // A stalled headers/body read must not leave setup running indefinitely. Only
+ // inactivity is bounded; normal progress can take longer than this deadline.
+ const timeout=new AbortController(),networkSignal=signal?AbortSignal.any([signal,timeout.signal]):timeout.signal;
+ let timer,response,reader,file;
+ const progressReceived=()=>{clearTimeout(timer);timer=setTimeout(()=>timeout.abort(Error('AYA_DOWNLOAD_TIMEOUT')),Number.isFinite(idleTimeoutMs)&&idleTimeoutMs>0?idleTimeoutMs:45000);};
+ async function transfer(run){
+  networkSignal.throwIfAborted();let abort;
+  try{return await Promise.race([Promise.resolve().then(()=>{networkSignal.throwIfAborted();return run();}),new Promise((_resolve,reject)=>{abort=()=>reject(networkSignal.reason);networkSignal.addEventListener('abort',abort,{once:true});})]);}
+  finally{networkSignal.removeEventListener('abort',abort);}
+ }
+ try{
+  progressReceived();response=await transfer(()=>trustedResponse(spec.url,{headers:offset?{Range:'bytes='+offset+'-'}:{},signal:networkSignal},fetchImpl));
+  if(offset&&response.status===200){offset=0;await response.body?.cancel().catch(()=>{});response=await transfer(()=>trustedResponse(spec.url,{signal:networkSignal},fetchImpl));}
+  // Restarted responses need a fresh digest; retained ranges hash the existing prefix.
+  const digest=offset?hash:crypto.createHash('sha256');
+  if(!(response.status===200&&!offset||response.status===206&&offset&&response.headers.get('content-range')?.startsWith('bytes '+offset+'-')))throw Error('AYA_DOWNLOAD_FAILED');
+  if(!response.body)throw Error('AYA_DOWNLOAD_FAILED');
+  progressReceived();file=await fsp.open(partial,offset?'a':'w');reader=response.body.getReader();let bytes=offset;
+  while(true){const {done,value}=await transfer(()=>reader.read());if(done)break;progressReceived();bytes+=value.byteLength;if(bytes>spec.bytes)throw Error('AYA_DOWNLOAD_SIZE');digest.update(value);await file.writeFile(value);onProgress(bytes,spec.bytes);}
+  clearTimeout(timer);await file.close();file=null;signal?.throwIfAborted();
+  if(bytes!==spec.bytes||digest.digest('hex')!==spec.sha256){await fsp.rm(partial,{force:true});throw Error('AYA_DOWNLOAD_CHECKSUM');}
+  await fsp.rename(partial,destination);return destination;
+ }finally{clearTimeout(timer);await file?.close();if(reader)await reader.cancel().catch(()=>{});else await response?.body?.cancel().catch(()=>{});}
 }
 async function extractEngine(archive,destination){
  let total=0;const seen=new Set();
@@ -86,7 +97,7 @@ function createManagedAya({directory,fetchImpl=fetch,spawnImpl=spawn,platform=pr
    progress={running:false,status:'ready',completed:ENGINE.bytes+MODEL.bytes,total:ENGINE.bytes+MODEL.bytes};
   }catch(e){lastError=controller.signal.aborted?'LOCAL_CANCELLED':e.code==='ENOSPC'?'AYA_DISK_FULL':e.message||'AYA_INSTALL_FAILED';progress={...progress,running:false,status:controller.signal.aborted?'cancelled':'failed'};}finally{install=null;}})();return {ok:true};
  }
- function cancelInstall(owner){if(install?.owner===owner)install.controller.abort();return {ok:true};}
+ function cancelInstall(owner){if(install&&install.owner!==owner)return {ok:false,error:'LOCAL_BUSY'};install?.controller.abort();return {ok:true};}
  async function importModel(file){
   if(disposed)return {ok:false,error:'LOCAL_CANCELLED'};
   if(install||startPromise||child)return {ok:false,error:'LOCAL_BUSY'};

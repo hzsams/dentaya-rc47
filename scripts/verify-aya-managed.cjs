@@ -30,10 +30,48 @@ const {CONTEXT_MARKER}=require('../electron/aya/agent.cjs');
  await verifiedDownload(spec,dest,{fetchImpl:async(_url,options)=>{assert.equal(options.headers.Range,'bytes=8-');return new Response(content.subarray(8),{status:206,headers:{'content-range':`bytes 8-${content.length-1}/${content.length}`}});}});
  assert.deepEqual(await fs.readFile(dest),content);
  await fs.rm(dest);await assert.rejects(verifiedDownload({...spec,sha256:'a'.repeat(64)},dest,{fetchImpl:async()=>new Response(content)}),/CHECKSUM/);await assert.rejects(fs.stat(dest+'.part'));
+ // An idle network transfer must settle, retain a resumable verified prefix,
+ // and leave explicit user cancellation distinct from a stalled connection.
+ for(const phase of ['headers','body']){
+  const idleDest=path.join(dir,'idle-'+phase),userAbort=new AbortController();let watchdog,transfer;
+  try{
+   transfer=verifiedDownload(spec,idleDest,{signal:userAbort.signal,idleTimeoutMs:100,fetchImpl:async(_url,{signal})=>{
+    if(phase==='headers')return new Promise((_resolve,reject)=>signal.addEventListener('abort',()=>reject(signal.reason),{once:true}));
+    return new Response(new ReadableStream({start(controller){controller.enqueue(content.subarray(0,8));signal.addEventListener('abort',()=>controller.error(signal.reason),{once:true});}}));
+   }});
+   const result=await Promise.race([transfer.then(()=> 'READY',error=>error.message),new Promise(resolve=>{watchdog=setTimeout(()=>resolve('TEST_WATCHDOG'),1000);})]);
+   assert.equal(result,'AYA_DOWNLOAD_TIMEOUT','An idle '+phase+' transfer must fail with a safe retryable timeout');
+  }finally{clearTimeout(watchdog);userAbort.abort();await transfer?.catch(()=>{});}
+  if(phase==='body'){
+   assert.equal((await fs.stat(idleDest+'.part')).size,8,'Timed-out transfer retains only the received prefix');
+   await verifiedDownload(spec,idleDest,{fetchImpl:async(_url,options)=>{assert.equal(options.headers.Range,'bytes=8-');return new Response(content.subarray(8),{status:206,headers:{'content-range':`bytes 8-${content.length-1}/${content.length}`}});}});
+   assert.deepEqual(await fs.readFile(idleDest),content,'Retry verifies the full hash after resuming the timed-out transfer');
+  }
+ }
+ let progressiveBytes=0;
+ await verifiedDownload(spec,path.join(dir,'progressing'),{idleTimeoutMs:120,fetchImpl:async()=>new Response(new ReadableStream({async pull(controller){await new Promise(resolve=>setTimeout(resolve,30));const end=Math.min(content.length,progressiveBytes+5);controller.enqueue(content.subarray(progressiveBytes,end));progressiveBytes=end;if(end===content.length)controller.close();}}))});
+ assert.equal(progressiveBytes,content.length,'Regular progress resets inactivity; total transfer time may exceed the idle deadline');
+ const manualAbort=new AbortController(),manualTransfer=verifiedDownload(spec,path.join(dir,'manual-abort'),{signal:manualAbort.signal,idleTimeoutMs:100,fetchImpl:async(_url,{signal})=>new Promise((_resolve,reject)=>{signal.addEventListener('abort',()=>reject(signal.reason),{once:true});setImmediate(()=>manualAbort.abort());})});
+ await assert.rejects(manualTransfer,error=>error.name==='AbortError','User cancellation retains its cancellation result instead of becoming a network timeout');
  let calls=0;await assert.rejects(trustedResponse(spec.url,{},async()=>{calls++;return new Response(null,{status:302,headers:{location:'http://127.0.0.1/private'}});}),/DOWNLOAD_HOST/);assert.equal(calls,1);
  const archive=path.join(dir,'engine.zip');await fs.writeFile(archive,zipSync({'bin/llama-server.exe':new Uint8Array([77,90]),'bin/ggml.dll':new Uint8Array([1,2]),'bin/unused.exe':new Uint8Array([4])}));await extractEngine(archive,path.join(dir,'engine'));
  assert.deepEqual((await fs.readdir(path.join(dir,'engine'))).sort(),['ggml.dll','llama-server.exe']);
  await fs.writeFile(archive,zipSync({'../llama-server.exe':new Uint8Array([1])}));await assert.rejects(extractEngine(archive,path.join(dir,'evil')),/ARCHIVE/);
+ // A second app window cannot claim that it cancelled another window's
+ // installation. The real owner can still stop the same pending transfer.
+ let downloading,transferSignal;
+ const transferStarted=new Promise(resolve=>{downloading=resolve;});
+ const ownedInstall=createManagedAya({directory:path.join(dir,'owned-install'),platform:'win32',fetchImpl:async(_url,options)=>new Promise((_resolve,reject)=>{
+  transferSignal=options.signal;options.signal.addEventListener('abort',()=>reject(options.signal.reason),{once:true});downloading();
+ })});
+ try{
+  assert.equal((await ownedInstall.installAll(71)).ok,true);await transferStarted;
+  assert.deepEqual(ownedInstall.cancelInstall(72),{ok:false,error:'LOCAL_BUSY'},'A foreign window receives an honest busy response, never a false cancellation acknowledgement');
+  assert.equal(transferSignal.aborted,false);assert.equal((await ownedInstall.status()).progress.running,true);
+  assert.deepEqual(ownedInstall.cancelInstall(71),{ok:true});await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(transferSignal.aborted,true);assert.equal(ownedInstall.isBusy(),false);assert.equal((await ownedInstall.status()).progress.status,'cancelled');
+  assert.deepEqual(ownedInstall.cancelInstall(71),{ok:true},'Stopping an already settled installation remains idempotent');
+ }finally{ownedInstall.dispose();await new Promise(resolve=>setImmediate(resolve));}
  const gguf=Buffer.alloc(2048);gguf.write('GGUF');gguf.writeUInt32LE(3,4);const modelFile=path.join(dir,'test.gguf');await fs.writeFile(modelFile,gguf);
  let spawned=0,killed=0,payload,templatePayload,allRequests=[],chunks=0,mode='normal',bootFailure=null;
  const plan={answer:'Önce güncel raporu alalım.',goal:'46 kron kontrolü',decisions:['Kole korunacak'],openQuestions:[],actions:[]};
@@ -105,6 +143,6 @@ const {CONTEXT_MARKER}=require('../electron/aya/agent.cjs');
  assert.match(answerOwned('Temel model sıfırdan eğitildi mi?').output,/sıfırdan eğitilmedi/);
  const cad=normalizeCad({unit:'46',upperReady:true,lowerReady:true,openingMm:99,positions:[1],patientName:'PRIVATE'});assert.equal(cad.openingMm,12);assert.ok(!JSON.stringify(cad).includes('PRIVATE'));assert.ok(!('positions' in cad));
  const note={id:'test',kind:'document',title:'Dökümhane',content:'Başlangıç bilgisi.\n'.repeat(300)+'Kalibrasyon kodu Z8T4.'};assert.match(ownedContext({prompt:'Kalibrasyon kodu',knowledge:[note]}).personalKnowledge[0].content,/Z8T4/);assert.equal(ownedContext({prompt:'Kalibrasyon kodu',knowledge:[note],useMemory:false}).references.length,0);
- console.log(JSON.stringify({pass:true,checksumAndResume:true,cachedVerificationCancellation:true,redirectRejection:true,archiveTraversalRejection:true,ggufImport:true,tokenBudget:true,loopbackStreaming:true,explicitMemory:true,cadMetadataWhitelist:true,startupDiagnosis:{bounded:true,rawDetailsExcluded:true,retry:true,lateHandshakeRejected:true,cases:10},startupCancellation:{preAborted:true,modelRead:true,portAllocation:true,stopRetry:true,disposeFinal:true},foundationTrainingClaim:false,nativeInference:'mocked in this check; separate native log'},null,2));
+ console.log(JSON.stringify({pass:true,checksumAndResume:true,cachedVerificationCancellation:true,downloadInactivity:{headers:true,body:true,resumablePrefix:true,progressResetsDeadline:true,explicitCancelDistinct:true},installCancellationOwnership:true,redirectRejection:true,archiveTraversalRejection:true,ggufImport:true,tokenBudget:true,loopbackStreaming:true,explicitMemory:true,cadMetadataWhitelist:true,startupDiagnosis:{bounded:true,rawDetailsExcluded:true,retry:true,lateHandshakeRejected:true,cases:10},startupCancellation:{preAborted:true,modelRead:true,portAllocation:true,stopRetry:true,disposeFinal:true},foundationTrainingClaim:false,nativeInference:'mocked in this check; separate native log'},null,2));
  }finally{runtime?.dispose();await fs.rm(dir,{recursive:true,force:true});}
 })().catch(e=>{console.error(e);process.exitCode=1;});

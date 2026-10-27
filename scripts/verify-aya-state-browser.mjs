@@ -110,7 +110,7 @@ try{
  assert.equal(await page.evaluate(()=>window.rc54State.calls.at(-1).model),'synthetic-preferred-model','The recovered selection is used for the next real bridge request');
  await page.evaluate(()=>{window.rc54State.pendingReply({ok:true,output:'Seçili model ile sentetik devam yanıtı'});window.rc54State.pendingReply=null;});
  await page.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);
- await screenshot(main.locator('.aya-conversation-shell'),'RC59_AYA_Focus_Model_Recovery.png');
+ await screenshot(main.locator('.aya-conversation-shell'),'RC60_AYA_Focus_Model_Recovery.png');
  const cad=page.locator('#cad-test');
  await page.evaluate(()=>{window.rc54State.mode='installing';window.dispatchEvent(new Event('focus'));});
  await page.waitForFunction(()=>!document.querySelector('#cad-test select[aria-label="Kurulu yerel model"]'));
@@ -145,13 +145,32 @@ try{
  assert.equal(await main.locator('.aya-goal-preview').count(),0,'Reload cannot restore memory cleared from a memory-only conversation');
  assert.equal(await main.locator('.aya-message').count(),0);
  assert.equal(await page.evaluate(()=>window.rc50Work.readAyaState().sessions.length),0,'Reload does not save a fresh empty record');
- await screenshot(main.locator('.aya-conversation-shell'),'RC59_AYA_Empty_Memory_Reload.png');
+ await screenshot(main.locator('.aya-conversation-shell'),'RC60_AYA_Empty_Memory_Reload.png');
  await main.getByRole('button',{name:'Sohbet ayarları',exact:true}).click();await main.getByRole('button',{name:'Bellek ve notlar',exact:true}).click();
  await saveGoal('BU PENCERENİN HEDEFİ');await page.waitForFunction(()=>window.rc50Work.readAyaState().sessions.length===1);
  // A second real browser page shares this origin's localStorage. All edits
  // below use the real controls; only the desktop model transport is synthetic.
+ const beforeReadOnly=await page.evaluate(()=>localStorage.getItem('dentaya:aya-core:v1'));
  const secondPage=await context.newPage();secondPage.on('pageerror',error=>errors.push(error.message));
  await secondPage.goto(url);await secondPage.waitForFunction(()=>window.rc50Work&&document.querySelector('.aya-goal-preview'));
+ const settleReadOnly=()=>secondPage.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+ await settleReadOnly();
+ assert.equal(await page.evaluate(()=>localStorage.getItem('dentaya:aya-core:v1')),beforeReadOnly,'Opening an unchanged second window leaves exact history bytes, timestamp and revision untouched');
+ await secondPage.reload();await secondPage.waitForFunction(()=>window.rc50Work&&document.querySelector('.aya-goal-preview'));await settleReadOnly();
+ assert.equal(await page.evaluate(()=>localStorage.getItem('dentaya:aya-core:v1')),beforeReadOnly,'Reloading an unchanged conversation does not create activity or a new revision');
+ await page.evaluate(()=>window.rc50Work.setLocale('en'));await main.getByRole('button',{name:'New conversation',exact:true}).waitFor();
+ await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+ assert.equal(await page.evaluate(()=>localStorage.getItem('dentaya:aya-core:v1')),beforeReadOnly,'Changing interface language does not modify conversation content or activity');
+ await page.evaluate(()=>window.rc50Work.setLocale('tr'));await main.getByRole('button',{name:'Yeni sohbet',exact:true}).waitFor();
+ await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+ assert.equal(await page.evaluate(()=>localStorage.getItem('dentaya:aya-core:v1')),beforeReadOnly);
+ await saveGoal('BU PENCERENİN DEVAM HEDEFİ');
+ await page.waitForFunction(()=>window.rc50Work.readAyaState().sessions[0]?.workingMemory.goal==='BU PENCERENİN DEVAM HEDEFİ');
+ assert.equal(await main.locator('.aya-session-conflict').count(),0,'A read-only second window cannot block the original window\'s next real edit');
+ await screenshot(main.locator('.aya-conversation-shell'),'RC60_AYA_Read_Only_History.png');
+ const afterRealEdit=await page.evaluate(()=>localStorage.getItem('dentaya:aya-core:v1'));
+ await secondPage.reload();await secondPage.waitForFunction(()=>window.rc50Work&&document.querySelector('.aya-goal-preview'));await settleReadOnly();
+ assert.equal(await page.evaluate(()=>localStorage.getItem('dentaya:aya-core:v1')),afterRealEdit);
  const secondMain=secondPage.locator('#main-test'),secondMemory=secondMain.locator('.aya-working-memory');
  async function secondEditGoal(goal){
   await secondMain.getByRole('button',{name:'Sohbet ayarları',exact:true}).click();
@@ -185,7 +204,7 @@ try{
  assert.equal(await page.evaluate(id=>window.rc50Work.readAyaState().sessions.find(session=>session.id===id)?.workingMemory.goal,originalId),'YENİ PENCEREDE ONAYLANAN TESLİM HEDEFİ','The delayed reply cannot overwrite a newer stored goal');
  assert.match(await main.locator('.aya-message--assistant').last().textContent(),/BEKLEYEN PENCERENİN YANITI KORUNDU/);
  assert.match(await main.locator('.aya-goal-preview').textContent(),/ESKİ YANITIN YEREL HEDEFİ/,'Conflict handling retains current in-memory work');
- await screenshot(main.locator('.aya-conversation-shell'),'RC59_AYA_Two_Window_Conflict.png');
+ await screenshot(main.locator('.aya-conversation-shell'),'RC60_AYA_Two_Window_Conflict.png');
  await input.fill(unsent);await main.getByRole('button',{name:'Bu çalışmayı ayrı sohbete kaydet',exact:true}).click();
  await page.waitForFunction(()=>window.rc50Work.readAyaState().sessions.length===2&&!document.querySelector('.aya-session-conflict'));
  const copyId=await page.evaluate(()=>window.rc50Work.readAyaState().sessions[0].id);
@@ -198,11 +217,11 @@ try{
  await secondPage.reload();await secondPage.waitForFunction(()=>window.rc50Work&&document.querySelector('.aya-goal-preview'));
  await secondMain.getByRole('button',{name:'Sohbet ayarları',exact:true}).click();await secondMain.getByRole('button',{name:'Geçmiş',exact:true}).click();
  const firstHistoryRow=secondMain.locator('.aya-history-item').first();
- await secondPage.evaluate(()=>{const original=Storage.prototype.setItem;window.rc59RestoreStorage=()=>{Storage.prototype.setItem=original;};Storage.prototype.setItem=function(key,value){if(key==='dentaya:aya-core:v1')throw new DOMException('Synthetic storage failure','QuotaExceededError');return original.call(this,key,value);};});
+ await secondPage.evaluate(()=>{const original=Storage.prototype.setItem;window.rc60RestoreStorage=()=>{Storage.prototype.setItem=original;};Storage.prototype.setItem=function(key,value){if(key==='dentaya:aya-core:v1')throw new DOMException('Synthetic storage failure','QuotaExceededError');return original.call(this,key,value);};});
  await firstHistoryRow.getByRole('button',{name:'Sil',exact:true}).click();
  assert.equal(await secondMain.locator('.aya-history-item').count(),2,'A failed history delete preserves the record and active conversation');
  assert.match(await secondMain.locator('.aya-chat-error').textContent(),/saklanamadı/);
- await secondPage.evaluate(()=>window.rc59RestoreStorage());
+ await secondPage.evaluate(()=>window.rc60RestoreStorage());
  await firstHistoryRow.getByRole('button',{name:'Sil',exact:true}).click();
  await page.waitForFunction(id=>!window.rc50Work.readAyaState().sessions.some(session=>session.id===id),copyId);
  await page.evaluate(()=>{window.rc54State.pendingReply({ok:true,output:'SİLİNEN KAYDIN YALNIZ YEREL YANITI',workingMemory:{goal:'SİLİNEN KAYDIN YEREL HEDEFİ',decisions:[],openQuestions:[]}});window.rc54State.pendingReply=null;});
@@ -211,11 +230,11 @@ try{
  assert.match(await main.locator('.aya-session-conflict').textContent(),/saklanan kaydı silinmiş/);
  assert.equal(await main.getByRole('button',{name:'Saklanan sohbeti yükle',exact:true}).isDisabled(),true);
  assert.match(await main.locator('.aya-message--assistant').last().textContent(),/SİLİNEN KAYDIN YALNIZ YEREL YANITI/);
- await screenshot(main.locator('.aya-conversation-shell'),'RC59_AYA_Deleted_Record_Recovery.png');
+ await screenshot(main.locator('.aya-conversation-shell'),'RC60_AYA_Deleted_Record_Recovery.png');
  await secondPage.close();
  assert.deepEqual(errors,[],'State transitions produce no React/hydration/page errors');
  await browser.close();browser=null;await stopServer();await fs.rm(route,{recursive:true,force:true});owned=false;await fs.rm(path.join(root,'.next/dev/types'),{recursive:true,force:true});
- console.log(JSON.stringify({pass:true,sessionEditorIsolation:true,pendingReplyMemoryConflict:true,userDraftPreserved:true,explicitMemoryReload:true,lateStatusCannotOverwriteReady:true,mainFocusRecoversEngineChanges:true,explicitModelChoiceSurvivesUnavailable:true,recoveredStatusClearsTransportError:true,cadInstallAndUnavailableUseCore:true,cadBusyPollingRecovers:true,memoryOnlyResetPersists:true,emptySessionNotCreated:true,newerStoredMemoryPreserved:true,twoRealWindowsPreserveNewerStoredReply:true,explicitStoredReloadPreservesDraft:true,explicitSeparateCopyPreservesBoth:true,failedDeleteRetainsRecord:true,deletedConversationNotResurrected:true,modelCallsAreMock:true,cadCallbacksAreSynthetic:true,nativeInference:false,screenshots},null,2));
+ console.log(JSON.stringify({pass:true,sessionEditorIsolation:true,pendingReplyMemoryConflict:true,userDraftPreserved:true,explicitMemoryReload:true,lateStatusCannotOverwriteReady:true,mainFocusRecoversEngineChanges:true,explicitModelChoiceSurvivesUnavailable:true,recoveredStatusClearsTransportError:true,cadInstallAndUnavailableUseCore:true,cadBusyPollingRecovers:true,memoryOnlyResetPersists:true,emptySessionNotCreated:true,newerStoredMemoryPreserved:true,readOnlyOpenPreservesHistoryBytes:true,readOnlyReloadPreservesActivity:true,localeDoesNotRewriteConversation:true,readOnlyWindowDoesNotBlockRealEdit:true,twoRealWindowsPreserveNewerStoredReply:true,explicitStoredReloadPreservesDraft:true,explicitSeparateCopyPreservesBoth:true,failedDeleteRetainsRecord:true,deletedConversationNotResurrected:true,modelCallsAreMock:true,cadCallbacksAreSynthetic:true,nativeInference:false,screenshots},null,2));
 }catch(error){console.error(logs);throw error;}finally{
  await browser?.close();await stopServer();if(owned)await fs.rm(route,{recursive:true,force:true});await fs.rm(path.join(root,'.next/dev/types'),{recursive:true,force:true});
 }

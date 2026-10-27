@@ -114,7 +114,7 @@ try{
  await assertDiagnosticIsolation();
  assert.match(await modelMain.locator('.aya-diagnostic-result').textContent(),/Yerel model testi.*Yerel model test cevabı/s,'The diagnostic result is visibly separate from the working conversation');
  assert.doesNotMatch(await modelMain.textContent(),/YALNIZ MOTOR TESTİNİN HEDEFİ|KULLANICI KARARINI EZMEMELİ/);
- if(process.env.DENTAYA_SCREENSHOT_DIR)await modelMain.locator('.aya-conversation-shell').screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC59_AYA_Diagnostic_Isolation.png'),animations:'disabled'});
+ if(process.env.DENTAYA_SCREENSHOT_DIR)await modelMain.locator('.aya-conversation-shell').screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC60_AYA_Diagnostic_Isolation.png'),animations:'disabled'});
  const diagnosticPrompt=await modelPage.evaluate(()=>window.rc46Model.calls.at(-1).prompt);
  await modelMain.locator('#aya-response-mode').selectOption('core');
  await modelPage.evaluate(()=>{window.rc46Model.mode='error';window.rc46Model.error='LOCAL_TIMEOUT';});
@@ -122,7 +122,7 @@ try{
  await modelMain.locator('.aya-chat-error').waitFor();await modelPage.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);
  assert.equal(await modelText.inputValue(),unsentDraft,'A failed diagnostic cannot replace the draft with its test prompt');
  await assertDiagnosticIsolation();
- if(process.env.DENTAYA_SCREENSHOT_DIR)await modelMain.locator('.aya-conversation-shell').screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC59_AYA_Diagnostic_Draft.png'),animations:'disabled'});
+ if(process.env.DENTAYA_SCREENSHOT_DIR)await modelMain.locator('.aya-conversation-shell').screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC60_AYA_Diagnostic_Draft.png'),animations:'disabled'});
  assert.equal(await modelMain.locator('.aya-chat-error').getByRole('button',{name:'Soruyu düzenle',exact:true}).count(),0,'Editing the fixed diagnostic must not overwrite a different composer draft');
  await modelPage.evaluate(()=>window.rc46Model.mode='ok');
  const callsBeforeDiagnosticRetry=await modelPage.evaluate(()=>window.rc46Model.calls.length);
