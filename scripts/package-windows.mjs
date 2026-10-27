@@ -116,7 +116,7 @@ async function runtimeCandidates(req, electronDir) {
 async function validateRuntime(dist, version, probe) {
   const executable = path.join(dist, 'electron.exe');
   await verifyPe(executable, 0x8664);
-  await verifyPe(path.join(dist, 'd3dcompiler_47.dll'));
+  await verifyPe(path.join(dist, 'd3dcompiler_47.dll'), 0x8664);
   for (const name of ['icudtl.dat', 'chrome_100_percent.pak', 'resources/default_app.asar']) await requireFile(path.join(dist, name));
   let installed;
   try {installed = (await fs.readFile(path.join(dist, 'version'), 'utf8')).trim();}

@@ -139,6 +139,9 @@ test('different Electron version and wrong architecture are rejected', async t =
   await f.write('node_modules/electron/dist/version', '44.4.5');
   await f.write('node_modules/electron/dist/electron.exe', pe(0x14c));
   await assert.rejects(inspectProject(f.dir), /Windows x64/);
+  await f.write('node_modules/electron/dist/electron.exe', pe());
+  await f.write('node_modules/electron/dist/d3dcompiler_47.dll', pe(0x14c));
+  await assert.rejects(inspectProject(f.dir), /Windows x64/);
 });
 
 test('a missing runtime without its own package installer stops before packaging', async t => {
