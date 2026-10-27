@@ -13,6 +13,28 @@ export function supportsNode(version = process.versions.node) {
   const [major, minor] = version.replace(/^v/, '').split('.').map(Number);
   return Number.isInteger(major) && Number.isInteger(minor) && (major > 22 || (major === 22 && minor >= 12));
 }
+
+// Windows cannot execute npm.cmd with execFile and shell:false. Run npm's
+// JavaScript entry point with the already selected Node binary instead.
+export async function readNpmVersion({env = process.env, execPath = process.execPath, platform = process.platform, run = promisify(execFile)} = {}) {
+  const cliCandidates = [
+    env.npm_execpath,
+    path.join(path.dirname(execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js'),
+    path.resolve(path.dirname(execPath), '..', 'lib', 'node_modules', 'npm', 'bin', 'npm-cli.js'),
+  ].filter(file => typeof file === 'string' && path.isAbsolute(file) && /(?:^|[/\\])npm-cli\.(?:c?js)$/i.test(file));
+  let cli;
+  for (const file of [...new Set(cliCandidates)]) {
+    try {if ((await fs.stat(file)).isFile()) {cli = file; break;}}
+    catch (error) {if (error.code !== 'ENOENT' && error.code !== 'ENOTDIR') throw error;}
+  }
+  if (!cli && platform === 'win32') throw new Error('npm-cli.js bulunamadi; Node.js ve npm kurulumunu kontrol edin.');
+  const {stdout} = await run(cli ? execPath : 'npm', cli ? [cli, '--version'] : ['--version'], {
+    env, encoding: 'utf8', shell: false, windowsHide: true, timeout: 20000, maxBuffer: 1024 * 1024,
+  });
+  const version = stdout.trim();
+  if (!/^\d+\.\d+\.\d+(?:[-+][\w.-]+)?$/.test(version)) throw new Error('npm surumu okunamadi.');
+  return version;
+}
 const inside = (parent, file) => {
   const relative = path.relative(parent, file);
   return relative !== '' && !relative.startsWith(`..${path.sep}`) && relative !== '..' && !path.isAbsolute(relative);
@@ -23,19 +45,33 @@ async function requireFile(file) {
   if (!stat.isFile() || stat.size === 0) throw new Error(`Eksik veya bos dosya: ${file}`);
 }
 
-async function verifyPe(file, expectedMachine) {
+export async function verifyPe(file, expectedMachine) {
   const handle = await fs.open(file, 'r');
   try {
+    const invalid = () => new Error(`Gecerli bir Windows dosyasi degil: ${file}`);
+    const {size} = await handle.stat();
     const dos = Buffer.alloc(64);
     if ((await handle.read(dos, 0, 64, 0)).bytesRead !== 64 || dos.toString('ascii', 0, 2) !== 'MZ') {
-      throw new Error(`Gecerli bir Windows dosyasi degil: ${file}`);
+      throw invalid();
     }
-    if (expectedMachine !== undefined) {
-      const pe = Buffer.alloc(6);
-      if ((await handle.read(pe, 0, 6, dos.readUInt32LE(60))).bytesRead !== 6 || pe.readUInt32LE(0) !== 0x4550 || pe.readUInt16LE(4) !== expectedMachine) {
-        throw new Error(`Windows x64 Electron dagitimi gerekli: ${file}`);
-      }
+    const offset = dos.readUInt32LE(60), coff = Buffer.alloc(24);
+    if (offset < 64 || offset > size - coff.length || (await handle.read(coff, 0, coff.length, offset)).bytesRead !== coff.length || coff.readUInt32LE(0) !== 0x4550) throw invalid();
+    const machine = coff.readUInt16LE(4), sections = coff.readUInt16LE(6), optionalSize = coff.readUInt16LE(20);
+    if (expectedMachine !== undefined && machine !== expectedMachine) throw new Error(`Windows x64 Electron dagitimi gerekli: ${file}`);
+    if (![0x14c, 0x8664].includes(machine) || sections < 1 || sections > 96 || !(coff.readUInt16LE(22) & 0x0002)) throw invalid();
+    const headerEnd = offset + coff.length + optionalSize + sections * 40;
+    if (optionalSize < (machine === 0x8664 ? 112 : 96) || headerEnd > size) throw invalid();
+    const optional = Buffer.alloc(optionalSize);
+    if ((await handle.read(optional, 0, optionalSize, offset + coff.length)).bytesRead !== optionalSize || optional.readUInt16LE(0) !== (machine === 0x8664 ? 0x20b : 0x10b)) throw invalid();
+    const headersSize = optional.readUInt32LE(60);
+    if (headersSize < headerEnd || headersSize > size) throw invalid();
+    const table = Buffer.alloc(sections * 40);
+    if ((await handle.read(table, 0, table.length, offset + coff.length + optionalSize)).bytesRead !== table.length) throw invalid();
+    for (let section = 0; section < sections; section++) {
+      const rawSize = table.readUInt32LE(section * 40 + 16), rawOffset = table.readUInt32LE(section * 40 + 20);
+      if (rawSize && (rawOffset < headersSize || rawOffset > size || rawSize > size - rawOffset)) throw invalid();
     }
+    return {machine, sections, bytes: size};
   } finally {
     await handle.close();
   }

@@ -3,13 +3,17 @@ import assert from 'node:assert/strict';
 import * as fs from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
-import {inspectProject, isFileLockFailure, packageWindows, showResult, electronInstallEnvironment, probeElectronVersion, supportsNode} from './package-windows.mjs';
+import {inspectProject, isFileLockFailure, packageWindows, showResult, electronInstallEnvironment, probeElectronVersion, supportsNode, readNpmVersion, verifyPe} from './package-windows.mjs';
+import afterPack from './after-pack.cjs';
 
 const version = '1.0.0-rc.45';
 const pe = machine => {
-  const data = Buffer.alloc(128);
+  const data = Buffer.alloc(1024);
   data.write('MZ'); data.writeUInt32LE(64, 60); data.writeUInt32LE(0x4550, 64);
   data.writeUInt16LE(machine ?? 0x8664, 68);
+  data.writeUInt16LE(1, 70); data.writeUInt16LE(240, 84); data.writeUInt16LE(0x0002, 86);
+  data.writeUInt16LE(machine === 0x14c ? 0x10b : 0x20b, 88); data.writeUInt32LE(512, 148);
+  data.write('.text', 328); data.writeUInt32LE(512, 344); data.writeUInt32LE(512, 348);
   return data;
 };
 
@@ -153,7 +157,7 @@ assert.deepEqual(args.slice(0,6), ['--win','nsis','--x64','--publish','never','-
 const cfg = JSON.parse(fs.readFileSync(args[6], 'utf8'));
 assert.equal(cfg.extends, path.join(process.cwd(),'electron-builder.yml'));
 assert.equal(cfg.electronDist, path.join(process.cwd(),'node_modules/electron/dist'));
-const pe = Buffer.alloc(128); pe.write('MZ');
+const pe = Buffer.from('${pe().toString('base64')}', 'base64');
 fs.writeFileSync(path.join(cfg.directories.output,'DentAYA-Setup-${version}.exe'),pe);
 console.log('fake builder process completed');
 `);
@@ -306,4 +310,84 @@ test('the version probe handles the real --version child-process protocol', asyn
 test('the pinned Electron dependency requires Node 22.12 or later', () => {
   for (const version of ['20.19.0', '22.0.0', '22.11.9', 'not-a-version']) assert.equal(supportsNode(version), false, version);
   for (const version of ['22.12.0', 'v22.12.1', '22.22.0', '24.0.0', '26.1.0']) assert.equal(supportsNode(version), true, version);
+});
+
+test('npm version uses Node and npm-cli.js even with spaces and shell characters in its path', async t => {
+  const f = await fixture(t);
+  const cli = await f.write('npm tools & release/npm-cli.js', `process.stdout.write('11.9.0\\n');`);
+  assert.equal(await readNpmVersion({platform: 'win32', env: {...process.env, npm_execpath: cli}}), '11.9.0');
+  let call;
+  assert.equal(await readNpmVersion({platform: 'win32', env: {npm_execpath: cli}, run: async (...args) => {call = args; return {stdout: '11.9.0\n'};}}), '11.9.0');
+  assert.equal(call[0], process.execPath);
+  assert.deepEqual(call[1], [cli, '--version']);
+  assert.equal(call[2].shell, false);
+  assert.equal(call[2].windowsHide, true);
+});
+
+test('Windows npm fallback resolves the CLI beside Node without executing npm.cmd', async t => {
+  const f = await fixture(t), executable = path.join(f.dir, 'Node installation/node.exe');
+  const cli = await f.write('Node installation/node_modules/npm/bin/npm-cli.js', '// fixture');
+  let command, args;
+  assert.equal(await readNpmVersion({platform: 'win32', execPath: executable, env: {npm_execpath: path.join(f.dir, 'npm.cmd')}, run: async (cmd, argv) => {command = cmd; args = argv; return {stdout: '11.9.0'};}}), '11.9.0');
+  assert.equal(command, executable);
+  assert.deepEqual(args, [cli, '--version']);
+});
+
+test('Windows npm with no JavaScript entry fails without spawning a shell', async t => {
+  const f = await fixture(t);
+  let spawned = false;
+  await assert.rejects(readNpmVersion({platform: 'win32', execPath: path.join(f.dir, 'missing/node.exe'), env: {npm_execpath: 'npm.cmd'}, run: async () => {spawned = true;}}), /npm-cli\.js bulunamadi/);
+  assert.equal(spawned, false);
+  const cli = await f.write('npm-cli.js', '// fixture');
+  await assert.rejects(readNpmVersion({platform: 'win32', env: {npm_execpath: cli}, run: async () => ({stdout: 'unexpected npm output'})}), /npm surumu okunamadi/);
+});
+
+test('PE validation rejects MZ-only, forged signature, truncated headers and truncated sections', async t => {
+  const f = await fixture(t), file = path.join(f.dir, 'candidate.exe');
+  const mzOnly = Buffer.alloc(1024); mzOnly.write('MZ');
+  const signature = pe(); signature.writeUInt32LE(0xdeadbeef, 64);
+  const outside = pe(); outside.writeUInt32LE(4096, 60);
+  const truncated = pe().subarray(0, 512);
+  const shortHeaders = pe(); shortHeaders.writeUInt32LE(100, 148);
+  for (const data of [mzOnly, signature, outside, pe().subarray(0, 80), truncated, shortHeaders]) {
+    await fs.writeFile(file, data);
+    await assert.rejects(verifyPe(file), /Gecerli bir Windows dosyasi degil/);
+  }
+});
+
+test('PE validation accepts NSIS x86 installers and requires x64 for the Electron application', async t => {
+  const f = await fixture(t), file = await f.write('candidate.exe', pe(0x14c));
+  assert.equal((await verifyPe(file)).machine, 0x14c);
+  await assert.rejects(verifyPe(file, 0x8664), /Windows x64/);
+  await fs.writeFile(file, pe(0xaa64));
+  await assert.rejects(verifyPe(file), /Gecerli bir Windows dosyasi degil/);
+  await fs.writeFile(file, pe());
+  assert.equal((await verifyPe(file, 0x8664)).bytes, 1024);
+});
+
+test('a builder exit zero cannot publish an MZ-only installer', async t => {
+  const f = await fixture(t);
+  await assert.rejects(packageWindows({...f.options, run: async (...args) => {
+    await success(...args);
+    const config = JSON.parse(await fs.readFile(args[1], 'utf8'));
+    const fake = Buffer.alloc(1024); fake.write('MZ');
+    await fs.writeFile(path.join(config.directories.output, `DentAYA-Setup-${version}.exe`), fake);
+    return {code: 0, tail: ''};
+  }}), /Gecerli bir Windows dosyasi degil/);
+  await assert.rejects(fs.stat(path.join(f.dir, 'dist-desktop/latest-build.json')), {code: 'ENOENT'});
+});
+
+test('afterPack excludes every .env file while preserving originals and Next assets', async t => {
+  const f = await fixture(t);
+  const originals = ['.next/standalone/.env', '.next/standalone/.env.production', '.next/standalone/nested/.ENV.local', '.next/static/.env.secret', 'public/.env.example'];
+  for (const name of originals) await f.write(name, 'TEST_FIXTURE_ONLY=keep-source\n');
+  await f.write('public/asset.txt', 'public asset');
+  const output = path.join(f.dir, 'packed app');
+  await afterPack.default({packager: {projectDir: f.dir}, appOutDir: output});
+  const packed = path.join(output, 'resources/app-next');
+  for (const name of ['.env', '.env.production', 'nested/.ENV.local', '.next/static/.env.secret', 'public/.env.example']) await assert.rejects(fs.stat(path.join(packed, name)), {code: 'ENOENT'});
+  for (const name of originals) assert.equal(await fs.readFile(path.join(f.dir, name), 'utf8'), 'TEST_FIXTURE_ONLY=keep-source\n');
+  assert.equal(await fs.readFile(path.join(packed, 'server.js'), 'utf8'), '// prepared standalone');
+  assert.equal(await fs.readFile(path.join(packed, 'public/asset.txt'), 'utf8'), 'public asset');
+  await fs.stat(path.join(packed, 'node_modules/next/package.json'));
 });

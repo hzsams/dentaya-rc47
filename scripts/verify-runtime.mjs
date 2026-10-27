@@ -1,5 +1,4 @@
-import { execFileSync } from "node:child_process";
-import { supportsNode } from "./package-windows.mjs";
+import { supportsNode, readNpmVersion } from "./package-windows.mjs";
 
 const checks=[];
 const expect=(name,ok,detail="")=>checks.push({name,ok:Boolean(ok),detail});
@@ -7,8 +6,7 @@ const major=(v)=>Number(String(v).replace(/^v/,"").split(".")[0]||0);
 const nodeVersion=process.version;
 let npmVersion="unknown";
 try {
-  const cmd=process.platform==="win32"?"npm.cmd":"npm";
-  npmVersion=execFileSync(cmd,["--version"],{encoding:"utf8"}).trim();
+  npmVersion=await readNpmVersion();
 } catch {}
 expect("Node.js 22.12+",supportsNode(nodeVersion),nodeVersion);
 expect("npm 11+",major(npmVersion)>=11,npmVersion);

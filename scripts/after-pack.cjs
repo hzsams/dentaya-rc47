@@ -15,6 +15,9 @@ exports.default = async function afterPack(context) {
       recursive: true,
       force: true,
       dereference: true,
+      // Standalone tracing can include local environment files. Credentials
+      // stay in the source/build folder and never enter the installer.
+      filter: source => !/^\.env/i.test(path.basename(source)),
     });
   };
 
