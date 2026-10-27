@@ -261,6 +261,7 @@ try {
   await appointmentSave.evaluate(button => { button.click(); button.click(); }); await appointmentRequest; await settleRenderer(appointmentPage);
   await appointmentModal.locator('fieldset:disabled').waitFor();
   assert.equal(fixture.appointmentWrites.length, 1, 'An appointment double click commits once');
+  assert.equal(await appointmentModal.evaluate(node => node.contains(document.activeElement)), true, 'Starting a pending write cannot restore focus to controls behind the modal');
   assert.equal(await appointmentModal.locator('input,select,textarea').evaluateAll(nodes => nodes.length > 0 && nodes.every(node => node.matches(':disabled'))), true, 'All appointment form fields stay locked through the pending write');
   let pendingPrompts = 0;
   const unexpectedPendingPrompt = dialog => { pendingPrompts++; void dialog.dismiss(); };
@@ -279,6 +280,9 @@ try {
   fixture.releaseAppointment(); fixture.holdAppointment = null; await (await appointmentResponse).finished();
   await appointmentPage.waitForFunction(() => !document.querySelector('[role="dialog"] fieldset')?.disabled);
   assert.equal(fixture.appointmentWrites.length, 1, 'The complete failed appointment operation still contains only one write');
+  assert.equal(await appointmentModal.evaluate(node => node === document.activeElement), true, 'Unlocking a failed write preserves focus on the pending dialog');
+  await appointmentPage.keyboard.press('Shift+Tab');
+  assert.equal(await appointmentSave.evaluate(node => node === document.activeElement), true, 'Shift+Tab from the newly unlocked dialog wraps to its final enabled control');
   assert.equal(await appointmentNotes.inputValue(), appointmentDraft, 'A failed appointment write preserves the editable draft');
   assert.equal(await appointmentModal.getByLabel('Tarih', { exact: true }).inputValue(), futureDay);
   appointmentPage.once('dialog', dialog => dialog.accept()); await cancelAppointment.click(); await appointmentModal.waitFor({ state: 'hidden' });
