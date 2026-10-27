@@ -7,8 +7,8 @@
   "semanticReviewRequired": true,
   "semanticAcceptance": "pending-human-review",
   "model": {
-    "bytes": 1834426016,
-    "sha256": "061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+    "bytes": 2497280256,
+    "sha256": "7485fe6f11af29433bc51cab58009521f205840f5b4ae3a32fa7f92e8534fdf5",
     "verified": true
   },
   "engine": {
@@ -22,5 +22,5 @@
   "report": "native-inference-report.json",
   "checkerExitCode": 1,
   "error": "NATIVE_CONTRACT_FAILED",
-  "milliseconds": 136813
+  "milliseconds": 173630
 }

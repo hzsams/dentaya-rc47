@@ -7,8 +7,8 @@
   "engineVersion": "version: 9380 (d205df681)\r\nbuilt with Clang 19.1.5 for Windows x86_64",
   "engineBinarySHA256": "052539ab0e0f77725efa10e7ae857153fcdbdfdfe8dc59d711c64a3c916c627d",
   "model": {
-    "bytes": 1834426016,
-    "sha256": "061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+    "bytes": 2497280256,
+    "sha256": "7485fe6f11af29433bc51cab58009521f205840f5b4ae3a32fa7f92e8534fdf5",
     "verified": true
   },
   "checks": [
@@ -18,17 +18,17 @@
       "prompt": "Sana nasıl seslenmeliyim ve bu uygulamada bana ne için yardımcı oluyorsun?",
       "reply": {
         "ok": true,
-        "output": "AYA'ya nasıl seslenmeliyim ve bu uygulamada bana ne için yardımcı oluyorsun? AYA, genellikle \"AYA\" diye seslenirim. Bu uygulama, bana işlerinizi kolaylaştırmak ve doğru bilgi vermek için yardımcı olur. Sana yardımcı olabilirim: işlerinizi izlemek, bilgileri kontrol etmek, hesaplamalar yapmak, dönüştürmeleri yapmak, CAD araçlarını kullanmak ve diğer işlerinizi yönetmek. Sana yardımcı olabilirim.",
+        "output": "AYA\n\nSeslenmeyi ve işlevselliği anlatabilmek için doğrudan ve kısa bir şekilde konuşmalısın. Bu uygulama, diş hekimliği ve diş tıbbi işlemlerle ilgili işlevlerde yardımcı olmak amacıyla geliştirildi. AYA, diş tıbbi süreçlerde kullanılan terimleri, akışları, kontrol listelerini, görev transferlerini, hesaplamaları ve dönüştürmeleri anlamak ve uygulamak için yardımcı olur. Ancak, bu uygulama, kişisel bilgileri, tıbbi kayıtları veya diş tıbbi tedavi planlarını saklamaz. Sadece diş tıbbi süreçlerle ilgili bilgileri ve işlevleri desteklemek amacıyla kullanılır.",
         "metrics": {
-          "milliseconds": 26186,
-          "tokens": 137
+          "milliseconds": 40364,
+          "tokens": 197
         },
-        "model": "aya-local:061b54daade076b5d3362dac252678d1",
+        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
         "references": []
       },
-      "streamedUpdates": 136,
-      "streamedCharacters": 397,
-      "wallMilliseconds": 29732
+      "streamedUpdates": 196,
+      "streamedCharacters": 562,
+      "wallMilliseconds": 43149
     },
     {
       "name": "novel-non-dental-request",
@@ -36,17 +36,17 @@
       "prompt": "Bir rüzgâr çanının ağzından, yağmuru ilk kez duyan çocuklara üç yeni cümle kur. Konuyu diş veya yazılıma bağlama.",
       "reply": {
         "ok": true,
-        "output": "AYA  \nBu soruyu çözmek için bir rüzgâr çanısı, yağmuru ilk kez duyan çocuklara üç yeni cümle kurmak istiyorum. Konuyu diş veya yazılıma bağlamak istiyorum.  \n\nİlk cümle: Rüzgâr çanısı, dişlerin kırılmasından sonra, yağmurun ilk kez duynuğunda, bir dişin kırıldığını gösterir.  \nİkinci cümle: Rüzgâr çanısı, dişlerin kırılmasından sonra, yağmurun ilk kez duynuğunda, bir dişin kırıldığını anlatır.  \nÜçüncü cümle: Rüzgâr çanısı, dişlerin kırılmasından sonra, yağmurun ilk kez duynuğunda, bir dişin kırıldığını anlatır.",
+        "output": "AYA\n\nRüzgâr çanının ağzından ilk yağmurun çocuklara hitap eden üç cümle:  \n1. \"İlk yağmur, kollarını sarmalayan soğuk bir sel.\"  \n2. \"Çocuklar, yağmurun ilk damlasını sıklıkla duyar.\"  \n3. \"Rüzgâr çanı, yağmurun sesini ilk kez duyuran çocuklara seslendirir.\"  \n\nBu cümleler, diş tıraşı sırasında kullanılan bir yazılımın kullanıcıya hitap etmesini sağlayabilir.",
         "metrics": {
-          "milliseconds": 16803,
-          "tokens": 209
+          "milliseconds": 24259,
+          "tokens": 134
         },
-        "model": "aya-local:061b54daade076b5d3362dac252678d1",
+        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
         "references": []
       },
-      "streamedUpdates": 208,
-      "streamedCharacters": 517,
-      "wallMilliseconds": 16826
+      "streamedUpdates": 133,
+      "streamedCharacters": 361,
+      "wallMilliseconds": 24276
     },
     {
       "name": "novel-natural-language",
@@ -54,17 +54,17 @@
       "prompt": "Bu akşamki çalışma planımız şu: önce 46 numaralı implant üstü kronu inceleyeceğiz. Kararımız, dış konturu koruyup oklüzal yüksekliği elle azaltmak. Hedefi ve kararı aklında tut; henüz işlem yapma.",
       "reply": {
         "ok": true,
-        "output": "AYA  \nBu akşamki çalışma planınızda 46 numaralı implant üstü kronunu incelemek ve dış konturu koruyup oklüzal yüksekliği elle azaltmak hedefi ve kararını belirlemek istiyorsunuz. İşlemi henüz başlatmak için hazırlık yapmanız gerekir.  \nİşlemi yapmadan önce, implantın dış konturu ve oklüzal yüksekliği ile ilgili bilgileri doğrulayınız.  \nİşlemi başlatmak için gerekli olan bilgileri ve CAD araçlarını hazır tutunuz.  \nİşlemi yapmadan önce, implantın dış konturu ve oklüzal yüksekliği ile ilgili bilgileri doğrulayınız.",
+        "output": "AYA  \nBu akşamki çalışma planını anladım. 46 numaralı implant üstü kronun dış konturunu koruyarak oklüzal yüksekliğini azaltmak amaçlı inceleyeceğiz. Hedef ve kararları unutmayalım, henüz işlem yapmadan önce bu noktaları gözden geçireceğiz. Daha fazla bilgi veya talimat varsa bana bildir.",
         "metrics": {
-          "milliseconds": 14568,
-          "tokens": 173
+          "milliseconds": 18480,
+          "tokens": 98
         },
-        "model": "aya-local:061b54daade076b5d3362dac252678d1",
+        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
         "references": []
       },
-      "streamedUpdates": 172,
-      "streamedCharacters": 519,
-      "wallMilliseconds": 14589
+      "streamedUpdates": 97,
+      "streamedCharacters": 289,
+      "wallMilliseconds": 18498
     },
     {
       "name": "separate-memory-extraction",
@@ -74,27 +74,23 @@
         "ok": true,
         "output": "Memory updated",
         "metrics": {
-          "milliseconds": 24020,
-          "tokens": 121
+          "milliseconds": 19989,
+          "tokens": 79
         },
         "workingMemory": {
-          "goal": "To proceed with the evaluation of the 46th implant upper crown and determine whether to retain the external contour and reduce the occlusal height manually.",
+          "goal": "46 numaralı implant üstü kronun dış konturunu koruyarak oklüzal yüksekliğini azaltmak",
           "decisions": [
-            "Evaluate the 46th implant upper crown",
-            "Determine whether to retain the external contour and reduce the occlusal height manually"
+            "dış konturu koruyup oklüzal yüksekliği elle azaltmak"
           ],
-          "openQuestions": [
-            "What are the specific details of the 46th implant upper crown?",
-            "Are there any additional information or documentation available about the implant?"
-          ]
+          "openQuestions": []
         },
         "proposals": [],
-        "model": "aya-local:061b54daade076b5d3362dac252678d1",
+        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
         "references": []
       },
       "streamedUpdates": 0,
       "streamedCharacters": 0,
-      "wallMilliseconds": 24043
+      "wallMilliseconds": 20006
     },
     {
       "name": "working-memory-follow-up",
@@ -102,17 +98,17 @@
       "prompt": "Az önce hangi diş ve hangi biçim kararını konuşmuştuk? Sadece hatırladıklarını söyle.",
       "reply": {
         "ok": true,
-        "output": "Diş: 46. diş, biçim: dış konturunu koruyor ve occlusal yüksekliği azaltıyor.",
+        "output": "46 numaralı implant üstü kronun dış konturunu koruyarak oklüzal yüksekliğini azaltmak.",
         "metrics": {
-          "milliseconds": 7540,
-          "tokens": 30
+          "milliseconds": 7740,
+          "tokens": 29
         },
-        "model": "aya-local:061b54daade076b5d3362dac252678d1",
+        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
         "references": []
       },
-      "streamedUpdates": 29,
-      "streamedCharacters": 76,
-      "wallMilliseconds": 7560
+      "streamedUpdates": 28,
+      "streamedCharacters": 86,
+      "wallMilliseconds": 7755
     },
     {
       "name": "natural-partial-memory-correction",
@@ -120,17 +116,17 @@
       "prompt": "Çalışma hedefini şimdilik kaldır; dış kontur hakkında anlaştığımız kararı ve varsa açık soruları aynen koru.",
       "reply": {
         "ok": true,
-        "output": "AYA  \nÇalışma hedefini kaldırıldı. Dış kontur hakkındaki karar ve açık sorular aynen korunmuştur.",
+        "output": "AYA  \nÇalışma hedefini kaldırdım. Dış kontur hakkında anlaştığımız kararı ve varsa açık soruları aynen koruyorum. Daha fazla bilgi veya talimat varsa lütfen paylaştırın.",
         "metrics": {
-          "milliseconds": 3721,
-          "tokens": 32
+          "milliseconds": 11082,
+          "tokens": 60
         },
-        "model": "aya-local:061b54daade076b5d3362dac252678d1",
+        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
         "references": []
       },
-      "streamedUpdates": 31,
-      "streamedCharacters": 97,
-      "wallMilliseconds": 3741
+      "streamedUpdates": 59,
+      "streamedCharacters": 169,
+      "wallMilliseconds": 11099
     },
     {
       "name": "separate-partial-memory-correction",
@@ -140,27 +136,23 @@
         "ok": true,
         "output": "Memory updated",
         "metrics": {
-          "milliseconds": 14332,
-          "tokens": 130
+          "milliseconds": 8091,
+          "tokens": 33
         },
         "workingMemory": {
-          "goal": "To proceed with the evaluation of the 46th implant upper crown and determine whether to retain the external contour and reduce the occlusal height manually.",
+          "goal": "46 numaralı implant üstü kronun dış konturunu koruyarak oklüzal yüksekliğini azaltmak",
           "decisions": [
-            "Evaluate the 46th implant upper crown",
-            "Determine whether to retain the external contour and reduce the occlusal height manually"
+            "dış konturu koruyup oklüzal yüksekliği elle azaltmak"
           ],
-          "openQuestions": [
-            "What are the specific details of the 46th implant upper crown?",
-            "Are there any additional information or documentation available about the implant?"
-          ]
+          "openQuestions": []
         },
         "proposals": [],
-        "model": "aya-local:061b54daade076b5d3362dac252678d1",
+        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
         "references": []
       },
       "streamedUpdates": 0,
       "streamedCharacters": 0,
-      "wallMilliseconds": 14352
+      "wallMilliseconds": 8109
     }
   ],
   "transport": [
@@ -514,7 +506,7 @@
     "conversation": {
       "attempted": 5,
       "succeeded": 5,
-      "streamedUpdates": 576
+      "streamedUpdates": 513
     },
     "memory": {
       "attempted": 2,
@@ -541,5 +533,5 @@
   },
   "contractPass": false,
   "blocked": false,
-  "error": "A novel partial reset can clear the goal\n+ actual - expected\n\n+ 'To proceed with the evaluation of the 46th implant upper crown and determine whether to retain the external contour and reduce the occlusal height manually.'\n- ''\n"
+  "error": "A novel partial reset can clear the goal\n+ actual - expected\n\n+ '46 numaralı implant üstü kronun dış konturunu koruyarak oklüzal yüksekliğini azaltmak'\n- ''\n"
 }
