@@ -4,6 +4,7 @@ on:
     branches: [codex/aya-native-validation]
     paths:
       - .github/workflows/native-validation.yml
+      - scripts/fetch-official-4b-metadata.cjs
       - scripts/run-windows-aya-native.cjs
       - scripts/verify-aya-native.cjs
       - electron/aya-local.cjs
@@ -26,35 +27,16 @@ jobs:
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
         with:
           node-version: 24.19.0
-      - name: Pin npm toolchain
-        shell: pwsh
-        run: |
-          if ((npm --version).Trim() -ne '11.9.0') { npm install --global npm@11.9.0; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }
-          if ((npm --version).Trim() -ne '11.9.0') { throw 'npm toolchain mismatch' }
-      - name: Install locked production dependencies
-        run: npm ci --omit=dev --ignore-scripts
-      - name: Actual pinned model inference
-        run: node scripts/run-windows-aya-native.cjs --output native-validation-evidence
-      - name: Record tested source and official model metadata
-        if: always()
-        shell: pwsh
-        run: |
-          @'
-          const fs=require('node:fs'),crypto=require('node:crypto');
-          fs.mkdirSync('native-validation-evidence',{recursive:true});
-          const names=['electron/aya-local.cjs','electron/aya/managed-runtime.cjs','electron/aya/core.cjs','electron/aya/agent.cjs','scripts/verify-aya-native.cjs','scripts/run-windows-aya-native.cjs'];
-          const hashes=Object.fromEntries(names.map(name=>[name,crypto.createHash('sha256').update(fs.readFileSync(name)).digest('hex')]));
-          fs.writeFileSync('native-validation-evidence/source-info.json',JSON.stringify({testedCommit:process.env.GITHUB_SHA,runnerOS:process.platform,node:process.version,runId:process.env.GITHUB_RUN_ID,sourceHashes:hashes},null,2)+'\n');
-          (async()=>{try{const r=await fetch('https://huggingface.co/api/models/Qwen/Qwen3-1.7B-GGUF/revision/90862c4b9d2787eaed51d12237eafdfe7c5f6077?blobs=true',{signal:AbortSignal.timeout(20000)});const data=r.ok?await r.json():null;fs.writeFileSync('native-validation-evidence/official-model-metadata.json',JSON.stringify({httpStatus:r.status,revision:data?.sha,files:data?.siblings?.filter(f=>f.rfilename.endsWith('.gguf')).map(f=>({name:f.rfilename,lfs:f.lfs}))},null,2)+'\n');}catch{fs.writeFileSync('native-validation-evidence/official-model-metadata.json',JSON.stringify({error:'OFFICIAL_METADATA_UNAVAILABLE'})+'\n');}})();
-          '@ | node
+      - name: Discover official 4B immutable pin (metadata only)
+        run: node scripts/fetch-official-4b-metadata.cjs
       - name: Commit only diagnostic reports to isolated branch
         if: always()
         shell: pwsh
         run: |
           git config user.name 'DentAYA native validation'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          $allowed = @('windows-native-result.json','native-inference-report.json','native-acceptance.txt','source-info.json','official-model-metadata.json')
+          $allowed = @('official-4b-metadata.json')
           foreach ($name in $allowed) { $file = "native-validation-evidence/$name"; if (Test-Path -LiteralPath $file) { git add -- $file; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } } }
           git diff --cached --quiet
-          if ($LASTEXITCODE -eq 1) { git commit -m 'Record isolated Windows native inference evidence'; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; git push origin HEAD:codex/aya-native-validation; exit $LASTEXITCODE }
+          if ($LASTEXITCODE -eq 1) { git commit -m 'Record official 4B metadata without inference'; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; git push origin HEAD:codex/aya-native-validation; exit $LASTEXITCODE }
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
