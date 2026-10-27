@@ -45,11 +45,11 @@ try{
  async function screenshot(locator,name){if(!process.env.DENTAYA_SCREENSHOT_DIR)return;await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});const target=path.join(process.env.DENTAYA_SCREENSHOT_DIR,name);await locator.screenshot({path:target,animations:'disabled'});screenshots.push(target);}
  async function waitForFixture(page){await page.waitForFunction(()=>{const input=document.querySelector('#aya-local-message');return Boolean(window.rc50Work&&input&&!input.disabled);});}
  async function ask(page,scope,prompt,cad=false){
-  const selector=cad?'.cad-aya-messages article':'.aya-message--assistant';
-  const count=await scope.locator(selector).count();
+  const replies=cad?scope.locator('.cad-aya-messages article').filter({hasNot:page.getByText('Siz',{exact:true})}):scope.locator('.aya-message--assistant');
+  const count=await replies.count();
   const composer=scope.locator(cad?'.cad-aya-panel>form':'.aya-chat-composer');
   await composer.locator('textarea').fill(prompt);await composer.locator('button[type=submit]').click();
-  const reply=scope.locator(selector).nth(count+(cad?1:0));await reply.waitFor();
+  const reply=replies.nth(count);await reply.waitFor();
   await page.waitForFunction(cad=>{const input=document.querySelector(cad?'#cad-test .cad-aya-panel>form textarea':'#aya-local-message');return input&&!input.disabled;},cad);
   return reply;
  }
@@ -67,29 +67,25 @@ try{
  await page.goto(url);await waitForFixture(page);
  const main=page.locator('#main-test');
  await ask(page,main,memoryCommand);await inspectMemory(page,main);
- const recalled=await (await ask(page,main,'Hedefimiz neydi?')).textContent();
- assert.ok(recalled.includes(goal),'Explicitly recorded goal is recalled without a model');
- assert.ok(recalled.includes(decision),'Recall retains the recorded decision');
- const compound=await (await ask(page,main,'12 cm kaç mm? Ardından teslim notu taslağı hazırla')).textContent();
- assert.match(compound,/120\s*mm/i,'The first requested step converts centimetres to millimetres');
- assert.ok(compound.includes(goal),'The delivery draft uses the recorded goal');
- assert.ok(compound.includes(decision),'The delivery draft uses the recorded decision');
- assert.match(compound,/\bCore\b/,'Offline tasks identify the actual Core engine');
- await screenshot(main.locator('.aya-conversation-shell'),'AYA_RC50_memory_and_multistep.png');
+ async function unavailableMain(prompt){
+  const count=await main.locator('.aya-message--assistant').count();const composer=main.locator('.aya-chat-composer');await composer.locator('textarea').fill(prompt);await composer.locator('button[type=submit]').click();await main.locator('.aya-chat-error').waitFor();await page.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);assert.equal(await main.locator('.aya-message--assistant').count(),count,'Normal offline conversation cannot switch to curated task/recall answers');assert.equal(await composer.locator('textarea').inputValue(),prompt);
+ }
+ await unavailableMain('Hedefimiz neydi?');
+ await unavailableMain('12 cm kaç mm? Ardından teslim notu taslağı hazırla');
+ await inspectMemory(page,main);
+ await screenshot(main.locator('.aya-conversation-shell'),'AYA_RC61_memory_and_unavailable_model.png');
  await main.getByRole('button',{name:'Yeni sohbet',exact:true}).click();
- assert.equal(await main.locator('.aya-message').count(),0,'New conversation clears the displayed conversation');
- const reset=await (await ask(page,main,'Hedefimiz neydi?')).textContent();
- assert.ok(!reset.includes(goal)&&!reset.includes(decision),'A new conversation cannot recall the preceding working memory');
+ assert.equal(await main.locator('.aya-message').count(),0,'New conversation clears the displayed conversation');assert.equal(await main.locator('.aya-goal-preview').count(),0,'A new conversation cannot inherit the preceding working memory');
  await ask(page,main,memoryCommand);
  await page.evaluate(()=>window.rc50Work.saveAyaOptions({saveHistory:true}));
  await page.waitForFunction(goal=>window.rc50Work.readAyaState().sessions[0]?.workingMemory?.goal===goal,goal);
  await page.reload();await waitForFixture(page);
  await main.locator('.aya-goal-preview').waitFor();await inspectMemory(page,main);
- const restored=await (await ask(page,main,'Hedefimiz neydi?')).textContent();
- assert.ok(restored.includes(goal)&&restored.includes(decision)&&restored.includes(question),'History opt-in restores explicit memory after a browser reload');
+ await unavailableMain('Hedefimiz neydi?');await inspectMemory(page,main);
  timings.offlineMemoryAndTasksMs=Date.now()-offlineStarted;
 
  const cadStarted=Date.now(),cad=page.locator('#cad-test');
+ await cad.getByRole('combobox',{name:'Yanıt kaynağı',exact:true}).selectOption('guide');
  await ask(page,cad,memoryCommand,true);
  await cad.locator('.cad-aya-context>summary').click();
  await cad.locator('.aya-working-memory>summary').click();
@@ -140,10 +136,10 @@ try{
  const previousUnit=await page.evaluate(()=>window.rc50Work.getContext());
  // Match the actual DesignStudioClient scope key so each unit has its own panel session.
  await page.evaluate(()=>window.rc50Work.setContext(c=>({...c,unit:'47',scope:'rc56-synthetic-project/source/unit-47',snapshot:'rc56-unit47',dataToken:'rc56-unit47-geometry',placed:false,availableTools:['place','inspect']})));
- await page.waitForFunction(()=>window.rc50Work.getContext().unit==='47');
- const otherUnit=await ask(page,cad,'Peki şimdi?',true);assert.equal(await otherUnit.locator('[data-proposal-tool]').count(),0,'Another unit cannot infer a follow-up target from the previous unit');
+ await page.waitForFunction(()=>window.rc50Work.getContext().unit==='47');await cad.getByRole('combobox',{name:'Yanıt kaynağı',exact:true}).selectOption('guide');
+ const beforeUnknownGuide=await cad.locator('.cad-aya-messages article').count();await cad.locator('.cad-aya-panel>form textarea').fill('Peki şimdi?');await cad.locator('.cad-aya-panel>form button[type=submit]').click();await cad.locator('[role=alert]').waitFor();await page.waitForFunction(()=>!document.querySelector('#cad-test .cad-aya-panel>form textarea').disabled);assert.equal(await cad.locator('.cad-aya-messages article').count(),beforeUnknownGuide+1,'An unknown guide follow-up cannot fabricate a reply in another unit');assert.equal(await cad.locator('[data-proposal-tool]').count(),0,'Another unit cannot infer a follow-up target from the previous unit');
  const otherMemory=await ask(page,cad,'Hedefimiz neydi?',true);assert.ok(!(await otherMemory.textContent()).includes(goal),'The new unit does not inherit the previous goal');
- await page.evaluate(context=>window.rc50Work.setContext(()=>context),previousUnit);await page.waitForFunction(()=>window.rc50Work.getContext().unit==='46');
+ await page.evaluate(context=>window.rc50Work.setContext(()=>context),previousUnit);await page.waitForFunction(()=>window.rc50Work.getContext().unit==='46');await cad.getByRole('combobox',{name:'Yanıt kaynağı',exact:true}).selectOption('guide');
  const returnedMemory=await ask(page,cad,'Hedefimiz neydi?',true);assert.ok((await returnedMemory.textContent()).includes(goal),'Returning to the original unit restores its own working memory');
  timings.offlineCadMs=Date.now()-cadStarted;
 
@@ -154,38 +150,44 @@ try{
    onOpenPreferences:()=>()=>{},
    localAyaStatus:async()=>({ok:true,models:[{name:'rc50-synthetic-local-model',size:1000}],progress:{running:false,status:'ready',completed:0,total:0}}),
    onLocalAyaToken:()=>()=>{},
-   localAyaChat:async input=>{state.calls.push(input);if(state.error)return {ok:false,error:state.error};return {ok:true,output:'Sentetik yerel model yanıtı: çalışma bağlamı alındı.',references:[],workingMemory:input.workingMemory};},
+   localAyaChat:async input=>{state.calls.push(input);if(input.task==='memory')return {ok:true,output:'Separate memory extraction',workingMemory:input.workingMemory};if(state.error)return {ok:false,error:state.error};return {ok:true,output:'Sentetik yerel model yanıtı: çalışma bağlamı alındı.',references:[],workingMemory:input.workingMemory};},
    localAyaCancel:async()=>({ok:true}),
   };
  });
  await modelPage.goto(url);await waitForFixture(modelPage);await modelPage.waitForFunction(()=>document.querySelector('.aya-status--model'));
  const modelMain=modelPage.locator('#main-test');
+ const normalCalls=()=>modelPage.evaluate(()=>window.rc50Model.calls.filter(call=>call.task!=='memory'));
  await ask(modelPage,modelMain,memoryCommand);await inspectMemory(modelPage,modelMain);
  assert.equal(await modelPage.evaluate(()=>window.rc50Model.calls.length),0,'An explicit memory command is applied directly even when a local model is ready');
  await ask(modelPage,modelMain,'Dentin hakkında yeni bir açıklama hazırla');
- assert.equal(await modelPage.evaluate(()=>window.rc50Model.calls.length),1,'A normal new request still reaches the ready local model');
+ assert.equal((await normalCalls()).length,1,'A normal new request still reaches the ready local model');
  assert.deepEqual(await modelPage.evaluate(()=>window.rc50Model.calls[0].workingMemory),{goal,decisions:[decision],openQuestions:[question]},'The model receives the memory the user explicitly recorded');
- assert.equal(await modelPage.evaluate(()=>window.rc50Model.calls[0].agent),true);
+ assert.equal(await modelPage.evaluate(()=>window.rc50Model.calls[0].agent),false,'Main conversation uses natural text independently of tool JSON');
  assert.match(await modelMain.locator('.aya-message--assistant').last().textContent(),/Sentetik yerel model yanıtı/);
  await screenshot(modelMain.locator('.aya-conversation-shell'),'AYA_RC50_model_receives_explicit_memory.png');
  await modelMain.getByRole('button',{name:'Yeni sohbet',exact:true}).click();
  await ask(modelPage,modelMain,'Bağımsız yeni çalışma için kısa bir öneri yaz');
- assert.deepEqual(await modelPage.evaluate(()=>window.rc50Model.calls.at(-1).workingMemory),{goal:'',decisions:[],openQuestions:[]},'A new conversation sends empty memory to the model');
+ assert.deepEqual(await modelPage.evaluate(()=>window.rc50Model.calls.filter(call=>call.task!=='memory').at(-1).workingMemory),{goal:'',decisions:[],openQuestions:[]},'A new conversation sends empty memory to the model');
  const modelCad=modelPage.locator('#cad-test');await modelCad.getByRole('combobox',{name:'Kurulu yerel model',exact:true}).waitFor();
  await modelPage.evaluate(()=>{window.rc50Model.error='LOCAL_TIMEOUT';});
- const recoveredCad=await ask(modelPage,modelCad,'Modelin üstüne kron yapalım.',true);assert.match(await recoveredCad.textContent(),/AYA Core/);
- const fallbackPlace=recoveredCad.locator('[data-proposal-tool="place"]');await fallbackPlace.waitFor();assert.deepEqual(await modelPage.evaluate(()=>window.rc50Work.actions),[],'Model failure keeps placement as an explicit suggestion');
- await screenshot(modelCad,'AYA_RC56_model_failure_cad_help.png');
+ const beforeFailure=await modelCad.locator('.cad-aya-messages article').count();
+ await modelCad.locator('.cad-aya-panel>form textarea').fill('Modelin üstüne kron yapalım.');await modelCad.locator('.cad-aya-panel>form button[type=submit]').click();await modelCad.locator('[role=alert]').waitFor();await modelPage.waitForFunction(()=>!document.querySelector('#cad-test .cad-aya-panel>form textarea').disabled);
+ assert.equal(await modelCad.locator('.cad-aya-messages article').count(),beforeFailure+1,'CAD model failure produces no automatic guide assistant or proposals');assert.deepEqual(await modelPage.evaluate(()=>window.rc50Work.actions),[]);
+ await modelCad.getByRole('combobox',{name:'Yanıt kaynağı',exact:true}).selectOption('guide');
+ const recoveredCad=await ask(modelPage,modelCad,'Modelin üstüne kron yapalım.',true);assert.match(await recoveredCad.textContent(),/rehber/i);
+ const fallbackPlace=recoveredCad.locator('[data-proposal-tool="place"]');await fallbackPlace.waitFor();assert.deepEqual(await modelPage.evaluate(()=>window.rc50Work.actions),[],'Explicit guide keeps placement as an Apply-gated suggestion');
+ await screenshot(modelCad,'AYA_RC61_explicit_guide_after_model_failure.png');
  await fallbackPlace.getByRole('button',{name:'Uygula',exact:true}).click();await modelPage.waitForFunction(()=>window.rc50Work.getContext().placed===true);assert.deepEqual(await modelPage.evaluate(()=>window.rc50Work.actions),['place']);
- await modelPage.evaluate(()=>{window.rc50Model.error='';});const callsBefore=await modelPage.evaluate(()=>window.rc50Model.calls.length);
- const restoredModel=await ask(modelPage,modelCad,'Peki şimdi?',true);assert.match(await restoredModel.textContent(),/Sentetik yerel model yanıtı/);assert.equal(await modelPage.evaluate(()=>window.rc50Model.calls.length),callsBefore+1,'A recovered ready model keeps priority over Core follow-up handling');
+ await modelPage.evaluate(()=>{window.rc50Model.error='';});await modelCad.getByRole('combobox',{name:'Yanıt kaynağı',exact:true}).selectOption('conversation');const callsBefore=(await normalCalls()).length;
+ const restoredModel=await ask(modelPage,modelCad,'Peki şimdi?',true);assert.match(await restoredModel.textContent(),/Sentetik yerel model yanıtı/);assert.equal((await normalCalls()).length,callsBefore+1,'Returning to model mode reaches the ready model');
+ const restoredRequest=(await normalCalls()).at(-1);assert.ok(restoredRequest.history.every(message=>!message.guide&&message.engine!=='guide'&&!message.content.includes('Modelin üstüne kron yapalım.')),'Explicit guide turns cannot enter the next model conversation context');
  timings.readyModelMs=Date.now()-modelStarted;
  assert.deepEqual(errors,[],'The real conversation components run without page, hydration, or React errors');
  await browser.close();browser=null;
  await stopServer();
  rmSync(route,{recursive:true,force:true});rmSync(path.join(root,'.next/dev/types'),{recursive:true,force:true});
  assert.equal(existsSync(route),false);timings.totalMs=Date.now()-started;
- console.log(JSON.stringify({pass:true,explicitMemoryInRealChat:true,memoryRecallAndNewConversation:true,historyOptInReload:true,multistepConversionAndMemoryDraft:true,offlineTypedCadProposal:true,applyRequired:true,staleProposalDisabled:true,callbackFailurePreserved:true,manualSaveSupersedesHistoricalFailure:true,scopedCadFollowups:true,changedGeometryRequiresCurrentCheck:true,crossUnitFollowupAndMemoryBoundaries:true,failedModelRetainsApplyOnlyCadHelp:true,recoveredModelRetainsPriority:true,noInventedGeometryMetrics:true,readyModelReceivesExplicitMemory:true,modelCallsAreMock:true,cadCallbacksAreSynthetic:true,realGeometryValidated:false,timings,screenshots},null,2));
+ console.log(JSON.stringify({pass:true,explicitMemoryInRealChat:true,explicitMemoryAndNewConversation:true,historyOptInReload:true,normalOfflineTasksDoNotImpersonateInference:true,explicitGuideTypedCadProposal:true,applyRequired:true,staleProposalDisabled:true,callbackFailurePreserved:true,manualSaveSupersedesHistoricalFailure:true,scopedCadFollowups:true,changedGeometryRequiresCurrentCheck:true,crossUnitFollowupAndMemoryBoundaries:true,failedModelNoFabricatedReply:true,explicitGuideRetainsApplyOnlyCadHelp:true,recoveredModelRetainsPriority:true,noInventedGeometryMetrics:true,readyModelReceivesExplicitMemory:true,modelCallsAreMock:true,cadCallbacksAreSynthetic:true,realGeometryValidated:false,timings,screenshots},null,2));
 }catch(error){console.error(logs.slice(-14000));throw error;}finally{
  await browser?.close();
  await stopServer();

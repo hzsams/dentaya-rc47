@@ -1,0 +1,91 @@
+{
+  "release": "1.0.0-rc.61",
+  "status": "pass",
+  "scope": "source and synthetic integration verification only",
+  "date": "2026-10-27T14:50:08.161261+03:00",
+  "baseRelease": "1.0.0-rc.60",
+  "baseCommit": "2e8787484a33b7ac8e90a8987d36d1a367d6591a",
+  "nativeModelInferenceVerified": false,
+  "windowsInstallerProduced": false,
+  "liveOrganizationBackendVerified": false,
+  "dentalFactsActual": 500,
+  "dentalFactSourcesActual": 60,
+  "brandLogosActual": 120,
+  "ayaQuestionCatalogueActual": 1008,
+  "miniGamesActual": 5,
+  "nativeGrammarVerified": true,
+  "nativeGrammarChecks": 22,
+  "nativeModelWeightsAvailable": false,
+  "nativeModelInferenceCases": 0,
+  "nativeSemanticAcceptance": "blocked official model access; not verified",
+  "nativeEvidence": {
+    "grammar": {
+      "path": "native-grammar-report.json",
+      "sha256": "c3057b8310e4523339301004f84d615a829649185a7303113a40b1cc80f9d8dc"
+    },
+    "inference": {
+      "path": "native-inference-report.json",
+      "sha256": "efa20e5061c1235b8bf92d5fb1260cdbae8331895038ffc1ffd0b6a58032bb81"
+    }
+  },
+  "checks": [
+    {
+      "name": "full-verify",
+      "command": "npm run verify",
+      "exitCode": 0,
+      "seconds": 239.28,
+      "log": "full-verify.txt"
+    },
+    {
+      "name": "loading-reading",
+      "command": "node scripts/verify-loading-reading-browser.mjs",
+      "exitCode": 0,
+      "seconds": 27.01,
+      "log": "loading-reading.txt"
+    }
+  ],
+  "browserResults": "browser-results.json",
+  "browserResultsSha256": "7ca6bfe71f65ea2ebf967bcbd68d510e476bbe34a524b6b94509bbc363306d28",
+  "browserRuns": 7,
+  "sourceHashesAtVerification": {
+    ".env.example": "afa148a0f2d2a4158893a84d5305757acc7aa19aab3fc3ce5dfdc5a60b2951b2",
+    ".env.release.example": "cfe5370598d80cdc5eae1858c67c5c6d65b0976d7eefb4c4aac17c71bf30a2f4",
+    "AGENTS.md": "e8593688527c6d0ff63085e7be3dba08ea667466d1a305e6cf6f3206f6b11fa3",
+    "DENTAYA_GUNCELLE_DERLE.cmd": "a59849befd0625788306169ae6d2faeac65f9f719320a7cf0f4548ef17db99ec",
+    "KURULUM.txt": "e08ec3911c74652c8334612fb3673a773b6cfbecaf09a4d07dfb2e998c4b65c8",
+    "README.md": "db781ce64f9ae9e9e13afb7abad02677c7f781c191d3bd7c3f160de66f7b60f9",
+    "electron/aya-local.cjs": "85ca0e172d61030ceaab98f4c33b9cfbf650ff0bec06786a798b9b550140afcf",
+    "electron/aya/assistant.cjs": "5b6d33b0e9919565d4d5ff78e9031fa328ec61486e4db8c161822d642c447d54",
+    "electron/aya/core.cjs": "98f3d9e64d9fc7bf5ada33f72a3babde154449b9cf3a7fce0b22fefda88a9c3b",
+    "package-lock.json": "19f4f5a2e45fcec76cf9e5709313ebcc9115e5b24b763a694a8150b9a6532fee",
+    "package.json": "76c9742df794f51282ecd13c32870f76150d293df7490b97151aed878e7fac9c",
+    "scripts/verify-aya-conversation-browser.mjs": "dd5cbcc4d6aae4ff8ea701e660099b0a9cc7a727f438bc34daba79a3e6f18fd6",
+    "scripts/verify-aya-conversation.ts": "e09b4ef894c3ac03c99e8b2c768053cca27cdef166e60087afcff436580c1961",
+    "scripts/verify-aya-native.cjs": "3d6c9d4ee29396d189ef9586f2bdfe20120380d016902a4c3784c9b8f797e332",
+    "scripts/verify-aya-setup-browser.mjs": "42e84d12ffaaf5ce781720611beb51ca9148a29e76eaf2077ed2186d50f8cade",
+    "scripts/verify-aya-state-browser.mjs": "0336f5a50eaecdb920f00c0c76c0e198d36d5bbf0fa62990aaa2f380c0221aff",
+    "scripts/verify-aya-work-browser.mjs": "7d3101fff437fb50923969107202662492b811d837c66ed5bb105c9f3fcb25ee",
+    "scripts/verify-aya-work.ts": "26fc12c1be41f58917f8102c7f59ae3a2910f4620f09c681574a45e1e6f75a46",
+    "scripts/verify-cad-daily-browser.mjs": "8c8b6206996caf3097958f3be91ebd168cbc1266894eacdd796fb4e752c07e15",
+    "scripts/verify-desktop-shell-browser.mjs": "975c3bf763b1f20295b3922062348f432771f25402a18e633ad0454499251aac",
+    "scripts/verify-local-aya.cjs": "fc219d394d9f6ba63c8198f159ec56ff96f4197689b70d12b9bbe23f2e8ebe27",
+    "scripts/verify-ui-browser.mjs": "cabe26d82c05b66ce78981f9ce09bb1133ffbed3db13a766457773b2cc1343cb",
+    "src/app/ai/AyaChat.tsx": "a772d7ec69608bbc87ee9ee0921f1dda808a5594f319cdd30ec663661f446ca8",
+    "src/app/ai/AyaEngineSetup.tsx": "fb35e2aef80cd4700574ec2e1f582d99778ef6687007b34230163692964947a3",
+    "src/app/ai/AyaSources.tsx": "50bdbca4f9f75eaa392e65ae4bffdd4b10ecb2ba39cd7105cb49fdc961fadce6",
+    "src/app/ai/aya-sources.css": "f9b68d19d61d9b6a6f61a56d179b8cae42cfcf5b8b7dc68d8374744d41a43668",
+    "src/app/design/CadAyaPanel.tsx": "e308e47293f6a09fc87b225d397d137335874bb94a2ec4017c0d8f52ce95a7b2",
+    "src/lib/aya-conversation.ts": "0627788c67a182cbdbb6a8392158c3a90d7c0ffae55d16bb9144b5e29730049d",
+    "src/lib/i18n/aya-agent.ts": "cf76c0632902308e831a46f24c5cb982ec19de83bd5e905ee70bf47eeb0f11af",
+    "src/lib/i18n/aya-experience.ts": "86cc68bfaf695aa2fc4955b8b963ea00d045357eaa3c399f5dd7ea307f7760d7",
+    "src/lib/release.ts": "777cfc4a3b235be837f55cef464629c976f6a1a25403c41679ea2784bbf5e14a",
+    "src/lib/supabase.ts": "4044cd14cc3edeb91409bb620cbba545487793669d1feff2b0476d310c0aacbf",
+    "src/types/desktop.d.ts": "8d3763c106a0e98c20761bc27653f184831f641fa5cc54808c1e649995a79640"
+  },
+  "runtime": {
+    "node": "v24.19.0",
+    "npm": "11.9.0",
+    "os": "Linux"
+  },
+  "sourceIntegrity": "sealed separately after report generation"
+}

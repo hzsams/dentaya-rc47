@@ -1,9 +1,11 @@
 // AYA's conversation shell keeps existing language packs and uses English for new copy outside Turkish.
 const tr = {
  selectedSources:'Seçilen kaynaklar',externalSource:'Dış kaynak, yeni sekmede açılır',
+ catalogReferenceNote:'Türkçe eğitim başvurusudur; model yanıtı değildir. Klinik veya üretim onayı yerine geçmez.',catalogReferenceMissing:'Bu başvuru kaydı bu sürümde bulunamadı.',
+ unavailableStatus:'Yerel model bekleniyor',unavailableNote:'AYA’nın sohbet edebilmesi için bu bilgisayarda çalışan bir yerel model gerekiyor. Sohbet ayarlarından modeli kurun veya seçin.',configureModel:'Yerel modeli ayarla',freeConversation:'Kendi cümlelerinizle yazın. AYA konuşmanın bağlamını, çalışma hedefini ve kararlarınızı birlikte kullanır.',conversationEngineHelp:'Sohbet doğrudan seçili yerel modelle yapılır. Model çalışmıyorsa hazır cevap eklenmez; sorunuz korunur. CAD işlemleri ayrı Uygula onayı gerektirir.',modelBusy:'Yerel model meşgul. Devam eden işlemin bitmesini bekleyin.',cancelled:'Yanıt durduruldu. Sorunuz korundu.',
  title:'AYA',subtitle:'Çalışma asistanınız',back:'Çalışma alanı',newChat:'Yeni sohbet',settings:'Sohbet ayarları',close:'Kapat',
  conversation:'AYA sohbeti',checking:'Bağlantı kontrol ediliyor',answering:'Yanıt hazırlanıyor',coreStatus:'Core · çevrimdışı rehber',modelReady:'Yerel model hazır',modelVerified:'Yerel model · yanıt alındı',modelFailed:'Son istek tamamlanamadı',
- localNote:'Mesajlarınız bu bilgisayarda işlenir.',coreNote:'Bilgi rehberi ve çalışma araçları kullanıma hazır.',browserNote:'Tarayıcıda Core rehberi açıktır. Açık uçlu sohbet için masaüstünde yerel model kurabilirsiniz.',
+ localNote:'Mesajlarınız bu bilgisayarda işlenir.',coreNote:'Bilgi rehberi ve çalışma araçları kullanıma hazır.',browserNote:'Bu tarayıcı yerel model köprüsüne bağlı değil. Sohbeti Windows masaüstü uygulamasında yerel modelle açın.',
  welcome:'Bugün ne üzerinde çalışıyoruz?',welcomeNote:'Bir konu sorun, işinizi adımlara ayıralım veya bir kontrol listesi hazırlayalım.',
  promptTitles:['CAD adımlarını açıkla','Kontrol listesi hazırla','Birim dönüştür','Teslim notu oluştur'],
  prompts:['CAD iş akışında adımları nasıl takip ederim?','Kontrol listesi','12 cm kaç mm?','Teslim notu taslağı'],
@@ -19,9 +21,11 @@ const tr = {
 };
 const en: typeof tr = {
  selectedSources:'Selected references',externalSource:'External reference, opens in a new tab',
+ catalogReferenceNote:'This is a Turkish educational reference, not a model response. It does not replace clinical or production approval.',catalogReferenceMissing:'This reference entry was not found in this version.',
+ unavailableStatus:'Waiting for a local model',unavailableNote:'AYA needs a local model running on this computer to converse. Install or select a model in Conversation settings.',configureModel:'Set up local model',freeConversation:'Write in your own words. AYA uses the conversation, work goal, and decisions as context.',conversationEngineHelp:'Conversation goes directly to the selected local model. If the model is unavailable, no canned answer is added; your question is kept. CAD actions require a separate Apply confirmation.',modelBusy:'The local model is busy. Wait for the active operation to finish.',cancelled:'Response stopped. Your question is kept.',
  title:'AYA',subtitle:'Your work assistant',back:'Workspace',newChat:'New conversation',settings:'Conversation settings',close:'Close',
  conversation:'AYA conversation',checking:'Checking connection',answering:'Preparing a reply',coreStatus:'Core · offline guide',modelReady:'Local model ready',modelVerified:'Local model · response received',modelFailed:'Last request could not complete',
- localNote:'Messages are processed on this computer.',coreNote:'The information guide and work tools are ready.',browserNote:'Core guidance is available in the browser. Install a local model in the desktop app for open-ended conversation.',
+ localNote:'Messages are processed on this computer.',coreNote:'The information guide and work tools are ready.',browserNote:'This browser has no local model bridge. Open conversation in the Windows desktop app with a local model.',
  welcome:'What are we working on today?',welcomeNote:'Ask a question, break down a task, or prepare a checklist.',
  promptTitles:['Explain CAD steps','Prepare a checklist','Convert a unit','Create a handoff note'],
  prompts:['How do I follow the CAD workflow steps?','Workspace checklist','12 cm to mm?','Handoff draft'],

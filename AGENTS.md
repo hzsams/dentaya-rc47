@@ -1,6 +1,6 @@
 # DentAYA çalışma talimatı
 
-Bu klasör RC46/RC47 tabanından geliştirilen RC60 kaynak güncellemesidir. Önce CODEX_DEVIR_NOTLARI.md ve CODEX_BASLANGIC_PROMPTU.md dosyalarını oku; bunlar ilk WIP devir kayıtlarıdır. Güncel kapsam ve test sınırları RC60_KONTROL_RAPORU.md içindedir. RC60 sonuçlarını verification/RC60 kayıtlarından kontrol et; önceki sürümün geçen kontrollerini yeni kaynak doğrulaması sayma. Windows EXE, gerçek model çıkarımı ve canlı kurum kabulünü doğrulanmış kabul etme.
+Bu klasör RC46/RC47 tabanından geliştirilen RC61 kaynak güncellemesidir. Önce CODEX_DEVIR_NOTLARI.md ve CODEX_BASLANGIC_PROMPTU.md dosyalarını oku; bunlar ilk WIP devir kayıtlarıdır. Güncel kapsam ve test sınırları RC61_KONTROL_RAPORU.md içindedir. RC61 sonuçlarını verification/RC61 kayıtlarından kontrol et; önceki sürümün geçen kontrollerini yeni kaynak doğrulaması sayma. Windows EXE, gerçek model çıkarımı ve canlı kurum kabulünü doğrulanmış kabul etme.
 
 - RC55, RC52'nin Studio aydınlık panellerini, mor başlıkları ve CAD'de sağ koyu komut şeridini kullanır; nesneler parametrelerin üstünde soldadır. CAD'de ortak uygulama başlığını veya ek modül kenar çubuğunu geri getirme. exocad/3Shape ergonomik referanstır; tescilli kod, logo veya arayüz varlığı kopyalama. Geçerli dil, açıkça seçilmiş görünüm tercihleri, kılavuzlu/uzman mod ve taşıma/sıfırlama davranışlarını koru.
 - Yükleme yalnız gerçek bekleyen işlemin ömrünü izler. Zorunlu 5 saniyelik okuma, işlem sonrasında kalan katman veya hazır ekranda odak tuzağı ekleme. Bilgi kartları ve mini oyunlar isteğe bağlı kalır.
@@ -43,3 +43,9 @@ Bu klasör RC46/RC47 tabanından geliştirilen RC60 kaynak güncellemesidir. Ön
 - RC60 uzun not alıntısı özgün kelime konumları çevresinden seçilir; 2200 sınırı, kaynak ve açık not kullanımı tercihini koru. Eşleşen notu kaynak gösterip ilgili son bilgiyi bağlam dışında bırakma.
 - RC60 değişmemiş sohbet açma/dil değiştirme geçmiş tarihini, sırasını veya revizyonunu değiştirmez. No-op karşılaştırması sıkı revizyon kapısından sonra gelir; gerçek değişiklik ve silme çakışmasını gevşetme.
 - RC60 başka pencerenin indirmesini iptal başarılı sayma. Kurulum kontrol istekleri kilitli, hata yakalayan ve durum yenileyen akışı kullanır. İndirmede 45 saniye hareketsizlik sınırı ilerlemeyle yenilenir; yarım dosya yeniden denemede tam boyut/hash kapısından geçer.
+
+
+- RC61 ana sohbet yalnız gerçek yerel model yanıtını kullanır; hata/yoklukta otomatik Core/katalog/araç yanıtı üretme. Açık bellek kontrol komutları ve acil uyarılar ayrı deterministik işlemdir. Ana sohbet agent:false doğal akış kullanır; CAD tipli planı agent:true olarak doğrulanır. Ana sohbetin eski rehber yanıtları model geçmişine taşınmaz.
+- RC61 hedef/karar/açık soru çıkarımı task:memory ayrı model işlemidir. Not/belge/geçmiş/CAD bu çağrıya girmez. Son yanıt ekstraksiyon hatasıyla silinmez; yalnız aynı oturum/son tur/bellek revizyonunda uygulanır. Yeni soru önce arka plan işini iptal edip bekler.
+- CAD Araç rehberi açık Yanıt kaynağı seçimiyle kullanılır; rehber turları model geçmişine girmez. Model hatası hazır öneriye dönüşmez. Mevcut manuel araçlar kullanılabilir kalır.
+- Ollama 4B seçeneği çalışan yerel Ollama gerektirir; managed1.7B sabit pin/hash korundu. Gerçek model semantik çıkarımı ağ engeli nedeniyle doğrulanmadı; kaynak/fixture testini gerçek model kabulü diye sunma.

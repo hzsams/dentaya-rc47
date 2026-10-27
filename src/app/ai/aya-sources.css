@@ -7,3 +7,8 @@
 .aya-sources a:hover{text-decoration:underline;text-underline-offset:3px}
 .aya-sources a:focus-visible{outline:2px solid var(--dy-accent);outline-offset:3px}
 .aya-sources a>small{display:block;margin-top:2px;color:var(--dy-muted);font-size:10px}
+.aya-catalog-reference{line-height:1.6;overflow-wrap:anywhere}
+.aya-catalog-reference>summary{cursor:pointer;color:var(--dy-text)}
+.aya-catalog-reference>p{margin:8px 0;font-size:12px;white-space:pre-wrap}
+.aya-catalog-reference>.aya-reference-note{color:var(--dy-muted);font-size:10px}
+.aya-catalog-reference>ul{margin:8px 0;padding:0;list-style:none;font-size:11px}

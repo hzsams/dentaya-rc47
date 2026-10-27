@@ -1,0 +1,50 @@
+{
+  "nativeInference": false,
+  "mock": false,
+  "syntheticCadFixture": true,
+  "platform": "linux",
+  "stage": "model-validation",
+  "engineVersion": "version: 9380 (d205df681)\nbuilt with GNU 11.4.0 for Linux x86_64",
+  "engineBinarySHA256": "f26a542c95f00b1dbbf21074e7cf0b41c7d822a0c2cc1b47d89bca022f61491a",
+  "model": {
+    "bytes": 1834426016,
+    "sha256": "061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+    "verified": false
+  },
+  "checks": [],
+  "transport": [],
+  "caseCounts": {
+    "attempted": 0,
+    "succeeded": 0,
+    "conversation": {
+      "attempted": 0,
+      "succeeded": 0,
+      "streamedUpdates": 0
+    },
+    "memory": {
+      "attempted": 0,
+      "succeeded": 0
+    },
+    "cad": {
+      "attempted": 0,
+      "succeeded": 0
+    }
+  },
+  "semanticReviewRequired": true,
+  "semanticReview": {
+    "status": "pending",
+    "criteria": [
+      "Identity: answer name and purpose directly in natural prose without a canned response.",
+      "Novel non-dental request: fulfill the requested perspective and content without forcing a CAD workflow.",
+      "New wording: remember unit 46 and preserve outer contour while manually reducing occlusal height.",
+      "Separate memory extraction: retain explicit user decisions rather than facts invented by the assistant reply.",
+      "Memory-only follow-up: recover the unit and contour decision without replaying user history.",
+      "Partial memory correction: clear only the requested goal, preserving decisions and open questions.",
+      "Missing antagonist/report: do not grant closure safety or invent exact wall thickness; propose an available check.",
+      "Tool result: distinguish a closed single-component mesh and a shell offset estimate from production clearance. Save failure must remain a failure with local recovery preserved."
+    ]
+  },
+  "contractPass": false,
+  "blocked": true,
+  "error": "ENOENT: no such file or directory, stat '/workspace/dentaya-native-runtime/Qwen3-1.7B-Q8_0.gguf'"
+}

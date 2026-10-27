@@ -1,9 +1,9 @@
 {
-  "release": "1.0.0-rc.60",
+  "release": "1.0.0-rc.61",
   "status": "source-release-candidate",
   "date": "2026-10-27",
-  "baseRelease": "1.0.0-rc.59",
-  "baseCommit": "fbd214319bcd4c93d985332abd4c1c416a8f64d3",
+  "baseRelease": "1.0.0-rc.60",
+  "baseCommit": "2e8787484a33b7ac8e90a8987d36d1a367d6591a",
   "nativeModelInferenceVerified": false,
   "windowsInstallerProduced": false,
   "liveOrganizationBackendVerified": false,
@@ -17,18 +17,18 @@
   "miniGamesActual": 5,
   "nativeModelWeightsAvailable": false,
   "nativeModelInferenceStatus": "blocked-model-weights",
-  "verification": "RC60_KONTROL_RAPORU.md",
-  "sourceVerification": "verification/RC60/source-verification.json",
+  "verification": "RC61_KONTROL_RAPORU.md",
+  "sourceVerification": "verification/RC61/source-verification.json",
   "files": [
     {
       "path": ".env.example",
       "size": 1010,
-      "sha256": "8b85d884e7671412891b82425768b0d835c64ce673ca950123ee98fe1abc4733"
+      "sha256": "afa148a0f2d2a4158893a84d5305757acc7aa19aab3fc3ce5dfdc5a60b2951b2"
     },
     {
       "path": ".env.release.example",
       "size": 407,
-      "sha256": "296247c3d19af38aceea90d80fef5f4816c4a230386a1029d4f22d793c2e9f11"
+      "sha256": "cfe5370598d80cdc5eae1858c67c5c6d65b0976d7eefb4c4aac17c71bf30a2f4"
     },
     {
       "path": ".gitignore",
@@ -42,8 +42,8 @@
     },
     {
       "path": "AGENTS.md",
-      "size": 8970,
-      "sha256": "d343422f8a016bb85cc132637d04f718fa0afd6d1c8aff527a99d926aacb6bb6"
+      "size": 10056,
+      "sha256": "e8593688527c6d0ff63085e7be3dba08ea667466d1a305e6cf6f3206f6b11fa3"
     },
     {
       "path": "AYA_ACTIONS_QA.md",
@@ -167,8 +167,8 @@
     },
     {
       "path": "DENTAYA_GUNCELLE_DERLE.cmd",
-      "size": 3135,
-      "sha256": "7d08c79d06ee8f7b3e7d4a0df599c4fdea1aa01e41b052f9566058e2dfca401e"
+      "size": 3129,
+      "sha256": "a59849befd0625788306169ae6d2faeac65f9f719320a7cf0f4548ef17db99ec"
     },
     {
       "path": "DentAYA_CAD_Degisiklikler.txt",
@@ -207,8 +207,8 @@
     },
     {
       "path": "KURULUM.txt",
-      "size": 5155,
-      "sha256": "bc767181dcfeac725b3692d075d28e0e290cebf15d4ef1c0c3a27630a3dca37a"
+      "size": 5553,
+      "sha256": "e08ec3911c74652c8334612fb3673a773b6cfbecaf09a4d07dfb2e998c4b65c8"
     },
     {
       "path": "LOGO_GUNCELLEME.txt",
@@ -751,6 +751,21 @@
       "sha256": "1c9799825d1b963cdcd793ce001701c0b621b9c62b0702d91076e692b5a9282d"
     },
     {
+      "path": "RC61_AYA_1008_SORU_CEVAP.json",
+      "size": 365775,
+      "sha256": "7e542e3df45988b7fc17b415b76aec1ce7dd45f59453109724fe840375b2348b"
+    },
+    {
+      "path": "RC61_KONTROL_RAPORU.md",
+      "size": 7539,
+      "sha256": "b75a8c63e111d82f87bf88a8c98727703aa835f1b712b39d4754f96c1250575a"
+    },
+    {
+      "path": "RC61_KULLANIM.md",
+      "size": 4724,
+      "sha256": "813b37bfcea3b80b60f6c2e6e1d212a4b2d89979b6033eabef672dcc1e1098d2"
+    },
+    {
       "path": "RC6_CHANGELOG.md",
       "size": 805,
       "sha256": "3da664df997388f7c74588f417e0676b263ac4aa225fced31091f5f197b6a03f"
@@ -767,8 +782,8 @@
     },
     {
       "path": "README.md",
-      "size": 10804,
-      "sha256": "20afe5a17b039cdf19195c1b224bb008c221798bd52f1986deee6e57b558d170"
+      "size": 11261,
+      "sha256": "db781ce64f9ae9e9e13afb7abad02677c7f781c191d3bd7c3f160de66f7b60f9"
     },
     {
       "path": "README_BUILD_FIX_01.md",
@@ -1022,8 +1037,8 @@
     },
     {
       "path": "electron/aya-local.cjs",
-      "size": 8560,
-      "sha256": "378a4aa2e369610f4ff95155bc3879a86671fc3c985c7cd029c7c29c489c03f9"
+      "size": 14769,
+      "sha256": "85ca0e172d61030ceaab98f4c33b9cfbf650ff0bec06786a798b9b550140afcf"
     },
     {
       "path": "electron/aya/agent.cjs",
@@ -1038,7 +1053,7 @@
     {
       "path": "electron/aya/assistant.cjs",
       "size": 11382,
-      "sha256": "9412dd6efdd8beef55d1aae4fd8e83250e308d3e0f2e49445e545ec83842fc47"
+      "sha256": "5b6d33b0e9919565d4d5ff78e9031fa328ec61486e4db8c161822d642c447d54"
     },
     {
       "path": "electron/aya/assistant.d.cts",
@@ -1087,8 +1102,8 @@
     },
     {
       "path": "electron/aya/core.cjs",
-      "size": 6678,
-      "sha256": "b5bf6debddd628d323a654f0bc67cb9dafa1d8c737fdc5c7f4b1843d57d61075"
+      "size": 8329,
+      "sha256": "98f3d9e64d9fc7bf5ada33f72a3babde154449b9cf3a7fce0b22fefda88a9c3b"
     },
     {
       "path": "electron/aya/dialogue.cjs",
@@ -2063,12 +2078,12 @@
     {
       "path": "package-lock.json",
       "size": 354831,
-      "sha256": "89779ac488aa5ec4b00e3071d6a2f31acfbb06966e3225d01d48bf4ca629fc87"
+      "sha256": "19f4f5a2e45fcec76cf9e5709313ebcc9115e5b24b763a694a8150b9a6532fee"
     },
     {
       "path": "package.json",
-      "size": 10409,
-      "sha256": "c6be4e0172df334b2af00d30992cd7aafb6e9f963e1f2fd8c812b74cbb39d12b"
+      "size": 10601,
+      "sha256": "76c9742df794f51282ecd13c32870f76150d293df7490b97151aed878e7fac9c"
     },
     {
       "path": "public/brand/DentAYA_Premium_Atelier.svg",
@@ -7342,13 +7357,13 @@
     },
     {
       "path": "scripts/verify-aya-conversation-browser.mjs",
-      "size": 27849,
-      "sha256": "b3d1d925b5e2aa6902348fa983aaa9b2ce2d32bbda6f87bb151aef7247aeda4c"
+      "size": 33926,
+      "sha256": "dd5cbcc4d6aae4ff8ea701e660099b0a9cc7a727f438bc34daba79a3e6f18fd6"
     },
     {
       "path": "scripts/verify-aya-conversation.ts",
-      "size": 12659,
-      "sha256": "00153648156cdceeeb9ba10a9638fd78aa48c06d1fd684606d1775906bf6e7e2"
+      "size": 10707,
+      "sha256": "e09b4ef894c3ac03c99e8b2c768053cca27cdef166e60087afcff436580c1961"
     },
     {
       "path": "scripts/verify-aya-core.cjs",
@@ -7376,6 +7391,11 @@
       "sha256": "0d17107f25a4373bc66d2479985e0e3a6005989cb52eea5054fb20b59e3739bc"
     },
     {
+      "path": "scripts/verify-aya-memory-task.cjs",
+      "size": 6327,
+      "sha256": "dac6e1870baac6e56511dc9e6f3a1ce96a7d1ddce4ca646a60bc5861207df0e7"
+    },
+    {
       "path": "scripts/verify-aya-memory.cjs",
       "size": 11209,
       "sha256": "5549c09a007b804eed3ecb57a1315452ea25ab2149c04a0b43a52df3b81f9da6"
@@ -7387,8 +7407,18 @@
     },
     {
       "path": "scripts/verify-aya-native.cjs",
-      "size": 9182,
-      "sha256": "152e7c0a6b5bad9ae945e2a92ee921dd0450ecac20bebd768c5fa409b85547b8"
+      "size": 11937,
+      "sha256": "3d6c9d4ee29396d189ef9586f2bdfe20120380d016902a4c3784c9b8f797e332"
+    },
+    {
+      "path": "scripts/verify-aya-natural-stream.cjs",
+      "size": 9533,
+      "sha256": "153c6dadc315ef958dbef174ea14728421f125038c49778820435d1269b351a6"
+    },
+    {
+      "path": "scripts/verify-aya-ollama-download.cjs",
+      "size": 5309,
+      "sha256": "bb37ed62e9a87bd8b5ef605c2a4f08eb0b0b9672c90ff20a2ac2a89070cd08db"
     },
     {
       "path": "scripts/verify-aya-references.ts",
@@ -7417,8 +7447,8 @@
     },
     {
       "path": "scripts/verify-aya-setup-browser.mjs",
-      "size": 7424,
-      "sha256": "d3acb44843df2a132eb20ec3ba72cf30786b9afe33ff400dbcabac2da8bf23ba"
+      "size": 13350,
+      "sha256": "42e84d12ffaaf5ce781720611beb51ca9148a29e76eaf2077ed2186d50f8cade"
     },
     {
       "path": "scripts/verify-aya-setup.ts",
@@ -7427,8 +7457,8 @@
     },
     {
       "path": "scripts/verify-aya-state-browser.mjs",
-      "size": 26155,
-      "sha256": "67cac1c99dffff1c33f111583f0256dfd71a16aa06727d31b2d2b76a5a99c030"
+      "size": 28647,
+      "sha256": "0336f5a50eaecdb920f00c0c76c0e198d36d5bbf0fa62990aaa2f380c0221aff"
     },
     {
       "path": "scripts/verify-aya-tasks.cjs",
@@ -7442,13 +7472,13 @@
     },
     {
       "path": "scripts/verify-aya-work-browser.mjs",
-      "size": 18047,
-      "sha256": "35a97e2c3d296eda34131884984c525d1c6ea5cce13a428008d8d25b9c7815e1"
+      "size": 20063,
+      "sha256": "7d3101fff437fb50923969107202662492b811d837c66ed5bb105c9f3fcb25ee"
     },
     {
       "path": "scripts/verify-aya-work.ts",
-      "size": 5120,
-      "sha256": "b8278c5d3d76f73e8593a6d5024fabc1d2aebb2f2ee53e0fcfe99e102b6bdf7c"
+      "size": 6019,
+      "sha256": "26fc12c1be41f58917f8102c7f59ae3a2910f4620f09c681574a45e1e6f75a46"
     },
     {
       "path": "scripts/verify-brand-assets.mjs",
@@ -7472,8 +7502,8 @@
     },
     {
       "path": "scripts/verify-cad-daily-browser.mjs",
-      "size": 58476,
-      "sha256": "e93cf889752424f12e0668ee05bf75c3911253efed94cb70b13a72ceb90d7b3e"
+      "size": 58693,
+      "sha256": "8c8b6206996caf3097958f3be91ebd168cbc1266894eacdd796fb4e752c07e15"
     },
     {
       "path": "scripts/verify-cad-daily.ts",
@@ -7602,8 +7632,8 @@
     },
     {
       "path": "scripts/verify-desktop-shell-browser.mjs",
-      "size": 42065,
-      "sha256": "72b19b077c71ca4a549172c725707f6c0d2ef0475dac011e24bc86986fdab17c"
+      "size": 42814,
+      "sha256": "975c3bf763b1f20295b3922062348f432771f25402a18e633ad0454499251aac"
     },
     {
       "path": "scripts/verify-e2e-workflow.ts",
@@ -7657,8 +7687,8 @@
     },
     {
       "path": "scripts/verify-local-aya.cjs",
-      "size": 17108,
-      "sha256": "f3ec5bf2339afec93592266e381b73031f5234243cdba9ee43fa6e5c6bbe5d47"
+      "size": 17107,
+      "sha256": "fc219d394d9f6ba63c8198f159ec56ff96f4197689b70d12b9bbe23f2e8ebe27"
     },
     {
       "path": "scripts/verify-localization.ts",
@@ -7787,8 +7817,8 @@
     },
     {
       "path": "scripts/verify-ui-browser.mjs",
-      "size": 31850,
-      "sha256": "b317f7957fa0ee799bdb03be45012be9f0201eed1c7a437f38df6eda36a6b76d"
+      "size": 33465,
+      "sha256": "cabe26d82c05b66ce78981f9ce09bb1133ffbed3db13a766457773b2cc1343cb"
     },
     {
       "path": "scripts/verify-validation-browser.mjs",
@@ -7966,9 +7996,14 @@
       "sha256": "87d4d8f5fd5b78cdd03ac8414f2366ea94251a5e8ff81ace91f669c2235476f3"
     },
     {
+      "path": "src/app/ai/AyaCatalogReference.tsx",
+      "size": 1682,
+      "sha256": "9bee2af0b223f7df1587b11842c7df526bfe591d50e82e83104a2cf26b08ab3a"
+    },
+    {
       "path": "src/app/ai/AyaChat.tsx",
-      "size": 26873,
-      "sha256": "da843be527352d92449109de6be7442ba5b4e6c4f83406c2cf865199cde69030"
+      "size": 31120,
+      "sha256": "a772d7ec69608bbc87ee9ee0921f1dda808a5594f319cdd30ec663661f446ca8"
     },
     {
       "path": "src/app/ai/AyaConnection.tsx",
@@ -7977,8 +8012,8 @@
     },
     {
       "path": "src/app/ai/AyaEngineSetup.tsx",
-      "size": 4275,
-      "sha256": "70c0897a832b7049381cc6d1b060a2831c7b0102f69c8af3fa5f65822a208126"
+      "size": 5537,
+      "sha256": "fb35e2aef80cd4700574ec2e1f582d99778ef6687007b34230163692964947a3"
     },
     {
       "path": "src/app/ai/AyaHealth.tsx",
@@ -8007,8 +8042,8 @@
     },
     {
       "path": "src/app/ai/AyaSources.tsx",
-      "size": 1590,
-      "sha256": "f2494bb2589531b05c4b4b445e3cc1263107733b0d4e87a0e6bcd1deffd5e944"
+      "size": 1964,
+      "sha256": "50bdbca4f9f75eaa392e65ae4bffdd4b10ecb2ba39cd7105cb49fdc961fadce6"
     },
     {
       "path": "src/app/ai/AyaWorkingMemoryPanel.tsx",
@@ -8027,8 +8062,8 @@
     },
     {
       "path": "src/app/ai/aya-sources.css",
-      "size": 925,
-      "sha256": "da6c83b89b5ea263770f70ab75f51e4b7f53bbc2fa204c44c29ab18179b57ab1"
+      "size": 1293,
+      "sha256": "f9b68d19d61d9b6a6f61a56d179b8cae42cfcf5b8b7dc68d8374744d41a43668"
     },
     {
       "path": "src/app/ai/page.tsx",
@@ -8147,8 +8182,8 @@
     },
     {
       "path": "src/app/design/CadAyaPanel.tsx",
-      "size": 18043,
-      "sha256": "19c6fccb3078df06a7ba9b1e08dee3507b26286f162e4eb336b7f828c3a10cf5"
+      "size": 18593,
+      "sha256": "e308e47293f6a09fc87b225d397d137335874bb94a2ec4017c0d8f52ce95a7b2"
     },
     {
       "path": "src/app/design/CadBrushPresets.tsx",
@@ -8502,8 +8537,8 @@
     },
     {
       "path": "src/lib/aya-conversation.ts",
-      "size": 5396,
-      "sha256": "6f9739a08e7cf03cf0f57226c6689168312f46ac1dd2e6ab6a53f20be341129f"
+      "size": 5594,
+      "sha256": "0627788c67a182cbdbb6a8392158c3a90d7c0ffae55d16bb9144b5e29730049d"
     },
     {
       "path": "src/lib/aya-download-status.ts",
@@ -8822,8 +8857,8 @@
     },
     {
       "path": "src/lib/i18n/aya-agent.ts",
-      "size": 6438,
-      "sha256": "fde82b6744029e806ef4fb9cdfad0b703ddc8e63bc7e297a3b254b4b09c99cdf"
+      "size": 7147,
+      "sha256": "cf76c0632902308e831a46f24c5cb982ec19de83bd5e905ee70bf47eeb0f11af"
     },
     {
       "path": "src/lib/i18n/aya-catalog.ts",
@@ -8832,8 +8867,13 @@
     },
     {
       "path": "src/lib/i18n/aya-experience.ts",
-      "size": 8408,
-      "sha256": "bfd78c0a5fd31eed303d7be07d6821e78a7f2d4fdee03f69f77a6d037b6cf3ed"
+      "size": 10177,
+      "sha256": "86cc68bfaf695aa2fc4955b8b963ea00d045357eaa3c399f5dd7ea307f7760d7"
+    },
+    {
+      "path": "src/lib/i18n/aya-setup.ts",
+      "size": 974,
+      "sha256": "97c72fe2b6af9f33ea60bab201d9c3a1e3d02ddb6f2cea32ff312f53bf12e500"
     },
     {
       "path": "src/lib/i18n/brand.ts",
@@ -9408,7 +9448,7 @@
     {
       "path": "src/lib/release.ts",
       "size": 418,
-      "sha256": "da1cf53397c148065c05603f1c9986983b812956922152c5d10bf9915b1b6c50"
+      "sha256": "777cfc4a3b235be837f55cef464629c976f6a1a25403c41679ea2784bbf5e14a"
     },
     {
       "path": "src/lib/retry.ts",
@@ -9443,7 +9483,7 @@
     {
       "path": "src/lib/supabase.ts",
       "size": 1108,
-      "sha256": "79431f2f8261f0f715e7386761aacb95eb829573bdcf484c1432ccd7127c7bdc"
+      "sha256": "4044cd14cc3edeb91409bb620cbba545487793669d1feff2b0476d310c0aacbf"
     },
     {
       "path": "src/lib/system-messages.ts",
@@ -9507,8 +9547,8 @@
     },
     {
       "path": "src/types/desktop.d.ts",
-      "size": 2980,
-      "sha256": "799f06634b71b8f9a6aca2617c680b661cb3a453945512cdcab392294eb1db12"
+      "size": 3128,
+      "sha256": "8d3763c106a0e98c20761bc27653f184831f641fa5cc54808c1e649995a79640"
     },
     {
       "path": "supabase/.gitignore",
@@ -12759,6 +12799,436 @@
       "path": "verification/RC60/source-verification.json",
       "size": 1835,
       "sha256": "e69cbd3dc13cba36d52269fd337c98ec6f210f8d03a3e0fd7ac54b59eccbd9fe"
+    },
+    {
+      "path": "verification/RC61/aya-setup.txt",
+      "size": 815,
+      "sha256": "f91e27b6313402991e200ef08c5e76194324f57136299b0fdf1a27e4e152b336"
+    },
+    {
+      "path": "verification/RC61/browser-core-detail.json",
+      "size": 17259,
+      "sha256": "64cee7c3619bccdc2e82ac3a54ca50fc236d764f9e1f1a9aa94d67a1604c75a5"
+    },
+    {
+      "path": "verification/RC61/browser-results.json",
+      "size": 11830,
+      "sha256": "7ca6bfe71f65ea2ebf967bcbd68d510e476bbe34a524b6b94509bbc363306d28"
+    },
+    {
+      "path": "verification/RC61/cad-daily.txt",
+      "size": 2708,
+      "sha256": "afe2286c0631faa1456bb0a60082d73f8dc96ba598e121f85da602868ffa5c0f"
+    },
+    {
+      "path": "verification/RC61/conversation-browser.txt",
+      "size": 1312,
+      "sha256": "f1e0c3838f1de331cdeb214a678c9e7d762ffe1c1854d8a42fd008f9fa7d1f9d"
+    },
+    {
+      "path": "verification/RC61/desktop-shell.txt",
+      "size": 2151,
+      "sha256": "6631ef374e1ce331e929bb9eae3f78c07441a6823a1d2ad4b960aea874cae215"
+    },
+    {
+      "path": "verification/RC61/full-verify.txt",
+      "size": 45052,
+      "sha256": "2405c501a10393bb77eca361d2148ae175bd0169cba011f1dee6f9b6dfcdb8c5"
+    },
+    {
+      "path": "verification/RC61/github-official-release-fresh.headers.txt",
+      "size": 143,
+      "sha256": "249118861afdd1b4a245f1847db31c434beade7ef115d843fc19763d525c25e8"
+    },
+    {
+      "path": "verification/RC61/github-qwen-readme.headers.txt",
+      "size": 1018,
+      "sha256": "7505f5919386656fca5de10f80347a3fee26a043461a9e0454f10211f4da5780"
+    },
+    {
+      "path": "verification/RC61/github-qwen-releases-fresh.headers.txt",
+      "size": 5503,
+      "sha256": "1735c31cb474f53e1964c1695776279370f43c083d51fac2b2cd26ec316a2a44"
+    },
+    {
+      "path": "verification/RC61/huggingface-official-fresh.headers.txt",
+      "size": 143,
+      "sha256": "249118861afdd1b4a245f1847db31c434beade7ef115d843fc19763d525c25e8"
+    },
+    {
+      "path": "verification/RC61/loading-reading.txt",
+      "size": 721,
+      "sha256": "01012569d82a4ef09387edc419019c6a018069cef239cae7ee5496ce837713c1"
+    },
+    {
+      "path": "verification/RC61/modelscope-official-international-fresh.headers.txt",
+      "size": 143,
+      "sha256": "249118861afdd1b4a245f1847db31c434beade7ef115d843fc19763d525c25e8"
+    },
+    {
+      "path": "verification/RC61/modelscope-qwen4b-api.headers.txt",
+      "size": 143,
+      "sha256": "acf7e65b44563d795b96c81577e4be7a3c8933cf6be83106deb4fc526c56c926"
+    },
+    {
+      "path": "verification/RC61/modelscope-qwen4b-head.headers.txt",
+      "size": 143,
+      "sha256": "acf7e65b44563d795b96c81577e4be7a3c8933cf6be83106deb4fc526c56c926"
+    },
+    {
+      "path": "verification/RC61/native-access-report.json",
+      "size": 8741,
+      "sha256": "25c9d146ab689dd1166663dd12b624b4fb3db864f2a8c0953cf45bcb95a32b88"
+    },
+    {
+      "path": "verification/RC61/native-current-architecture-report.json",
+      "size": 2004,
+      "sha256": "efa20e5061c1235b8bf92d5fb1260cdbae8331895038ffc1ffd0b6a58032bb81"
+    },
+    {
+      "path": "verification/RC61/native-current-architecture.txt",
+      "size": 667,
+      "sha256": "081704cc7833083ccfc0de0212f47c2ded5314d6912a307efa7fed76dd6da0f6"
+    },
+    {
+      "path": "verification/RC61/native-grammar-report.json",
+      "size": 3991,
+      "sha256": "c3057b8310e4523339301004f84d615a829649185a7303113a40b1cc80f9d8dc"
+    },
+    {
+      "path": "verification/RC61/native-grammar.txt",
+      "size": 3992,
+      "sha256": "076e8fef4ca2a725b733bfedcdd74e6be9d9a4343304f26c9f2c60327e6bc171"
+    },
+    {
+      "path": "verification/RC61/native-inference-report.json",
+      "size": 2004,
+      "sha256": "efa20e5061c1235b8bf92d5fb1260cdbae8331895038ffc1ffd0b6a58032bb81"
+    },
+    {
+      "path": "verification/RC61/ollama-library-qwen3.headers.txt",
+      "size": 143,
+      "sha256": "d94b537200bd651ff2237e772d82e0509854c592aef31fecea595c052ae97426"
+    },
+    {
+      "path": "verification/RC61/ollama-qwen3-4b.headers.txt",
+      "size": 143,
+      "sha256": "bc7bff0131824cebf4faabd6003a22294c68d005f33e46abfe72753a7b6390c5"
+    },
+    {
+      "path": "verification/RC61/screenshots/AYA_RC50_callback_failure_and_stale_proposal.png",
+      "size": 130370,
+      "sha256": "f8e44431ee0f334df6e3d378d5e0402a88bbcaa015dbec3584375386c503a3a1"
+    },
+    {
+      "path": "verification/RC61/screenshots/AYA_RC50_model_receives_explicit_memory.png",
+      "size": 69946,
+      "sha256": "0f7d45f656425f0ed09dfa445698b3a83b4ae0e9ab94fa113089c622578b1bd0"
+    },
+    {
+      "path": "verification/RC61/screenshots/AYA_RC50_offline_place_proposal.png",
+      "size": 105567,
+      "sha256": "2c37b767c525dc10e2246965b2e75cc9e694adfb879c7181bb31ccec9e4975c7"
+    },
+    {
+      "path": "verification/RC61/screenshots/AYA_RC54_memory_conflict.png",
+      "size": 117800,
+      "sha256": "0eefce41c39c582679ee6143a3b4bbcf77dd6f24a8cd9a34b2d09d7a6abca217"
+    },
+    {
+      "path": "verification/RC61/screenshots/AYA_RC56_scoped_followup.png",
+      "size": 130423,
+      "sha256": "ee2b522d6ffbf09fe1bc4660f25494662f1d5181e977b76ff61eb2ea4cc47e63"
+    },
+    {
+      "path": "verification/RC61/screenshots/AYA_RC61_explicit_guide_after_model_failure.png",
+      "size": 83610,
+      "sha256": "8236b085e13773ee18f4caad221e06db50a65386cdaf991038c88b337f91375b"
+    },
+    {
+      "path": "verification/RC61/screenshots/AYA_RC61_memory_and_unavailable_model.png",
+      "size": 81563,
+      "sha256": "a84a21c778c157aca45ebc035ff4341c793c4471f47e4291629a65d3e8afaff5"
+    },
+    {
+      "path": "verification/RC61/screenshots/AYA_RC61_unavailable_model.png",
+      "size": 41047,
+      "sha256": "72e4236ef45aecc8496e848fe7e7aa9f2dcfd66bcf1cadeef5720bc49f66ac20"
+    },
+    {
+      "path": "verification/RC61/screenshots/AYA_conversation_desktop.png",
+      "size": 57823,
+      "sha256": "528329692c89b67198364bccfb953c8f87394c6c57b2e427481f867b732427b8"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC32_languages_mobile.png",
+      "size": 54314,
+      "sha256": "80968be4c6440e599aebf98519a511b9c2bfede5c92f6820321185894c7fb85c"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC32_sound_settings.png",
+      "size": 58512,
+      "sha256": "7b23fa217546da3180ee8d631bc6429cbf5c7204d4999e1fd3780ec05a678da2"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC40_CAD_AYA.png",
+      "size": 243945,
+      "sha256": "a80c38ad081d7b25f01b7584dbcb37a5a98970571e8ce52cf33837534d4497d6"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC44_AYA.png",
+      "size": 108407,
+      "sha256": "f2745d3a193e5f329b8b3392ebeb59eb564f8684cc7f9a7f381cb146d650e10a"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC44_Games_Mobile.png",
+      "size": 38203,
+      "sha256": "cffef958d1be17a8a57c08917402a928c3fe392c9e5ccf9b7c810d24a22cd48d"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC51_CAD_daily.png",
+      "size": 224924,
+      "sha256": "7d2d776b936d087f33d55ab36739d275093219546109791acf366d171302f7c2"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_ai_1366.png",
+      "size": 113251,
+      "sha256": "d3180d0671f9d0b1ea61dc561837a7b5212470b0bdcb5b23028be65a2f285266"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_ai_1440.png",
+      "size": 128523,
+      "sha256": "d32742bfdf31ebf716ea7d5af5095f07a93e738e19035e287650c076f4b7c6e8"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_ai_390.png",
+      "size": 39255,
+      "sha256": "6125899e1862bb5d0b49d66ead3447cc0e1f1e73a255c589ba947a5ffbfb1b51"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_appointments_1366.png",
+      "size": 123440,
+      "sha256": "85f6e824be6b7f6f0aef0e6e639de4a6941cb4af8ea6d05e75b0141a15ffa768"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_appointments_1440.png",
+      "size": 143446,
+      "sha256": "007e39d3efd30901cea0ea948f9e863a9abaf81ef9390661be77e92611327098"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_appointments_390.png",
+      "size": 48976,
+      "sha256": "d06ace57ef4a1f312688d2c9ee09b4b84ff94d349d45698a35e9a5446588a73a"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_finance_1366.png",
+      "size": 150899,
+      "sha256": "1449041d00f0c46f86f34fd5e227fd8276d786cbafdec1af995504d5186a7392"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_finance_1440.png",
+      "size": 181760,
+      "sha256": "e58f33c5ab58cb353db28cc2adc9aaf16fa6bab54815c608f3f1b786ad72d296"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_finance_390.png",
+      "size": 55338,
+      "sha256": "162c46c65c5e4d653f0420b7d409ac3d0b6c857930bba59f59bd2f487ba860d1"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_messages_1366.png",
+      "size": 146999,
+      "sha256": "d5bb01c83aa4602f6dbaed26ffce15eba2a80f84fa5335ff86becdbac3fe8320"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_messages_1440.png",
+      "size": 190347,
+      "sha256": "f7293fbc5d9da232f82674e3329e9e5b240c895dac2d82be5bc30724a10ad7b4"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_messages_390.png",
+      "size": 63067,
+      "sha256": "e056c62a37cdffb1f9f261403ec0960daeb44e355983a82f8d9634bd0c4d34e4"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_patients-light_1440.png",
+      "size": 117663,
+      "sha256": "9307bd2d9bb1b1be9641bdd2cd1b224ab371e2b9fee0c03c1872ad963f4fff6e"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_patients-rtl_1440.png",
+      "size": 124406,
+      "sha256": "a67f1f52cfc7d1eee22b57a2f5e9e6a780ff78e5d9e8ba5b56f4ddce23694feb"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_patients-rtl_390.png",
+      "size": 48683,
+      "sha256": "b73b03b98f1b685e9a9d227e8a68fed15edea5dae4ef9c5043d3129cc12bcfe8"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_patients_1366.png",
+      "size": 106679,
+      "sha256": "d842f8f5053048cd941b0f60719155a0ae3b329e4d569e42200d945e5fefa91a"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_patients_1440.png",
+      "size": 119296,
+      "sha256": "0c31400a6d670e3ff1ff41771d56ad863a94d7ff43530f9f3ccb2cfc35ff6b94"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_patients_390.png",
+      "size": 45553,
+      "sha256": "25170d1eba1cee450b9068c3a282c52545505ac752a98d727e285ecdbcefe4e5"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_workspace-guest_1440.png",
+      "size": 151272,
+      "sha256": "21babc15e1789c82114343f782740486a63d368413cb80f435a57d3047e3d8d7"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_workspace_1366.png",
+      "size": 134682,
+      "sha256": "40c1645b06c48eb23f782af6550ab77d3930b0ad664e9436f7ed9331d0d895e6"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_workspace_1440.png",
+      "size": 148053,
+      "sha256": "f7a76c8e2e8d87f3189f75b4191fde55216abfd0fe1a8a9ca43323b795098f40"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Desktop_workspace_390.png",
+      "size": 56094,
+      "sha256": "038940490db83a32b27e7a90548c44332b979648c2949c90dc35001c9d8a1049"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Module_Folders_CAD.png",
+      "size": 151970,
+      "sha256": "1c405a3cf0ea267fb24df8ad91f592c42164278f142d3f65405e1f9798c2de66"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Module_Folders_Desktop.png",
+      "size": 174236,
+      "sha256": "da20b67cedbcc8b37ce69bf65c6fd516c4cf522545a08a6d13ebc05f8f11322e"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Module_Folders_Mobile.png",
+      "size": 88947,
+      "sha256": "5458addb200c5fbc59875385ab2fe3dab40948c48f2e76831f35365edf3bd394"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC58_Module_Folders_Nested_Search.png",
+      "size": 152697,
+      "sha256": "741704c80f4745d81065462c2749a52eaf940d4447d8669bbf8c9f6258ac99f9"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC60_AYA_Setup_Cancel_Recovery.png",
+      "size": 73709,
+      "sha256": "6397253d4b1dcac825f08daeaf2961758ee79b842d8ea592bd206d0615066870"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC60_AYA_Setup_Other_Window.png",
+      "size": 80557,
+      "sha256": "303370b42964fe1db15020149c80827a520b37834ea73f5c096bbd2ed39420c3"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC60_CAD_AYA_Draft_Preserved.png",
+      "size": 280350,
+      "sha256": "d37ad2d185dfa51260fac79fc15347cd9d0d042f7f1d410e3096d30b360b8874"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC60_CAD_Current_Shell_QC.png",
+      "size": 278511,
+      "sha256": "9633fbd34b125e4bb670ebd68bb4fed7f450535c24062cbb1f5edb4ea47d9c65"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC60_CAD_Stale_QC.png",
+      "size": 195887,
+      "sha256": "2503da57976b8d7c32bd125614f422d431f8a2929f2c308966c2c633bccedb0f"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC60_Host_Action_Receipt.png",
+      "size": 279205,
+      "sha256": "41ece10a1183106ae9ced8dba3085289abdcb747819d49cfa68159cf381c8b94"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC61_AYA_Cited_QA_Readonly.png",
+      "size": 65310,
+      "sha256": "5e62021ca5e0a212def8c1dca77c39b0d2d5bd7c3660ae78d0aaffa465a750ab"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC61_AYA_Deleted_Record_Recovery.png",
+      "size": 101747,
+      "sha256": "fbf143d5fef7ef5a1ee652921ace6ede00440964c3a6b22b40a5632e877691c5"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC61_AYA_Diagnostic_Draft.png",
+      "size": 100666,
+      "sha256": "802447c2d0023eb95ccbf8bf5d156d91942930ea1d177e501c4ffc2369d05d89"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC61_AYA_Diagnostic_Isolation.png",
+      "size": 98414,
+      "sha256": "a395488b5c31b85b00af8da7758d2e7f4bf770634abc7cfe40f845f9767acc61"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC61_AYA_Empty_Memory_Reload.png",
+      "size": 49505,
+      "sha256": "28e77356677d3248772155e32f029c1112c1288106dd49e4f299866c2b49b430"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC61_AYA_Focus_Model_Recovery.png",
+      "size": 132408,
+      "sha256": "4f7080f3de5597e200adcb1bef087e0e666b45ed139a5fd18934265f9c765746"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC61_AYA_Installed_Model_Busy.png",
+      "size": 142351,
+      "sha256": "201d75043eba2d030b6fc5358c6f6ca1f0d644ebf6bf9b447c60b0ac2f095074"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC61_AYA_Optional_Ollama_4B_Setup.png",
+      "size": 68216,
+      "sha256": "f47f4e58f81f07f16e6fee928beae7d2f24df283d9f66cc808b05e828f560300"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC61_AYA_Read_Only_History.png",
+      "size": 83624,
+      "sha256": "1da795c7f101495e380d6258faba9c9b38a23f4ebe9df9f7aefdaf2fcb5bab02"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC61_AYA_Two_Window_Conflict.png",
+      "size": 91576,
+      "sha256": "0ef09c6c06353c98f0188b814b2993c350a5e768d0182ec257d33389420cea52"
+    },
+    {
+      "path": "verification/RC61/screenshots/RC61_AYA_unavailable_mobile.png",
+      "size": 55633,
+      "sha256": "502572907118a831c37c236a3b30b0b48d85097b9dac56b4f2ba4be8d7eafa87"
+    },
+    {
+      "path": "verification/RC61/screenshots/loading-ready-mobile.png",
+      "size": 23220,
+      "sha256": "f2d65dc5fb59e1475f5ccefca76e84166d181a73ac60815142683c7524f62709"
+    },
+    {
+      "path": "verification/RC61/source-verification.json",
+      "size": 5120,
+      "sha256": "8ed9134971d7b64d6571186912670351d57129417a9a4754cf76124ddd1f2057"
+    },
+    {
+      "path": "verification/RC61/state-browser.txt",
+      "size": 1888,
+      "sha256": "ef1f4afe8fc22ff04fdd36f09a9b08a6049ee74efbb11119c65273d5f37d60da"
+    },
+    {
+      "path": "verification/RC61/ui.txt",
+      "size": 1201,
+      "sha256": "47a383c618c3b29d0bafb7439bee7b61f4965d4e2d5f57e8750c71e227ec62db"
+    },
+    {
+      "path": "verification/RC61/work-browser.txt",
+      "size": 1592,
+      "sha256": "198bbf9748c17cebf400b968ce5071614b966fb5b5c63fdb96399d5416e21d8a"
     },
     {
       "path": "verification/professional/aya.json",

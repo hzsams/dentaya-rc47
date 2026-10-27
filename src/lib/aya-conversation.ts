@@ -1,62 +1,67 @@
-/** One model-first policy for main chat and CAD, with an honest offline fallback. */
+/** Model conversation and the explicitly selected, deterministic guide are separate paths. */
 import {answerOwned} from '../../electron/aya/assistant.cjs';
-import {answerDialogue} from '../../electron/aya/dialogue.cjs';
-import {answerTasks} from '../../electron/aya/task-dialogue.cjs';
 import {answerMemory,isMemoryCommand} from '../../electron/aya/memory-dialogue.cjs';
 import {suggestCadReply} from '../../electron/aya/cad-dialogue.cjs';
 import {suggestSectionReply} from '../../electron/aya/section-dialogue.cjs';
-import {answerCatalog,fallbackReply,isCatalogQuestion,safetyReply} from '../../electron/aya/conversation.cjs';
+import {answerCatalog,isCatalogQuestion,safetyReply} from '../../electron/aya/conversation.cjs';
 import {ayaDocumentGuide} from './aya-guide';
 import {ayaCadHelp,type AyaCadContext} from './aya-cad-assistance';
 import {normalizeMemory,type AyaWorkingMemory,type AyaProposal} from '../../electron/aya/agent.cjs';
 import type {AyaMessage,AyaOptions} from './aya-local-state';
 import {normalizeAyaReferences} from './aya-references';
 
-type ModelResult={ok:boolean;output?:string;error?:string;references?:AyaMessage['references'];workingMemory?:AyaWorkingMemory;proposals?:AyaProposal[]};
-export type AyaReply={ok:true;output:string;engine:'model'|'guide'|'core';references:NonNullable<AyaMessage['references']>;warning?:string;cancelled?:boolean;workingMemory?:AyaWorkingMemory;proposals?:AyaProposal[]};
-type Input={prompt:string;history?:AyaMessage[];workingMemory?:AyaWorkingMemory;knowledge?:unknown;cadContext?:AyaCadContext|null;options?:Partial<AyaOptions>;locale?:string;forceModel?:boolean};
-export async function resolveAyaReply(input:Input,{t=s=>s,callModel}:{t?:(s:string)=>string;callModel?:()=>Promise<ModelResult>}={}):Promise<AyaReply>{
- const {prompt,knowledge=[],cadContext=null,history=[],options={},locale='tr',forceModel=false}=input;
+export type AyaReplyMode='conversation'|'guide';
+export type AyaModelResult={ok:boolean;output?:string;error?:string;references?:AyaMessage['references'];workingMemory?:AyaWorkingMemory;proposals?:AyaProposal[]};
+export type AyaReplySuccess={ok:true;kind:'model'|'guide'|'control'|'safety';output:string;engine:'model'|'guide'|'core';references:NonNullable<AyaMessage['references']>;workingMemory?:AyaWorkingMemory;proposals?:AyaProposal[]};
+/** A failed inference is UI state, never an invented assistant turn or tool proposal. */
+export type AyaReplyUnavailable={ok:false;kind:'unavailable';error:string;cancelled:boolean;references:[]};
+export type AyaReply=AyaReplySuccess|AyaReplyUnavailable;
+type Input={prompt:string;history?:AyaMessage[];workingMemory?:AyaWorkingMemory;knowledge?:unknown;cadContext?:AyaCadContext|null;options?:Partial<AyaOptions>;locale?:string;forceModel?:boolean;mode?:AyaReplyMode};
+export async function resolveAyaReply(input:Input,{t=s=>s,callModel}:{t?:(s:string)=>string;callModel?:()=>Promise<AyaModelResult>}={}):Promise<AyaReply>{
+ const {prompt,knowledge=[],cadContext=null,history=[],options={},locale='tr',forceModel=false,mode='conversation'}=input;
  if(!prompt.trim()||prompt.length>8000)throw Error('INVALID_PROMPT');
  const context={knowledge,cadContext,history,options,locale,workingMemory:input.workingMemory};
- const safety=safetyReply(prompt,{locale});if(safety)return safety;
+ const safety=safetyReply(prompt,{locale});if(safety)return {...safety,kind:'safety'};
  // Explicit session controls are deterministic, like editing the memory panel.
  // Ordinary recall and natural discussion still go to a ready local model.
- if(!forceModel&&isMemoryCommand(prompt)){const controlled=answerMemory(prompt,context);if(controlled)return controlled;}
- const modelFailure=(error:string):AyaReply=>{
-  // A failed model must not make a basic product question unanswerable. Keep
-  // cancellation final and label both the Core answer and the failed attempt.
-  const known=error==='LOCAL_CANCELLED'||error==='LOCAL_CONTEXT_CHANGED'?null:answerDialogue(prompt,context)??(isMemoryCommand(prompt)?null:answerMemory(prompt,context))??suggestSectionReply(prompt,context)??suggestCadReply(prompt,context)??answerTasks(prompt,{...context,t});
-  if(known)return {...known,warning:error,output:known.output+'\n\n'+(locale==='tr'?'Yerel model bu isteği tamamlayamadı; bu yanıt AYA Core tarafından hazırlandı.':'The local model could not complete this request; AYA Core prepared this reply.')};
-  return {...fallbackReply(prompt,{locale,history,modelEnabled:true,modelError:error}),warning:error,cancelled:error==='LOCAL_CANCELLED'};
+ if(!forceModel&&isMemoryCommand(prompt)){const controlled=answerMemory(prompt,context);if(controlled)return {...controlled,kind:'control'};}
+ const unavailable=(value:unknown):AyaReplyUnavailable=>{
+  // Native/transport details are not user-authored content. Only bounded error
+  // identifiers may reach the error UI; never echo a raw path or server message.
+  const error=typeof value==='string'&&/^(?:LOCAL_|AYA_|MODEL_|GUIDE_)[A-Z0-9_]{1,64}$/.test(value)?value:'LOCAL_ERROR';
+  return {ok:false,kind:'unavailable',error,cancelled:error==='LOCAL_CANCELLED'||error==='LOCAL_CONTEXT_CHANGED',references:[]};
  };
- // Ready models handle all normal language, including definitions and follow-ups.
- if(callModel){
+ // Conversation means an actual local inference, even for a known catalogue
+ // question or identity. A missing/failed model cannot switch this path to Core.
+ if(forceModel||mode==='conversation'){
+  if(!callModel)return unavailable('MODEL_MISSING');
   try{
    const result=await callModel();
-   if(result.ok&&typeof result.output==='string'&&result.output.trim())return {ok:true,engine:'model',output:result.output,references:normalizeAyaReferences(result.references),workingMemory:result.workingMemory?normalizeMemory(result.workingMemory):undefined,proposals:result.proposals??[]};
+   if(result.ok&&typeof result.output==='string'&&result.output.trim())return {ok:true,kind:'model',engine:'model',output:result.output,references:normalizeAyaReferences(result.references),workingMemory:result.workingMemory?normalizeMemory(result.workingMemory):undefined,proposals:cadContext?result.proposals??[]:[]};
    const error=result.error||'LOCAL_EMPTY_RESPONSE';
-   return modelFailure(error);
-  }catch(error){return modelFailure(error instanceof Error&&(error.name==='AbortError'||error.message==='LOCAL_CANCELLED')?'LOCAL_CANCELLED':'LOCAL_ERROR');}
+   return unavailable(error);
+  }catch(error){return unavailable(error instanceof Error&&error.name==='AbortError'?'LOCAL_CANCELLED':error instanceof Error?error.message:'LOCAL_ERROR');}
  }
 
- if(!forceModel){
-  const remembered=answerMemory(prompt,context);if(remembered)return remembered;
+ // This guide is reached only through an explicit selection. Its curated answers
+ // and typed CAD suggestions remain available without impersonating inference.
+ const guide=(reply:Omit<AyaReplySuccess,'kind'>):AyaReplySuccess=>({...reply,kind:'guide'});
+ {
+  const remembered=answerMemory(prompt,context);if(remembered)return guide(remembered);
   if(options.useKnowledge!==false&&/\bcmd\b/i.test(prompt)&&/kurulum|güncelle|guncelle|windows|derle/i.test(prompt)){
-   const install=ayaDocumentGuide(prompt,t,history);if(install.output&&install.references?.some(r=>r.id==='desktop-install'))return {ok:true,engine:'guide',output:install.output,references:install.references};
+   const install=ayaDocumentGuide(prompt,t,history);if(install.output&&install.references?.some(r=>r.id==='desktop-install'))return guide({ok:true,engine:'guide',output:install.output,references:install.references});
   }
   // Exact catalogue questions are intentional definitions/checks, not CAD commands.
   const canonical=options.useKnowledge!==false&&isCatalogQuestion(prompt)?answerCatalog(prompt,context):null;
-  if(canonical)return canonical;
-  const currentCad=suggestSectionReply(prompt,context)??suggestCadReply(prompt,context);if(currentCad)return currentCad;
+  if(canonical)return guide(canonical);
+  const currentCad=suggestSectionReply(prompt,context)??suggestCadReply(prompt,context);if(currentCad)return guide(currentCad);
   const owned=answerOwned(prompt,{...context,includeCatalog:!cadContext},t);
-  if(owned)return owned;
+  if(owned)return guide(owned);
   const cad=cadContext&&!cadContext.scope?ayaCadHelp(prompt,cadContext,t):null;
-  if(cad)return {ok:true,engine:'core',output:cad,references:[]};
+  if(cad)return guide({ok:true,engine:'core',output:cad,references:[]});
   const catalogue=options.useKnowledge!==false?answerCatalog(prompt,context):null;
-  if(catalogue)return catalogue;
+  if(catalogue)return guide(catalogue);
  }
- if(forceModel)return {...fallbackReply(prompt,{locale,history,modelError:'MODEL_MISSING'}),warning:'MODEL_MISSING'};
- if(options.useKnowledge!==false){const guide=ayaDocumentGuide(prompt,t,history);if(guide.ok&&guide.output&&guide.references?.length)return {ok:true,engine:'guide',output:guide.output,references:guide.references};}
- return fallbackReply(prompt,{locale,history,modelEnabled:false});
+ if(options.useKnowledge!==false){const found=ayaDocumentGuide(prompt,t,history);if(found.ok&&found.output&&found.references?.length)return guide({ok:true,engine:'guide',output:found.output,references:found.references});}
+ return unavailable('GUIDE_NO_MATCH');
 }

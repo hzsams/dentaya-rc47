@@ -8,7 +8,6 @@ import {createAyaStatusRefreshGate,selectAyaModel} from '@/lib/aya-ui-state';
 import {ayaSetupError} from '@/lib/aya-setup-status';
 import {ayaProposalBlock,type AyaActionResult} from '@/lib/aya-cad-agent';
 import {resolveAyaReply} from '@/lib/aya-conversation';
-import {fallbackReply} from '../../../electron/aya/conversation.cjs';
 import {normalizeMemory,type AyaWorkingMemory,type AyaProposal,type AyaCadTool} from '../../../electron/aya/agent.cjs';
 import {ayaAgentText} from '@/lib/i18n/aya-agent';
 import {CopyAyaResponse} from '../ai/AyaMessageTools';
@@ -20,7 +19,7 @@ import {readAyaKnowledge} from '@/lib/aya-knowledge';
 import {readAyaState,type AyaMessage} from '@/lib/aya-local-state';
 import AyaKnowledgePanel from '../ai/AyaKnowledgePanel';
 import AyaSources from '../ai/AyaSources';
-type Message=AyaMessage&{proposals?:AyaProposal[];cadScope?:string};
+type Message=AyaMessage&{proposals?:AyaProposal[];cadScope?:string;guide?:boolean};
 type Event=AyaCadActionEvidence;
 type Session={draft:string;pendingDraft:string;messages:Message[];memory:AyaWorkingMemory;events:Event[]};
 // Panel close/reopen keeps the current task in process memory, scoped to project/source/unit.
@@ -40,7 +39,7 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
  const [draft,setDraft]=useState(saved?.draft||saved?.pendingDraft||''),[pendingDraft,setPendingDraft]=useState(''),[messages,setMessages]=useState<Message[]>(()=>saved?.messages??[]),[memory,setMemory]=useState(()=>saved?.memory??normalizeMemory(null)),[events,setEvents]=useState<Event[]>(()=>saved?.events??[]);
  const [activeAction,setActiveAction]=useState<AyaCadTool|null>(null);
  const [busy,setBusy]=useState(false),[model,setModel]=useState(''),[error,setError]=useState(''),[models,setModels]=useState<{name:string;size:number;label?:string}[]>([]);
- const [runtimeBusy,setRuntimeBusy]=useState(false);
+ const [runtimeBusy,setRuntimeBusy]=useState(false),[guideMode,setGuideMode]=useState(false);
  const live=useRef(true),lock=useRef(false),request=useRef(''),contextRef=useRef(context),inputRef=useRef<HTMLTextAreaElement|null>(null),logRef=useRef<HTMLDivElement|null>(null),followBottom=useRef(true);
  const cancelPending=useRef<((reason:string)=>void)|null>(null),requestSnapshot=useRef('');
  const initialFocusPending=useRef(true);
@@ -82,22 +81,29 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
   lock.current=true;followBottom.current=true;setBusy(true);setPendingDraft(preserveDraft?'':prompt);if(!preserveDraft)setDraft('');setError('');
   const requestId=crypto.randomUUID(),captured=contextRef.current;
   request.current=requestId;requestSnapshot.current=captured.snapshot??'';
-  const base=previous.slice(-64);setMessages([...base,{role:'user',content:prompt,cadScope:captured.scope}]);
+  const prior=previous.at(-1);
+  const base=(prior?.role==='user'&&prior.content===prompt&&prior.cadScope===captured.scope?previous.slice(0,-1):previous).slice(-64),guide=guideMode,user:Message={role:'user',content:prompt,cadScope:captured.scope,guide};
+  const modelHistory=base.filter(message=>!message.guide&&message.engine!=='guide');
+  setMessages([...base,user]);
   let timeout:ReturnType<typeof setTimeout>|undefined;
   try{
    const notebook=readAyaKnowledge(),api=window.dentayaDesktop,options=readAyaState().options,cadContext={...captured,recentActions:actionEvents.slice(-8)};
-   const result=await resolveAyaReply({prompt,cadContext,workingMemory:memory,knowledge:notebook.enabled?notebook.items:[],history:base,options,locale},{t,callModel:model&&api?.localAyaChat?()=>{
+   const result=await resolveAyaReply({prompt,cadContext,workingMemory:memory,knowledge:notebook.enabled?notebook.items:[],history:guide?base:modelHistory,options,locale,mode:guide?'guide':'conversation'},{t,callModel:!guide&&model&&api?.localAyaChat?()=>{
     const cancelled=new Promise<{ok:false;error:string}>(resolve=>{cancelPending.current=reason=>{resolve({ok:false,error:reason});if(reason!=='LOCAL_CANCELLED')void api.localAyaCancel?.();};timeout=setTimeout(()=>cancelPending.current?.('LOCAL_TIMEOUT'),185000);});
-    return Promise.race([api.localAyaChat!({agent:true,workingMemory:memory,requestId,prompt,model,locale,detail:'detailed',options,history:base,knowledge:notebook.enabled?notebook.items:[],useMemory:notebook.enabled,cadContext}),cancelled]);
+    return Promise.race([api.localAyaChat!({agent:true,workingMemory:memory,requestId,prompt,model,locale,detail:'detailed',options,history:modelHistory,knowledge:notebook.enabled?notebook.items:[],useMemory:notebook.enabled,cadContext}),cancelled]);
    }:undefined});
    if(!live.current||request.current!==requestId)return;
    // A response for another geometry/task cannot change this task's memory or offer executable tools.
    if(captured.scope!==contextRef.current.scope||captured.snapshot!==contextRef.current.snapshot){if(!preserveDraft)setDraft(prompt);setError(copy.stale);return;}
-   setMessages([...base,{role:'user',content:prompt,cadScope:captured.scope},{role:'assistant',content:result.output,engine:result.engine,references:result.references,proposals:result.proposals,cadScope:captured.scope}]);
-   if(result.workingMemory)setMemory(result.workingMemory);
-   if(!preserveDraft&&(result.cancelled||result.warning))setDraft(prompt);
-   if(result.warning)setError(result.warning==='LOCAL_INVALID_PLAN'?copy.invalid:result.warning.startsWith('AYA_ENGINE_')?ayaSetupError(result.warning,locale):t('Yerel model yanıt veremedi. Motoru ve model seçimini kontrol edin.'));
-  }catch{if(live.current&&request.current===requestId){const reply=fallbackReply(prompt,{locale,history:base,modelError:'LOCAL_ERROR'});setMessages([...base,{role:'user',content:prompt,cadScope:captured.scope},{role:'assistant',content:reply.output,engine:'core',cadScope:captured.scope}]);if(!preserveDraft)setDraft(prompt);}}
+   if(!result.ok){
+    if(!preserveDraft)setDraft(prompt);
+    setError(result.error==='LOCAL_INVALID_PLAN'?copy.invalid:result.error.startsWith('AYA_ENGINE_')?ayaSetupError(result.error,locale):result.error==='LOCAL_CANCELLED'?copy.cancelled:result.error==='GUIDE_NO_MATCH'?copy.guideNoMatch:copy.modelUnavailable);
+    return;
+   }
+   setMessages([...base,user,{role:'assistant',content:result.output,engine:guide?'guide':result.engine,references:result.references,proposals:result.proposals,cadScope:captured.scope,guide}]);
+   if((!guide||result.kind==='control')&&result.workingMemory)setMemory(result.workingMemory);
+  }catch{if(live.current&&request.current===requestId){if(!preserveDraft)setDraft(prompt);setError(copy.modelUnavailable);}}
+
   finally{if(timeout)clearTimeout(timeout);if(request.current===requestId){lock.current=false;request.current='';cancelPending.current=null;if(live.current){setPendingDraft('');setBusy(false);}}}
  }
  async function apply(proposal:AyaProposal){
@@ -121,14 +127,14 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
   if(captured.scope!==contextRef.current.scope)return;
   setEvents(nextEvents);setMessages(nextMessages);if(!result.ok)setError(result.message);
   // One bounded follow-up interprets actual check output, only for the unchanged geometry.
-  if(result.ok&&proposal.tool==='inspect'&&model&&evidence){await new Promise<void>(resolve=>requestAnimationFrame(()=>resolve()));if(live.current&&evidence.scope===contextRef.current.scope&&evidence.snapshot===contextRef.current.snapshot&&evidence.dataToken===contextRef.current.dataToken)void send(copy.interpret,nextMessages,nextEvents,true);}
+  if(result.ok&&proposal.tool==='inspect'&&!guideMode&&model&&evidence){await new Promise<void>(resolve=>requestAnimationFrame(()=>resolve()));if(live.current&&evidence.scope===contextRef.current.scope&&evidence.snapshot===contextRef.current.snapshot&&evidence.dataToken===contextRef.current.dataToken)void send(copy.interpret,nextMessages,nextEvents,true);}
  }
  const checks=cadChecklist(context,t),legacy=nextCadAction(context),legacyActions={setup:{label:t('İş tanımı'),run:onSetup},show:{label:t('Tümünü göster'),run:onShow},place:{label:t('Koleye yerleştir'),run:onPlace},save:{label:t('Kaydet ve çık'),run:onSave},next:{label:t('Sonraki'),run:onNext}};
  const currentProposal=(tool:AyaCadTool):AyaProposal=>({tool,reason:copy.tools[tool],scope:context.scope??'',snapshot:context.snapshot??''});
  return <UiNode as="section" className="cad-aya-panel" role="dialog" aria-label="AYA çalışma asistanı" onKeyDown={e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();onClose();}}}>
   <UiNode as="header"><UiNode as="strong" translateChildren={false}>{copy.title}</UiNode><UiNode as="button" type="button" onClick={onClose}>Kapat</UiNode></UiNode>
   <UiNode as="p"><UiNode as="span">Çalışma ünitesi</UiNode><UserText>{' · '+(context.unit||'—')}</UserText></UiNode>
-  <UiNode as="p" className="aya-agent-status" translateChildren={false}>{model?copy.model:copy.fallback}</UiNode>
+  <UiNode as="p" className="aya-agent-status" translateChildren={false}>{guideMode?copy.guide:model?copy.model:copy.fallback}</UiNode>
   {!onRun&&legacy&&<UiNode as="div" className="cad-aya-next" translateChildren={false}><UiNode as="small">{toolsCopy.nextAction}</UiNode><UiNode as="button" type="button" onClick={legacyActions[legacy].run}>{legacyActions[legacy].label}</UiNode></UiNode>}
   {onRun&&<UiNode as="div" className="cad-aya-actions" translateChildren={false}><UiNode as="button" type="button" disabled={busy||context.isSaving} onClick={()=>void send(copy.review)}>{copy.refresh}</UiNode>{(['inspect','show-all','undo','save'] as const).filter(id=>context.availableTools?.includes(id)).map(id=><UiNode as="button" type="button" key={id} data-aya-tool={id} disabled={busy} onClick={()=>void apply(currentProposal(id))}>{copy.tools[id]}</UiNode>)}</UiNode>}
   <UiNode as="details" className="cad-aya-context" translateChildren={false}><UiNode as="summary">{copy.context}<UiNode as="small">{checks.filter(item=>item.state==='ready').length} / {checks.length}</UiNode></UiNode><UiNode as="div" className="cad-aya-context-body">
@@ -137,6 +143,7 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
   {onRun&&<UiNode as="details" className="aya-cad-evidence" data-aya-section-evidence={context.section?JSON.stringify(context.section):undefined} translateChildren={false}><UiNode as="summary">{copy.evidence}</UiNode>{context.section&&<UiNode as="p">{cadSectionText(locale).ayaReady}</UiNode>}{context.report?<UiNode as="div"><UiNode as="p">{context.report.boundaryEdges??'—'} {copy.openEdges}</UiNode><UiNode as="p">{context.report.contactReference==='antagonist'?`${context.report.collisionSamples??0} / ${context.report.samples??0} ${copy.samples}`:copy.noAntagonist}</UiNode>{context.report.minimumWallEstimateMm!==undefined&&<UiNode as="p">{copy.estimate}: {context.report.minimumWallEstimateMm.toFixed(2)} mm</UiNode>}{context.report.warnings.map((s,i)=><UiNode as="p" key={i}><UserText>{s}</UserText></UiNode>)}</UiNode>:<UiNode as="p">{copy.noReport}</UiNode>}</UiNode>}
   <AyaKnowledgePanel/>
   </UiNode></UiNode>
+  <UiNode as="label" translateChildren={false}>{copy.source}<UiNode as="select" aria-label={copy.source} value={guideMode?'guide':'conversation'} disabled={busy} onChange={e=>{setGuideMode(e.target.value==='guide');setError('');}}><UiNode as="option" value="conversation">{copy.localSource}</UiNode><UiNode as="option" value="guide">{copy.guide}</UiNode></UiNode></UiNode>
   {models.length>0&&<UiNode as="label">Kurulu yerel model<UiNode as="select" value={model} disabled={busy} onChange={e=>{modelPreference.current=e.target.value;setModel(e.target.value);}} aria-label="Kurulu yerel model">{models.map(m=><UiNode as="option" key={m.name} value={m.name} translateChildren={false}>{m.label??m.name}</UiNode>)}</UiNode></UiNode>}
   <UiNode as="div" role="log" ref={logRef} onScroll={e=>{const log=e.currentTarget;followBottom.current=log.scrollHeight-log.scrollTop-log.clientHeight<40;}} className="cad-aya-messages" aria-live="polite">
    {messages.map((m,i)=><UiNode as="article" key={i}><UiNode as="strong">{m.role==='user'?'Siz':m.engine==='model'?'AYA · yerel':m.engine==='core'?'AYA Core':'Uygulama rehberi · belge metni'}</UiNode><UserText>{m.content}</UserText><AyaSources references={m.references}/>

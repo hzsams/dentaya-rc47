@@ -79,6 +79,7 @@ async function installFixture(context, authenticated = true, { locale = 'tr', th
       localStorage.setItem('dentaya:preferences', JSON.stringify({ theme, motion_level: 'reduced', compact_mode: false, surface_style: 'soft', font_scale: 'normal', custom_accent: null, use_custom_accent: false }));
       localStorage.setItem('dentaya:workspace-chrome-v1', JSON.stringify({ compact: true, navigation: true, reducedMotion: true }));
       localStorage.setItem('dentaya:experience:v1', JSON.stringify({ motion: 'reduced' }));
+      // Keep a legacy preference to verify that it cannot revive canned replies.
       localStorage.setItem('dentaya:aya-response-mode', 'core');
       sessionStorage.setItem('desktop-shell-fixture-seeded', 'true');
     }
@@ -409,8 +410,13 @@ async function routeActions(page, route) {
     const composer = page.locator('#aya-local-message');
     await composer.fill('1800 × 0,18');
     await page.locator('.aya-chat-composer').getByRole('button', { name: /Gönder/ }).click();
-    await page.locator('.aya-message--assistant').filter({ hasText: '324' }).waitFor();
-    assert.equal(await page.locator('.aya-status--model').count(), 0, 'A browser Core response cannot claim a ready local model');
+    await page.waitForFunction(() => document.querySelector('#aya-local-message')?.value === '1800 × 0,18' && !document.querySelector('#aya-local-message')?.disabled);
+    assert.equal(await page.locator('.aya-message--assistant').count(), 0, 'An unavailable model cannot fabricate a calculation response');
+    assert.equal(await page.locator('.aya-message--user').count(), 1, 'The actual question remains visible');
+    assert.match(await page.locator('.aya-status').textContent(), /Yerel model bekleniyor/);
+    assert.match(await page.locator('.aya-chat-error').textContent(), /model/i);
+    assert.equal(await page.locator('.aya-status--model').count(), 0, 'A browser without a model cannot claim ready inference');
+    assert.equal(await page.locator('#aya-response-mode').count(), 0, 'A legacy preference cannot restore the removed Core switch');
   }
 }
 
@@ -496,7 +502,7 @@ try {
   await page.keyboard.press('Escape');
   await layout(page, '/patients-rtl', { width: 1440, height: 1000 });
   await layout(page, '/patients-rtl', { width: 390, height: 844 }, { mobile: true });
-  checks.push('real patient search/create entry, appointment planner/form, finance record controls, bounded message composer, local AYA calculation');
+  checks.push('real patient search/create entry, appointment planner/form, finance record controls, bounded message composer, honest unavailable AYA state with preserved question');
   checks.push('persisted reduced motion; light and dark presets; Arabic RTL desktop and mobile');
 
   const cadContext = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });

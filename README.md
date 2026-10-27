@@ -1,6 +1,8 @@
-# DentAYA RC60
+# DentAYA RC61
 
-Sürüm `1.0.0-rc.60`, AYA Core `0.16.0`. RC60, uzun kişisel notların ilgili bölümünü gerçek model girdisine taşır; değişmemiş sohbetin başka pencerede açılması veya dil değiştirilmesi gereksiz kayıt çakışması yaratmaz. Yerel kurulumda başka pencerenin indirmesini durdurma isteği doğru sonuç verir; durmuş aktarımlar yeniden denemeye açılır. Gerçek model kabulünün durumu güncel raporda ayrı belirtilir.
+Sürüm `1.0.0-rc.61`, AYA Core `0.17.0`. Ana sohbet serbest metin üreten yerel modele ayrıldı; model yokken veya hata verdiğinde otomatik hazır cevap üretilmez. Yanıt akış halinde görünür; hedef ve karar güncellemesi ayrı, sınırlandırılmış bir model çağrısıdır. CAD araç rehberi açıkça seçilir; manuel CAD ve 27 tipli Uygula kapısı korunur. 16 GB RAM için mevcut Ollama üzerinden Qwen3 4B indirme seçeneği eklendi; sabit/hash doğrulanan managed model değişmedi. Gerçek model semantik kabulü ve Windows EXE bu ortamda tamamlanmadı; güncel sınırlar [kontrol raporunda](RC61_KONTROL_RAPORU.md) açıklanır.
+
+Aşağıdaki RC60 ve önceki sürüm notları tarihsel kayıttır. Model hatasında otomatik Core yanıtı ve ana sohbette soru kütüphanesi artık geçerli davranış değildir. Güncel kullanım [RC61_KULLANIM.md](RC61_KULLANIM.md) içindedir.
 
 Aydınlık panelleri ve erik moru başlıklarıyla DentAYA Studio düzeni korunur. CAD; nesneler ve parametreler solda, mevcut komutlar koyu sağ araç şeridinde, geniş 3B alan ortada olacak şekilde düzenlenir. Ortak uygulama başlığı CAD'de gösterilmez. Özgün DentAYA varlıkları kullanılır; exocad/3Shape çalışma ergonomisi referanstır.
 

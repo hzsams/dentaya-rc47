@@ -192,7 +192,8 @@ try {
  await page.keyboard.press('Escape');assert.equal(await aya.count(),0);assert.equal(await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).evaluate(button=>document.activeElement===button),true,'Closing the sidebar restores keyboard focus');await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();await page.setViewportSize({width:1600,height:1000});
  assert.equal(await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).inputValue(),'Bu ünite için henüz göndermediğim soru','Closing and reopening the same CAD unit preserves an unsent draft');
  const ask=async text=>{await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).fill(text);await aya.getByRole('button',{name:'Gönder',exact:true}).click();await aya.getByRole('button',{name:'Gönder',exact:true}).waitFor();};
- // RC50 uses the scoped CAD dialogue for explicit current-workspace reviews.
+ await aya.getByRole('combobox',{name:'Yanıt kaynağı',exact:true}).selectOption('guide');
+ // Explicit tool guide uses current host context without impersonating inference.
  // A catalogue placement definition is not evidence of a live scene assessment.
  await ask('Güncel çalışma durumunu değerlendir ve sıradaki adımı öner.');
  assert.match(await aya.getByRole('log').textContent(),/Çalışma ünitesi: 46/);
@@ -201,10 +202,11 @@ try {
  assert.equal(await aya.locator('[data-check-id=position]').getAttribute('data-check-state'),'ready');
  assert.match(await aya.locator('.aya-cad-evidence').textContent(),/Antagonist karşılaştırması yok/);
  const again=await save();assert.deepEqual(unitMesh(again),unitMesh(snapshot),'AYA workspace checks must not change the placed crown');
- console.log('PASS: live CAD-aware AYA works without a model; real checks preserve the mesh.');
+ console.log('PASS: explicitly selected CAD tool guide uses live context; real manual checks preserve the mesh.');
  // A fake local bridge tests renderer integration; it is not native inference.
  await page.evaluate(()=>{window.rc47CadModel.ready=true;window.dispatchEvent(new Event('focus'));});
  await aya.getByRole('combobox',{name:'Kurulu yerel model',exact:true}).waitFor();
+ await aya.getByRole('combobox',{name:'Yanıt kaynağı',exact:true}).selectOption('conversation');
  await page.setViewportSize({width:1366,height:768});await aya.locator('.cad-aya-context>summary').click();const contextComposer=await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).boundingBox(),sendControl=await aya.getByRole('button',{name:'Gönder',exact:true}).boundingBox();assert.ok(contextComposer&&sendControl&&contextComposer.y+contextComposer.height<768&&sendControl.y+sendControl.height<768,'Open workspace context must not push the composer or send button off screen');await aya.locator('.cad-aya-context>summary').click();await page.setViewportSize({width:1600,height:1000});
 
  const historyBefore=await page.locator('.cad-history-count').textContent(),writesBefore=writes.length;

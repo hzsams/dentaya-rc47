@@ -3,13 +3,13 @@ setlocal DisableDelayedExpansion
 cd /d "%~dp0"
 if errorlevel 1 goto wrong
 if not exist package.json goto wrong
-findstr /C:"1.0.0-rc.60" package.json >nul
+findstr /C:"1.0.0-rc.61" package.json >nul
 if errorlevel 1 goto wrong
 if not exist electron\aya\language-packs.cjs goto wrong
 if not exist electron\aya\core.cjs goto wrong
 if not exist src\lib\i18n\UiNode.tsx goto wrong
 if not exist scripts\package-windows.mjs goto wrong
-echo DentAYA RC60 - AYA not baglami, sohbet kaydi ve motor kurulumu
+echo DentAYA RC61 - AYA serbest sohbet, bellek ve yerel model
 where node.exe >nul 2>nul
 if errorlevel 1 goto missing_node
 where npm.cmd >nul 2>nul
@@ -44,7 +44,7 @@ if errorlevel 1 goto failed
 node scripts\package-windows.mjs --show-result --reveal
 if errorlevel 1 goto failed
 echo.
-echo Derleme tamamlandi. Kurulum adi: DentAYA-Setup-1.0.0-rc.60.exe
+echo Derleme tamamlandi. Kurulum adi: DentAYA-Setup-1.0.0-rc.61.exe
 echo DentAYA programini kaydedip kapatin, sonra yeni Setup dosyasini calistirin.
 pause
 exit /b 0
@@ -78,7 +78,7 @@ echo Calisma klasoru: "%DENTAYA_BUILD%"
 pause
 exit /b 1
 :wrong
-echo Bu dosyayi RC60 paketindeki package.json ile ayni klasore koyup acin.
+echo Bu dosyayi RC61 paketindeki package.json ile ayni klasore koyup acin.
 echo Proje klasorunun adinin RC20 olmasi tek basina sorun degildir.
 pause
 exit /b 1

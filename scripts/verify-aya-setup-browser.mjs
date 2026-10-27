@@ -19,7 +19,7 @@ try{
  const page=await browser.newPage({viewport:{width:1280,height:900}});page.on('pageerror',error=>errors.push(error.message));
  await page.addInitScript(()=>{
   const progress={running:true,status:'model',completed:10,total:100};
-  const state=window.rc60Setup={mode:'foreign',cancels:0,refreshes:0,pending:null,status:{ok:false,error:'LOCAL_BUSY',models:[],progress}};
+  const state=window.rc60Setup={mode:'foreign',cancels:0,refreshes:0,pending:null,ollamaMode:'pull-pending',ollamaPulls:0,ollamaCancels:0,pendingPull:null,pendingOllamaCancel:null,status:{ok:false,error:'LOCAL_BUSY',models:[],progress}};
   window.dentayaDesktop={onOpenPreferences:()=>()=>{},
    localAyaStatus:async()=>{state.refreshes++;if(state.mode==='status-error')throw Error('PRIVATE status transport detail');return state.status;},
    localAyaInstallCancel:async()=>{
@@ -28,6 +28,18 @@ try{
     if(state.mode==='transport-error')throw Error('PRIVATE C:\\user\\model.gguf https://private.invalid');
     if(state.mode==='pending')return new Promise(resolve=>{state.pending=()=>{state.status={ok:true,models:[],progress:{running:false,status:'cancelled',completed:10,total:100}};resolve({ok:true});};});
     return {ok:true};
+   },
+   localAyaDownload:async()=>{
+    state.ollamaPulls++;
+    if(state.ollamaMode==='pull-error')throw Error('PRIVATE C:\\user\\model.gguf https://private.invalid');
+    if(state.ollamaMode==='pull-busy')return {ok:false,error:'LOCAL_BUSY'};
+    return new Promise(resolve=>{state.pendingPull=()=>{state.status={...state.status,ok:false,error:'LOCAL_BUSY',ollama:{online:true,progress:{running:true,status:'Model indiriliyor…',completed:250,total:2500}}};resolve({ok:true});};});
+   },
+   localAyaCancelDownload:async()=>{
+    state.ollamaCancels++;
+    if(state.ollamaMode==='cancel-foreign')return {ok:false,error:'LOCAL_BUSY'};
+    if(state.ollamaMode==='cancel-error')throw Error('PRIVATE C:\\user\\model.gguf https://private.invalid');
+    return new Promise(resolve=>{state.pendingOllamaCancel=()=>{state.status={...state.status,ok:true,error:undefined,ollama:{online:true,progress:{running:false,status:'İndirme durduruldu.',completed:250,total:2500}}};resolve({ok:true});};});
    },
   };
  });
@@ -60,6 +72,35 @@ try{
  await page.evaluate(()=>{window.rc60Setup.mode='ok';});await refresh.click();await page.waitForFunction(()=>!document.querySelector('#aya-setup-test [role=alert]'));
  assert.equal(await cancel.isEnabled(),true,'The setup remains usable after recovery');
  if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC60_AYA_Setup_Cancel_Recovery.png'),animations:'disabled'});}
+ // The optional larger model has its own loopback Ollama availability/progress.
+ // An offline runtime never offers an action that would pretend to install it.
+ const pull4B=main.getByRole('button',{name:'Ollama ile 4B modeli indir',exact:true}),cancel4B=main.getByRole('button',{name:'4B indirmeyi durdur',exact:true});
+ await page.evaluate(()=>{window.rc60Setup.status={ok:false,models:[],progress:{running:false,status:'',completed:0,total:0},ollama:{online:false,progress:{running:false,status:'',completed:0,total:0}}};});
+ await refresh.click();await unlocked();assert.equal(await pull4B.count(),0,'An offline Ollama has no enabled model-pull shortcut');assert.equal(await cancel4B.count(),0);
+ await page.evaluate(()=>{window.rc60Setup.status={...window.rc60Setup.status,ok:true,ollama:{online:true,progress:{running:false,status:'',completed:0,total:0}}};});
+ await refresh.click();await pull4B.waitFor();await unlocked();assert.equal(await pull4B.isEnabled(),true);
+ const beforePull=await page.evaluate(()=>({pulls:window.rc60Setup.ollamaPulls,refreshes:window.rc60Setup.refreshes}));
+ await pull4B.evaluate(button=>{button.click();button.click();});await page.waitForFunction(()=>window.rc60Setup.pendingPull);
+ assert.equal(await page.evaluate(()=>window.rc60Setup.ollamaPulls),beforePull.pulls+1,'A same-turn double click starts only one Ollama model pull');
+ assert.equal(await pull4B.isDisabled(),true);assert.equal(await refresh.isDisabled(),true);
+ await page.evaluate(()=>{window.rc60Setup.pendingPull();window.rc60Setup.pendingPull=null;});await cancel4B.waitFor();await unlocked();
+ assert.equal(await page.evaluate(()=>window.rc60Setup.refreshes),beforePull.refreshes+1,'Model-pull acknowledgement refreshes actual Ollama progress once');
+ assert.equal(await page.evaluate(()=>window.rc60Setup.status.progress.running),false,'Managed progress remains separate from the Ollama pull');
+ assert.equal(await page.evaluate(()=>window.rc60Setup.status.ollama.progress.running),true);assert.equal(await pull4B.isDisabled(),true);assert.equal(await cancel4B.isEnabled(),true);
+ await page.evaluate(()=>{window.rc60Setup.ollamaMode='cancel-foreign';});await cancel4B.click();await main.getByRole('alert').waitFor();await unlocked();
+ assert.match(await main.getByRole('alert').textContent(),/başka bir işlemde/);assert.equal(await cancel4B.isEnabled(),true);
+ assert.equal(await page.evaluate(()=>window.rc60Setup.status.ollama.progress.running),true,'A rejected Ollama cancellation cannot claim the transfer stopped');
+ const beforeOllamaCancel=await page.evaluate(()=>({cancels:window.rc60Setup.ollamaCancels,refreshes:window.rc60Setup.refreshes}));
+ await page.evaluate(()=>{window.rc60Setup.ollamaMode='cancel-pending';});await cancel4B.evaluate(button=>{button.click();button.click();});await page.waitForFunction(()=>window.rc60Setup.pendingOllamaCancel);
+ assert.equal(await page.evaluate(()=>window.rc60Setup.ollamaCancels),beforeOllamaCancel.cancels+1);assert.equal(await cancel4B.isDisabled(),true);assert.equal(await refresh.isDisabled(),true);
+ await page.evaluate(()=>{window.rc60Setup.pendingOllamaCancel();window.rc60Setup.pendingOllamaCancel=null;});await page.waitForFunction(()=>!Array.from(document.querySelectorAll('#aya-setup-test button')).some(button=>button.textContent==='4B indirmeyi durdur'));await unlocked();
+ assert.equal(await page.evaluate(()=>window.rc60Setup.refreshes),beforeOllamaCancel.refreshes+1);assert.equal(await main.getByRole('alert').count(),0);assert.equal(await pull4B.isEnabled(),true);
+ const beforePullError=await page.evaluate(()=>window.rc60Setup.refreshes);
+ await page.evaluate(()=>{window.rc60Setup.ollamaMode='pull-error';});await pull4B.click();await main.getByRole('alert').waitFor();await unlocked();
+ assert.doesNotMatch(await main.getByRole('alert').textContent(),/PRIVATE|private\.invalid|model\.gguf/,'Ollama transport exceptions do not expose paths or URLs');
+ assert.equal(await page.evaluate(()=>window.rc60Setup.refreshes),beforePullError+1);assert.equal(await pull4B.isEnabled(),true,'A failed Ollama request releases the setup lock');
+ await page.evaluate(()=>{window.rc60Setup.ollamaMode='pull-pending';});await refresh.click();await unlocked();assert.equal(await main.getByRole('alert').count(),0);
+ if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC61_AYA_Optional_Ollama_4B_Setup.png'),animations:'disabled'});}
  assert.deepEqual(errors,[],'Rejected cancellation/refresh has no unhandled rejection or React error');
- console.log(JSON.stringify({pass:true,realSetupComponent:true,foreignCancelShowsBusy:true,noFalseCancellationSuccess:true,sameTurnDoubleClickGuard:true,cancelAcknowledgementRefresh:true,rejectedCancelRefreshes:true,privateTransportDetailsExcluded:true,statusFailureReleasesLock:true,recoveryClearsError:true,unhandledRejections:0,desktopIPC:'mock',nativeInference:false},null,2));
+ console.log(JSON.stringify({pass:true,realSetupComponent:true,foreignCancelShowsBusy:true,noFalseCancellationSuccess:true,sameTurnDoubleClickGuard:true,cancelAcknowledgementRefresh:true,rejectedCancelRefreshes:true,privateTransportDetailsExcluded:true,statusFailureReleasesLock:true,recoveryClearsError:true,optionalOllama4B:{offlineActionHidden:true,onlineActionAvailable:true,pullDoubleClickGuard:true,pullAcknowledgementRefresh:true,separateProgress:true,foreignCancelShowsBusy:true,cancelDoubleClickGuard:true,cancelAcknowledgementRefresh:true,privateTransportDetailsExcluded:true,failureReleasesLock:true},unhandledRejections:0,desktopIPC:'mock',nativeInference:false},null,2));
 }catch(error){console.error(logs);throw error;}finally{await browser?.close();await stopServer();if(owned)await fs.rm(route,{recursive:true,force:true});await fs.rm(path.join(root,'.next/dev/types'),{recursive:true,force:true});}

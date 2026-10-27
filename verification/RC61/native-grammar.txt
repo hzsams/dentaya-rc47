@@ -1,0 +1,173 @@
+{
+  "grammarOnly": true,
+  "nativeInference": false,
+  "mock": false,
+  "engine": "b9380 Linux x64 CPU",
+  "officialArchiveSHA256": "b12c76fe1c830c645b805dcd2eb67aad582da4488eb0133d55cc176be529d50d",
+  "pins": {
+    "json.hpp": "aaf127c04cb31c406e5b04a63f1ae89369fccde6d8fa7cdda1ed4f32dfc5de63",
+    "libllama-common.so": "e4aaebc8496ebebab156a772fdd7816ccefa9b50333aadc1a364517596e7d944",
+    "libllama.so": "164a7773e901be1ff0aa90f8d5e3647dd0473f8ac641e505fcb991cb0920e260"
+  },
+  "checks": [
+    {
+      "schema": "agent-no-cad",
+      "check": "empty-actions",
+      "accepted": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "schema": "agent-no-cad",
+      "check": "non-empty-actions-rejected",
+      "accepted": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "schema": "agent-no-cad",
+      "check": "memory-merge",
+      "accepted": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "schema": "agent-no-cad",
+      "check": "memory-replace",
+      "accepted": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "schema": "agent-no-cad",
+      "check": "memory-clear",
+      "accepted": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "schema": "agent-no-cad",
+      "check": "memory-patch",
+      "accepted": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "schema": "agent-no-cad",
+      "check": "partial-memory-patch",
+      "accepted": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "schema": "agent-no-cad",
+      "check": "invalid-patch-operation",
+      "accepted": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "schema": "agent-no-cad",
+      "check": "unknown-patch-field",
+      "accepted": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "schema": "agent-no-cad",
+      "check": "incomplete-patch-mask",
+      "accepted": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "schema": "agent-no-cad",
+      "check": "invalid-memory-update",
+      "accepted": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "schema": "agent-no-cad",
+      "check": "unknown-top-level-field",
+      "accepted": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "schema": "agent-no-cad",
+      "check": "missing-required-actions",
+      "accepted": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "schema": "agent-no-cad",
+      "check": "empty-answer",
+      "accepted": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "schema": "agent-cad",
+      "check": "empty-actions",
+      "accepted": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "schema": "agent-cad",
+      "check": "allowed-inspect",
+      "accepted": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "schema": "agent-cad",
+      "check": "allowed-flashlight-on",
+      "accepted": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "schema": "agent-cad",
+      "check": "unavailable-flashlight-off",
+      "accepted": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "schema": "agent-cad",
+      "check": "disallowed-save",
+      "accepted": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "schema": "agent-cad",
+      "check": "unknown-action-field",
+      "accepted": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "schema": "agent-cad",
+      "check": "non-string-answer",
+      "accepted": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "schema": "agent-cad",
+      "check": "too-many-actions",
+      "accepted": false,
+      "expected": false,
+      "pass": true
+    }
+  ],
+  "schemaSHA256": {
+    "agent-no-cad": "dbd184843506a9db85b12a6e978b32a7663f20bc311f8162666ae422b14f560d",
+    "agent-cad": "ae8e311d6998451cade3fb26960de35d22f3bc55b853a95fa7bd846a6a0d760d"
+  },
+  "pass": true
+}

@@ -30,7 +30,7 @@ try{
  const page=await context.newPage();
  page.on('pageerror',error=>errors.push(error.message));page.on('console',message=>{if(/hydration|maximum update depth|unique "key"/i.test(message.text()))errors.push(message.text());});
  await page.addInitScript(()=>{
-  const state=window.rc54State={mode:'ready',pendingReply:null,pendingStatus:null,polls:0,calls:[]};
+  const state=window.rc54State={mode:'ready',pendingReply:null,pendingStatus:null,nextMemory:null,polls:0,calls:[]};
   const ready={ok:true,models:[{name:'synthetic-local-model',size:1000},{name:'synthetic-preferred-model',size:900}],progress:{running:false,status:'ready',completed:0,total:0}};
   const installing={ok:true,models:[],progress:{running:true,status:'model',completed:10,total:100}};
   window.dentayaDesktop={
@@ -48,7 +48,7 @@ try{
     }
     return ready;
    },
-   localAyaChat:async input=>{state.calls.push(input);return new Promise(resolve=>{state.pendingReply=resolve;});},
+   localAyaChat:async input=>{state.calls.push(input);if(input.task==='memory'){const workingMemory=state.nextMemory??input.workingMemory;state.nextMemory=null;return {ok:true,output:'Separate memory extraction',workingMemory};}return new Promise(resolve=>{state.pendingReply=resolve;});},
    localAyaCancel:async()=>({ok:true}),
   };
  });
@@ -65,7 +65,7 @@ try{
  await memory.getByRole('button',{name:'Belleği düzenle',exact:true}).click();await main.locator('#aya-memory-goal').fill('KULLANICININ BEKLEYEN TASLAĞI');
  await input.fill('Planı yeni teslim saatine göre güncelle');await main.locator('.aya-chat-composer button[type=submit]').click();await page.waitForFunction(()=>window.rc54State.pendingReply);
  assert.equal(await memory.getByRole('button',{name:'Belleği kaydet',exact:true}).isDisabled(),true,'A pending response cannot race a manual memory commit');
- await page.evaluate(()=>{window.rc54State.pendingReply({ok:true,output:'Sentetik güncelleme',workingMemory:{goal:'Modelin güncel teslim hedefi',decisions:['Yeni teslim saati onaylandı'],openQuestions:['Kurye saati?']}});window.rc54State.pendingReply=null;});
+ await page.evaluate(()=>{window.rc54State.nextMemory={goal:'Modelin güncel teslim hedefi',decisions:['Yeni teslim saati onaylandı'],openQuestions:['Kurye saati?']};window.rc54State.pendingReply({ok:true,output:'Sentetik güncelleme'});window.rc54State.pendingReply=null;});
  await memory.locator('.aya-memory-conflict[role=alert]').waitFor();
  assert.equal(await main.locator('#aya-memory-goal').inputValue(),'KULLANICININ BEKLEYEN TASLAĞI','Conflicting incoming memory preserves the visible user draft');
  assert.equal(await memory.getByRole('button',{name:'Belleği kaydet',exact:true}).isDisabled(),true,'A stale draft cannot silently overwrite new memory');
@@ -93,14 +93,22 @@ try{
  await page.waitForFunction(()=>!document.querySelector('#main-test .aya-status--model'));
  assert.equal(await input.isDisabled(),false,'A model disappearing in another window does not lock the composer');
  const callsWhileUnavailable=await page.evaluate(()=>window.rc54State.calls.length);
- await askCore('12 cm kaç mm?');
- assert.equal(await page.evaluate(()=>window.rc54State.calls.length),callsWhileUnavailable,'Main chat uses Core after focus detects an unavailable model');
+ const noModelReplies=await main.locator('.aya-message--assistant').count();await input.fill('12 cm kaç mm?');await main.locator('.aya-chat-composer button[type=submit]').click();await main.locator('.aya-chat-error').waitFor();await page.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);
+ assert.equal(await main.locator('.aya-message--assistant').count(),noModelReplies,'A disappeared model cannot become a fabricated Core answer');assert.equal(await input.inputValue(),'12 cm kaç mm?');
+ assert.equal(await page.evaluate(()=>window.rc54State.calls.length),callsWhileUnavailable,'Main chat does not invoke an unavailable model');
  await page.evaluate(()=>{window.rc54State.mode='ready';window.dispatchEvent(new Event('focus'));});
  await page.waitForFunction(()=>document.querySelector('#main-test .aya-status--model'));
  // The native details element closes when its model list becomes available;
  // reopen it before querying its accessible controls, as after polling above.
  if(!await setup.evaluate(node=>node.open))await setup.locator(':scope>summary').click();
  assert.equal(await setup.getByRole('combobox',{name:'Kurulu yerel model',exact:true}).inputValue(),'synthetic-preferred-model','Recovery retains the chosen model instead of silently switching to the first installed model');
+ // A selected installed model that is temporarily busy is not a missing model.
+ await page.evaluate(()=>{window.rc54State.mode='busy';window.dispatchEvent(new Event('focus'));});
+ await page.waitForFunction(()=>document.querySelector('#main-test .aya-status')?.textContent.includes('Yerel model meşgul.'));
+ assert.match(await main.locator('.aya-status-description').textContent(),/Mesajlarınız bu bilgisayarda işlenir/);assert.doesNotMatch(await main.locator('.aya-status-description').textContent(),/kurun veya seçin|çalışan bir yerel model gerekiyor/,'Busy local work keeps its true installed/local status');assert.equal(await main.getByRole('button',{name:'Yerel yanıtı test et',exact:true}).isDisabled(),true,'A diagnostic cannot contend for a busy engine');assert.equal(await input.isDisabled(),false,'The composer remains available while background work owns the model');
+ await screenshot(main.locator('.aya-conversation-shell'),'RC61_AYA_Installed_Model_Busy.png');
+ await page.evaluate(()=>{window.rc54State.mode='ready';window.dispatchEvent(new Event('focus'));});
+ await page.waitForFunction(()=>document.querySelector('#main-test .aya-status--model')&&!document.querySelector('#main-test .aya-status')?.textContent.includes('Yerel model meşgul.'));assert.equal(await main.getByRole('button',{name:'Yerel yanıtı test et',exact:true}).isDisabled(),false,'An idle installed model becomes diagnostic-ready again');
  await page.evaluate(()=>{window.rc54State.mode='status-error';window.dispatchEvent(new Event('focus'));});
  await main.locator('.aya-chat-error').waitFor();assert.match(await main.locator('.aya-chat-error').textContent(),/Yerel motor kontrol edilemedi/);
  await page.evaluate(()=>{window.rc54State.mode='ready';window.dispatchEvent(new Event('focus'));});
@@ -110,19 +118,19 @@ try{
  assert.equal(await page.evaluate(()=>window.rc54State.calls.at(-1).model),'synthetic-preferred-model','The recovered selection is used for the next real bridge request');
  await page.evaluate(()=>{window.rc54State.pendingReply({ok:true,output:'Seçili model ile sentetik devam yanıtı'});window.rc54State.pendingReply=null;});
  await page.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);
- await screenshot(main.locator('.aya-conversation-shell'),'RC60_AYA_Focus_Model_Recovery.png');
+ await screenshot(main.locator('.aya-conversation-shell'),'RC61_AYA_Focus_Model_Recovery.png');
  const cad=page.locator('#cad-test');
  await page.evaluate(()=>{window.rc54State.mode='installing';window.dispatchEvent(new Event('focus'));});
  await page.waitForFunction(()=>!document.querySelector('#cad-test select[aria-label="Kurulu yerel model"]'));
  const calls=await page.evaluate(()=>window.rc54State.calls.length);
  await cad.locator('.cad-aya-panel>form textarea').fill('Sıradaki adım ne?');await cad.locator('.cad-aya-panel>form button[type=submit]').click();
  await page.waitForFunction(()=>!document.querySelector('#cad-test .cad-aya-panel>form textarea').disabled);
- assert.equal(await page.evaluate(()=>window.rc54State.calls.length),calls,'CAD uses Core instead of invoking a globally busy model');
+ assert.equal(await page.evaluate(()=>window.rc54State.calls.length),calls,'CAD does not invoke a globally busy model');assert.equal(await cad.locator('.cad-aya-messages article').filter({hasText:'Sıradaki adım ne?'}).count(),1);assert.equal(await cad.locator('.cad-aya-messages article strong').filter({hasText:'AYA'}).count(),0,'CAD cannot fabricate an assistant while the model is unavailable');
  await page.evaluate(()=>{window.rc54State.mode='ready';});await cad.getByRole('combobox',{name:'Kurulu yerel model',exact:true}).waitFor();
  await page.evaluate(()=>{window.rc54State.mode='busy';window.dispatchEvent(new Event('focus'));});await page.waitForFunction(()=>!document.querySelector('#cad-test select[aria-label="Kurulu yerel model"]'));
  await page.evaluate(()=>{window.rc54State.mode='ready';});await cad.getByRole('combobox',{name:'Kurulu yerel model',exact:true}).waitFor();
  await page.evaluate(()=>{window.rc54State.mode='unavailable';window.dispatchEvent(new Event('focus'));});await page.waitForFunction(()=>!document.querySelector('#cad-test select[aria-label="Kurulu yerel model"]'));
- await screenshot(cad,'AYA_RC54_unavailable_model_core.png');
+ await screenshot(cad,'AYA_RC61_unavailable_model.png');
  // A manually edited session can contain memory without any sent messages.
  // Clearing its last memory must also clear its opted-in persisted record.
  await page.evaluate(()=>window.rc50Work.saveAyaOptions({saveHistory:false}));
@@ -145,7 +153,7 @@ try{
  assert.equal(await main.locator('.aya-goal-preview').count(),0,'Reload cannot restore memory cleared from a memory-only conversation');
  assert.equal(await main.locator('.aya-message').count(),0);
  assert.equal(await page.evaluate(()=>window.rc50Work.readAyaState().sessions.length),0,'Reload does not save a fresh empty record');
- await screenshot(main.locator('.aya-conversation-shell'),'RC60_AYA_Empty_Memory_Reload.png');
+ await screenshot(main.locator('.aya-conversation-shell'),'RC61_AYA_Empty_Memory_Reload.png');
  await main.getByRole('button',{name:'Sohbet ayarları',exact:true}).click();await main.getByRole('button',{name:'Bellek ve notlar',exact:true}).click();
  await saveGoal('BU PENCERENİN HEDEFİ');await page.waitForFunction(()=>window.rc50Work.readAyaState().sessions.length===1);
  // A second real browser page shares this origin's localStorage. All edits
@@ -167,7 +175,7 @@ try{
  await saveGoal('BU PENCERENİN DEVAM HEDEFİ');
  await page.waitForFunction(()=>window.rc50Work.readAyaState().sessions[0]?.workingMemory.goal==='BU PENCERENİN DEVAM HEDEFİ');
  assert.equal(await main.locator('.aya-session-conflict').count(),0,'A read-only second window cannot block the original window\'s next real edit');
- await screenshot(main.locator('.aya-conversation-shell'),'RC60_AYA_Read_Only_History.png');
+ await screenshot(main.locator('.aya-conversation-shell'),'RC61_AYA_Read_Only_History.png');
  const afterRealEdit=await page.evaluate(()=>localStorage.getItem('dentaya:aya-core:v1'));
  await secondPage.reload();await secondPage.waitForFunction(()=>window.rc50Work&&document.querySelector('.aya-goal-preview'));await settleReadOnly();
  assert.equal(await page.evaluate(()=>localStorage.getItem('dentaya:aya-core:v1')),afterRealEdit);
@@ -199,12 +207,12 @@ try{
  await secondPage.reload();await secondPage.waitForFunction(()=>window.rc50Work&&document.querySelector('.aya-goal-preview'));
  await secondEditGoal('YENİ PENCEREDE ONAYLANAN TESLİM HEDEFİ');
  await page.waitForFunction(()=>window.rc50Work.readAyaState().sessions[0]?.workingMemory.goal==='YENİ PENCEREDE ONAYLANAN TESLİM HEDEFİ');
- await page.evaluate(()=>{window.rc54State.pendingReply({ok:true,output:'BEKLEYEN PENCERENİN YANITI KORUNDU',workingMemory:{goal:'ESKİ YANITIN YEREL HEDEFİ',decisions:['Yerel karar'],openQuestions:[]}});window.rc54State.pendingReply=null;});
+ await page.evaluate(()=>{window.rc54State.nextMemory={goal:'ESKİ YANITIN YEREL HEDEFİ',decisions:['Yerel karar'],openQuestions:[]};window.rc54State.pendingReply({ok:true,output:'BEKLEYEN PENCERENİN YANITI KORUNDU'});window.rc54State.pendingReply=null;});
  await main.locator('.aya-session-conflict').waitFor();await page.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);
  assert.equal(await page.evaluate(id=>window.rc50Work.readAyaState().sessions.find(session=>session.id===id)?.workingMemory.goal,originalId),'YENİ PENCEREDE ONAYLANAN TESLİM HEDEFİ','The delayed reply cannot overwrite a newer stored goal');
  assert.match(await main.locator('.aya-message--assistant').last().textContent(),/BEKLEYEN PENCERENİN YANITI KORUNDU/);
  assert.match(await main.locator('.aya-goal-preview').textContent(),/ESKİ YANITIN YEREL HEDEFİ/,'Conflict handling retains current in-memory work');
- await screenshot(main.locator('.aya-conversation-shell'),'RC60_AYA_Two_Window_Conflict.png');
+ await screenshot(main.locator('.aya-conversation-shell'),'RC61_AYA_Two_Window_Conflict.png');
  await input.fill(unsent);await main.getByRole('button',{name:'Bu çalışmayı ayrı sohbete kaydet',exact:true}).click();
  await page.waitForFunction(()=>window.rc50Work.readAyaState().sessions.length===2&&!document.querySelector('.aya-session-conflict'));
  const copyId=await page.evaluate(()=>window.rc50Work.readAyaState().sessions[0].id);
@@ -224,17 +232,17 @@ try{
  await secondPage.evaluate(()=>window.rc60RestoreStorage());
  await firstHistoryRow.getByRole('button',{name:'Sil',exact:true}).click();
  await page.waitForFunction(id=>!window.rc50Work.readAyaState().sessions.some(session=>session.id===id),copyId);
- await page.evaluate(()=>{window.rc54State.pendingReply({ok:true,output:'SİLİNEN KAYDIN YALNIZ YEREL YANITI',workingMemory:{goal:'SİLİNEN KAYDIN YEREL HEDEFİ',decisions:[],openQuestions:[]}});window.rc54State.pendingReply=null;});
+ await page.evaluate(()=>{window.rc54State.nextMemory={goal:'SİLİNEN KAYDIN YEREL HEDEFİ',decisions:[],openQuestions:[]};window.rc54State.pendingReply({ok:true,output:'SİLİNEN KAYDIN YALNIZ YEREL YANITI'});window.rc54State.pendingReply=null;});
  await main.locator('.aya-session-conflict').waitFor();await page.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);
  assert.equal(await page.evaluate(id=>window.rc50Work.readAyaState().sessions.some(session=>session.id===id),copyId),false,'A delayed reply cannot resurrect a conversation deleted from another window');
  assert.match(await main.locator('.aya-session-conflict').textContent(),/saklanan kaydı silinmiş/);
  assert.equal(await main.getByRole('button',{name:'Saklanan sohbeti yükle',exact:true}).isDisabled(),true);
  assert.match(await main.locator('.aya-message--assistant').last().textContent(),/SİLİNEN KAYDIN YALNIZ YEREL YANITI/);
- await screenshot(main.locator('.aya-conversation-shell'),'RC60_AYA_Deleted_Record_Recovery.png');
+ await screenshot(main.locator('.aya-conversation-shell'),'RC61_AYA_Deleted_Record_Recovery.png');
  await secondPage.close();
  assert.deepEqual(errors,[],'State transitions produce no React/hydration/page errors');
  await browser.close();browser=null;await stopServer();await fs.rm(route,{recursive:true,force:true});owned=false;await fs.rm(path.join(root,'.next/dev/types'),{recursive:true,force:true});
- console.log(JSON.stringify({pass:true,sessionEditorIsolation:true,pendingReplyMemoryConflict:true,userDraftPreserved:true,explicitMemoryReload:true,lateStatusCannotOverwriteReady:true,mainFocusRecoversEngineChanges:true,explicitModelChoiceSurvivesUnavailable:true,recoveredStatusClearsTransportError:true,cadInstallAndUnavailableUseCore:true,cadBusyPollingRecovers:true,memoryOnlyResetPersists:true,emptySessionNotCreated:true,newerStoredMemoryPreserved:true,readOnlyOpenPreservesHistoryBytes:true,readOnlyReloadPreservesActivity:true,localeDoesNotRewriteConversation:true,readOnlyWindowDoesNotBlockRealEdit:true,twoRealWindowsPreserveNewerStoredReply:true,explicitStoredReloadPreservesDraft:true,explicitSeparateCopyPreservesBoth:true,failedDeleteRetainsRecord:true,deletedConversationNotResurrected:true,modelCallsAreMock:true,cadCallbacksAreSynthetic:true,nativeInference:false,screenshots},null,2));
+ console.log(JSON.stringify({pass:true,sessionEditorIsolation:true,pendingReplyMemoryConflict:true,userDraftPreserved:true,explicitMemoryReload:true,lateStatusCannotOverwriteReady:true,mainFocusRecoversEngineChanges:true,installedBusyModelKeepsLocalStatus:true,busyDiagnosticDisabledAndRecovers:true,explicitModelChoiceSurvivesUnavailable:true,recoveredStatusClearsTransportError:true,cadInstallAndUnavailableNeverFabricateReply:true,cadBusyPollingRecovers:true,memoryOnlyResetPersists:true,emptySessionNotCreated:true,newerStoredMemoryPreserved:true,readOnlyOpenPreservesHistoryBytes:true,readOnlyReloadPreservesActivity:true,localeDoesNotRewriteConversation:true,readOnlyWindowDoesNotBlockRealEdit:true,twoRealWindowsPreserveNewerStoredReply:true,explicitStoredReloadPreservesDraft:true,explicitSeparateCopyPreservesBoth:true,failedDeleteRetainsRecord:true,deletedConversationNotResurrected:true,modelCallsAreMock:true,cadCallbacksAreSynthetic:true,nativeInference:false,screenshots},null,2));
 }catch(error){console.error(logs);throw error;}finally{
  await browser?.close();await stopServer();if(owned)await fs.rm(route,{recursive:true,force:true});await fs.rm(path.join(root,'.next/dev/types'),{recursive:true,force:true});
 }
