@@ -265,7 +265,7 @@ export default function AppointmentsPage() {
             if (e.key === 'Tab') {
                 const nodes = focusable(), first = nodes[0], last = nodes[nodes.length - 1];
                 if(!nodes.length){e.preventDefault();el?.focus();}
-                else if (e.shiftKey && (document.activeElement === first||!el?.contains(document.activeElement))) {
+                else if (e.shiftKey && (document.activeElement === first||document.activeElement===el||!el?.contains(document.activeElement))) {
                     e.preventDefault();
                     last?.focus();
                 }
