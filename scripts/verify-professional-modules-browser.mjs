@@ -22,7 +22,7 @@ const threadA = Array.from({ length: 120 }, (_, index) => message(ids.conversati
 const threadB = [message(ids.conversationB, 200, 'B_CURRENT')];
 let finance = { id: id(10), case_id: ids.caseA, patient_price: 1000.50, discount_amount: 0, paid_amount: 0, currency: 'EUR', payment_status: 'pending', overhead_pct: 20, target_margin_pct: 35, notes: null, updated_at: version };
 const quotes = [{ id: id(11), case_id: ids.caseA, amount: 100.25, currency: 'EUR', status: 'sent', notes: null, basis: {}, updated_at: version }];
-const fixture = { financeReadFailure: false, holdFinance: null, releaseFinance: null, financeWrite: 'conflict', writes: [], role: 'owner', holdA: null, releaseA: null, sendMode: 'invalid-duplicate', messageWrites: [], holdSend: null, releaseSend: null };
+const fixture = { financeReadFailure: false, holdFinance: null, releaseFinance: null, financeWrite: 'conflict', writes: [], role: 'owner', holdA: null, releaseA: null, sendMode: 'invalid-duplicate', messageWrites: [], holdSend: null, releaseSend: null, caseMode: 'error', caseWrites: [], holdCase: null, releaseCase: null, appointmentMode: 'error', appointmentWrites: [], holdAppointment: null, releaseAppointment: null };
 const errors = [];
 let server, browser, log = '', serverExit = null;
 async function installBackend(page) {
@@ -36,6 +36,17 @@ async function installBackend(page) {
     else if (table === 'organizations') result = organizations.filter(row => !url.searchParams.get('id')?.startsWith('eq.') || url.searchParams.get('id') === `eq.${row.id}`);
     else if (table === 'cases') { if (fixture.holdFinance) await fixture.holdFinance; result = cases.filter(row => !url.searchParams.get('lab_org_id') || url.searchParams.get('lab_org_id') === `eq.${row.lab_org_id}`); }
     else if (table === 'patients') result = [{ id: ids.patient, external_ref: 'SYNTHETIC', first_name: 'Test', last_name: 'Patient' }];
+    else if (table === 'create_case_from_patient' && method === 'POST') {
+      fixture.caseWrites.push(req.postDataJSON());
+      if (fixture.holdCase) await fixture.holdCase;
+      if (fixture.caseMode === 'error') { status = 503; result = { message: 'Synthetic case network failure', code: 'NETWORK_TEST' }; }
+      else result = ids.caseB;
+    } else if (table === 'appointments' && method === 'POST') {
+      fixture.appointmentWrites.push(req.postDataJSON());
+      if (fixture.holdAppointment) await fixture.holdAppointment;
+      if (fixture.appointmentMode === 'error') { status = 503; result = { message: 'Synthetic appointment network failure', code: 'NETWORK_TEST' }; }
+      else result = [];
+    }
     else if (table === 'lab_case_quotes') {
       if (fixture.financeReadFailure) { status = 503; result = { message: 'Synthetic network failure', code: 'NETWORK_TEST' }; }
       else result = quotes;
@@ -93,6 +104,17 @@ async function desktopMessageLayout(page, width, height) {
   assert.ok(layout.historyScrollHeight > layout.historyHeight + 100, 'A long thread must scroll inside its history area');
   return layout;
 }
+async function settleRenderer(page) {
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+}
+async function dismissedConfirmation(page, action, label) {
+  const dialogReady = page.waitForEvent('dialog');
+  const pendingAction = action();
+  const dialog = await dialogReady;
+  assert.equal(dialog.type(), 'confirm', `${label} asks before discarding a dirty form`);
+  await dialog.dismiss();
+  await pendingAction;
+}
 try {
   server = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'dev', '--hostname', '127.0.0.1', '--port', '3057'], { cwd: root, env: { ...process.env, NEXT_TELEMETRY_DISABLED: '1', NEXT_PUBLIC_SUPABASE_URL: 'http://127.0.0.1:54321', NEXT_PUBLIC_SUPABASE_ANON_KEY: 'dentaya-synthetic-module-fixture' }, stdio: ['ignore', 'pipe', 'pipe'] });
   for (const stream of [server.stdout, server.stderr]) stream.on('data', data => { log = (log + data).slice(-20000); });
@@ -139,6 +161,130 @@ try {
   if (process.env.DENTAYA_SCREENSHOT_DIR) { await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR, { recursive: true }); await page.screenshot({ path: path.join(process.env.DENTAYA_SCREENSHOT_DIR, 'finance-records.png'), fullPage: true }); }
   console.log('PASS: financial loading failure, stale/zero-row write, exact currency, draft protection and duplicate submission guards.');
 
+  const casePage = await browser.newPage({ viewport: { width: 1440, height: 1100 } }); casePage.setDefaultTimeout(30000); await installBackend(casePage);
+  await casePage.goto(`${base}/cases`);
+  const newCase = casePage.getByRole('button', { name: 'Yeni Vaka', exact: true });
+  await newCase.click();
+  const caseModal = casePage.getByRole('dialog', { name: 'Laboratuvara gönder', exact: true });
+  await caseModal.waitFor();
+  await caseModal.getByLabel('Laboratuvar', { exact: true }).selectOption(ids.labA);
+  await caseModal.getByRole('button', { name: 'Üstten', exact: true }).click();
+  await caseModal.locator('[data-tooth="11"]').click();
+  const caseNotes = caseModal.getByLabel('Klinik Not', { exact: true });
+  await caseNotes.fill('RC62 pending case draft must remain unchanged');
+  await caseModal.getByLabel('Materyal', { exact: true }).fill('RC62 ceramic');
+  const caseSend = caseModal.getByRole('button', { name: 'Vakayı Gönder', exact: true });
+  fixture.holdCase = new Promise(resolve => { fixture.releaseCase = resolve; });
+  const firstCaseRequest = casePage.waitForRequest(request => request.method() === 'POST' && request.url().includes('/rpc/create_case_from_patient'));
+  await caseSend.evaluate(button => {
+    button.click(); button.click();
+    // These same-turn callbacks run before React can paint disabled controls.
+    const buttons = Array.from(document.querySelectorAll('button'));
+    for (const label of ['Kapat', 'Vazgeç', 'Yeni Vaka']) buttons.find(item => item.textContent?.trim() === label)?.click();
+  });
+  await firstCaseRequest; await caseModal.locator('fieldset:disabled').waitFor(); await settleRenderer(casePage);
+  assert.equal(fixture.caseWrites.length, 1, 'A same-turn case double click dispatches one RPC');
+  assert.equal(await caseNotes.inputValue(), 'RC62 pending case draft must remain unchanged', 'Immediate close/reopen callbacks cannot reset a pending case draft');
+  assert.equal(await caseModal.getByLabel('Materyal', { exact: true }).inputValue(), 'RC62 ceramic');
+  assert.equal(await caseModal.locator('input,select,textarea').evaluateAll(nodes => nodes.length > 0 && nodes.every(node => node.matches(':disabled'))), true, 'All mutable case fields inherit the pending fieldset lock');
+  assert.equal(await newCase.isDisabled(), true, 'New case cannot replace the submitted form while its RPC is pending');
+  for (const label of ['Kapat', 'Vazgeç']) assert.equal(await caseModal.getByRole('button', { name: label, exact: true }).isDisabled(), true, `${label} cannot abandon a pending case commit`);
+  if (process.env.DENTAYA_SCREENSHOT_DIR) await caseModal.screenshot({ path: path.join(process.env.DENTAYA_SCREENSHOT_DIR, 'case-pending-commit.png'), animations: 'disabled' });
+  const failedCaseResponse = casePage.waitForResponse(response => response.url().includes('/rpc/create_case_from_patient'));
+  fixture.releaseCase(); fixture.holdCase = null; await (await failedCaseResponse).finished();
+  await casePage.waitForFunction(() => !document.querySelector('[role="dialog"] fieldset')?.disabled);
+  await caseModal.getByRole('alert').waitFor();
+  assert.equal(await caseNotes.inputValue(), 'RC62 pending case draft must remain unchanged', 'A failed case commit retains the editable draft');
+  assert.equal(await caseModal.locator('[data-tooth="11"]').getAttribute('aria-pressed'), 'true');
+  assert.equal(new URL(casePage.url()).pathname, '/cases', 'Failure cannot navigate to a fabricated case');
+  const failedCaseIdentity = fixture.caseWrites[0].p_request_id;
+  assert.match(failedCaseIdentity, /^[0-9a-f-]{36}$/i);
+
+  // Retry the identical draft, then leave the real route before the RPC ends.
+  // Its late success belongs to the old component and cannot redirect this page.
+  fixture.caseMode = 'success'; fixture.holdCase = new Promise(resolve => { fixture.releaseCase = resolve; });
+  const retryCaseRequest = casePage.waitForRequest(request => request.method() === 'POST' && request.url().includes('/rpc/create_case_from_patient'));
+  await caseSend.click(); await retryCaseRequest; await settleRenderer(casePage);
+  assert.equal(fixture.caseWrites.length, 2); assert.equal(fixture.caseWrites[1].p_request_id, failedCaseIdentity, 'An unchanged case retry reuses its idempotency identity');
+  casePage.once('dialog', dialog => dialog.accept());
+  await casePage.getByRole('link', { name: 'Muhasebe', exact: true }).evaluate(link => link.click());
+  await casePage.waitForURL(`${base}/finance`); await casePage.locator('.finance-case').first().waitFor();
+  const lateCaseResponse = casePage.waitForResponse(response => response.url().includes('/rpc/create_case_from_patient'));
+  fixture.releaseCase(); fixture.holdCase = null; await (await lateCaseResponse).finished(); await settleRenderer(casePage);
+  assert.equal(new URL(casePage.url()).pathname, '/finance', 'A case RPC that resolves after unmount cannot navigate the new route');
+  await casePage.close();
+  console.log('PASS: case commit locks same-turn open/close/duplicate callbacks and every mutable field; failed retry preserves draft and identity; late unmounted RPC cannot navigate.');
+
+  const appointmentPage = await browser.newPage({ viewport: { width: 1440, height: 1000 } }); appointmentPage.setDefaultTimeout(30000); await installBackend(appointmentPage);
+  await appointmentPage.goto(`${base}/appointments`);
+  const addAppointment = appointmentPage.getByRole('button', { name: '+ Randevu Ekle', exact: true }).first();
+  await addAppointment.click();
+  const appointmentModal = appointmentPage.getByRole('dialog', { name: 'Randevu formu', exact: true });
+  await appointmentModal.waitFor();
+  let pristinePrompts = 0;
+  const unexpectedPristinePrompt = dialog => { pristinePrompts++; void dialog.dismiss(); };
+  appointmentPage.on('dialog', unexpectedPristinePrompt);
+  await appointmentModal.getByRole('button', { name: '×', exact: true }).click(); await appointmentModal.waitFor({ state: 'hidden' });
+  appointmentPage.off('dialog', unexpectedPristinePrompt);
+  assert.equal(pristinePrompts, 0, 'Closing an unchanged appointment form does not ask to discard changes');
+  await addAppointment.click(); await appointmentModal.waitFor();
+  const appointmentNotes = appointmentModal.getByLabel('Not', { exact: true });
+  const appointmentDraft = 'RC62 appointment draft survives every dismissed close';
+  await appointmentNotes.fill(appointmentDraft);
+  const closeAppointment = appointmentModal.getByRole('button', { name: '×', exact: true });
+  const cancelAppointment = appointmentModal.getByRole('button', { name: 'Vazgeç', exact: true });
+  for (const [label, action] of [
+    ['Escape', () => appointmentPage.keyboard.press('Escape')],
+    ['backdrop', () => appointmentModal.locator('..').click({ position: { x: 2, y: 2 } })],
+    ['close button', () => closeAppointment.click()],
+    ['Cancel button', () => cancelAppointment.click()],
+  ]) {
+    await dismissedConfirmation(appointmentPage, action, label);
+    assert.equal(await appointmentModal.isVisible(), true, `Dismissing ${label} keeps the appointment modal open`);
+    assert.equal(await appointmentNotes.inputValue(), appointmentDraft, `Dismissing ${label} preserves the appointment draft`);
+  }
+  await dismissedConfirmation(appointmentPage, () => appointmentPage.getByRole('link', { name: '← Klinik Merkezi', exact: true }).evaluate(link => link.click()), 'route link');
+  assert.equal(new URL(appointmentPage.url()).pathname, '/appointments');
+  assert.equal(await appointmentNotes.inputValue(), appointmentDraft, 'A dismissed route confirmation preserves the appointment form');
+  await dismissedConfirmation(appointmentPage, () => appointmentPage.evaluate(() => window.dispatchEvent(new Event('dentaya:before-navigation', { cancelable: true }))).then(allowed => assert.equal(allowed, false)), 'module launcher navigation');
+  assert.equal(await appointmentNotes.inputValue(), appointmentDraft);
+
+  const appointmentSave = appointmentModal.getByRole('button', { name: 'Randevuyu Kaydet', exact: true });
+  await closeAppointment.focus(); await appointmentPage.keyboard.press('Shift+Tab');
+  assert.equal(await appointmentSave.evaluate(node => node === document.activeElement), true, 'Shift+Tab wraps to the last enabled appointment control');
+  await appointmentPage.keyboard.press('Tab');
+  assert.equal(await closeAppointment.evaluate(node => node === document.activeElement), true, 'Tab wraps to the first enabled appointment control');
+  const futureDay = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+  await appointmentModal.getByLabel('Tarih', { exact: true }).fill(futureDay);
+  fixture.holdAppointment = new Promise(resolve => { fixture.releaseAppointment = resolve; });
+  const appointmentRequest = appointmentPage.waitForRequest(request => request.method() === 'POST' && new URL(request.url()).pathname.endsWith('/appointments'));
+  await appointmentSave.evaluate(button => { button.click(); button.click(); }); await appointmentRequest; await settleRenderer(appointmentPage);
+  await appointmentModal.locator('fieldset:disabled').waitFor();
+  assert.equal(fixture.appointmentWrites.length, 1, 'An appointment double click commits once');
+  assert.equal(await appointmentModal.locator('input,select,textarea').evaluateAll(nodes => nodes.length > 0 && nodes.every(node => node.matches(':disabled'))), true, 'All appointment form fields stay locked through the pending write');
+  let pendingPrompts = 0;
+  const unexpectedPendingPrompt = dialog => { pendingPrompts++; void dialog.dismiss(); };
+  appointmentPage.on('dialog', unexpectedPendingPrompt);
+  await appointmentPage.keyboard.press('Escape'); await appointmentModal.locator('..').click({ position: { x: 2, y: 2 } });
+  assert.equal(await appointmentModal.isVisible(), true, 'Escape and backdrop cannot close a pending appointment commit');
+  assert.equal(pendingPrompts, 0, 'A pending appointment cannot open a discard confirmation');
+  appointmentPage.off('dialog', unexpectedPendingPrompt);
+  assert.equal(await closeAppointment.isDisabled(), true); assert.equal(await cancelAppointment.isDisabled(), true); assert.equal(await addAppointment.isDisabled(), true);
+  await appointmentModal.focus(); await appointmentPage.keyboard.press('Tab');
+  assert.equal(await appointmentModal.evaluate(node => node.contains(document.activeElement)), true, 'Pending appointment focus stays inside the modal when all controls are disabled');
+  await appointmentPage.keyboard.press('Shift+Tab');
+  assert.equal(await appointmentModal.evaluate(node => node.contains(document.activeElement)), true, 'Pending Shift+Tab cannot escape to page controls');
+  if (process.env.DENTAYA_SCREENSHOT_DIR) await appointmentModal.screenshot({ path: path.join(process.env.DENTAYA_SCREENSHOT_DIR, 'appointment-pending-commit.png'), animations: 'disabled' });
+  const appointmentResponse = appointmentPage.waitForResponse(response => new URL(response.url()).pathname.endsWith('/appointments') && response.request().method() === 'POST');
+  fixture.releaseAppointment(); fixture.holdAppointment = null; await (await appointmentResponse).finished();
+  await appointmentPage.waitForFunction(() => !document.querySelector('[role="dialog"] fieldset')?.disabled);
+  assert.equal(fixture.appointmentWrites.length, 1, 'The complete failed appointment operation still contains only one write');
+  assert.equal(await appointmentNotes.inputValue(), appointmentDraft, 'A failed appointment write preserves the editable draft');
+  assert.equal(await appointmentModal.getByLabel('Tarih', { exact: true }).inputValue(), futureDay);
+  appointmentPage.once('dialog', dialog => dialog.accept()); await cancelAppointment.click(); await appointmentModal.waitFor({ state: 'hidden' });
+  await appointmentPage.close();
+  console.log('PASS: dirty appointment forms guard Escape/backdrop/close/Cancel/routes, pristine close has no prompt, and pending writes lock fields and trap focus.');
+
   const chat = await browser.newPage({ viewport: { width: 1440, height: 1000 } }); chat.setDefaultTimeout(30000); await installBackend(chat);
   fixture.holdA = new Promise(resolve => { fixture.releaseA = resolve; });
   await chat.goto(`${base}/messages`); await chat.locator('.thread-row').nth(1).waitFor();
@@ -174,6 +320,19 @@ try {
   await composer.fill('Draft for Lab A');
   await chat.locator('.thread-row').nth(1).click(); await chat.getByText('B_CURRENT', { exact: true }).waitFor();
   assert.equal(await composer.inputValue(), 'Draft for Lab B', 'Each recipient retains a separate draft');
+  const beforeImeWrites = fixture.messageWrites.length;
+  await composer.fill('RC62 IME composition must not send');
+  for (const mode of ['isComposing', 'keyCode229']) {
+    await composer.evaluate((node, compositionMode) => {
+      const event = new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', bubbles: true, cancelable: true, isComposing: compositionMode === 'isComposing' });
+      if (compositionMode === 'keyCode229') Object.defineProperty(event, 'keyCode', { value: 229 });
+      node.dispatchEvent(event);
+    }, mode);
+    await settleRenderer(chat);
+    assert.equal(fixture.messageWrites.length, beforeImeWrites, `IME Enter (${mode}) cannot POST a message`);
+    assert.equal(await composer.inputValue(), 'RC62 IME composition must not send', `IME Enter (${mode}) preserves the composed text`);
+  }
+  await composer.fill('Draft for Lab B');
   await chat.locator('.message-composer').getByRole('button', { name: 'Gönder', exact: true }).click();
   await chat.getByText(/Bu işlem zaten kaydedilmiş|Mesaj gönderilemedi/).waitFor();
   assert.equal(await composer.inputValue(), 'Draft for Lab B', 'An unrelated duplicate-key error must not clear the message');
@@ -198,6 +357,6 @@ try {
   console.log('PASS: desktop composer and Send fit 1366×768 / 1440×1000, long histories scroll internally without body growth, and mobile remains accessible without horizontal overflow.');
   console.log('PASS: newest message paging, stale thread isolation, per-recipient drafts, verified duplicate recovery and send-in-flight editing.');
   assert.deepEqual(errors, []);
-  console.log(JSON.stringify({ status: 'pass', backend: 'synthetic intercepted Supabase HTTP', liveBackendVerified: false, finance: true, messaging: true }));
+  console.log(JSON.stringify({ status: 'pass', backend: 'synthetic intercepted Supabase HTTP', liveBackendVerified: false, finance: true, cases: true, casePendingCommitGuard: true, caseRetryIdentity: true, unmountedCaseResponseCannotNavigate: true, appointments: true, appointmentDirtyCloseGuards: true, appointmentPendingFocusTrap: true, messaging: true, imeEnterNeverPosts: true }));
 } catch (error) { console.error(log); throw error; }
-finally { fixture.releaseFinance?.(); fixture.releaseA?.(); fixture.releaseSend?.(); if (browser) await browser.close(); if (server) { server.kill('SIGTERM'); await Promise.race([new Promise(resolve => server.once('exit', resolve)), new Promise(resolve => setTimeout(resolve, 3000))]); } }
+finally { fixture.releaseFinance?.(); fixture.releaseA?.(); fixture.releaseSend?.(); fixture.releaseCase?.(); fixture.releaseAppointment?.(); if (browser) await browser.close(); if (server) { server.kill('SIGTERM'); await Promise.race([new Promise(resolve => server.once('exit', resolve)), new Promise(resolve => setTimeout(resolve, 3000))]); } }
