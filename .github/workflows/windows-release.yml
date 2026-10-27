@@ -1,0 +1,152 @@
+name: Verified Windows desktop release
+
+on:
+  push:
+    tags:
+      - 'v1.0.0-rc.*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  NEXT_TELEMETRY_DISABLED: '1'
+  CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+jobs:
+  windows-build:
+    name: Build and smoke the actual Windows installer
+    runs-on: windows-2025
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: '24.19.0'
+          cache: npm
+      - name: Select the pinned npm tool
+        shell: pwsh
+        run: |
+          npm install --global npm@11.9.0 --no-audit --no-fund
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if ((node --version) -ne 'v24.19.0' -or (npm --version) -ne '11.9.0') { throw 'Unexpected Node/npm tool versions' }
+      - name: Verify exact checkout, release tag, and source manifest
+        shell: pwsh
+        run: |
+          node scripts/verify-windows-ci-source.mjs --commit $env:GITHUB_SHA --ref $env:GITHUB_REF
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/verify-source-integrity.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Install the exact lockfile dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Run all source checks and production build
+        run: npm run verify
+      - name: Package the existing verified production build
+        run: npm run desktop:package
+      - name: Verify installer payload and smoke its extracted Electron executable
+        shell: pwsh
+        run: |
+          $arguments = @('scripts/verify-windows-artifact.mjs', '--project', '.', '--output', 'ci-artifacts/windows-release', '--commit', $env:GITHUB_SHA)
+          if ($env:GITHUB_REF.StartsWith('refs/tags/')) { $arguments += @('--tag', $env:GITHUB_REF_NAME) }
+          node @arguments
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/verify-windows-ci-source.mjs --commit $env:GITHUB_SHA --ref $env:GITHUB_REF
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: verified-windows-installer
+          path: |
+            ci-artifacts/windows-release/DentAYA-Setup-*.exe
+            ci-artifacts/windows-release/SHA256SUMS.txt
+            ci-artifacts/windows-release/windows-build-receipt.json
+            ci-artifacts/windows-release/desktop-smoke-report.json
+          if-no-files-found: error
+          retention-days: 14
+
+  windows-native:
+    name: Separate real native AYA contract evidence
+    runs-on: windows-2025
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: '24.19.0'
+          cache: npm
+      - name: Select the pinned npm tool
+        shell: pwsh
+        run: |
+          npm install --global npm@11.9.0 --no-audit --no-fund
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if ((node --version) -ne 'v24.19.0' -or (npm --version) -ne '11.9.0') { throw 'Unexpected Node/npm tool versions' }
+      - name: Verify exact source and install dependencies
+        shell: pwsh
+        run: |
+          node scripts/verify-windows-ci-source.mjs --commit $env:GITHUB_SHA --ref $env:GITHUB_REF
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/verify-source-integrity.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm ci --no-audit --no-fund
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Exercise real conversation, memory, and synthetic CAD model calls
+        run: node scripts/run-windows-aya-native.cjs --output ci-artifacts/native
+      - name: Record native report source provenance
+        if: always()
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force ci-artifacts/native | Out-Null
+          node -e "const fs=require('node:fs');fs.writeFileSync('ci-artifacts/native/source-provenance.json',JSON.stringify({commit:process.env.GITHUB_SHA,version:require('./package.json').version,runId:process.env.GITHUB_RUN_ID,job:'windows-native'},null,2)+'\n')"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        if: always()
+        with:
+          name: windows-native-evidence
+          path: |
+            ci-artifacts/native/native-inference-report.json
+            ci-artifacts/native/windows-native-result.json
+            ci-artifacts/native/native-acceptance.txt
+            ci-artifacts/native/source-provenance.json
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    name: Publish verified tag assets with actual native results
+    needs: [windows-build, windows-native]
+    if: ${{ always() && startsWith(github.ref, 'refs/tags/') && needs.windows-build.result == 'success' && (needs.windows-native.result == 'success' || needs.windows-native.result == 'failure') }}
+    runs-on: windows-2025
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: '24.19.0'
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          name: verified-windows-installer
+          path: ci-artifacts/windows-release
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          name: windows-native-evidence
+          path: ci-artifacts/native
+      - name: Recheck assets and publish the tag release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/publish-windows-release.mjs --release-dir ci-artifacts/windows-release --native-dir ci-artifacts/native --commit $env:GITHUB_SHA --tag $env:GITHUB_REF_NAME
