@@ -7942,8 +7942,8 @@
     },
     {
       "path": "scripts/verify-windows-packaging.mjs",
-      "size": 23640,
-      "sha256": "20621abd4394ee21ff7c15e141776b3181c82d6acb8ebd0dd18cd4228a764638"
+      "size": 23819,
+      "sha256": "f6f0128d7dd29af66a6d69e16d37b3b34546d45feb2813cd35457df975d26d43"
     },
     {
       "path": "scripts/verify-workflow-safety.ts",
@@ -13424,6 +13424,26 @@
       "path": "verification/professional/ui.json",
       "size": 1337,
       "sha256": "25635aa24f56c73019c9cc79e295f4b57043342c7f1a3953d38480464fb31d78"
+    },
+    {
+      "path": "windows-validation-evidence/40672561285-1/dependency-install.txt",
+      "size": 897,
+      "sha256": "2441923367ad0cb37f8e59de3379b19eb1dac334a9233c82c5ede631942c45d0"
+    },
+    {
+      "path": "windows-validation-evidence/40672561285-1/full-verify.txt",
+      "size": 12425,
+      "sha256": "d407d91110837f5a6b960afdfc0da9c477da134e82394895ef6938f542ecf3a3"
+    },
+    {
+      "path": "windows-validation-evidence/40672561285-1/result.json",
+      "size": 841,
+      "sha256": "a84a7bbbcb2f2bfe8aed1ebf639015a9c620c597dc3c9bad317a982c0b3010d4"
+    },
+    {
+      "path": "windows-validation-evidence/40672561285-1/source-check.txt",
+      "size": 192,
+      "sha256": "dcaadee75372ebe9ebd6a62c2296d1c9e4bccec7edc0d1e4071166d32ecf3409"
     }
   ]
 }

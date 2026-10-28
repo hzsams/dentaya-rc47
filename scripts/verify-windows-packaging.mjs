@@ -18,7 +18,9 @@ const pe = machine => {
 };
 
 async function fixture(t) {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'DentAYA package test '));
+  // Windows TEMP can use an 8.3 alias while inspectProject returns real paths.
+  // Keep strict path assertions against that same canonical fixture directory.
+  const dir = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), 'DentAYA package test ')));
   t.after(() => fs.rm(dir, {recursive: true, force: true}));
   const write = async (name, value) => {
     const file = path.join(dir, name);
