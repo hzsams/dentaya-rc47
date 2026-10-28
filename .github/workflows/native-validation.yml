@@ -12,14 +12,15 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: isolated-aya-native-validation-instruct-2507
+  group: isolated-aya-native-validation-template-controls
   cancel-in-progress: false
 jobs:
   native:
     runs-on: windows-2025
     timeout-minutes: 30
     env:
-      AYA_EVIDENCE_DIRECTORY: native-validation-evidence/instruct-2507
+      AYA_EVIDENCE_DIRECTORY: native-validation-evidence/template-controls
+      AYA_NATIVE_CONTROLS_ONLY: "1"
     permissions:
       contents: write
     steps:

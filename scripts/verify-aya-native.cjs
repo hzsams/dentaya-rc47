@@ -18,10 +18,11 @@ async function hashFile(file){const hash=crypto.createHash('sha256');for await(c
  const version=spawnSync(path.resolve(engine),['--version'],{encoding:'utf8',stdio:['ignore','pipe','pipe']});assert.equal(version.status,0,'Engine version check must succeed');result.engineVersion=(version.stdout+version.stderr).trim();assert.match(result.engineVersion,/9380/,'Use the documented b9380 engine');
  result.stage='model-validation';assert.equal((await fs.stat(modelFile)).size,MODEL.bytes,'Use the pinned Qwen model size');assert.equal(await hashFile(modelFile),MODEL.sha256,'Use the pinned Qwen model SHA-256');result.model.verified=true;
  const directory=await fs.mkdtemp(path.join(os.tmpdir(),'dentaya-native-'));
+ let renderedPrompt='';
  const runtime=createManagedAya({directory,engineBinary:path.resolve(engine),spawnImpl:(binary,args,options)=>{assert.equal(options.shell,false);assert.equal(args[args.indexOf('--host')+1],'127.0.0.1');return spawn(binary,args,options);},fetchImpl:async(url,options)=>{
   const u=new URL(url);assert.equal(u.hostname,'127.0.0.1');assert.match(options?.headers?.Authorization??'',/^Bearer [a-f0-9]{64}$/);
-  if(u.pathname==='/v1/chat/completions'){const payload=JSON.parse(options.body);result.transport.push({stream:payload.stream,responseFormat:payload.response_format,thinking:payload.chat_template_kwargs,sampling:{temperature:payload.temperature,top_p:payload.top_p,top_k:payload.top_k,min_p:payload.min_p},roles:payload.messages.map(m=>m.role)});}
-  return fetch(url,options);
+  if(u.pathname==='/v1/chat/completions'){const payload=JSON.parse(options.body);result.transport.push({stream:payload.stream,responseFormat:payload.response_format,thinking:payload.chat_template_kwargs,sampling:{temperature:payload.temperature,top_p:payload.top_p,top_k:payload.top_k,min_p:payload.min_p},roles:payload.messages.map(m=>m.role),messages:payload.messages,renderedPrompt});}
+  const response=await fetch(url,options);if(u.pathname==='/apply-template'&&response.ok)renderedPrompt=(await response.clone().json()).prompt;return response;
  }});
  // Capture raw synthetic outputs for semantic/schema review without changing
  // the bridge's validation or exposing structured JSON through the UI callback.
@@ -46,6 +47,30 @@ async function hashFile(file){const hash=crypto.createHash('sha256');for await(c
    }
    result.caseCounts.succeeded++;result.caseCounts[kind].succeeded++;
    return reply;
+  }
+  if(process.env.AYA_NATIVE_CONTROLS_ONLY==='1'){
+   result.purpose='minimal-template-versus-bridge-diagnostics';
+   const plainEn='You are AYA, a helpful local assistant. Reply in English.',plainTr='You are AYA, a helpful local assistant. Reply in Turkish.';
+   const negative='Bir rüzgâr çanının ağzından, yağmuru ilk kez duyan çocuklara üç yeni cümle kur. Konuyu diş veya yazılıma bağlama.';
+   const emptyContext=CONTEXT_MARKER+JSON.stringify({workingMemory:{goal:'',decisions:[],openQuestions:[]}});
+   const controls=[
+    {name:'direct-minimal-english',locale:'en',system:plainEn,prompt:'What is your name and purpose?'},
+    {name:'bridge-english',bridge:true,locale:'en',prompt:'What is your name and purpose?'},
+    {name:'direct-minimal-turkish',locale:'tr',system:plainTr,prompt:'Adın ne, görevin ne?'},
+    {name:'bridge-turkish',bridge:true,locale:'tr',prompt:'Adın ne, görevin ne?'},
+    {name:'direct-negative-request',locale:'tr',system:plainTr,prompt:negative},
+    {name:'bridge-negative-request',bridge:true,locale:'tr',prompt:negative},
+    {name:'direct-adjacent-users',locale:'tr',system:plainTr,prompt:'Adın ne, görevin ne?',context:emptyContext},
+    {name:'direct-merged-user',locale:'tr',system:plainTr,prompt:emptyContext+'\n\nCURRENT USER REQUEST:\nAdın ne, görevin ne?'}
+   ];
+   for(const control of controls){
+    const started=Date.now();let streamed=0;
+    result.caseCounts.attempted++;result.caseCounts.conversation.attempted++;
+    const reply=control.bridge?await api.chat({model,locale:control.locale,agent:false,prompt:control.prompt,options:{maxTokens:512,creativity:0,useKnowledge:false}},'native-control',s=>s,()=>streamed++):{ok:true,...await runtime.chat({model,options:{maxTokens:512,creativity:0},messages:[{role:'system',content:control.system},...(control.context?[{role:'user',content:control.context}]:[]),{role:'user',content:control.prompt}],onToken:()=>streamed++})};
+    const check={name:control.name,kind:'conversation',prompt:control.prompt,reply,streamedUpdates:streamed,wallMilliseconds:Date.now()-started};result.checks.push(check);console.log(JSON.stringify(check));
+    assert.equal(reply.ok,true);assert.ok(reply.output?.trim());result.nativeInference=true;result.caseCounts.succeeded++;result.caseCounts.conversation.succeeded++;result.caseCounts.conversation.streamedUpdates+=streamed;
+   }
+   result.stage='template-controls-complete';result.contractPass=false;result.error='DIAGNOSTIC_ONLY_NO_ACCEPTANCE';return;
   }
   const identity=await turn('natural-identity','Sana nasıl seslenmeliyim ve bu uygulamada bana ne için yardımcı oluyorsun?');checkAcceptance('identity-name',()=>assert.match(identity.output,/AYA/,'Name and purpose must be answered by actual free-text inference'));
   await turn('novel-non-dental-request','Bir rüzgâr çanının ağzından, yağmuru ilk kez duyan çocuklara üç yeni cümle kur. Konuyu diş veya yazılıma bağlama.');
