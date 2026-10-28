@@ -70,13 +70,21 @@ Kullanıcı yeni ChatGPT'ye ayrıntılı devir istediği için açık uçlu mode
 
 - Kaynak **9dc9956**.
 - Run **40730934136**: `https://github.com/hzsams/dentaya-rc47/actions/runs/40730934136`.
-- Rapor dizini `native-validation-evidence/qwen35-grounding/` (handoff anında hâlâ çalışıyordu; güncel sonucu oku).
+- Rapor dizini `native-validation-evidence/qwen35-grounding/`; rapor commit **131415a**. Sonuç artık tamamlandı: **9 gerçek istek / 8 tam bridge yanıtı**, contractPass false, son CAD yanıtı LOCAL_INVALID_PLAN.
 - 27 iç araç kimliği ve parser/allowlist/scope/click kapıları DEĞİŞMEDİ. Alias eklenmedi.
 - `view-thickness` açıklaması pozitif kaynak/preparasyon yüzey uzaklığı olarak açıldı; gerçek duvar/kapanış onayı üretmediği belirtildi.
 - saveFailed / antagonist yokluğu / rapor yokluğu / shell tahmini, genel planlayıcı metninin önüne gerçek host durumundan türetilen kısa öncelikler olarak kondu.
 - Genel sohbet policy'sindeki gereksiz dental priming azaltıldı; yaratıcı bakış açısı/cümle sayısı/konu dışlama ve bekleyen bellek değişikliği netleştirildi.
 
-İlk grounding metni, **tam 27 araç + gerçek kesit + 2048 çıktı rezervi** testinde byte bütçesini aştı (`verify-local-aya.cjs:52`). Test gevşetilmedi; metin kısaltıldı. Son kod checkpoint'i **2760095b4c14085dfcb7497644509bf384319012**; aynı test dahil focused kontroller geçti. Bu commit `[skip ci]` taşır: mevcut 40730934136 run'ı ÖNCEKİ 9dc9956 metnini sınar. Kompakt son kaynağın native çıkarımı ayrıca yeniden doğrulanmalıdır. Bu ayrımı rapordan silme.
+İlk grounding metni, **tam 27 araç + gerçek kesit + 2048 çıktı rezervi** testinde byte bütçesini aştı (`verify-local-aya.cjs:52`). Test gevşetilmedi; metin kısaltıldı. Son kod checkpoint'i **2760095b4c14085dfcb7497644509bf384319012**; aynı test dahil focused kontroller geçti. Bu commit `[skip ci]` taşır: tamamlanan 40730934136 run'ı ÖNCEKİ 9dc9956 metnini sınadı. Kompakt son kaynağın native çıkarımı ayrıca yeniden doğrulanmalıdır. Bu ayrımı rapordan silme.
+
+### Son gerçek grounding sonucunun yeni bulgusu
+
+40730934136 ham yanıtları artık incelendi. Yaratıcı yanıtta diş/yazılım dışlaması düzeldi ve üç cümle var; istenen birinci kişi rüzgâr çanı bakışı hâlâ net değil. Eksik antagonist/rapor durumunda model artık güvenliği **Bilinmiyor** diyor, kesin duvar değeri uydurmuyor ve inspect öneriyor. Ayrı bellek/recall/partial-clear yine çalışıyor. Doğal sohbet henüz ayrı ekstraksiyon bitmeden “kaydettim/hedef değiştirildi” diyebiliyor; akıcı profesyonel Türkçe de tam değil.
+
+Kritik yeni sorun: CAD planlayıcısı, kendi bulgularını ve önerilerini kullanıcının karar listesine koyarak beş karar yuvasını doldurdu. Sonraki CAD ham JSON'unda iki yeni, farklı model cümlesi daha var. Eski strict merge kapasite kapısı 5+2=7 olduğu için **doğru şekilde atomik olarak reddetti**; son UI yanıtı bu nedenle LOCAL_INVALID_PLAN. Tam raw çıktıyı readAgentReply üzerinden replay ederek union -> updateMemory stack'i doğrulandı. Sınırı yükseltme, eski kararları atma veya testi gevşetme.
+
+Son raw cevap başarısız kaydı ve 0.65 mm'nin tahmin olduğunu görüyor; fakat yerel kurtarmayı belirtmiyor ve mevcut başarılı inspect'e rağmen aynı inspect'i tekrar öneriyor. Dolayısıyla bu aday da kabul edilmedi. Ayrıntı `native-validation-evidence/qwen35-grounding/semantic-review.md` içindedir. En önemli sonraki mimari iş, CAD araç planını/kanıt yorumunu kullanıcıyla alınmış karar belleğinden ayırmaktır: gerçek host sonuçları zaten taze recentActions/report kanalındadır; bunları kullanıcı kararı diye yeniden saklamayın. Güncelleme gerekiyorsa yalnız son kullanıcının isteğiyle ayrı task:memory üzerinden, aynı scope/tur/bellek-revizyon ve iptal kapılarıyla yapın. Bu henüz uygulanmadı.
 
 ## 7. Tamamlanan kontroller
 
@@ -117,8 +125,8 @@ Modeli gerçekten kabul edersen ayrıca canlı setup baseline, assistant localSe
 ## 10. Yeni GPT'nin sonraki kesin işleri
 
 1. Git durumunu ve kökleri doğrula; hiçbir WIP'i reset/clean ile silme.
-2. 40730934136 gerçek sonucunu ve qwen35-grounding ham 9 yanıtını oku; eski 9-contract pass / semantic reject kanıtını ayrı tut.
-3. 2760095 kompakt kod için yeni cached native run başlat. Testleri/2048 rezervi/27 araç ve saveFailure kapılarını gevşetme.
+2. Tamamlanan 40730934136 başarısız sonucunu, qwen35-grounding ham 9 yanıtını ve kapasite replay bulgusunu oku; eski 9-contract pass / semantic reject kanıtını ayrı tut. CAD planı ile açık kullanıcı karar belleğinin yanlış birleşmesini düzelt; strict kapasiteyi gevşetme.
+3. CAD/bellek ayrımı ve 2760095 kompakt kod için yeni cached native run başlat. Testleri/2048 rezervi/27 araç ve saveFailure kapılarını gevşetme.
 4. Her ham yanıtta ad/purpose, yeni yaratıcı kısıt, unit46+kontur, yalnız bellekten recall, partial clear exact preservation, eksik antagonistte unknown, source-distance vs gerçek wall, güncel failed-save+local recovery önceliğini değerlendir. Doğru ölçüm veya kayıt sonucu uyduran adayı kabul etme.
 5. Semantik yeterlilik yoksa ana ürün modelini değiştirme; çalışma belleği sözleşmesinin somut ilerlemesini ve kalan model sınırlamalarını açık raporla. “Gerçek inference var” ile “profesyonel kullanım kabulü var” ayrı.
 6. Kabul edilecek en küçük patch'i ana ürüne kontrollü al; ilgili Node, browser ve final source/build/Windows paket kontrollerini tam kaynak üzerinde çalıştır. Tarayıcı/fullverify ortak .next sebebiyle sırayla çalışmalıdır.

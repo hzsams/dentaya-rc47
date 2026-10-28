@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-28T16:59:55.587157+00:00",
+  "generatedAt": "2026-10-28T17:14:29.312321+00:00",
   "mainRepository": "/workspace/dentaya-rc47",
   "mainModel": "Qwen3 1.7B Q8_0 baseline; experimental candidate NOT adopted",
   "experimentalRepository": "/workspace/dentaya-native-ci-check",
@@ -27,14 +27,28 @@
     "evidenceDirectory": "native-validation-evidence/qwen35-ops"
   },
   "latestGroundingExperiment": {
-    "sourceCommit": "9dc9956",
+    "sourceCommit": "9dc9956cdf81f2dc4492e8afef6429b13fe221e8",
     "runId": "40730934136",
     "url": "https://github.com/hzsams/dentaya-rc47/actions/runs/40730934136",
-    "statusAtHandoff": "pending; inspect actual run and new evidence before any acceptance",
+    "statusAtHandoff": "completed failed: 9 actual requests, 8 complete bridge replies; final combined CAD/memory plan rejected",
     "evidenceDirectory": "native-validation-evidence/qwen35-grounding",
     "latestBudgetFix": "2760095b4c14085dfcb7497644509bf384319012",
     "budgetFixNativeVerified": false,
-    "note": "Budget fix commit has [skip ci]; current in-flight run tests the prior 9dc9956 prompt. Exact latest source still needs native revalidation."
+    "note": "Run tests prior9dc9956 grounding prompt. Latest compact2760095 source still needs native revalidation. CAD planner writes its own conclusions into decision memory; separate planning/result evidence from explicit user-memory updates.",
+    "evidenceCommit": "131415a",
+    "contractPass": false,
+    "nativeRequestsAttempted": 9,
+    "acceptedReplies": 8,
+    "error": "cad-tool-results-and-report-limits: LOCAL_INVALID_PLAN",
+    "manualSemanticAcceptance": "NOT ACCEPTED",
+    "reproducedFailure": {
+      "stack": "agent.cjs union -> updateMemory -> readAgentReply",
+      "priorDecisions": 5,
+      "newDistinctModelConclusions": 2,
+      "union": 7,
+      "capacity": 5,
+      "guard": "correct atomic rejection; do not evict old decisions or raise capacity to force pass"
+    }
   },
   "model": {
     "name": "Qwen3.5-4B-Q4_K_M.gguf",
