@@ -1,0 +1,36 @@
+name: Discover official non-thinking model metadata
+on:
+  push:
+    branches: [codex/aya-native-validation]
+    paths:
+      - .github/workflows/native-model-metadata.yml
+      - scripts/fetch-official-instruct-metadata.cjs
+permissions:
+  contents: read
+concurrency:
+  group: isolated-aya-instruct-metadata
+  cancel-in-progress: false
+jobs:
+  metadata:
+    runs-on: windows-2025
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
+        with:
+          node-version: 24.19.0
+      - name: Read official immutable metadata without downloading weights
+        run: node scripts/fetch-official-instruct-metadata.cjs
+      - name: Preserve metadata evidence only
+        if: always()
+        shell: pwsh
+        run: |
+          git config user.name 'DentAYA native validation'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add -- native-validation-evidence/instruct-2507-discovery/official-metadata.json
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          git diff --cached --quiet
+          if ($LASTEXITCODE -eq 1) { git commit -m 'Record official non-thinking model metadata'; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; git pull --rebase origin codex/aya-native-validation; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; git push origin HEAD:codex/aya-native-validation; exit $LASTEXITCODE }
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
