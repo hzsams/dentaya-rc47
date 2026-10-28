@@ -1,0 +1,336 @@
+{
+  "nativeInference": true,
+  "mock": false,
+  "syntheticCadFixture": true,
+  "platform": "win32",
+  "stage": "inference",
+  "engineVersion": "version: 9380 (d205df681)\r\nbuilt with Clang 19.1.5 for Windows x86_64",
+  "engineBinarySHA256": "052539ab0e0f77725efa10e7ae857153fcdbdfdfe8dc59d711c64a3c916c627d",
+  "model": {
+    "bytes": 2497280256,
+    "sha256": "7485fe6f11af29433bc51cab58009521f205840f5b4ae3a32fa7f92e8534fdf5",
+    "verified": true
+  },
+  "checks": [
+    {
+      "name": "natural-identity",
+      "kind": "conversation",
+      "prompt": "Sana nasıl seslenmeliyim ve bu uygulamada bana ne için yardımcı oluyorsun?",
+      "reply": {
+        "ok": true,
+        "output": "AYA  \nSeslenmeyi ve yardımcı olmamı nasıl yapacağımı sormak ister misin? Bu uygulamada, diş hekimliği ile ilgili bilgiler, tıbbi kayıtlar ve yazılım işlevleriyle ilgili destek sunmaya çalışırım. Sana nasıl yardımcı olabileceğimi ve hangi konularda destek olabileceğimi daha iyi anlatmak için detaylı bir açıklama yapabilirim. Sana nasıl seslenmeliyim ve hangi konularda yardımcı olabileceğimi açıklayabilir miyim?",
+        "metrics": {
+          "milliseconds": 37151,
+          "tokens": 141
+        },
+        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
+        "references": []
+      },
+      "streamedUpdates": 140,
+      "streamedCharacters": 413,
+      "wallMilliseconds": 42824
+    },
+    {
+      "name": "novel-non-dental-request",
+      "kind": "conversation",
+      "prompt": "Bir rüzgâr çanının ağzından, yağmuru ilk kez duyan çocuklara üç yeni cümle kur. Konuyu diş veya yazılıma bağlama.",
+      "reply": {
+        "ok": true,
+        "output": "AYA\nÜç yeni cümle kurma isteği alındı. Konuyu diş veya yazılıma bağlamak için şu şekilde oluşturulabilir:\n\n1. Rüzgâr çanının ağzından gelen ilk yağmur, çocuklara diş hekimliği açısından önemli bir işaret olur, çünkü bu, ilk tıbbi bakımdan bahsedebiliriz.\n2. Çocuklar, rüzgâr çanının ağzından gelen ilk yağmurun sesini duyduklarında, yazılım geliştiricileri için bu olay, bir kullanıcı deneyimi tasarımının ilk adımını temsil edebilir.\n3. Rüzgâr çanının ağzından gelen ilk yağmur, çocuklara diş hekimliğindeki ilk kontrolü ve yazılım geliştiricileri için ilk kod yazımı arasında bir benzerlik oluşturur.",
+        "metrics": {
+          "milliseconds": 24699,
+          "tokens": 198
+        },
+        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
+        "references": []
+      },
+      "streamedUpdates": 197,
+      "streamedCharacters": 602,
+      "wallMilliseconds": 24721
+    },
+    {
+      "name": "novel-natural-language",
+      "kind": "conversation",
+      "prompt": "Bu akşamki çalışma planımız şu: önce 46 numaralı implant üstü kronu inceleyeceğiz. Kararımız, dış konturu koruyup oklüzal yüksekliği elle azaltmak. Hedefi ve kararı aklında tut; henüz işlem yapma.",
+      "reply": {
+        "ok": true,
+        "output": "AYA  \nBu akşamki çalışma planımız: 46 numaralı implant üstü kronu inceleyeceğiz. Kararımız, dış konturu koruyup oklüzal yüksekliği elle azaltmak. Hedefi ve kararı aklında tut; henüz işlem yapma.",
+        "metrics": {
+          "milliseconds": 10432,
+          "tokens": 66
+        },
+        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
+        "references": []
+      },
+      "streamedUpdates": 65,
+      "streamedCharacters": 194,
+      "wallMilliseconds": 10450
+    },
+    {
+      "name": "separate-memory-extraction",
+      "kind": "memory",
+      "prompt": "Bu akşamki çalışma planımız şu: önce 46 numaralı implant üstü kronu inceleyeceğiz. Kararımız, dış konturu koruyup oklüzal yüksekliği elle azaltmak. Hedefi ve kararı aklında tut; henüz işlem yapma.",
+      "reply": {
+        "ok": true,
+        "output": "Memory updated",
+        "metrics": {
+          "milliseconds": 27543,
+          "tokens": 79
+        },
+        "workingMemory": {
+          "goal": "",
+          "decisions": [],
+          "openQuestions": []
+        },
+        "proposals": [],
+        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
+        "references": []
+      },
+      "streamedUpdates": 0,
+      "streamedCharacters": 0,
+      "wallMilliseconds": 27561
+    }
+  ],
+  "transport": [
+    {
+      "stream": true,
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ],
+      "rawCompletion": "AYA  \nSeslenmeyi ve yardımcı olmamı nasıl yapacağımı sormak ister misin? Bu uygulamada, diş hekimliği ile ilgili bilgiler, tıbbi kayıtlar ve yazılım işlevleriyle ilgili destek sunmaya çalışırım. Sana nasıl yardımcı olabileceğimi ve hangi konularda destek olabileceğimi daha iyi anlatmak için detaylı bir açıklama yapabilirim. Sana nasıl seslenmeliyim ve hangi konularda yardımcı olabileceğimi açıklayabilir miyim?"
+    },
+    {
+      "stream": true,
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ],
+      "rawCompletion": "AYA\nÜç yeni cümle kurma isteği alındı. Konuyu diş veya yazılıma bağlamak için şu şekilde oluşturulabilir:\n\n1. Rüzgâr çanının ağzından gelen ilk yağmur, çocuklara diş hekimliği açısından önemli bir işaret olur, çünkü bu, ilk tıbbi bakımdan bahsedebiliriz.\n2. Çocuklar, rüzgâr çanının ağzından gelen ilk yağmurun sesini duyduklarında, yazılım geliştiricileri için bu olay, bir kullanıcı deneyimi tasarımının ilk adımını temsil edebilir.\n3. Rüzgâr çanının ağzından gelen ilk yağmur, çocuklara diş hekimliğindeki ilk kontrolü ve yazılım geliştiricileri için ilk kod yazımı arasında bir benzerlik oluşturur."
+    },
+    {
+      "stream": true,
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ],
+      "rawCompletion": "AYA  \nBu akşamki çalışma planımız: 46 numaralı implant üstü kronu inceleyeceğiz. Kararımız, dış konturu koruyup oklüzal yüksekliği elle azaltmak. Hedefi ve kararı aklında tut; henüz işlem yapma."
+    },
+    {
+      "stream": true,
+      "responseFormat": {
+        "type": "json_object",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "answer",
+            "goal",
+            "decisions",
+            "openQuestions",
+            "actions",
+            "memoryUpdate",
+            "memoryPatch"
+          ],
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "Memory updated"
+              ]
+            },
+            "goal": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "memoryUpdate": {
+              "type": "string",
+              "enum": [
+                "patch"
+              ]
+            },
+            "memoryPatch": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "goal",
+                "decisions",
+                "openQuestions"
+              ],
+              "properties": {
+                "goal": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "set",
+                    "clear"
+                  ]
+                },
+                "decisions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                },
+                "openQuestions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                }
+              }
+            },
+            "decisions": {
+              "type": "array",
+              "maxItems": 5,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "openQuestions": {
+              "type": "array",
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "actions": {
+              "type": "array",
+              "maxItems": 0,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "tool",
+                  "reason"
+                ],
+                "properties": {
+                  "tool": {
+                    "type": "string",
+                    "enum": [
+                      "inspect",
+                      "setup",
+                      "library",
+                      "place",
+                      "save",
+                      "save-exit",
+                      "undo",
+                      "redo",
+                      "fit-camera",
+                      "show-all",
+                      "isolate",
+                      "recorded-bite",
+                      "view-natural",
+                      "view-contact",
+                      "view-thickness",
+                      "view-undercut",
+                      "view-section",
+                      "tool-margin",
+                      "tool-measure",
+                      "tool-add",
+                      "tool-reduce",
+                      "tool-smooth",
+                      "internal-fit",
+                      "next",
+                      "inspection",
+                      "flashlight-on",
+                      "flashlight-off"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ],
+      "rawCompletion": "{\"answer\":\"Memory updated\",\"goal\":\"46 numaralı implant üstü kronu inceleyeceğiz\",\"memoryUpdate\":\"patch\",\"memoryPatch\":{\"goal\":\"keep\",\"decisions\":\"keep\",\"openQuestions\":\"keep\"},\"decisions\":[\"dış konturu koruyup oklüzal yüksekliği elle azaltmak\"],\"openQuestions\":[],\"actions\":[]}"
+    }
+  ],
+  "caseCounts": {
+    "attempted": 4,
+    "succeeded": 4,
+    "conversation": {
+      "attempted": 3,
+      "succeeded": 3,
+      "streamedUpdates": 402
+    },
+    "memory": {
+      "attempted": 1,
+      "succeeded": 1
+    },
+    "cad": {
+      "attempted": 0,
+      "succeeded": 0
+    }
+  },
+  "semanticReviewRequired": true,
+  "semanticReview": {
+    "status": "pending",
+    "criteria": [
+      "Identity: answer name and purpose directly in natural prose without a canned response.",
+      "Novel non-dental request: fulfill the requested perspective and content without forcing a CAD workflow.",
+      "New wording: remember unit 46 and preserve outer contour while manually reducing occlusal height.",
+      "Separate memory extraction: retain explicit user decisions rather than facts invented by the assistant reply.",
+      "Memory-only follow-up: recover the unit and contour decision without replaying user history.",
+      "Partial memory correction: clear only the requested goal, preserving decisions and open questions.",
+      "Missing antagonist/report: do not grant closure safety or invent exact wall thickness; propose an available check.",
+      "Tool result: distinguish a closed single-component mesh and a shell offset estimate from production clearance. Save failure must remain a failure with local recovery preserved."
+    ]
+  },
+  "contractPass": false,
+  "blocked": false,
+  "error": "Working memory must retain the user's unit"
+}

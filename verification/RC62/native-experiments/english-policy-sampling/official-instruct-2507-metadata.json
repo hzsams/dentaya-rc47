@@ -1,0 +1,9 @@
+{
+  "purpose": "official-instruct-model-pin-discovery",
+  "nativeInferenceAttempted": false,
+  "repository": "Qwen/Qwen3-4B-Instruct-2507-GGUF",
+  "discoveryURL": "https://huggingface.co/api/models/Qwen/Qwen3-4B-Instruct-2507-GGUF?blobs=true",
+  "httpStatus": 401,
+  "status": "failed",
+  "error": "OFFICIAL_METADATA_HTTP_401"
+}

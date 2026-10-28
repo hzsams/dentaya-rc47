@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "pass": true,
+  "platform": "win32",
+  "freshProfile": true,
+  "packagedServer": true,
+  "bridgeIpc": true,
+  "modelInferenceTested": false,
+  "routes": [
+    {
+      "requested": "/workspace",
+      "final": "/workspace",
+      "documentReady": true,
+      "bridge": true,
+      "ipc": true,
+      "unauthenticated": true
+    },
+    {
+      "requested": "/ai",
+      "final": "/ai",
+      "documentReady": true,
+      "bridge": true,
+      "ipc": true,
+      "unauthenticated": true
+    },
+    {
+      "requested": "/settings",
+      "final": "/settings",
+      "documentReady": true,
+      "bridge": true,
+      "ipc": true,
+      "unauthenticated": true
+    }
+  ],
+  "rendererExceptions": 0,
+  "commit": "61ee56824704c8937fbace10e77947e30d96653a",
+  "version": "1.0.0-rc.62"
+}

@@ -1,0 +1,26 @@
+{
+  "release": "1.0.0-rc.61",
+  "platform": "win32",
+  "provenance": "controlled-windows-native",
+  "status": "failed",
+  "nativeInferenceObserved": true,
+  "semanticReviewRequired": true,
+  "semanticAcceptance": "pending-human-review",
+  "model": {
+    "bytes": 2497281120,
+    "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+    "verified": true
+  },
+  "engine": {
+    "version": "b9380",
+    "archiveSHA256": "cd44b61422671f0565cae98d856a70d55ef10392197a49246671f85bacb50dc3",
+    "binarySHA256": "052539ab0e0f77725efa10e7ae857153fcdbdfdfe8dc59d711c64a3c916c627d"
+  },
+  "casesAttempted": 9,
+  "casesSucceeded": 9,
+  "weightsIncludedInInstaller": false,
+  "report": "native-inference-report.json",
+  "checkerExitCode": 1,
+  "error": "NATIVE_CONTRACT_FAILED",
+  "milliseconds": 353809
+}

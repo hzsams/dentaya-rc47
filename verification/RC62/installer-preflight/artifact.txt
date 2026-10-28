@@ -1,0 +1,1 @@
+PASS: DentAYA-Setup-1.0.0-rc.62.exe; 22b9986ee83304da0843602185a7c5c8dd0f8a1973a6f1cfa152d4011ed81e78; exact source 61ee56824704c8937fbace10e77947e30d96653a; installer-extracted desktop smoke passed.

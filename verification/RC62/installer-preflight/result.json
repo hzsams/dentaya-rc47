@@ -1,0 +1,39 @@
+{
+  "testedCommit": "61ee56824704c8937fbace10e77947e30d96653a",
+  "runId": "40673513656",
+  "runAttempt": "1",
+  "platform": "win32",
+  "node": "v24.19.0",
+  "status": "success",
+  "steps": {
+    "source": {
+      "outputs": {},
+      "outcome": "success",
+      "conclusion": "success"
+    },
+    "dependencies": {
+      "outputs": {},
+      "outcome": "success",
+      "conclusion": "success"
+    },
+    "verify": {
+      "outputs": {},
+      "outcome": "success",
+      "conclusion": "success"
+    },
+    "package": {
+      "outputs": {},
+      "outcome": "success",
+      "conclusion": "success"
+    },
+    "artifact": {
+      "outputs": {},
+      "outcome": "success",
+      "conclusion": "success"
+    }
+  },
+  "diagnosticBranchOnly": true,
+  "publishedRelease": false,
+  "modelInferenceTested": false,
+  "semanticAcceptance": false
+}
