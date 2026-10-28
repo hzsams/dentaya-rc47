@@ -1,0 +1,27 @@
+{
+  "release": "1.0.0-rc.61",
+  "platform": "win32",
+  "provenance": "controlled-windows-native",
+  "status": "failed",
+  "nativeInferenceObserved": true,
+  "semanticReviewRequired": true,
+  "semanticAcceptance": "pending-human-review",
+  "model": {
+    "bytes": 2740937888,
+    "sha256": "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4",
+    "verified": true
+  },
+  "engine": {
+    "version": "b9380",
+    "archiveSHA256": "cd44b61422671f0565cae98d856a70d55ef10392197a49246671f85bacb50dc3",
+    "binarySHA256": "052539ab0e0f77725efa10e7ae857153fcdbdfdfe8dc59d711c64a3c916c627d"
+  },
+  "casesAttempted": 9,
+  "casesSucceeded": 8,
+  "weightsIncludedInInstaller": false,
+  "report": "native-inference-report.json",
+  "checkerExitCode": 1,
+  "error": "NATIVE_CONTRACT_FAILED",
+  "assetCachePolicy": "pinned-assets-retained-outside-source-and-installer; size and SHA-256 reverified on every restore",
+  "milliseconds": 372486
+}
