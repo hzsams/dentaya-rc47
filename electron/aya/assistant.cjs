@@ -1,6 +1,6 @@
 /* Browser/Electron shared, deterministic AYA-owned context and evidence layer. */
 'use strict';
-const CORE_VERSION='0.17.0';
+const CORE_VERSION='0.18.0';
 const workTools=require('./work-tools.cjs');
 const conversation=require('./conversation.cjs');
 const {answerDialogue}=require('./dialogue.cjs');

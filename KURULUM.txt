@@ -1,5 +1,5 @@
-DentAYA RC61 — TAM KAYNAK GÜNCELLEME PAKETİ
-Sürüm: 1.0.0-rc.61 / AYA Core 0.17.0
+DentAYA RC62 — TAM KAYNAK GÜNCELLEME PAKETİ
+Sürüm: 1.0.0-rc.62 / AYA Core 0.18.0
 
 1. GitHub kaynak ZIP'ini yeni klasöre çıkarın; package.json bulunan klasörü açın.
 2. CMD için package.json yanında .env.local dosyası gerekir. Vaka/sunucu kaydı için mevcut çalışan dosyanızı kopyalayın. Mevcut kayıt ve kişisel ayarlarınızı koruyun.
@@ -9,11 +9,11 @@ Sürüm: 1.0.0-rc.61 / AYA Core 0.17.0
 3. Windows'ta DENTAYA_GUNCELLE_DERLE.cmd dosyasına çift tıklayın.
    Node.js 22.12+ ve npm 11+ gerekir. Tek CMD giriş noktası budur.
 4. Komut LOCALAPPDATA/DentAYA/Builds altında ayrı çalışma klasörü kullanır. OneDrive'daki .next ve node_modules kopyalanmaz. Eksik Electron dağıtımı, DLL kilidi tekrarları ve tanılama önlemleri korunur.
-5. Başarılı Windows derlemesinin ürettiği DentAYA-Setup-1.0.0-rc.61.exe dosyasını çalıştırın. Kesin çıktı yolu dist-desktop/latest-build.json içindedir.
+5. Başarılı Windows derlemesinin ürettiği DentAYA-Setup-1.0.0-rc.62.exe dosyasını çalıştırın. Kesin çıktı yolu dist-desktop/latest-build.json içindedir.
 
-Bu ZIP hazır Windows EXE'si içermez. Güncel kaynak, tarayıcı ve üretim derleme kontrollerinin gerçek sonuçları RC61_KONTROL_RAPORU.md içindedir. Windows üzerinde gerçek paketleme ve yerel model kabulü yapılmış sayılmaz. Sonuçları ve sınırları RC61_KONTROL_RAPORU.md dosyasından okuyun; önceki sürümün sonuçlarını yeni sürüme ait saymayın.
+Bu ZIP hazır Windows EXE'si içermez. Güncel kaynak, tarayıcı ve üretim derleme kontrollerinin gerçek sonuçları RC62_KONTROL_RAPORU.md içindedir. Windows üzerinde gerçek paketleme ve yerel model kabulü yapılmış sayılmaz. Sonuçları ve sınırları RC62_KONTROL_RAPORU.md dosyasından okuyun; önceki sürümün sonuçlarını yeni sürüme ait saymayın.
 
-RC61, aydınlık Studio panellerini, mor başlıkları ve CAD'de koyu sağ komut şeridini kullanır.
+RC62, aydınlık Studio panellerini, mor başlıkları ve CAD'de koyu sağ komut şeridini kullanır.
 Uygulamanın giriş adresi doğrudan İş yöneticisini açar; ayrı web sitesi bu kaynak değişikliğinin kapsamında değildir.
 Sol üstteki Modüller düğmesi klasör/alt klasör menüsünü açar. CAD dışındaki isteğe bağlı hızlı erişim şeridi korunur. Modül menüsü Alt+M, mevcut hızlı arama Ctrl+K, görünüm tercihleri Ctrl+, ile açılır.
 CAD'de nesneler ve parametreler soldadır; ortak uygulama başlığı gösterilmez. Panel taşıma ve konum sıfırlama seçenekleri korunur.
@@ -41,8 +41,8 @@ Geliştirme: npm ci / npm run verify
 Yerel arayüz: npm run dev -- --hostname 127.0.0.1 --port 3010
 Yerel sohbet hesap/API anahtarı gerektirmez; gerçek vaka ve sunucu kaydı mevcut Supabase bağlantısını kullanır. Yeni migration yoktur. Üretim web sitesine dağıtım yapılmaz.
 
-Kullanım: RC61_KULLANIM.md
-Kontrol ve sınırlamalar: RC61_KONTROL_RAPORU.md
+Kullanım: RC62_KULLANIM.md
+Kontrol ve sınırlamalar: RC62_KONTROL_RAPORU.md
 İlk devir kayıtları: CODEX_BASLANGIC_PROMPTU.md / CODEX_DEVIR_NOTLARI.md
 
-AYA RC61: Normal sohbet için çalışan yerel model gerekir; hata/yoklukta hazır cevap eklenmez. Sohbet ayarları > Genel bölümünde model kurun/seçin ve Yerel yanıtı test et ile kontrol edin. 16 GB RAM için, kurulu ve açık Ollama varsa 4B indirme seçeneği görünür. CAD Araç rehberi yalnız Yanıt kaynağı alanından açıkça seçilir. Ayrıntılar RC61_KULLANIM.md içindedir.
+AYA RC62: Normal sohbet için çalışan yerel model gerekir; hata/yoklukta hazır cevap eklenmez. Sohbet ayarları > Genel bölümünde model kurun/seçin ve Yerel yanıtı test et ile kontrol edin. 16 GB RAM için, kurulu ve açık Ollama varsa 4B indirme seçeneği görünür. CAD Araç rehberi yalnız Yanıt kaynağı alanından açıkça seçilir. Ayrıntılar RC62_KULLANIM.md içindedir.

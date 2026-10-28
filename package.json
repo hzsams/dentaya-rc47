@@ -1,6 +1,6 @@
 {
   "name": "dentaya-production-rc",
-  "version": "1.0.0-rc.61",
+  "version": "1.0.0-rc.62",
   "private": true,
   "type": "module",
   "description": "DentAYA klinik, laboratuvar ve dental CAD çalışma platformu",
