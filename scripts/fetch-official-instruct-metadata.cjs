@@ -20,6 +20,7 @@ async function inspect(repo){
   if(pinned.id!==repo||pinned.sha!==discovery.sha)throw Error('METADATA_REVISION');
   Object.assign(result,{status:'verified-publisher-metadata',revision:pinned.sha,license:pinned.cardData?.license,baseModel:pinned.cardData?.base_model,modelType:pinned.config?.model_type,files:(pinned.siblings??[]).filter(file=>/q4_k_m\.gguf$/i.test(file.rfilename)).map(file=>({name:file.rfilename,bytes:file.lfs?.size,sha256:file.lfs?.sha256??file.lfs?.oid,url:'https://huggingface.co/'+repo+'/resolve/'+pinned.sha+'/'+file.rfilename}))});
   if(result.files.some(file=>!/^[a-f0-9]{64}$/.test(file.sha256)||!Number.isSafeInteger(file.bytes)))throw Error('METADATA_LFS');
+  const cardURL='https://huggingface.co/'+repo+'/resolve/'+pinned.sha+'/README.md';try{const response=await fetch(cardURL,{signal:AbortSignal.timeout(20000)});const contents=response.ok?await response.text():'';result.cardProof={url:cardURL,httpStatus:response.status,sha256:require('node:crypto').createHash('sha256').update(contents).digest('hex'),bytes:Buffer.byteLength(contents),relevantLines:contents.split('\n').filter(line=>/temperature|top_p|top_k|min_p|greedy|best practices|non-thinking|presence_penalty|presencepenalty|repetition_penalty|repetitionpenalty/i.test(line))};}catch{result.cardProof={url:cardURL,error:'MODEL_CARD_UNAVAILABLE'};}
  }catch(error){result.status='failed';result.error=/^[A-Z0-9_]+$/.test(error.message)?error.message:'METADATA_UNAVAILABLE';}
  return result;
 }
