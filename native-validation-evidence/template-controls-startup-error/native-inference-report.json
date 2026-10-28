@@ -1,0 +1,51 @@
+{
+  "nativeInference": false,
+  "mock": false,
+  "syntheticCadFixture": true,
+  "platform": "win32",
+  "stage": "inference",
+  "engineVersion": "version: 9380 (d205df681)\r\nbuilt with Clang 19.1.5 for Windows x86_64",
+  "engineBinarySHA256": "052539ab0e0f77725efa10e7ae857153fcdbdfdfe8dc59d711c64a3c916c627d",
+  "model": {
+    "bytes": 2497281120,
+    "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+    "verified": true
+  },
+  "checks": [],
+  "transport": [],
+  "caseCounts": {
+    "attempted": 0,
+    "succeeded": 0,
+    "conversation": {
+      "attempted": 0,
+      "succeeded": 0,
+      "streamedUpdates": 0
+    },
+    "memory": {
+      "attempted": 0,
+      "succeeded": 0
+    },
+    "cad": {
+      "attempted": 0,
+      "succeeded": 0
+    }
+  },
+  "semanticReviewRequired": true,
+  "semanticReview": {
+    "status": "pending",
+    "criteria": [
+      "Identity: answer name and purpose directly in natural prose without a canned response.",
+      "Novel non-dental request: fulfill the requested perspective and content without forcing a CAD workflow.",
+      "New wording: remember unit 46 and preserve outer contour while manually reducing occlusal height.",
+      "Separate memory extraction: retain explicit user decisions rather than facts invented by the assistant reply.",
+      "Memory-only follow-up: recover the unit and contour decision without replaying user history.",
+      "Partial memory correction: clear only the requested goal, preserving decisions and open questions.",
+      "Missing antagonist/report: do not grant closure safety or invent exact wall thickness; propose an available check.",
+      "Tool result: distinguish a closed single-component mesh and a shell offset estimate from production clearance. Save failure must remain a failure with local recovery preserved."
+    ]
+  },
+  "purpose": "minimal-template-versus-bridge-diagnostics",
+  "contractPass": false,
+  "blocked": false,
+  "error": "CONTEXT_MARKER is not defined"
+}
