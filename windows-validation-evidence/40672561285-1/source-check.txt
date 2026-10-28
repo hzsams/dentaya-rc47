@@ -1,0 +1,2 @@
+{"commit":"361895e659ebc7a998f5dcd6e6eb0ea0397819c8","version":"1.0.0-rc.62","ref":"refs/heads/codex/windows-package-validation"}
+PASS: 2681 source files match the release integrity manifest.

@@ -1,0 +1,183 @@
+
+> dentaya-production-rc@1.0.0-rc.62 verify
+> npm run verify:runtime && npm run verify:professional-shell && npm run verify:lab-workspace && npm run verify:workflow-safety && npm run verify:brand-assets && npm run verify:desktop-brand && npm run verify:release && npm run verify:windows-package && npm run verify:release-env && npm run verify:security && npm run verify:localization && npm run verify:system-translations && npm run verify:aya && npm run verify:local-aya && npm run verify:aya-natural && npm run verify:aya-agent && npm run verify:aya-cad-agent && npm run verify:aya-section && npm run verify:aya-core && npm run verify:aya-managed && npm run verify:language-packs && npm run verify:desktop-language && npm run verify:experience && npm run verify:dental-facts && npm run verify:loading-play && npm run verify:rc44 && npm run verify:tooth-appearance && npm run verify:tooth-forms && npm run verify:cad-library && npm run verify:sculpt-integrity && npm run verify:morphology-sculpt && npm run verify:tooth-layout && npm run verify:cad-display && npm run verify:cad-view && npm run verify:cad-inspection && npm run verify:cad-section && npm run verify:performance && npm run verify:pilot && npm run lint -- --max-warnings=0 && npm run typecheck && npm run verify:cad && npm run verify:cad-setup && npm run verify:cad-daily && npm run verify:cad-restoration && npm run verify:cad-interaction && npm run verify:cad-workflow && npm run verify:cad-panel && npm run verify:cad-guided && npm run verify:migrations && npm run verify:e2e && npm run verify:community && npm run verify:operations && npm run verify:validation && npm run build
+
+
+> dentaya-production-rc@1.0.0-rc.62 verify:runtime
+> node scripts/verify-runtime.mjs
+
+PASS · Node.js 22.12+ · v24.19.0
+PASS · npm 11+ · 11.9.0
+Runtime verification PASS (2/2)
+
+> dentaya-production-rc@1.0.0-rc.62 verify:professional-shell
+> node --import tsx scripts/verify-professional-shell.ts
+
+PASS: public connection, local tools, launcher ownership, preserved module destinations, active folder paths, and nested multilingual module search.
+
+> dentaya-production-rc@1.0.0-rc.62 verify:lab-workspace
+> node scripts/verify-lab-workspace.mjs
+
+{
+  "pass": true,
+  "organizationScoped": true,
+  "exactCountsBeyondPagination": true,
+  "allNineQueueFilters": true,
+  "stableDistinctPages": true,
+  "caseAndCadNextActions": true,
+  "localPageSearch": true,
+  "homePreviewFilters": true,
+  "staleRefreshGate": true,
+  "failedReadRejectsPartialResults": true,
+  "fixtureCases": 230,
+  "backend": "synthetic query fixture; no production data"
+}
+
+> dentaya-production-rc@1.0.0-rc.62 verify:workflow-safety
+> node --import tsx scripts/verify-workflow-safety.ts
+
+{"status":"pass","idempotentRetries":true,"exactMoney":true,"honestPaymentStates":true,"desktopInvitationCodes":true,"calendarDateValidation":true,"localeSafeAppointmentEditing":true}
+
+> dentaya-production-rc@1.0.0-rc.62 verify:brand-assets
+> node scripts/verify-brand-assets.mjs
+
+{"pass":true,"uniqueMarks":120,"svgVariants":840,"smallIconRenders":360,"windowsIcoSizes":7,"preservedPriorMarks":100,"preservedPriorAssetFiles":900,"priorAssetsByteIdentical":true,"outlinedWordmark":"DENTAYA","uiAndDesktopAllowlistMatch":true,"shippedAtelierArtwork":true}
+
+> dentaya-production-rc@1.0.0-rc.62 verify:desktop-brand
+> node scripts/verify-desktop-brand.cjs
+
+PASS: allowlist, platform, icon persistence, shortcut create/update, foreign shortcut protection, failure result. Windows shell is mocked.
+
+> dentaya-production-rc@1.0.0-rc.62 verify:release
+> node scripts/verify-release.mjs
+
+PASS: package, lockfile, runtime release, client identifier and installer agree; one CMD entry point.
+
+> dentaya-production-rc@1.0.0-rc.62 verify:windows-package
+> node --test scripts/verify-windows-packaging.mjs scripts/verify-windows-artifact.test.mjs scripts/verify-windows-ci.mjs && node scripts/verify-windows-native-orchestration.cjs
+
+✔ ASAR reader handles a real pinned @electron/asar archive and binds all Electron sources (73.5739ms)
+✔ ASAR source drift, missing files and wrong application version are rejected (46.2196ms)
+✔ an environment file or model weight hidden inside ASAR fails acceptance (39.0052ms)
+✔ truncated ASAR header and payload cannot pass archive inspection (20.33ms)
+✔ Next payload comparison checks bytes and rejects extra environment files (10.9659ms)
+✔ integrity manifest is checked against exact current checkout bytes (5.5981ms)
+✔ receipt paths cannot escape output and Windows acceptance cannot run on Linux (0.6818ms)
+✔ desktop smoke requires genuine IPC bridge, isolated renderer and real guest route controls (0.4968ms)
+✔ desktop smoke environment is per-process and removes inherited model or Electron overrides (0.2618ms)
+✔ Node WebSocket CDP client matches out-of-order responses and preserves renderer exceptions (14.2872ms)
+✔ CDP timeout or renderer disconnect rejects acceptance instead of hanging (5.4393ms)
+✔ Windows Git checkout preserves source hashes, legacy line endings and binary bytes (977.097ms)
+✔ CI source guard binds clean checkout, lockfile version and dereferenced tag to the exact commit (4.8439ms)
+✔ CI source guard refuses modified tracked source and missing exact commit (3.0584ms)
+✔ verified installer release includes actual failed native evidence and keeps semantic limits (30.7976ms)
+✔ release guard rejects changed installer, source, report and unsupported native pass (30.7858ms)
+✔ publisher cannot call the network for a branch or a mismatched source commit (0.5046ms)
+✔ publisher creates a draft, uploads verified bytes and publishes only after all hashes match (25.8098ms)
+✔ publisher refuses a changed upload and leaves the release as a draft (0.4803ms)
+✔ publisher rejects native evidence from another workflow run before calling GitHub (0.2492ms)
+✖ installed matching Windows runtime, original config and prepared Next are reused (56.2553ms)
+✔ DLL locks get a fresh directory and bounded backoff; old output is retained (49.9623ms)
+✔ persistent lock fails after three attempts and writes no success receipt (37.0763ms)
+✔ unrelated packaging errors stop on the first attempt (51.8064ms)
+✔ exit zero without a usable installer is rejected (113.3731ms)
+✔ an empty or non-Windows installer is never reported as success (32.1882ms)
+✔ different or missing Next build data prevents packaging (60.3623ms)
+✔ different Electron version and wrong architecture are rejected (38.9094ms)
+✔ a missing runtime without its own package installer stops before packaging (26.018ms)
+fake builder process completed
+✔ real child-process invocation preserves spaced paths and disables publishing (94.1671ms)
+✔ a success receipt cannot reveal an installer outside its output folder (142.3256ms)
+✔ non-Windows packaging fails explicitly (0.2834ms)
+fixture installer completed
+✔ missing electron/dist is installed through the declared installer before packaging (135.0444ms)
+✖ a valid runtime with no version marker is queried without fabricating a marker (26.9425ms)
+fixture installer completed
+✖ the on-demand install-electron entry and package-resolved runtime path are supported (93.1139ms)
+fixture installer completed
+✔ a partial legacy runtime is preserved so the installer cannot skip a missing DLL (104.1551ms)
+fixture download failure
+✔ installer errors preserve a diagnostic log and prevent packaging (71.8204ms)
+fixture no-op
+✔ installer exit zero is insufficient unless the binary and data files exist (73.35ms)
+✔ an installer that creates only a version marker is rejected (68.0842ms)
+fixture installer completed
+✔ a wrong installed runtime version is rejected after the installer finishes (80.7403ms)
+✔ a mismatched npm package version is rejected without running an installer (21.4163ms)
+✔ an installer declared outside the Electron package is never executed (21.604ms)
+✔ installer environment is scoped, pins x64/win32 and removes download-skip overrides (0.3387ms)
+✔ the version probe handles the real --version child-process protocol (27.7781ms)
+✔ the pinned Electron dependency requires Node 22.12 or later (0.25ms)
+✔ npm version uses Node and npm-cli.js even with spaces and shell characters in its path (66.5929ms)
+✔ Windows npm fallback resolves the CLI beside Node without executing npm.cmd (25.5588ms)
+✔ Windows npm with no JavaScript entry fails without spawning a shell (19.7076ms)
+✔ PE validation rejects MZ-only, forged signature, truncated headers and truncated sections (20.9837ms)
+✔ PE validation accepts NSIS x86 installers and requires x64 for the Electron application (20.6934ms)
+✔ a builder exit zero cannot publish an MZ-only installer (27.7116ms)
+DentAYA afterPack OK: standalone + node_modules pakete kopyalandi.
+✔ afterPack excludes every .env file while preserving originals and Next assets (34.2534ms)
+ℹ tests 52
+ℹ suites 0
+ℹ pass 49
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1728.3908
+
+✖ failing tests:
+
+test at scripts\verify-windows-packaging.mjs:56:1
+✖ installed matching Windows runtime, original config and prepared Next are reused (56.2553ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'C:\\Users\\runneradmin\\AppData\\Local\\Temp\\DentAYA package test LZoBz6\\electron-builder.yml'
+  - 'C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\DentAYA package test LZoBz6\\electron-builder.yml'
+  
+      at TestContext.<anonymous> (file:///D:/a/dentaya-rc47/dentaya-rc47/scripts/verify-windows-packaging.mjs:65:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'C:\\Users\\runneradmin\\AppData\\Local\\Temp\\DentAYA package test LZoBz6\\electron-builder.yml',
+    expected: 'C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\DentAYA package test LZoBz6\\electron-builder.yml',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\verify-windows-packaging.mjs:213:1
+✖ a valid runtime with no version marker is queried without fabricating a marker (26.9425ms)
+  Error: ENOENT: no such file or directory, stat 'C:\Users\runneradmin\AppData\Local\Temp\DentAYA package test SunZE1\node_modules\electron\install.js'
+      at async Module.stat (node:internal/fs/promises:1095:18)
+      at async requireFile (file:///D:/a/dentaya-rc47/dentaya-rc47/scripts/package-windows.mjs:44:16)
+      at async ensureElectronRuntime (file:///D:/a/dentaya-rc47/dentaya-rc47/scripts/package-windows.mjs:155:3)
+      at async inspectProject (file:///D:/a/dentaya-rc47/dentaya-rc47/scripts/package-windows.mjs:212:19)
+      at async packageWindows (file:///D:/a/dentaya-rc47/dentaya-rc47/scripts/package-windows.mjs:253:16)
+      at async TestContext.<anonymous> (file:///D:/a/dentaya-rc47/dentaya-rc47/scripts/verify-windows-packaging.mjs:216:19)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'stat',
+    path: 'C:\\Users\\runneradmin\\AppData\\Local\\Temp\\DentAYA package test SunZE1\\node_modules\\electron\\install.js'
+  }
+
+test at scripts\verify-windows-packaging.mjs:225:1
+✖ the on-demand install-electron entry and package-resolved runtime path are supported (93.1139ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'C:\\Users\\runneradmin\\AppData\\Local\\Temp\\DentAYA package test fj5sVD\\node_modules\\electron\\cached-runtime'
+  - 'C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\DentAYA package test fj5sVD\\node_modules\\electron\\cached-runtime'
+  
+      at TestContext.<anonymous> (file:///D:/a/dentaya-rc47/dentaya-rc47/scripts/verify-windows-packaging.mjs:231:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'C:\\Users\\runneradmin\\AppData\\Local\\Temp\\DentAYA package test fj5sVD\\node_modules\\electron\\cached-runtime',
+    expected: 'C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\DentAYA package test fj5sVD\\node_modules\\electron\\cached-runtime',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
