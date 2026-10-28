@@ -1,9 +1,9 @@
 {
-  "release": "1.0.0-rc.61",
-  "status": "source-release-candidate",
-  "date": "2026-10-27",
-  "baseRelease": "1.0.0-rc.60",
-  "baseCommit": "2e8787484a33b7ac8e90a8987d36d1a367d6591a",
+  "release": "1.0.0-rc.62",
+  "status": "isolated-windows-installer-preflight",
+  "date": "2026-10-28",
+  "baseRelease": "1.0.0-rc.61",
+  "baseCommit": "4588013",
   "nativeModelInferenceVerified": false,
   "windowsInstallerProduced": false,
   "liveOrganizationBackendVerified": false,
@@ -12,23 +12,33 @@
   "brandLogosActual": 120,
   "ayaQuestionCatalogueActual": 1008,
   "dentalFactsTarget": 30000,
-  "nativeGrammarVerified": true,
-  "nativeGrammarChecks": 22,
+  "nativeGrammarVerified": false,
+  "nativeGrammarChecks": 0,
   "miniGamesActual": 5,
   "nativeModelWeightsAvailable": false,
-  "nativeModelInferenceStatus": "blocked-model-weights",
-  "verification": "RC61_KONTROL_RAPORU.md",
-  "sourceVerification": "verification/RC61/source-verification.json",
+  "nativeModelInferenceStatus": "not-tested-in-windows-package-preflight",
+  "verification": "RC62_KONTROL_RAPORU.md",
+  "sourceVerification": "diagnostic-only; actual Windows reports will be stored under windows-validation-evidence after the run",
   "files": [
     {
       "path": ".env.example",
       "size": 1010,
-      "sha256": "afa148a0f2d2a4158893a84d5305757acc7aa19aab3fc3ce5dfdc5a60b2951b2"
+      "sha256": "3486d38b7ad4297a05b2bea7348b1a4abb95a4e9397dfd78c0d19cef99ae28bd"
     },
     {
       "path": ".env.release.example",
       "size": 407,
-      "sha256": "cfe5370598d80cdc5eae1858c67c5c6d65b0976d7eefb4c4aac17c71bf30a2f4"
+      "sha256": "105c050f45d6ee45a467a0ee35513a621b2c1b392b2870b02b13bee93fb5d06a"
+    },
+    {
+      "path": ".gitattributes",
+      "size": 175,
+      "sha256": "e8ee1c26e6ac7e386a6f2137bd8cd380f52011498eb8e8b5c74ffe2fef60d4ed"
+    },
+    {
+      "path": ".github/workflows/windows-release.yml",
+      "size": 11918,
+      "sha256": "06464938b38be5a0951c5f759228041806d02705d96804271a6ad7c90b2adb65"
     },
     {
       "path": ".gitignore",
@@ -42,8 +52,8 @@
     },
     {
       "path": "AGENTS.md",
-      "size": 10056,
-      "sha256": "e8593688527c6d0ff63085e7be3dba08ea667466d1a305e6cf6f3206f6b11fa3"
+      "size": 11058,
+      "sha256": "896b76b32ae20ca380008fffcf717792223201601c473d077fc867386cb2f77b"
     },
     {
       "path": "AYA_ACTIONS_QA.md",
@@ -168,7 +178,7 @@
     {
       "path": "DENTAYA_GUNCELLE_DERLE.cmd",
       "size": 3129,
-      "sha256": "a59849befd0625788306169ae6d2faeac65f9f719320a7cf0f4548ef17db99ec"
+      "sha256": "5fd0ddff899af7118e46b1e0332643ac98d1670d6d1f09a81e9ebc92e5f5fd71"
     },
     {
       "path": "DentAYA_CAD_Degisiklikler.txt",
@@ -208,7 +218,7 @@
     {
       "path": "KURULUM.txt",
       "size": 5553,
-      "sha256": "e08ec3911c74652c8334612fb3673a773b6cfbecaf09a4d07dfb2e998c4b65c8"
+      "sha256": "a5f1b84c0c402692370914d5d1c897bd1b17f7124926c3e2f973e1504350b1f8"
     },
     {
       "path": "LOGO_GUNCELLEME.txt",
@@ -766,6 +776,21 @@
       "sha256": "813b37bfcea3b80b60f6c2e6e1d212a4b2d89979b6033eabef672dcc1e1098d2"
     },
     {
+      "path": "RC62_AYA_1008_SORU_CEVAP.json",
+      "size": 365775,
+      "sha256": "93a02f9da94fea0cbaa55b51f70b65b7a63287afdcedfc38f25a6695abdf9f9c"
+    },
+    {
+      "path": "RC62_KONTROL_RAPORU.md",
+      "size": 3176,
+      "sha256": "3d353430bf663aa033373ea105a86c5e06cde1d504cf95844f00cf2324d66c98"
+    },
+    {
+      "path": "RC62_KULLANIM.md",
+      "size": 4003,
+      "sha256": "b1ed968ecf374ef03e4b4f61bf66f7b1b72cc7468de826ffb83ec48be84dd1e7"
+    },
+    {
       "path": "RC6_CHANGELOG.md",
       "size": 805,
       "sha256": "3da664df997388f7c74588f417e0676b263ac4aa225fced31091f5f197b6a03f"
@@ -782,8 +807,8 @@
     },
     {
       "path": "README.md",
-      "size": 11261,
-      "sha256": "db781ce64f9ae9e9e13afb7abad02677c7f781c191d3bd7c3f160de66f7b60f9"
+      "size": 10973,
+      "sha256": "093695ac299d9a2f9ad7efb3175df35d48d3cf9b984f57290a8e92bd261639f5"
     },
     {
       "path": "README_BUILD_FIX_01.md",
@@ -1041,6 +1066,16 @@
       "sha256": "85ca0e172d61030ceaab98f4c33b9cfbf650ff0bec06786a798b9b550140afcf"
     },
     {
+      "path": "electron/aya/acceptance.cjs",
+      "size": 10659,
+      "sha256": "ed57701df4179816eaeffba6c4391aeea61d6803ad4dead3e70d73de1133d67c"
+    },
+    {
+      "path": "electron/aya/acceptance.d.cts",
+      "size": 1888,
+      "sha256": "7c47bded59fddaa79eb8a83cb242f432bdacda480739aeab034012200fba1382"
+    },
+    {
       "path": "electron/aya/agent.cjs",
       "size": 20287,
       "sha256": "175b2b2baa8214cadafafc9b333435581e97346628482f6401fd0c319fde456f"
@@ -1053,7 +1088,7 @@
     {
       "path": "electron/aya/assistant.cjs",
       "size": 11382,
-      "sha256": "5b6d33b0e9919565d4d5ff78e9031fa328ec61486e4db8c161822d642c447d54"
+      "sha256": "43ce485dcbc54270097fb514266cc986886ab0b2fce23e730722e64036dad278"
     },
     {
       "path": "electron/aya/assistant.d.cts",
@@ -2052,8 +2087,8 @@
     },
     {
       "path": "electron/main.cjs",
-      "size": 17311,
-      "sha256": "e1f7905c81f868a7638ab817705de92147011f509d753c738f51f10b187b99b9"
+      "size": 17429,
+      "sha256": "048ac964c7eb9c12498a0c7a92665553ede7169c99513e9eb60aa4797755d047"
     },
     {
       "path": "electron/preload.cjs",
@@ -2078,12 +2113,12 @@
     {
       "path": "package-lock.json",
       "size": 354831,
-      "sha256": "19f4f5a2e45fcec76cf9e5709313ebcc9115e5b24b763a694a8150b9a6532fee"
+      "sha256": "c61d4c4e8ae3f091de1f74cbf3e37ecfcd386b3b90ec55897ef08f960ba6c3ad"
     },
     {
       "path": "package.json",
-      "size": 10601,
-      "sha256": "76c9742df794f51282ecd13c32870f76150d293df7490b97151aed878e7fac9c"
+      "size": 11065,
+      "sha256": "3d870d86ab22ed999394ba42a02fd21498ab1b7a480f991d1e9c724bc9ff9056"
     },
     {
       "path": "public/brand/DentAYA_Premium_Atelier.svg",
@@ -7187,8 +7222,8 @@
     },
     {
       "path": "scripts/after-pack.cjs",
-      "size": 1435,
-      "sha256": "db7f5aceb812be6f8ff7300a9c4b68c216db2e8155a2fb18f3c170b434ab5590"
+      "size": 1648,
+      "sha256": "3412419fe4e13ccd70cb3286aa769bd7ba4d8c1e6d20bdc5cca547c6e4b9c438"
     },
     {
       "path": "scripts/audit-dental-sources.py",
@@ -7236,6 +7271,11 @@
       "sha256": "13a94c3ec1df33a243cdcd71070d6fbbb2739736695ac837de6daba5a3293d8f"
     },
     {
+      "path": "scripts/evaluate-aya-local.cjs",
+      "size": 2549,
+      "sha256": "af90439ad1449597cf3998fe3948c8d82b655191f7448b19c331272a230164d9"
+    },
+    {
       "path": "scripts/export-aya-catalog.mjs",
       "size": 1000,
       "sha256": "96938e8627d1a7d48f631c575cde75a2d1527dd40f025539f0151b20f22db76f"
@@ -7276,6 +7316,11 @@
       "sha256": "46a1647e37c600b6a7423b20d94f3c66ea2332f3024107cbc49fa1bc8da840a3"
     },
     {
+      "path": "scripts/fixtures/rc62-aya-acceptance.tsx",
+      "size": 1344,
+      "sha256": "042960a054a185158a1c1810b32d5ac5e7a3bdc22c89226e543c59630165b63a"
+    },
+    {
       "path": "scripts/import-dental-facts.ts",
       "size": 2874,
       "sha256": "878a39f33d42b2cccfeea1cfbad3d15e1c877b06edc856f80c3f1683c85ded70"
@@ -7292,13 +7337,18 @@
     },
     {
       "path": "scripts/package-windows.mjs",
-      "size": 15404,
-      "sha256": "475194ae2236bdf47f60321e489b36207ab6e7e54cd552f581984fb8eec626d1"
+      "size": 18199,
+      "sha256": "9fd88022ec03b38d9f0c7a11a44a0d3a9d96480f721a0cdaf77a534def89e5ca"
     },
     {
       "path": "scripts/prepare-release-env.mjs",
       "size": 958,
       "sha256": "25dc435a1ff79dac3af587037a503b2932c9ed6d445c88e0952d8dc9d7fbad46"
+    },
+    {
+      "path": "scripts/publish-windows-release.mjs",
+      "size": 11108,
+      "sha256": "5dfc85896bfd5982001c8654619e6164c66b476508fe2e49406237c0dc7e72d1"
     },
     {
       "path": "scripts/render-brand-assets.mjs",
@@ -7311,9 +7361,19 @@
       "sha256": "b6b2dfbf829b963a6180b91b6e378611ffd8bb95d70109b7feded23e141fac2d"
     },
     {
+      "path": "scripts/run-windows-aya-native.cjs",
+      "size": 8579,
+      "sha256": "41b500f853c497ebfd44e1af71bbdfd6bf291d08ba7b6337b0fd4a62dbb816ef"
+    },
+    {
       "path": "scripts/setup-windows.ps1",
       "size": 2612,
       "sha256": "e01ced49900032472e0f40705f1a96ed7b904353b88a8833ea13f36b5831359e"
+    },
+    {
+      "path": "scripts/smoke-windows-desktop.mjs",
+      "size": 11023,
+      "sha256": "6ebe8e2b6c895bb33b24f04d17fa5576fb7eccf16d97dbf6868324af2a599aa3"
     },
     {
       "path": "scripts/ui-visible-keys.mjs",
@@ -7329,6 +7389,16 @@
       "path": "scripts/verify-appointment-planner.ts",
       "size": 1062,
       "sha256": "1c4a4e69e4da48e0e60408b6398bdad04f03fdd57185859db3f9e9daaa5f22a1"
+    },
+    {
+      "path": "scripts/verify-aya-acceptance-browser.mjs",
+      "size": 9241,
+      "sha256": "3856b1f68a3432c0247d10b94ac192dae1cf9a5ce6025cfbc8b3617d11494523"
+    },
+    {
+      "path": "scripts/verify-aya-acceptance.cjs",
+      "size": 6665,
+      "sha256": "278b156fe82fbcaf4ec42cb00c2fd7e0605f40e0bab4158c1e2d114d9b67bc43"
     },
     {
       "path": "scripts/verify-aya-agent.cjs",
@@ -7349,6 +7419,16 @@
       "path": "scripts/verify-aya-catalog.cjs",
       "size": 5535,
       "sha256": "dcd7e3a17b09a90809005d973ad4e407692f9da7214195fb290a992d3028bc99"
+    },
+    {
+      "path": "scripts/verify-aya-chat-workspace-browser.mjs",
+      "size": 21359,
+      "sha256": "9e8b1b503bc38baf5ec7eebed010f806b350361262c1fc6b0f4bdd5de6591718"
+    },
+    {
+      "path": "scripts/verify-aya-chat-workspace.ts",
+      "size": 5395,
+      "sha256": "3d55b24e05acae8c7894dd0e15e2b5dd6ad1e29011ccb3228101f01dd1554882"
     },
     {
       "path": "scripts/verify-aya-config.cjs",
@@ -7447,8 +7527,8 @@
     },
     {
       "path": "scripts/verify-aya-setup-browser.mjs",
-      "size": 13350,
-      "sha256": "42e84d12ffaaf5ce781720611beb51ca9148a29e76eaf2077ed2186d50f8cade"
+      "size": 14555,
+      "sha256": "cea325409a355f479c360e8e467da7afa71f0e934eb3f5ec1a0a72f70ef0a93b"
     },
     {
       "path": "scripts/verify-aya-setup.ts",
@@ -7457,8 +7537,8 @@
     },
     {
       "path": "scripts/verify-aya-state-browser.mjs",
-      "size": 28647,
-      "sha256": "0336f5a50eaecdb920f00c0c76c0e198d36d5bbf0fa62990aaa2f380c0221aff"
+      "size": 28327,
+      "sha256": "926435b3928edb19264d3c8d41613e6fb8a2fbfcbc7addcf24ffe057b13e4b85"
     },
     {
       "path": "scripts/verify-aya-tasks.cjs",
@@ -7502,8 +7582,8 @@
     },
     {
       "path": "scripts/verify-cad-daily-browser.mjs",
-      "size": 58693,
-      "sha256": "8c8b6206996caf3097958f3be91ebd168cbc1266894eacdd796fb4e752c07e15"
+      "size": 59831,
+      "sha256": "c3cc5df6a0c294e647676accada948fad0f24a4d01e27dc4692370ed20c83f59"
     },
     {
       "path": "scripts/verify-cad-daily.ts",
@@ -7522,8 +7602,8 @@
     },
     {
       "path": "scripts/verify-cad-guided-browser.mjs",
-      "size": 33638,
-      "sha256": "e698b18e949215b31d33d3310df43a570b106c65e6b3b27218a5b20e7539d8cc"
+      "size": 33635,
+      "sha256": "520eb6a84051c62f2e15a553c7cc86131f0cd934bfd65ffe7de22ace467da2e9"
     },
     {
       "path": "scripts/verify-cad-guided.ts",
@@ -7627,13 +7707,13 @@
     },
     {
       "path": "scripts/verify-desktop-language.cjs",
-      "size": 6854,
-      "sha256": "c685283264de407a96c726ebe2fb50035ab250f7b53960f6f398d0df65fe9627"
+      "size": 7128,
+      "sha256": "4e70ea5c1dc0761969103876ea612f09b24bd6da019c057ce23d302215ba33fb"
     },
     {
       "path": "scripts/verify-desktop-shell-browser.mjs",
-      "size": 42814,
-      "sha256": "975c3bf763b1f20295b3922062348f432771f25402a18e633ad0454499251aac"
+      "size": 46872,
+      "sha256": "f0f6e67cb60de9a18e3a8638925c8a6cd1c6d904632c883097cc39112213fec6"
     },
     {
       "path": "scripts/verify-e2e-workflow.ts",
@@ -7737,8 +7817,8 @@
     },
     {
       "path": "scripts/verify-professional-modules-browser.mjs",
-      "size": 20909,
-      "sha256": "1c3b383723d2c8dd09c79cfd285ff2fd086922f27353f35e48699e671a7c73b6"
+      "size": 35986,
+      "sha256": "150ae85b026e339aa90d8dd61459a6648cf9fe890c1e5d63e9d923112d708e90"
     },
     {
       "path": "scripts/verify-professional-shell-browser.mjs",
@@ -7772,8 +7852,8 @@
     },
     {
       "path": "scripts/verify-runtime.mjs",
-      "size": 942,
-      "sha256": "1dcba55213641d7dd7e4a88d9ce0bca72dc9bbf37b4d935255922d2ac805c46d"
+      "size": 817,
+      "sha256": "2b3f97ce10fc8370e248470d9a5310d968c02b4ffa60e180df7a2c68adbb52d0"
     },
     {
       "path": "scripts/verify-sculpt-integrity.ts",
@@ -7836,9 +7916,34 @@
       "sha256": "3b8906aba1a2ba4d710207199c561c8eb391a1ccc550af840dd9b81e07c77138"
     },
     {
+      "path": "scripts/verify-windows-artifact.mjs",
+      "size": 17571,
+      "sha256": "9ced524fc0c558a12efb61e4ea83fd09d977160e36f1497d3176e54ed4783088"
+    },
+    {
+      "path": "scripts/verify-windows-artifact.test.mjs",
+      "size": 9858,
+      "sha256": "72d324bb9fca45eb11b40e51404e705f4f57629d20a75479ed7cd8fec80c246d"
+    },
+    {
+      "path": "scripts/verify-windows-ci-source.mjs",
+      "size": 1969,
+      "sha256": "27e60813ac2c903b6aec6d2dcff00a927ad5a08fafb38f33d17bec157c1c02c8"
+    },
+    {
+      "path": "scripts/verify-windows-ci.mjs",
+      "size": 12942,
+      "sha256": "718ea323fd673c26de832d9ea303461c65735946f13c88eede8fb9c24c1cb279"
+    },
+    {
+      "path": "scripts/verify-windows-native-orchestration.cjs",
+      "size": 4633,
+      "sha256": "337c201a22b53662bfc93886b5e973de80a441dada9833022fcb53235cb23bd9"
+    },
+    {
       "path": "scripts/verify-windows-packaging.mjs",
-      "size": 18081,
-      "sha256": "f6fcbdce709a25ffd9c66313cd1e057f4b36ad149a7b1c38bdefcf8d8203e6d6"
+      "size": 23640,
+      "sha256": "20621abd4394ee21ff7c15e141776b3181c82d6acb8ebd0dd18cd4228a764638"
     },
     {
       "path": "scripts/verify-workflow-safety.ts",
@@ -7987,13 +8092,18 @@
     },
     {
       "path": "src/app/WorkspaceChrome.tsx",
-      "size": 15269,
-      "sha256": "d0bc08cca12df30d9d4e879750897d37906e510ee4f91427412a9206f2c417c3"
+      "size": 17277,
+      "sha256": "029211e24bf47d51b1d1a7720fab71777f304445c0328d1e83fcf541e689d6ca"
     },
     {
       "path": "src/app/WorkspaceLauncher.tsx",
       "size": 18457,
       "sha256": "87d4d8f5fd5b78cdd03ac8414f2366ea94251a5e8ff81ace91f669c2235476f3"
+    },
+    {
+      "path": "src/app/ai/AyaAcceptancePanel.tsx",
+      "size": 5020,
+      "sha256": "f32fd7931a01e9f86ec40aa0bd919b70184dafcbc30b917c56a270e33b153794"
     },
     {
       "path": "src/app/ai/AyaCatalogReference.tsx",
@@ -8002,8 +8112,8 @@
     },
     {
       "path": "src/app/ai/AyaChat.tsx",
-      "size": 31120,
-      "sha256": "a772d7ec69608bbc87ee9ee0921f1dda808a5594f319cdd30ec663661f446ca8"
+      "size": 35101,
+      "sha256": "7338586fc0795d3e0550f6e0708868499f2d2471325f479d2f93aead2a0e382f"
     },
     {
       "path": "src/app/ai/AyaConnection.tsx",
@@ -8012,8 +8122,8 @@
     },
     {
       "path": "src/app/ai/AyaEngineSetup.tsx",
-      "size": 5537,
-      "sha256": "fb35e2aef80cd4700574ec2e1f582d99778ef6687007b34230163692964947a3"
+      "size": 6982,
+      "sha256": "a91cd68d86a2970c2f6682c6b40fbcf70ee205d72c745a6af63516bf3f265e0e"
     },
     {
       "path": "src/app/ai/AyaHealth.tsx",
@@ -8041,6 +8151,11 @@
       "sha256": "bf1c9ead074f3ee4716733f31b9f06fdeb78c7927d70f42f8955d05ac09e8994"
     },
     {
+      "path": "src/app/ai/AyaSetupProgress.tsx",
+      "size": 1390,
+      "sha256": "bef203b4ab60d939554991ef57d26949c70bbc8e44edfdbb52029c1ddae11125"
+    },
+    {
       "path": "src/app/ai/AyaSources.tsx",
       "size": 1964,
       "sha256": "50bdbca4f9f75eaa392e65ae4bffdd4b10ecb2ba39cd7105cb49fdc961fadce6"
@@ -8059,6 +8174,11 @@
       "path": "src/app/ai/aya-catalog.css",
       "size": 12480,
       "sha256": "820fd23399063f97c8051a0eec29b0b1695ff3393f2292d3f8ba3f58719b21b8"
+    },
+    {
+      "path": "src/app/ai/aya-engine-setup.css",
+      "size": 2233,
+      "sha256": "df47afc57821cdb2de8f1605d338efb4c70890b2ccee7228605fcbda22a5a269"
     },
     {
       "path": "src/app/ai/aya-sources.css",
@@ -8102,8 +8222,8 @@
     },
     {
       "path": "src/app/appointments/page.tsx",
-      "size": 31818,
-      "sha256": "4f562fdbe61516aab92add114bca5fc4245062a7275e10ca1ccfd53f3af6c959"
+      "size": 33848,
+      "sha256": "070fb430ea163034bf3c833002483a7b4e02cf2e37b4d6cfb0b0d9aa0a2276b5"
     },
     {
       "path": "src/app/cad-library/CadFormLibrary.tsx",
@@ -8137,8 +8257,8 @@
     },
     {
       "path": "src/app/cases/page.tsx",
-      "size": 43640,
-      "sha256": "dd9baf012fea93e0d8482991200da78824ccb594c7a2c249d14ed13de34dde96"
+      "size": 45421,
+      "sha256": "88ba2ea498df5f45c14bec1c28089ee07ccad762c62849c755ad301ae87d74a6"
     },
     {
       "path": "src/app/clinic/page.tsx",
@@ -8257,8 +8377,8 @@
     },
     {
       "path": "src/app/desktop-shell.css",
-      "size": 19997,
-      "sha256": "678a0fd1df012a932d564850e992731dbd9776ca78aa37feae6219958ea55167"
+      "size": 20168,
+      "sha256": "7811b43560df99a7307444adfb55e26093b75be2c3b61e28c8158d04ff3cedf7"
     },
     {
       "path": "src/app/error.tsx",
@@ -8372,8 +8492,8 @@
     },
     {
       "path": "src/app/messages/page.tsx",
-      "size": 37083,
-      "sha256": "5fb1bae7d671dab1eda86fa6558d4bf665f1bfb3bd675c07d073be05b0eccfaa"
+      "size": 37140,
+      "sha256": "c2bacf243580515c57af88bb2e7b07601163d80299649ca12839c69829cc0ce6"
     },
     {
       "path": "src/app/mini-game/page.tsx",
@@ -8471,14 +8591,19 @@
       "sha256": "fdb6be653a89ec3f82060f21c2327529fbd297b3932818179967f52b952588c5"
     },
     {
+      "path": "src/app/settings/GuestLocalSettings.tsx",
+      "size": 4545,
+      "sha256": "0ae5c6ede4e9586dfa371987a0594399d0dbf486c3dc235c195661822239c83b"
+    },
+    {
       "path": "src/app/settings/page.tsx",
-      "size": 81222,
-      "sha256": "301df03e8598849663a8fa8b034fc4f8f44fa3d056d34b4625eeba2e2e386945"
+      "size": 81240,
+      "sha256": "8bf6c11ca23fc1c43a349063607a357c5787ba380e6869842c8fd05b669a6af6"
     },
     {
       "path": "src/app/settings/settings.css",
-      "size": 8768,
-      "sha256": "af447a46b9ee59f4740a2f2f682db510459e52077864bbae0ac4cb3fc3603883"
+      "size": 10392,
+      "sha256": "61ccf8319bb1f9faa52209786e9bcdfaecb849f212f819d21accda717770937a"
     },
     {
       "path": "src/app/start/page.tsx",
@@ -8529,6 +8654,11 @@
       "path": "src/lib/aya-cad-assistance.ts",
       "size": 3844,
       "sha256": "efcb1dc90f339010394adc337f5318ed41350d8472503258e2b52ef16d269c8a"
+    },
+    {
+      "path": "src/lib/aya-chat-workspace.ts",
+      "size": 5796,
+      "sha256": "034be3da3dadcaa4086bb83737fb9b771154b18a2466c154bbc4e86683b52845"
     },
     {
       "path": "src/lib/aya-command-engine.ts",
@@ -8856,6 +8986,11 @@
       "sha256": "958b02963713a868b7f217a29c876a1ed4e71113a0bc01afbbf3ea52aae9104a"
     },
     {
+      "path": "src/lib/i18n/aya-acceptance.ts",
+      "size": 4217,
+      "sha256": "2959c7bf253385d84371dae4fe67e1e1cf7cd9487c7eb1f7b2b24ed2630adf38"
+    },
+    {
       "path": "src/lib/i18n/aya-agent.ts",
       "size": 7147,
       "sha256": "cf76c0632902308e831a46f24c5cb982ec19de83bd5e905ee70bf47eeb0f11af"
@@ -8866,14 +9001,19 @@
       "sha256": "c473dcd1998a66bc89d05b8f83bc2189290785d8b1f10d772c6f52e93dfae47e"
     },
     {
+      "path": "src/lib/i18n/aya-chat-workspace.ts",
+      "size": 494,
+      "sha256": "de479d4b4a1451ccbf53cc8a2fa0c74836364c24c20350ef6260a9f736136c6f"
+    },
+    {
       "path": "src/lib/i18n/aya-experience.ts",
       "size": 10177,
       "sha256": "86cc68bfaf695aa2fc4955b8b963ea00d045357eaa3c399f5dd7ea307f7760d7"
     },
     {
       "path": "src/lib/i18n/aya-setup.ts",
-      "size": 974,
-      "sha256": "97c72fe2b6af9f33ea60bab201d9c3a1e3d02ddb6f2cea32ff312f53bf12e500"
+      "size": 2973,
+      "sha256": "832023abc242c53b0acb1210715a8de5c80222c731fb62e2be1f5f5f33e19bef"
     },
     {
       "path": "src/lib/i18n/brand.ts",
@@ -8939,6 +9079,11 @@
       "path": "src/lib/i18n/loading-play.ts",
       "size": 2540,
       "sha256": "2a4d6bdbbd977d62e15be978ba3edf7ef5f1c4e5644f11e3f69415aade25301b"
+    },
+    {
+      "path": "src/lib/i18n/local-settings.ts",
+      "size": 1209,
+      "sha256": "47edde7774e33360b21561089ce58c6f32823d95e4f537b30d5e70d77f54fcae"
     },
     {
       "path": "src/lib/i18n/locales.ts",
@@ -9448,7 +9593,7 @@
     {
       "path": "src/lib/release.ts",
       "size": 418,
-      "sha256": "777cfc4a3b235be837f55cef464629c976f6a1a25403c41679ea2784bbf5e14a"
+      "sha256": "d0a14ade44e374d0c88187397516e1063eea4844fb1cc869fed5ea238649a56c"
     },
     {
       "path": "src/lib/retry.ts",
@@ -9483,7 +9628,7 @@
     {
       "path": "src/lib/supabase.ts",
       "size": 1108,
-      "sha256": "4044cd14cc3edeb91409bb620cbba545487793669d1feff2b0476d310c0aacbf"
+      "sha256": "fb38e0176f2940494cf87a4a1b75e580f4361dad274a105cbc522169e0b459b9"
     },
     {
       "path": "src/lib/system-messages.ts",

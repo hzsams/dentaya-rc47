@@ -4,6 +4,10 @@ on:
   push:
     tags:
       - 'v1.0.0-rc.*'
+    branches:
+      - 'codex/windows-package-validation'
+    paths-ignore:
+      - 'windows-validation-evidence/**'
   workflow_dispatch:
 
 permissions:
@@ -32,6 +36,9 @@ jobs:
         with:
           node-version: '24.19.0'
           cache: npm
+      - name: Prepare isolated diagnostic logs
+        shell: pwsh
+        run: New-Item -ItemType Directory -Force ci-artifacts/windows-preflight | Out-Null
       - name: Select the pinned npm tool
         shell: pwsh
         run: |
@@ -39,11 +46,12 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           if ((node --version) -ne 'v24.19.0' -or (npm --version) -ne '11.9.0') { throw 'Unexpected Node/npm tool versions' }
       - name: Verify exact checkout, release tag, and source manifest
+        id: source
         shell: pwsh
         run: |
-          node scripts/verify-windows-ci-source.mjs --commit $env:GITHUB_SHA --ref $env:GITHUB_REF
+          node scripts/verify-windows-ci-source.mjs --commit $env:GITHUB_SHA --ref $env:GITHUB_REF *>&1 | Tee-Object ci-artifacts/windows-preflight/source-check.txt
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          node scripts/verify-source-integrity.mjs
+          node scripts/verify-source-integrity.mjs *>&1 | Tee-Object -Append ci-artifacts/windows-preflight/source-check.txt
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Check the runner's full NSIS extraction support
         shell: pwsh
@@ -53,17 +61,30 @@ jobs:
           $formats = & $sevenZip i
           if ($LASTEXITCODE -ne 0 -or -not ($formats -match 'Nsis')) { throw 'Full 7-Zip lacks the NSIS decoder required to verify the installer payload' }
       - name: Install the exact lockfile dependencies
-        run: npm ci --no-audit --no-fund
+        id: dependencies
+        shell: pwsh
+        run: |
+          npm ci --no-audit --no-fund *>&1 | Tee-Object ci-artifacts/windows-preflight/dependency-install.txt
+          exit $LASTEXITCODE
       - name: Run all source checks and production build
-        run: npm run verify
+        id: verify
+        shell: pwsh
+        run: |
+          npm run verify *>&1 | Tee-Object ci-artifacts/windows-preflight/full-verify.txt
+          exit $LASTEXITCODE
       - name: Package the existing verified production build
-        run: npm run desktop:package
+        id: package
+        shell: pwsh
+        run: |
+          npm run desktop:package *>&1 | Tee-Object ci-artifacts/windows-preflight/packaging.txt
+          exit $LASTEXITCODE
       - name: Verify installer payload and smoke its extracted Electron executable
+        id: artifact
         shell: pwsh
         run: |
           $arguments = @('scripts/verify-windows-artifact.mjs', '--project', '.', '--output', 'ci-artifacts/windows-release', '--commit', $env:GITHUB_SHA)
           if ($env:GITHUB_REF.StartsWith('refs/tags/')) { $arguments += @('--tag', $env:GITHUB_REF_NAME) }
-          node @arguments
+          node @arguments *>&1 | Tee-Object ci-artifacts/windows-preflight/artifact.txt
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           node scripts/verify-windows-ci-source.mjs --commit $env:GITHUB_SHA --ref $env:GITHUB_REF
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
@@ -79,7 +100,64 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+
+      - name: Preserve honest isolated diagnostic evidence
+        if: ${{ always() && github.ref == 'refs/heads/codex/windows-package-validation' }}
+        shell: pwsh
+        env:
+          PREFLIGHT_STEPS: ${{ toJSON(steps) }}
+          PREFLIGHT_STATUS: ${{ job.status }}
+        run: |
+          @'
+          const fs=require('node:fs'),path=require('node:path');
+          const directory='ci-artifacts/windows-preflight';fs.mkdirSync(directory,{recursive:true});
+          const assets='ci-artifacts/windows-release';
+          for(const name of ['SHA256SUMS.txt','windows-build-receipt.json','desktop-smoke-report.json']){const source=path.join(assets,name);if(fs.existsSync(source))fs.copyFileSync(source,path.join(directory,name));}
+          const result={testedCommit:process.env.GITHUB_SHA,runId:process.env.GITHUB_RUN_ID,runAttempt:process.env.GITHUB_RUN_ATTEMPT,platform:process.platform,node:process.version,status:process.env.PREFLIGHT_STATUS,steps:JSON.parse(process.env.PREFLIGHT_STEPS||'{}'),diagnosticBranchOnly:true,publishedRelease:false,modelInferenceTested:false,semanticAcceptance:false};
+          fs.writeFileSync(path.join(directory,'result.json'),JSON.stringify(result,null,2)+'\n');
+          '@ | node
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        if: ${{ always() && github.ref == 'refs/heads/codex/windows-package-validation' }}
+        with:
+          name: isolated-windows-preflight-reports
+          overwrite: true
+          path: ci-artifacts/windows-preflight/*
+          if-no-files-found: error
+          retention-days: 14
+
+  preserve-preflight:
+    name: Preserve isolated reports through the Git transport
+    needs: [windows-build]
+    if: ${{ always() && github.ref == 'refs/heads/codex/windows-package-validation' }}
+    runs-on: windows-2025
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+        with:
+          ref: codex/windows-package-validation
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          name: isolated-windows-preflight-reports
+          path: windows-validation-evidence/${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Commit only small diagnostic reports without rewriting history
+        shell: pwsh
+        run: |
+          git config user.name 'DentAYA Windows preflight'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          $directory = 'windows-validation-evidence/${{ github.run_id }}-${{ github.run_attempt }}'
+          $allowed = @('result.json','source-check.txt','dependency-install.txt','full-verify.txt','packaging.txt','artifact.txt','windows-build-receipt.json','desktop-smoke-report.json','SHA256SUMS.txt')
+          foreach ($name in $allowed) { $file = Join-Path $directory $name; if (Test-Path -LiteralPath $file) { if ((Get-Item -LiteralPath $file).Length -gt 2097152) { throw 'Diagnostic report exceeds its size limit' }; git add -- $file; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } } }
+          git diff --cached --quiet
+          if ($LASTEXITCODE -eq 1) { git commit -m 'Record isolated Windows installer preflight evidence'; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; git pull --rebase origin codex/windows-package-validation; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; git push origin HEAD:codex/windows-package-validation; exit $LASTEXITCODE }
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
   windows-native:
+    if: ${{ github.ref != 'refs/heads/codex/windows-package-validation' }}
     name: Separate real native AYA contract evidence
     runs-on: windows-2025
     timeout-minutes: 25
