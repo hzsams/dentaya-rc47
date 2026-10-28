@@ -11,11 +11,17 @@ Bu belge RC62 geliştirmesi sırasında hazırlanır; sürüm etiketi ve nihai d
 - Aynı sekmede sohbet çalışma kopyası ve taslak korunur. Geçmiş kapalıysa kalıcı konuşma yazılmaz; açıkken sessionStorage yalnız kayıtlı oturumun taslak/kesinti bilgisini tutar. Silinmiş veya daha yeni kayıt eski çalışma kopyasıyla ezilmez.
 - Yerel misafir Ayarlar, gerçek indirme ilerlemesi, klavye sekmeleri/odak dönüşü iyileştirildi. CAD'e ortak web başlığı eklenmedi.
 - Bekleyen vaka ve randevu kayıtları, değiştirilmiş randevunun kapanma uyarısı, rota değişiminden sonra gelen eski sonuçlar ve IME Enter davranışı düzeltildi.
-- Windows paketlemesi npm.cmd başlatma, PE mimarisi, .env dışlama ve byte koruyan Git checkout ile güçlendirildi. Gerçek NSIS içeriği, ASAR ve Next dosyaları ile çıkarılmış Electron ekranlarını doğrulayan CI eklendi.
+- Windows paketlemesi npm.cmd başlatma, PE mimarisi, .env dışlama ve byte koruyan Git checkout ile güçlendirildi. Gerçek NSIS içeriği, ASAR ve Next dosyaları ile çıkarılmış Electron ekranlarını doğrulayan CI eklendi. Windows runner üzerinde görülen kısa TEMP yolu, file URL ve çeviri tarama yolu farkları düzeltildi; ilgili doğrulamalar korunarak gerçek Windows ön kontrolü geçti.
 
 ## Gerçek model değerlendirmesi
 
-Önceki ağ engeli Windows CI üzerinden aşıldı; resmî sabit hashli modelle gerçek çıkarım kayıtları alındı. İlk 1.7B ve kontrollü 4B denemelerinde kötü/ilgisiz yanıtlar ve hedefi temizleme hatası gözlendi. Bunlar başarılı model kabulü sayılmaz. Modelin önerdiği üretim ayarları ve alan bazlı bellek sözleşmesi ayrı kontrollü deneylerle incelenmektedir. Nihai kaynakta kullanılan model/ayar ve sonuçlar doğrulama bittikten sonra bu bölümde kaydedilir.
+Önceki ağ engeli Windows CI üzerinden aşıldı; resmî sabit hashli modelle gerçek çıkarım kayıtları alındı. İlk 1.7B ve kontrollü 4B denemelerinde kötü/ilgisiz yanıtlar ve hedefi temizleme hatası gözlendi. Bunlar başarılı model kabulü sayılmaz. Modelin önerdiği üretim ayarları ve alan bazlı bellek sözleşmesi ayrı kontrollü deneylerle incelenmektedir. Eski Qwen3 4B ve Instruct-2507 adayları da reddedildi: bazıları negatif Türkçe isteği ters yorumladı, hedef/üniteyi kaydetmedi veya kayıt/ölçüm kanıtını göz ardı etti. En sade doğrudan model çağrılarında aynı dil hatasının görülmesi AYA şablonu ile model yeteneğini ayırdı. Yeni model ve değeri işlemin yanında taşıyan bellek sözleşmesi ayrıca sınanıyor. Nihai kaynakta kullanılan model/ayar ve sonuçlar doğrulama bittikten sonra bu bölümde kaydedilir.
+
+## Tamamlanan Windows ön kontrolü
+
+[Gerçek Windows çalışması 40673513656](https://github.com/hzsams/dentaya-rc47/actions/runs/40673513656), `61ee56824704c8937fbace10e77947e30d96653a` tanı kaynağını sınadı; ürün tabanı `4588013` ve Windows taşınabilirlik düzeltmeleridir. Tam verify, üretim derlemesi, NSIS paketlemesi, kurucudan gerçek yükü çıkarma/kaynak hash karşılaştırması ve çıkarılan Electron ile üç misafir ekranı/IPC kontrolü geçti. Renderer hatası: 0. Kurucu: 279.376.003 bayt, SHA-256 `22b9986ee83304da0843602185a7c5c8dd0f8a1973a6f1cfa152d4011ed81e78`.
+
+Bu tanı kurucusu yayımlanmadı ve native model işi bu dalda çalıştırılmadı. Sonraki CAD/model değişiklikleri için son etiketin yeniden derlenmesi gerekir. Bu sonuç son RC62 kurucusunun veya modelinin kabulü değildir. Kanıt: [Windows receipt](verification/RC62/installer-preflight/windows-build-receipt.json), [gerçek Electron smoke](verification/RC62/installer-preflight/desktop-smoke-report.json), [kapsam](verification/RC62/installer-preflight/SCOPE.md).
 
 ## Doğrulama durumu
 
