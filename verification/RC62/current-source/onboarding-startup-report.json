@@ -1,0 +1,25 @@
+{
+  "pass": true,
+  "command": "NEXT_TELEMETRY_DISABLED=1 npm run dev -- --hostname 127.0.0.1 --port 3010",
+  "backendEnvironmentProvided": false,
+  "noLocalEnvFile": true,
+  "routes": [
+    {
+      "path": "/workspace",
+      "status": 200,
+      "bytes": 70241
+    },
+    {
+      "path": "/ai",
+      "status": 200,
+      "bytes": 70518
+    },
+    {
+      "path": "/settings",
+      "status": 200,
+      "bytes": 71464
+    }
+  ],
+  "liveBackendVerified": false,
+  "checkedAt": "2026-10-28T10:17:08.926Z"
+}

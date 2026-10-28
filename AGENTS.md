@@ -1,5 +1,7 @@
 # DentAYA çalışma talimatı
 
+28 Ekim 2026 geliştirme devri: önce YENI_CHATGPT_ICIN_TAM_DEVIR.md ve DEVIR_DURUMU.json dosyalarını okuyun. Devir etiketi son RC62 sürümü değildir; yeni Qwen3.5 aday kodu yalnız ayrı deneysel patch olarak taşınır ve ana ürüne uygulanmamıştır.
+
 Bu klasör RC46/RC47 tabanından geliştirilen RC62 çalışma kopyasıdır. Önce CODEX_DEVIR_NOTLARI.md ve CODEX_BASLANGIC_PROMPTU.md dosyalarını oku; bunlar ilk WIP devir kayıtlarıdır. Güncel kapsam ve doğrulama sınırları RC62_KONTROL_RAPORU.md ve verification/RC62 kayıtlarında tutulur. Eski sürümlerin geçen kontrollerini bu kaynağın doğrulaması sayma. Kaynak kontrolleri, gerçek model çıkarımı, Windows kurucu ve canlı kurum/klinik kabulünü ayrı raporla; henüz üretilmemiş kanıtı tamamlandı sayma.
 
 - RC55, RC52'nin Studio aydınlık panellerini, mor başlıkları ve CAD'de sağ koyu komut şeridini kullanır; nesneler parametrelerin üstünde soldadır. CAD'de ortak uygulama başlığını veya ek modül kenar çubuğunu geri getirme. exocad/3Shape ergonomik referanstır; tescilli kod, logo veya arayüz varlığı kopyalama. Geçerli dil, açıkça seçilmiş görünüm tercihleri, kılavuzlu/uzman mod ve taşıma/sıfırlama davranışlarını koru.

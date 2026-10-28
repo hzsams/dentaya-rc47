@@ -1,0 +1,586 @@
+
+> dentaya-production-rc@1.0.0-rc.62 verify
+> npm run verify:runtime && npm run verify:professional-shell && npm run verify:lab-workspace && npm run verify:workflow-safety && npm run verify:brand-assets && npm run verify:desktop-brand && npm run verify:release && npm run verify:windows-package && npm run verify:release-env && npm run verify:security && npm run verify:localization && npm run verify:system-translations && npm run verify:aya && npm run verify:local-aya && npm run verify:aya-natural && npm run verify:aya-agent && npm run verify:aya-cad-agent && npm run verify:aya-section && npm run verify:aya-core && npm run verify:aya-managed && npm run verify:language-packs && npm run verify:desktop-language && npm run verify:experience && npm run verify:dental-facts && npm run verify:loading-play && npm run verify:rc44 && npm run verify:tooth-appearance && npm run verify:tooth-forms && npm run verify:cad-library && npm run verify:sculpt-integrity && npm run verify:morphology-sculpt && npm run verify:tooth-layout && npm run verify:cad-display && npm run verify:cad-view && npm run verify:cad-inspection && npm run verify:cad-section && npm run verify:performance && npm run verify:pilot && npm run lint -- --max-warnings=0 && npm run typecheck && npm run verify:cad && npm run verify:cad-setup && npm run verify:cad-daily && npm run verify:cad-restoration && npm run verify:cad-interaction && npm run verify:cad-workflow && npm run verify:cad-panel && npm run verify:cad-guided && npm run verify:migrations && npm run verify:e2e && npm run verify:community && npm run verify:operations && npm run verify:validation && npm run build
+
+
+> dentaya-production-rc@1.0.0-rc.62 verify:runtime
+> node scripts/verify-runtime.mjs
+
+PASS · Node.js 22.12+ · v24.19.0
+PASS · npm 11+ · 11.9.0
+Runtime verification PASS (2/2)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.62 verify:professional-shell
+> node --import tsx scripts/verify-professional-shell.ts
+
+PASS: public connection, local tools, launcher ownership, preserved module destinations, active folder paths, and nested multilingual module search.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.62 verify:lab-workspace
+> node scripts/verify-lab-workspace.mjs
+
+{
+  "pass": true,
+  "organizationScoped": true,
+  "exactCountsBeyondPagination": true,
+  "allNineQueueFilters": true,
+  "stableDistinctPages": true,
+  "caseAndCadNextActions": true,
+  "localPageSearch": true,
+  "homePreviewFilters": true,
+  "staleRefreshGate": true,
+  "failedReadRejectsPartialResults": true,
+  "fixtureCases": 230,
+  "backend": "synthetic query fixture; no production data"
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.62 verify:workflow-safety
+> node --import tsx scripts/verify-workflow-safety.ts
+
+{"status":"pass","idempotentRetries":true,"exactMoney":true,"honestPaymentStates":true,"desktopInvitationCodes":true,"calendarDateValidation":true,"localeSafeAppointmentEditing":true}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.62 verify:brand-assets
+> node scripts/verify-brand-assets.mjs
+
+{"pass":true,"uniqueMarks":120,"svgVariants":840,"smallIconRenders":360,"windowsIcoSizes":7,"preservedPriorMarks":100,"preservedPriorAssetFiles":900,"priorAssetsByteIdentical":true,"outlinedWordmark":"DENTAYA","uiAndDesktopAllowlistMatch":true,"shippedAtelierArtwork":true}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.62 verify:desktop-brand
+> node scripts/verify-desktop-brand.cjs
+
+PASS: allowlist, platform, icon persistence, shortcut create/update, foreign shortcut protection, failure result. Windows shell is mocked.
+
+> dentaya-production-rc@1.0.0-rc.62 verify:release
+> node scripts/verify-release.mjs
+
+PASS: package, lockfile, runtime release, client identifier and installer agree; one CMD entry point.
+
+> dentaya-production-rc@1.0.0-rc.62 verify:windows-package
+> node --test scripts/verify-windows-packaging.mjs scripts/verify-windows-artifact.test.mjs scripts/verify-windows-ci.mjs && node scripts/verify-windows-native-orchestration.cjs
+
+✔ ASAR reader handles a real pinned @electron/asar archive and binds all Electron sources (74.887863ms)
+✔ ASAR source drift, missing files and wrong application version are rejected (33.497267ms)
+✔ an environment file or model weight hidden inside ASAR fails acceptance (32.68251ms)
+✔ truncated ASAR header and payload cannot pass archive inspection (12.060003ms)
+✔ Next payload comparison checks bytes and rejects extra environment files (10.938271ms)
+✔ integrity manifest is checked against exact current checkout bytes (6.146293ms)
+✔ receipt paths cannot escape output and Windows acceptance cannot run on Linux (0.989111ms)
+✔ desktop smoke requires genuine IPC bridge, isolated renderer and real guest route controls (0.96828ms)
+✔ desktop smoke environment is per-process and removes inherited model or Electron overrides (0.430234ms)
+✔ Node WebSocket CDP client matches out-of-order responses and preserves renderer exceptions (20.636359ms)
+✔ CDP timeout or renderer disconnect rejects acceptance instead of hanging (6.215216ms)
+✔ Windows Git checkout preserves source hashes, legacy line endings and binary bytes (106.769904ms)
+✔ CI source guard binds clean checkout, lockfile version and dereferenced tag to the exact commit (11.65941ms)
+✔ CI source guard refuses modified tracked source and missing exact commit (3.654111ms)
+✔ verified installer release includes actual failed native evidence and keeps semantic limits (14.341639ms)
+✔ release guard rejects changed installer, source, report and unsupported native pass (17.528233ms)
+✔ publisher cannot call the network for a branch or a mismatched source commit (0.532692ms)
+✔ publisher creates a draft, uploads verified bytes and publishes only after all hashes match (21.244445ms)
+✔ publisher refuses a changed upload and leaves the release as a draft (0.607643ms)
+✔ publisher rejects native evidence from another workflow run before calling GitHub (0.217865ms)
+✔ installed matching Windows runtime, original config and prepared Next are reused (60.627621ms)
+✔ DLL locks get a fresh directory and bounded backoff; old output is retained (35.671338ms)
+✔ persistent lock fails after three attempts and writes no success receipt (22.783996ms)
+✔ unrelated packaging errors stop on the first attempt (17.143732ms)
+✔ exit zero without a usable installer is rejected (13.467296ms)
+✔ an empty or non-Windows installer is never reported as success (20.481123ms)
+✔ different or missing Next build data prevents packaging (13.942343ms)
+✔ different Electron version and wrong architecture are rejected (18.734065ms)
+✔ a missing runtime without its own package installer stops before packaging (5.558602ms)
+fake builder process completed
+✔ real child-process invocation preserves spaced paths and disables publishing (37.689675ms)
+✔ a success receipt cannot reveal an installer outside its output folder (6.963333ms)
+✔ non-Windows packaging fails explicitly (0.272292ms)
+fixture installer completed
+✔ missing electron/dist is installed through the declared installer before packaging (40.187032ms)
+✔ a valid runtime with no version marker is queried without fabricating a marker (6.973026ms)
+fixture installer completed
+✔ the on-demand install-electron entry and package-resolved runtime path are supported (37.011267ms)
+fixture installer completed
+✔ a partial legacy runtime is preserved so the installer cannot skip a missing DLL (38.720841ms)
+fixture download failure
+✔ installer errors preserve a diagnostic log and prevent packaging (35.812738ms)
+fixture no-op
+✔ installer exit zero is insufficient unless the binary and data files exist (33.293462ms)
+✔ an installer that creates only a version marker is rejected (31.869239ms)
+fixture installer completed
+✔ a wrong installed runtime version is rejected after the installer finishes (37.770747ms)
+✔ a mismatched npm package version is rejected without running an installer (4.354362ms)
+✔ an installer declared outside the Electron package is never executed (5.136258ms)
+✔ installer environment is scoped, pins x64/win32 and removes download-skip overrides (0.552786ms)
+✔ the version probe handles the real --version child-process protocol (6.001468ms)
+✔ the pinned Electron dependency requires Node 22.12 or later (0.264369ms)
+✔ npm version uses Node and npm-cli.js even with spaces and shell characters in its path (31.851761ms)
+✔ Windows npm fallback resolves the CLI beside Node without executing npm.cmd (4.546257ms)
+✔ Windows npm with no JavaScript entry fails without spawning a shell (6.531821ms)
+✔ PE validation rejects MZ-only, forged signature, truncated headers and truncated sections (6.331772ms)
+✔ PE validation accepts NSIS x86 installers and requires x64 for the Electron application (4.653111ms)
+✔ a builder exit zero cannot publish an MZ-only installer (6.578336ms)
+DentAYA afterPack OK: standalone + node_modules pakete kopyalandi.
+✔ afterPack excludes every .env file while preserving originals and Next assets (11.388174ms)
+ℹ tests 52
+ℹ suites 0
+ℹ pass 52
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 679.237178
+PASS: pinned asset gate,9case+exitstatus contract, stale evidence removal,3fresh reports on installation failure, bounded waiting, cleanup, private error exclusion and mock provenance. No native inference.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.62 verify:release-env
+> node scripts/verify-release-env.mjs
+
+PASS: old release label migration, preserved connection settings, LF/CRLF, repeat execution and environment validation.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.62 verify:security
+> node scripts/verify-security.mjs
+
+PASS · nosniff header
+PASS · frame deny
+PASS · HSTS
+PASS · courier geolocation allowed only to self
+PASS · camera remains disabled
+PASS · request guard has rate budget
+PASS · request guard checks JSON
+PASS · request guard checks content length
+PASS · AYA authenticated
+PASS · AYA rate limited
+PASS · AYA body capped
+PASS · geocode authenticated
+PASS · geocode admin restricted
+PASS · geocode rate limited
+PASS · routes authenticated
+PASS · routes rate limited
+PASS · health details auth-gated
+PASS · health no-store
+PASS · release env has no public service role assignment
+PASS · release env has no public OpenAI key
+PASS · server maps keys are not public
+Security verification PASS (21/21)
+
+> dentaya-production-rc@1.0.0-rc.62 verify:localization
+> node --import tsx scripts/verify-localization.ts
+
+PASS: 46 complete locales / all 24 EU official locales; 220 existing strings×19 translations, 37 bootstrap strings×11 new EU locales; 4864 full-pack source keys; all 103 UI renderers connected (104 files total, including runtimes). Templates/entities/unknown user text safe. All 45 translated catalogs are bundled; source Turkish included. Coverage does not claim native-language editorial approval.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.62 verify:system-translations
+> node scripts/verify-visible-translations.mjs && node --import tsx scripts/verify-system-translations.ts
+
+PASS: 2490 displayed captions, conditional values, messages and error sources are present in all 45 translated packs.
+PASS: system notifications, case history, status labels and dental terminology in 46 languages; embedded patient names, notes, case titles and FDI identifiers preserved.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.62 verify:aya
+> node --import tsx scripts/verify-aya-request.ts
+
+PASS AYA request: declared and streamed body limits, malformed JSON, allowlisted language, unchanged diagnostic. Provider/auth mocked.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.62 verify:local-aya
+> node scripts/verify-local-aya.cjs
+
+PASS local AYA: fixed loopback, no credentials, local-only filtering, remote rejection, language, original-goal/final-constraint and recent-turn budget, matching long-note fact actually in bridge payload, full CAD/all-tools bridge with 2048-token output reserve, validated structured replies and session memory, invalid-plan rejection, empty response, owner cancellation including uncooperative transport, concurrency, download progress, missing runtime. Inference mocked.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.62 verify:aya-natural
+> node scripts/verify-aya-natural-stream.cjs && node scripts/verify-aya-memory-task.cjs && node scripts/verify-aya-ollama-download.cjs && node scripts/verify-aya-acceptance.cjs && node --import tsx scripts/verify-aya-chat-workspace.ts
+
+{
+  "pass": true,
+  "realBridge": true,
+  "naturalStream": true,
+  "workingMemoryContext": true,
+  "novelPromptUnchanged": true,
+  "fragmentedUtf8AndNdjson": true,
+  "cumulativeContentOnly": true,
+  "thoughtTokensHidden": true,
+  "completionRequired": true,
+  "outputAndLineAndTransferBounds": true,
+  "streamErrorsPrivate": true,
+  "cancellationOwnerIsolation": true,
+  "noLateTokens": true,
+  "cadRemainsStructured": true,
+  "modelInference": "mock transport only"
+}
+PASS memory task: bounded separate structured extraction, latest-user authority, original memory retained on no-op, no CAD/history/RAG/personal-note input, no streamed JSON, immutable caller data, strict tool/reset rejection, static private-error handling, input limits, managed parity. Mock transport only; no semantic model inference.
+PASS Ollama setup: independent online/progress snapshot, fixed local Qwen3 4B pull, static status/error text, bounded parser, required completion, installed-model check, truthful foreign cancellation, prompt owner cancellation with late/ignored transport, mutual exclusion and recovery. Mock loopback transport; no real model downloaded.
+PASS:9isolated local acceptance calls, fresh novel facts, explicit limited signals notsemanticapproval, no realdata/CADdispatcher, static errors, per-step progress, zero-call precancel and cancellation ownership until both native reply+IPC settle. Mock transport; nativeInferenceVerified:false.
+AYA chat workspace: process continuity, metadata-only reload, authority/deletion, isolation, limits and storage failure passed.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.62 verify:aya-agent
+> node scripts/verify-aya-agent.cjs
+
+PASS AYA agent: strict JSON, memory continuity/revision/explicit reset, note/history reset rejection, scoped visual tools, fresh antagonist evidence, relevant older turn pairs including long-task final corrections, atomic history eviction, original/current goal and final constraints with live CAD preservation, fact pruning within context budget. No inference performed.
+
+> dentaya-production-rc@1.0.0-rc.62 verify:aya-cad-agent
+> node --import tsx scripts/verify-aya-cad-agent.ts
+
+{
+  "pass": true,
+  "typedCallbacks": true,
+  "staleScopeSourceUnitGeometryRejected": true,
+  "doubleClickGuard": true,
+  "asyncCallbackTruth": true,
+  "replayGuard": true,
+  "failedCallbackRetry": true,
+  "antagonistEvidenceRequired": true,
+  "noInventedWallMeasurement": true
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.62 verify:aya-section
+> node --import tsx scripts/verify-aya-section-context.ts && node scripts/verify-aya-section.cjs
+
+{
+  "pass": true,
+  "actualBoxAreaAndLength": true,
+  "staleUnitGeometryPlaneRejected": true,
+  "sourcePreviewDisclosed": true,
+  "openAndDuplicateAreaWithheld": true,
+  "untrustedIssueTextRemoved": true,
+  "noRawGeometry": true,
+  "inputUnchanged": true
+}
+(node:40402) [THREE_CJS_DEPRECATED] DeprecationWarning: `require("three")` is deprecated and will be removed.
+Replace `const THREE = require("three")` with `import * as THREE from "three"`.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+{
+  "pass": true,
+  "groupsPassed": 15,
+  "groupsFailed": 0,
+  "actualTrianglePlaneEvidence": true,
+  "modelInference": false,
+  "failures": []
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.62 verify:aya-core
+> node scripts/verify-aya-core.cjs && npm run verify:aya-catalog && npm run verify:aya-work
+
+PASS AYA Core: shared-card TR/EN grounding/source provenance, topical follow-ups from history/goal, new-subject precedence, stale subject and generic-risk rejection, long-paragraph matching excerpts including inflected recall and boundary values, trusted docs alongside untrusted notes, knowledge opt-out, budget-retained citations, identity, Unicode and translated guides. No inference performed.
+
+> dentaya-production-rc@1.0.0-rc.62 verify:aya-catalog
+> node scripts/verify-aya-catalog.cjs && npm run verify:aya-dialogue && node --import tsx scripts/verify-aya-conversation.ts && node scripts/export-aya-catalog.mjs --check
+
+{
+  "pass": true,
+  "catalogue": {
+    "version": "1.0.0",
+    "questions": 1008,
+    "topics": 252,
+    "language": "tr",
+    "categories": [
+      {
+        "id": "aya",
+        "title": "AYA ve sohbet",
+        "questions": 100
+      },
+      {
+        "id": "workflow",
+        "title": "CAD günlük iş akışı",
+        "questions": 100
+      },
+      {
+        "id": "geometry",
+        "title": "Geometri ve anatomi",
+        "questions": 100
+      },
+      {
+        "id": "display",
+        "title": "Görünüm ve renkler",
+        "questions": 100
+      },
+      {
+        "id": "files",
+        "title": "Tarama ve dosyalar",
+        "questions": 100
+      },
+      {
+        "id": "desktop",
+        "title": "Masaüstü ve veri",
+        "questions": 100
+      },
+      {
+        "id": "dental",
+        "title": "Temel diş bilgisi",
+        "questions": 100
+      },
+      {
+        "id": "production",
+        "title": "Üretim kontrol notları",
+        "questions": 100
+      },
+      {
+        "id": "fdi",
+        "title": "FDI diş numaraları",
+        "questions": 208
+      }
+    ]
+  },
+  "canonicalQuestionsVerified": 1008,
+  "regressionQueries": 77,
+  "unknownsRejected": 11,
+  "followup": true,
+  "safety": true,
+  "exactPassMs": 71
+}
+
+> dentaya-production-rc@1.0.0-rc.62 verify:aya-dialogue
+> node scripts/verify-aya-dialogue.cjs
+
+{
+  "pass": true,
+  "cases": 214,
+  "groups": {
+    "direct basics": 51,
+    "public integration": 51,
+    "knowledge disabled": 4,
+    "declared names": 6,
+    "name corrections": 2,
+    "missing names": 5,
+    "name evidence boundaries": 6,
+    "negative name evidence": 3,
+    "name revocation": 2,
+    "explicit name clearing": 4,
+    "name after clearing": 2,
+    "quoted clearing task": 2,
+    "identity followups": 13,
+    "shorter means shorter": 8,
+    "examples retain topic": 4,
+    "missing dialogue topic": 3,
+    "substantive clause boundaries": 14,
+    "catalog followups": 5,
+    "acknowledgements preserve catalog": 4,
+    "catalog false followups": 10,
+    "catalog topic boundaries": 9,
+    "deterministic work preservation": 2,
+    "acknowledgement meaning": 4
+  },
+  "nativeInference": false,
+  "coverage": "TR/EN direct and polite dialogue, compounds, public offline routing, session name evidence and corrections, short followups, quoted task rejection, catalog topic boundaries and deterministic tool preservation"
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+{"pass":true,"conversationRequiresInference":true,"noAutomaticFallback":true,"noFabricatedFailureTurn":true,"modelFirstKnownAndNovelPrompts":true,"errorPrivacy":true,"cancellationFinal":true,"explicitGuideOnly":true,"guideRetainsTypedCadAndRealSectionEvidence":true,"emergencyDistinct":true,"modelInference":"mock callback only"}
+PASS: exported question catalogue matches the running source.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.62 verify:aya-work
+> node scripts/verify-aya-memory.cjs && node scripts/verify-aya-tasks.cjs && node scripts/verify-aya-cad-dialogue.cjs && node --import tsx scripts/verify-aya-work.ts && npm run verify:aya-references && npm run verify:aya-state
+
+PASS: 141 pure TR/EN session-memory cases: explicit controls, bounded atomic updates, correction/removal, dedupe, recall, unchanged inputs and quoted/mixed-request fallthrough. No model inference.
+PASS 12 cm kaç mm? Ardından teslim notu taslağı hazırla
+PASS Önce 12 cm kaç mm; sonra teslim notu yaz
+PASS 1. 12 cm kaç mm?
+2. Teslim notu taslağı
+PASS identity plus concrete conversion
+PASS two independent calculations and decimal comma
+PASS canonical evidence preserved in compound
+PASS disabled catalogue is respected
+PASS no partial or quoted task: Adın ne ve bir şiir yaz
+PASS no partial or quoted task: Teslim notu yaz cümlesini İngilizceye çevir
+PASS no partial or quoted task: Kontrol listesi adlı bir hikaye yaz
+PASS no partial or quoted task: 12 cm kaç mm? Sonra shell komutu çalıştır
+PASS no partial or quoted task: Adım Deniz ve 12 cm kaç mm?
+PASS no partial or quoted task: Adımı unut ve 12 cm kaç mm?
+PASS no partial or quoted task: Bana bu isimle hitap etme ve 12 cm kaç mm?
+PASS no partial or quoted task: Adım Ahmet değil ve 12 cm kaç mm?
+PASS no partial or quoted task: My name is not Alex and 12 cm to mm?
+PASS no partial or quoted task: hesapla process.exit()
+PASS six-task limit
+PASS invalid arithmetic has a concrete error
+PASS read-only memory evidence stays unmodified
+PASS shorter task followup retains goal
+PASS model answer is not replaced with a generic task followup
+PASS new substantive topic clears prior work task
+PASS English memory-aware handoff
+PASS provided CAD metadata is used without claiming inspection
+{"pass":true,"cases":25,"nativeInference":false,"readOnly":true}
+(node:40537) [THREE_CJS_DEPRECATED] DeprecationWarning: `require("three")` is deprecated and will be removed.
+Replace `const THREE = require("three")` with `import * as THREE from "three"`.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+{
+  "pass": true,
+  "groupsPassed": 48,
+  "groupsFailed": 0,
+  "realKernelEvidence": true,
+  "modelInference": false,
+  "failures": []
+}
+{"pass":true,"explicitMemoryIsDeterministicAndLabelled":true,"ordinaryReadsAndTasksRequireInference":true,"atomicMemoryErrors":true,"failedForceModelCannotMutateMemory":true,"explicitGuideUtilities":true,"noAutomaticFallback":true,"cancellationFinal":true,"scopedCadProposals":true,"staleHostCallbackBlocked":true,"emergencyDistinct":true,"mockedModel":true}
+
+> dentaya-production-rc@1.0.0-rc.62 verify:aya-references
+> node --import tsx scripts/verify-aya-references.ts
+
+PASS: selected references retain safe HTTPS/local links across saved history, reject executable URLs and credentials, deduplicate and respect source budgets.
+
+> dentaya-production-rc@1.0.0-rc.62 verify:aya-state
+> node --import tsx scripts/verify-aya-ui-state.ts && node --import tsx scripts/verify-aya-setup.ts
+
+PASS: stale session/model-memory editor rejection, no-op conversation saves preserve storage bytes/timestamp/order without writes, revision-checked real edits preserve newer/deleted records and history opt-out, explicit separate copy, preserved draft and explicit reload, busy/length guards, latest status wins and chosen model retention, async notebook import deletion/addition/opt-out preservation, concurrent imports, capacity and deduplication. No browser or model inference.
+PASS: actionable disk/GGUF/platform/integrity/network/engine/startup/busy/missing-model guidance, English fallback and private native-detail exclusion.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.62 verify:aya-managed
+> node scripts/verify-aya-managed.cjs
+
+{
+  "pass": true,
+  "checksumAndResume": true,
+  "cachedVerificationCancellation": true,
+  "downloadInactivity": {
+    "headers": true,
+    "body": true,
+    "resumablePrefix": true,
+    "progressResetsDeadline": true,
+    "explicitCancelDistinct": true
+  },
+  "installCancellationOwnership": true,
+  "redirectRejection": true,
+  "archiveTraversalRejection": true,
+  "ggufImport": true,
+  "tokenBudget": true,
+  "loopbackStreaming": true,
+  "explicitMemory": true,
+  "cadMetadataWhitelist": true,
+  "startupDiagnosis": {
+    "bounded": true,
+    "rawDetailsExcluded": true,
+    "retry": true,
+    "lateHandshakeRejected": true,
+    "cases": 10
+  },
+  "startupCancellation": {
+    "preAborted": true,
+    "modelRead": true,
+    "portAllocation": true,
+    "stopRetry": true,
+    "disposeFinal": true
+  },
+  "foundationTrainingClaim": false,
+  "nativeInference": "mocked in this check; separate native log"
+}
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.62 verify:language-packs
+> node scripts/verify-language-packs.cjs
+
+PASS: 4864 complete source keys, resume/cancel/reload, model verification, fixed loopback, no live user data, JSON/placeholders/FDI-number validation, import integrity and corrections. Inference mocked; no translation quality claim.
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
+
+> dentaya-production-rc@1.0.0-rc.62 verify:desktop-language
+> node scripts/verify-desktop-language.cjs
+
+/workspace/dentaya-rc47/electron/main.cjs:16
+const desktopUserData = app.commandLine.getSwitchValue("user-data-dir")
+                                        ^
+
+TypeError: app.commandLine.getSwitchValue is not a function
+    at /workspace/dentaya-rc47/electron/main.cjs:16:41
+    at Script.runInContext (node:vm:149:12)
+    at Script.runInNewContext (node:vm:154:17)
+    at Object.runInNewContext (node:vm:310:38)
+    at run (/workspace/dentaya-rc47/scripts/verify-desktop-language.cjs:17:5)
+    at Object.<anonymous> (/workspace/dentaya-rc47/scripts/verify-desktop-language.cjs:34:1)
+    at Module._compile (node:internal/modules/cjs/loader:1872:14)
+    at Object..js (node:internal/modules/cjs/loader:2003:10)
+    at Module.load (node:internal/modules/cjs/loader:1594:32)
+    at Module._load (node:internal/modules/cjs/loader:1396:12)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice

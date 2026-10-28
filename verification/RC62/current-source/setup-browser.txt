@@ -1,0 +1,27 @@
+{
+  "pass": true,
+  "realSetupComponent": true,
+  "foreignCancelShowsBusy": true,
+  "noFalseCancellationSuccess": true,
+  "sameTurnDoubleClickGuard": true,
+  "cancelAcknowledgementRefresh": true,
+  "rejectedCancelRefreshes": true,
+  "privateTransportDetailsExcluded": true,
+  "statusFailureReleasesLock": true,
+  "recoveryClearsError": true,
+  "optionalOllama4B": {
+    "offlineActionHidden": true,
+    "onlineActionAvailable": true,
+    "pullDoubleClickGuard": true,
+    "pullAcknowledgementRefresh": true,
+    "separateProgress": true,
+    "foreignCancelShowsBusy": true,
+    "cancelDoubleClickGuard": true,
+    "cancelAcknowledgementRefresh": true,
+    "privateTransportDetailsExcluded": true,
+    "failureReleasesLock": true
+  },
+  "unhandledRejections": 0,
+  "desktopIPC": "mock",
+  "nativeInference": false
+}

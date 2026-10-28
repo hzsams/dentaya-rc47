@@ -1,0 +1,12 @@
+{
+  "name": "full-verify-initial-failure",
+  "command": [
+    "npm",
+    "run",
+    "verify"
+  ],
+  "startedAt": "2026-10-28T10:18:08.095562+00:00",
+  "seconds": 29.282,
+  "exitCode": 1,
+  "log": "full-verify-initial-failure.txt"
+}

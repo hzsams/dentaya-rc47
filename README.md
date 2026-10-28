@@ -1,4 +1,6 @@
-# DentAYA RC62
+# DentAYA RC62 — geliştirme devri
+
+Yeni sohbet: [tam devir](YENI_CHATGPT_ICIN_TAM_DEVIR.md), [başlangıç isteği](YENI_CHATGPT_BASLANGIC_PROMPTU.md), [makine durumu](DEVIR_DURUMU.json). Bu paket son RC62 kurucusu değildir; ana model hâlâ 1.7B, yeni 3.5 aday ayrı ve semantik kabulü tamamlanmamıştır.
 
 Sürüm `1.0.0-rc.62`, AYA Core `0.18.0`. Yerel modelle konuşma, hedef/karar belleği ve kullanıcı onaylı CAD araçları üzerinde geliştiriliyor. Bu sürüm sohbet taslağını ve kesilen soruyu korur; yerel model kabulünü normal verilerden yalıtır. Kurulum/ayarlar, form kayıtları ve masaüstü gezinmesi iyileştirildi.
 

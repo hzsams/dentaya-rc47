@@ -1,0 +1,25 @@
+{
+  "pass": true,
+  "realReactAndNextRoutes": true,
+  "historyOffProcessContinuity": true,
+  "imeEnterNeverSubmits": true,
+  "noHistoryOffReloadPersistence": true,
+  "perSessionDraftIsolation": true,
+  "newStartsEmpty": true,
+  "authoritativeReload": true,
+  "openerSessionStorageCloneCannotOverwriteHistory": true,
+  "interruptedQuestionRecovery": true,
+  "explicitRetryOnly": true,
+  "noPartialOutputPersistence": true,
+  "diagnosticRecoveryIsolation": true,
+  "reloadPendingQuestionRecovery": true,
+  "deleteEvictsDraft": true,
+  "deletedSessionCannotResurrect": true,
+  "historyOffClearsRecoveryImmediately": true,
+  "transportIsSynthetic": true,
+  "nativeInference": false,
+  "screenshots": [
+    "/workspace/dentaya-rc62-validation/RC62_AYA_Temporary_Route_Return.png",
+    "/workspace/dentaya-rc62-validation/RC62_AYA_Interrupted_Question_Recovery.png"
+  ]
+}

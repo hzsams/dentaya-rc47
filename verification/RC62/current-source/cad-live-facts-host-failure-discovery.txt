@@ -1,0 +1,861 @@
+PASS: measured left-stacked docks, continuous real canvas, keyboard detach and explicit redock.
+PASS: implant-abutment crown appears on its offset margin, sized locally.
+PASS: explicitly selected CAD tool guide uses live context; real manual checks preserve the mesh.
+PASS: CAD drafts survive close/reopen and success, invalid output, engine failure, or cancellation during bounded QC interpretation.
+PASS: click-only CAD tools, actual report follow-up, replay/double-click guards, invalid JSON recovery, cancellation, late close, pending save reopen and unit memory boundaries (mock local bridge).
+PASS: same-event shell QC survives rendering/tasks and reaches AYA; clearing shell drops the old wall estimate.
+PASS: AYA undo and manual redo use real history; geometry changes invalidate a pending model reply and old evidence.
+PASS: case switches await acknowledged scene save; failure preserves the selected case, and returning restores the edited mesh.
+PASS: sculpted topology, separate unit margins, unit switching and reopen survive cloud save.
+PASS: save-and-exit waits for committed save, with background editing blocked.
+▲ Next.js 16.3.8 (Turbopack)
+- Local:         http://127.0.0.1:3049
+- Network:       http://127.0.0.1:3049
+✓ Ready in 284ms
+✓ Running next.config.ts took 26ms
+
+ GET /design?case=33333333-3333-4333-8333-333333333333 200 in 1090ms (next.js: 534ms, application-code: 555ms)
+ GET /design?case=33333333-3333-4333-8333-333333333333 200 in 160ms (next.js: 21ms, application-code: 139ms)
+[browser] Image with src "http://127.0.0.1:3049/logos/01_dental_form.svg?brand=premium-4" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/logos/01_dental_form.svg?brand=premium-4" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ GET /design?case=99999999-9999-4999-8999-999999999999 200 in 70ms (next.js: 42ms, application-code: 28ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /design?case=33333333-3333-4333-8333-333333333333 200 in 71ms (next.js: 28ms, application-code: 43ms)
+ GET /design?case=99999999-9999-4999-8999-999999999999 200 in 43ms (next.js: 15ms, application-code: 28ms)
+ GET /design?case=33333333-3333-4333-8333-333333333333 200 in 189ms (next.js: 25ms, application-code: 163ms)
+ GET /design?case=33333333-3333-4333-8333-333333333333 200 in 188ms (next.js: 5ms, application-code: 183ms)
+[browser] Image with src "http://127.0.0.1:3049/logos/01_dental_form.svg?brand=premium-4" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/logos/01_dental_form.svg?brand=premium-4" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ GET /lab 200 in 60ms (next.js: 39ms, application-code: 21ms)
+ GET /design?case=33333333-3333-4333-8333-333333333333 200 in 99ms (next.js: 4ms, application-code: 94ms)
+[browser] Image with src "http://127.0.0.1:3049/logos/01_dental_form.svg?brand=premium-4" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/logos/01_dental_form.svg?brand=premium-4" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+
+CAD failure diagnostic {
+  "state": {
+    "url": "http://127.0.0.1:3049/design?case=33333333-3333-4333-8333-333333333333",
+    "status": "Connection unavailable602.stl · mm268 üçgen · Yerel 16:42:11",
+    "case": "33333333-3333-4333-8333-333333333333",
+    "saveState": "dirty",
+    "modalOpen": false,
+    "headerButtons": [
+      {
+        "label": "Kaydet",
+        "disabled": false
+      },
+      {
+        "label": "Araçlar",
+        "disabled": false
+      },
+      {
+        "label": "",
+        "disabled": false
+      },
+      {
+        "label": "Tarama verisi",
+        "disabled": false
+      },
+      {
+        "label": "2Preparasyon marjini",
+        "disabled": false
+      },
+      {
+        "label": "3Anatomi & şekillendirme",
+        "disabled": false
+      },
+      {
+        "label": "4Temas & oklüzyon",
+        "disabled": false
+      },
+      {
+        "label": "5Kalınlık & kontrol",
+        "disabled": false
+      },
+      {
+        "label": "6Son kontrol & gönder",
+        "disabled": false
+      },
+      {
+        "label": "Modüller",
+        "disabled": false
+      },
+      {
+        "label": "Adım adım",
+        "disabled": false
+      },
+      {
+        "label": "Uzman",
+        "disabled": false
+      },
+      {
+        "label": "Görünüm ve ses ayarları",
+        "disabled": false
+      },
+      {
+        "label": "Araç kataloğu",
+        "disabled": false
+      },
+      {
+        "label": "Kısayollar",
+        "disabled": false
+      },
+      {
+        "label": "Panel konumunu sıfırla",
+        "disabled": false
+      },
+      {
+        "label": "Odak görünümü",
+        "disabled": false
+      },
+      {
+        "label": "Kaydet ve çık",
+        "disabled": false
+      },
+      {
+        "label": "Form kütüphanesi",
+        "disabled": false
+      },
+      {
+        "label": "AYA",
+        "disabled": false
+      },
+      {
+        "label": "İnceleme",
+        "disabled": false
+      }
+    ],
+    "history": "1 / 0"
+  },
+  "serverVersion": "2026-10-28T16:42:07.024Z",
+  "serverUnit": "unit-46-0",
+  "serverSavedAt": 1793205726921,
+  "writeCount": 32,
+  "requestLog": [
+    {
+      "at": 81086,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T16:41:21.318Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793205681828,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:41:21.318Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T16:41:21.899Z"
+    },
+    {
+      "at": 82943,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T16:41:21.899Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793205683670,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:41:21.899Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T16:41:23.757Z"
+    },
+    {
+      "at": 83513,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T16:41:23.757Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793205684241,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:41:23.757Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T16:41:24.328Z"
+    },
+    {
+      "at": 85662,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T16:41:24.328Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793205686384,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:41:24.328Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T16:41:26.478Z"
+    },
+    {
+      "at": 86053,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T16:41:26.478Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793205686797,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:41:26.478Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T16:41:26.870Z"
+    },
+    {
+      "at": 89548,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T16:41:26.870Z",
+      "unit": "unit-47-1",
+      "stage": "design",
+      "localSavedAt": 1793205690270,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:41:26.870Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T16:41:30.366Z"
+    },
+    {
+      "at": 90643,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T16:41:30.366Z",
+      "unit": "unit-47-1",
+      "stage": "design",
+      "localSavedAt": 1793205691359,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:41:30.366Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T16:41:31.462Z"
+    },
+    {
+      "at": 92731,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T16:41:31.462Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793205693476,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:41:31.462Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T16:41:33.552Z"
+    },
+    {
+      "at": 93394,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T16:41:33.552Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793205694136,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:41:33.552Z",
+      "status": 503,
+      "responseVersion": null
+    },
+    {
+      "at": 93800,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T16:41:33.552Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793205694543,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:41:33.552Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T16:41:34.621Z"
+    },
+    {
+      "at": 94107,
+      "method": "GET",
+      "case": "eq.99999999-9999-4999-8999-999999999999",
+      "serverVersion": "2026-10-28T16:40:00.795Z"
+    },
+    {
+      "at": 95258,
+      "method": "GET",
+      "case": "eq.99999999-9999-4999-8999-999999999999",
+      "serverVersion": "2026-10-28T16:40:00.795Z"
+    },
+    {
+      "at": 97271,
+      "method": "GET",
+      "case": "eq.99999999-9999-4999-8999-999999999999",
+      "serverVersion": "2026-10-28T16:40:00.795Z"
+    },
+    {
+      "at": 101297,
+      "method": "GET",
+      "case": "eq.99999999-9999-4999-8999-999999999999",
+      "serverVersion": "2026-10-28T16:40:00.795Z"
+    },
+    {
+      "at": 101475,
+      "method": "GET",
+      "case": "eq.33333333-3333-4333-8333-333333333333",
+      "serverVersion": "2026-10-28T16:41:34.621Z"
+    },
+    {
+      "at": 103117,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T16:41:34.621Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793205703859,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:41:34.621Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T16:41:43.939Z"
+    },
+    {
+      "at": 104319,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T16:41:43.939Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793205705051,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:41:43.939Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T16:41:45.142Z"
+    },
+    {
+      "at": 104594,
+      "method": "GET",
+      "case": "eq.99999999-9999-4999-8999-999999999999",
+      "serverVersion": "2026-10-28T16:40:00.795Z"
+    },
+    {
+      "at": 107162,
+      "method": "PATCH",
+      "id": "eq.aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "expected": "eq.2026-10-28T16:40:00.795Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793205707936,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:40:00.795Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T16:41:47.986Z"
+    },
+    {
+      "at": 108060,
+      "method": "PATCH",
+      "id": "eq.aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "expected": "eq.2026-10-28T16:41:47.986Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793205708781,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:41:47.986Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T16:41:48.886Z"
+    },
+    {
+      "at": 108119,
+      "method": "GET",
+      "case": "eq.33333333-3333-4333-8333-333333333333",
+      "serverVersion": "2026-10-28T16:41:45.142Z"
+    },
+    {
+      "at": 111594,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T16:41:45.142Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793205712205,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:41:45.142Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T16:41:52.420Z"
+    },
+    {
+      "at": 112014,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T16:41:52.420Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793205712747,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:41:52.420Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T16:41:52.841Z"
+    },
+    {
+      "at": 113827,
+      "method": "GET",
+      "case": "eq.33333333-3333-4333-8333-333333333333",
+      "serverVersion": "2026-10-28T16:41:52.841Z"
+    },
+    {
+      "at": 116296,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T16:41:52.841Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793205717008,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:41:52.841Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T16:41:57.124Z"
+    },
+    {
+      "at": 117012,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T16:41:57.124Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793205717753,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:41:57.124Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T16:41:57.841Z"
+    },
+    {
+      "at": 120946,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T16:41:57.841Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793205721691,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:41:57.841Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T16:42:01.776Z"
+    },
+    {
+      "at": 123303,
+      "method": "GET",
+      "case": "eq.33333333-3333-4333-8333-333333333333",
+      "serverVersion": "2026-10-28T16:42:01.776Z"
+    },
+    {
+      "at": 126193,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T16:42:01.776Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793205726921,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:42:01.776Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T16:42:07.024Z"
+    },
+    {
+      "at": 130633,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T16:42:07.024Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793205731340,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T16:42:07.024Z",
+      "status": 503,
+      "responseVersion": null
+    }
+  ],
+  "navigationLog": [
+    {
+      "at": 2339,
+      "url": "http://127.0.0.1:3049/design?case=33333333-3333-4333-8333-333333333333",
+      "kind": "document",
+      "navigation": true
+    },
+    {
+      "at": 6935,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at&case_id=eq.33333333-3333-4333-8333-333333333333",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 6979,
+      "url": "http://127.0.0.1:54321/rest/v1/design_versions?select=id%2Cversion_number%2Cstatus%2Cnote%2Ccreated_at&project_id=eq.55555555-5555-4555-8555-555555555555&order=version_number.desc",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 9624,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A40%3A00.795Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 24247,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A40%3A10.426Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 24603,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A40%3A25.049Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 30199,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A40%3A25.407Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 47724,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A40%3A31.003Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 48704,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A40%3A48.532Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 54440,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A40%3A50.809Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 57257,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A40%3A57.709Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 58107,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A40%3A58.065Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 66530,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A40%3A58.920Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 72677,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A41%3A07.342Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 74718,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A41%3A13.489Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 80504,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A41%3A15.530Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 81084,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A41%3A21.318Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 82936,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A41%3A21.899Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 83511,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A41%3A23.757Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 85661,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A41%3A24.328Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 86051,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A41%3A26.478Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 89547,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A41%3A26.870Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 90642,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A41%3A30.366Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 92729,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A41%3A31.462Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 93388,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A41%3A33.552Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 93797,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A41%3A33.552Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 94098,
+      "url": "http://127.0.0.1:3049/design?case=99999999-9999-4999-8999-999999999999&_rsc=u0XYY2p0R2dfPJh8",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 94107,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at&case_id=eq.99999999-9999-4999-8999-999999999999",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 95258,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at&case_id=eq.99999999-9999-4999-8999-999999999999",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 97271,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at&case_id=eq.99999999-9999-4999-8999-999999999999",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 101297,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at&case_id=eq.99999999-9999-4999-8999-999999999999",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 101468,
+      "url": "http://127.0.0.1:3049/design?case=33333333-3333-4333-8333-333333333333&_rsc=u0XYY2p0R2dfPJh8",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 101475,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at&case_id=eq.33333333-3333-4333-8333-333333333333",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 101748,
+      "url": "http://127.0.0.1:54321/rest/v1/design_versions?select=id%2Cversion_number%2Cstatus%2Cnote%2Ccreated_at&project_id=eq.55555555-5555-4555-8555-555555555555&order=version_number.desc",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 103115,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A41%3A34.621Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 104317,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A41%3A43.939Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 104580,
+      "url": "http://127.0.0.1:3049/design?case=99999999-9999-4999-8999-999999999999&_rsc=u0XYY2p0R2dfPJh8",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 104594,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at&case_id=eq.99999999-9999-4999-8999-999999999999",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 104643,
+      "url": "http://127.0.0.1:54321/rest/v1/design_versions?select=id%2Cversion_number%2Cstatus%2Cnote%2Ccreated_at&project_id=eq.aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa&order=version_number.desc",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 107161,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa&updated_at=eq.2026-10-28T16%3A40%3A00.795Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 108059,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa&updated_at=eq.2026-10-28T16%3A41%3A47.986Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 108106,
+      "url": "http://127.0.0.1:3049/design?case=33333333-3333-4333-8333-333333333333&_rsc=u0XYY2p0R2dfPJh8",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 108118,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at&case_id=eq.33333333-3333-4333-8333-333333333333",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 108163,
+      "url": "http://127.0.0.1:54321/rest/v1/design_versions?select=id%2Cversion_number%2Cstatus%2Cnote%2Ccreated_at&project_id=eq.55555555-5555-4555-8555-555555555555&order=version_number.desc",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 111593,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A41%3A45.142Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 111971,
+      "url": "http://127.0.0.1:3049/design?case=33333333-3333-4333-8333-333333333333",
+      "kind": "document",
+      "navigation": true
+    },
+    {
+      "at": 112013,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A41%3A52.420Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 113827,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at&case_id=eq.33333333-3333-4333-8333-333333333333",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 113874,
+      "url": "http://127.0.0.1:54321/rest/v1/design_versions?select=id%2Cversion_number%2Cstatus%2Cnote%2Ccreated_at&project_id=eq.55555555-5555-4555-8555-555555555555&order=version_number.desc",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 116278,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A41%3A52.841Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 117011,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A41%3A57.124Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 120945,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A41%3A57.841Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 121476,
+      "url": "http://127.0.0.1:3049/design?case=33333333-3333-4333-8333-333333333333",
+      "kind": "document",
+      "navigation": true
+    },
+    {
+      "at": 123302,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at&case_id=eq.33333333-3333-4333-8333-333333333333",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 123333,
+      "url": "http://127.0.0.1:54321/rest/v1/design_versions?select=id%2Cversion_number%2Cstatus%2Cnote%2Ccreated_at&project_id=eq.55555555-5555-4555-8555-555555555555&order=version_number.desc",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 126181,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A42%3A01.776Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 130632,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T16%3A42%3A07.024Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    }
+  ]
+}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.waitForFunction: Timeout 30000ms exceeded.
+    at <anonymous> (/workspace/dentaya-rc47/scripts/verify-cad-daily-browser.mjs:364:13) {
+  name: 'TimeoutError'
+}
+
+Node.js v24.19.0

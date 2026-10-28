@@ -1,0 +1,50 @@
+PASS: measured left-stacked docks, continuous real canvas, keyboard detach and explicit redock.
+PASS: implant-abutment crown appears on its offset margin, sized locally.
+PASS: explicitly selected CAD tool guide uses live context; real manual checks preserve the mesh.
+PASS: CAD drafts survive close/reopen and success, invalid output, engine failure, or cancellation during bounded QC interpretation.
+PASS: click-only CAD tools, actual report follow-up, replay/double-click guards, invalid JSON recovery, cancellation, late close, pending save reopen and unit memory boundaries (mock local bridge).
+PASS: same-event shell QC survives rendering/tasks and reaches AYA; clearing shell drops the old wall estimate.
+PASS: AYA undo and manual redo use real history; geometry changes invalidate a pending model reply and old evidence.
+PASS: case switches await acknowledged scene save; failure preserves the selected case, and returning restores the edited mesh.
+PASS: sculpted topology, separate unit margins, unit switching and reopen survive cloud save.
+PASS: save-and-exit waits for committed save, with background editing blocked.
+PASS: delayed recovery lookup and pending recovery choice block writes/navigation/local STL/publication; explicit local exit and recovery retain all geometry.
+PASS: publication saves complete geometry and save after publication accepts reordered JSONB metadata.
+PASS: desktop module navigation rejects conflicting saves, waits for retry acknowledgment and retains the requested destination and edited scene.
+{
+  "pass": true,
+  "realEditor": true,
+  "realWebGL": true,
+  "syntheticImplantAbutments": true,
+  "localMarginSizing": true,
+  "hiddenZeroOpacityRecovered": true,
+  "ayaChecksDoNotChangeMesh": true,
+  "fullMeshPersistence": true,
+  "perUnitPersistence": true,
+  "cloudReopen": true,
+  "saveExitAcknowledged": true,
+  "modalEditGuard": true,
+  "offlineExitRecovery": true,
+  "retainedLocalCheckpoint": true,
+  "publishCheckpoint": true,
+  "saveAfterPublish": true,
+  "optimisticConflictRejected": true,
+  "desktopNavigationSaveGuard": true,
+  "pendingRecoveryBlocksNavigationAndSave": true,
+  "staleQcHiddenAfterSculptAndUnitSwitch": true,
+  "currentShellQcSurvivesGeometryCommitAndTabs": true,
+  "manualQcSharedWithAya": true,
+  "visibleHostFactsTrackRealChecksAndSave": true,
+  "ayaContextGuide": true,
+  "ayaModelBridge": "mock; no native inference",
+  "ayaProposalClickOnly": true,
+  "ayaActualQcFollowup": true,
+  "ayaLateReplyGuard": true,
+  "ayaScopedMemory": true,
+  "saveBeforeCaseSwitch": true,
+  "caseFailureRetainsScene": true,
+  "targetReadFailureRestoresCase": true,
+  "ayaKeyboardAndLaptopComposer": true,
+  "noContactWithoutAntagonist": true,
+  "backend": "intercepted API fixture; no production data"
+}

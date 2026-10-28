@@ -1,0 +1,290 @@
+diff --git a/.github/workflows/native-model-metadata.yml b/.github/workflows/native-model-metadata.yml
+new file mode 100644
+index 0000000..df5c7eb
+--- /dev/null
++++ b/.github/workflows/native-model-metadata.yml
+@@ -0,0 +1,36 @@
++name: Discover instruction model publisher metadata
++on:
++  push:
++    branches: [codex/aya-native-validation]
++    paths:
++      - .github/workflows/native-model-metadata.yml
++      - scripts/fetch-official-instruct-metadata.cjs
++permissions:
++  contents: read
++concurrency:
++  group: isolated-aya-instruct-metadata
++  cancel-in-progress: false
++jobs:
++  metadata:
++    runs-on: windows-2025
++    timeout-minutes: 5
++    permissions:
++      contents: write
++    steps:
++      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
++      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
++        with:
++          node-version: 24.19.0
++      - name: Read immutable publisher metadata without downloading weights
++        run: node scripts/fetch-official-instruct-metadata.cjs
++      - name: Preserve metadata evidence only
++        if: always()
++        shell: pwsh
++        run: |
++          git config user.name 'DentAYA native validation'
++          git config user.email 'github-actions[bot]@users.noreply.github.com'
++          git add -- native-validation-evidence/qwen35-discovery/candidates-metadata.json
++          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
++          git diff --cached --quiet
++          if ($LASTEXITCODE -eq 1) { git commit -m 'Record official non-thinking model metadata'; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; git pull --rebase origin codex/aya-native-validation; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; git push origin HEAD:codex/aya-native-validation; exit $LASTEXITCODE }
++          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+diff --git a/.github/workflows/native-validation.yml b/.github/workflows/native-validation.yml
+new file mode 100644
+index 0000000..26db680
+--- /dev/null
++++ b/.github/workflows/native-validation.yml
+@@ -0,0 +1,88 @@
++name: Isolated Windows AYA native validation
++on:
++  push:
++    branches: [codex/aya-native-validation]
++    paths:
++      - .github/workflows/native-validation.yml
++      - scripts/fetch-official-4b-metadata.cjs
++      - scripts/run-windows-aya-native.cjs
++      - scripts/verify-native-asset-cache.cjs
++      - scripts/verify-aya-native.cjs
++      - electron/aya-local.cjs
++      - electron/aya/**
++permissions:
++  contents: read
++concurrency:
++  group: isolated-aya-native-validation-qwen35-grounding
++  cancel-in-progress: false
++jobs:
++  native:
++    runs-on: windows-2025
++    timeout-minutes: 30
++    env:
++      AYA_EVIDENCE_DIRECTORY: native-validation-evidence/qwen35-grounding
++    permissions:
++      contents: write
++    steps:
++      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
++        with:
++          persist-credentials: true
++      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
++        with:
++          node-version: 24.19.0
++      - name: Pin npm toolchain
++        shell: pwsh
++        run: |
++          if ((npm --version).Trim() -ne '11.9.0') { npm install --global npm@11.9.0; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }
++          if ((npm --version).Trim() -ne '11.9.0') { throw 'npm toolchain mismatch' }
++      - name: Install locked production dependencies
++        run: npm ci --omit=dev --ignore-scripts
++      - name: Read immutable cache identity
++        id: pins
++        shell: pwsh
++        run: |
++          node -e "const fs=require('node:fs');const {MODEL,ENGINE}=require('./electron/aya/managed-runtime.cjs');fs.appendFileSync(process.env.GITHUB_OUTPUT,'key=aya-pinned-v1-windows-'+ENGINE.sha256+'-'+MODEL.sha256+'\n');fs.appendFileSync(process.env.GITHUB_ENV,'AYA_NATIVE_ASSET_CACHE='+require('node:path').join(process.env.RUNNER_TEMP,'dentaya-pinned-native-assets')+'\n')"
++          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
++      - uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
++        id: asset-cache
++        with:
++          path: ${{ env.AYA_NATIVE_ASSET_CACHE }}
++          key: ${{ steps.pins.outputs.key }}
++      - name: Actual pinned model inference
++        run: node scripts/run-windows-aya-native.cjs --output $env:AYA_EVIDENCE_DIRECTORY
++      - name: Reverify cached assets before saving, regardless of semantic result
++        if: always()
++        id: verified-cache
++        shell: pwsh
++        run: |
++          node scripts/verify-native-asset-cache.cjs
++          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
++      - uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
++        if: ${{ always() && steps.verified-cache.outputs.verified == 'true' && steps.asset-cache.outputs.cache-hit != 'true' }}
++        with:
++          path: ${{ env.AYA_NATIVE_ASSET_CACHE }}
++          key: ${{ steps.pins.outputs.key }}
++      - name: Record tested source and exact model publisher metadata
++        if: always()
++        shell: pwsh
++        run: |
++          @'
++          const fs=require('node:fs'),crypto=require('node:crypto'),evidence=process.env.AYA_EVIDENCE_DIRECTORY,reportFile=name=>require('node:path').join(evidence,name);
++          fs.mkdirSync(evidence,{recursive:true});
++          const names=['electron/aya-local.cjs','electron/aya/managed-runtime.cjs','electron/aya/core.cjs','electron/aya/memory-task.cjs','electron/aya/dialogue.cjs','electron/aya/agent.cjs','scripts/verify-aya-native.cjs','scripts/run-windows-aya-native.cjs'];
++          const hashes=Object.fromEntries(names.map(name=>[name,crypto.createHash('sha256').update(fs.readFileSync(name)).digest('hex')]));
++          fs.writeFileSync(reportFile('source-info.json'),JSON.stringify({testedCommit:process.env.GITHUB_SHA,runnerOS:process.platform,node:process.version,runId:process.env.GITHUB_RUN_ID,sourceHashes:hashes},null,2)+'\n');
++          (async()=>{try{const r=await fetch('https://huggingface.co/api/models/unsloth/Qwen3.5-4B-GGUF/revision/e87f176479d0855a907a41277aca2f8ee7a09523?blobs=true',{signal:AbortSignal.timeout(20000)});const data=r.ok?await r.json():null;fs.writeFileSync(reportFile('publisher-model-metadata.json'),JSON.stringify({httpStatus:r.status,revision:data?.sha,files:data?.siblings?.filter(f=>f.rfilename.endsWith('.gguf')).map(f=>({name:f.rfilename,lfs:f.lfs}))},null,2)+'\n');}catch{fs.writeFileSync(reportFile('publisher-model-metadata.json'),JSON.stringify({error:'OFFICIAL_METADATA_UNAVAILABLE'})+'\n');}})();
++          (async()=>{const sourceURL='https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/e87f176479d0855a907a41277aca2f8ee7a09523/README.md';try{const r=await fetch(sourceURL,{signal:AbortSignal.timeout(20000)});const content=r.ok?await r.text():'';fs.writeFileSync(reportFile('publisher-model-card-proof.json'),JSON.stringify({sourceURL,httpStatus:r.status,bytes:Buffer.byteLength(content),sha256:crypto.createHash('sha256').update(content).digest('hex'),relevantLines:content.split('\n').filter(line=>/temperature|top_p|top_k|min_p|greedy|best practices|non-thinking/i.test(line))},null,2)+'\n');}catch{fs.writeFileSync(reportFile('publisher-model-card-proof.json'),JSON.stringify({sourceURL,error:'OFFICIAL_MODELCARD_UNAVAILABLE'})+'\n');}})();
++          '@ | node
++      - name: Commit only diagnostic reports to isolated branch
++        if: always()
++        shell: pwsh
++        run: |
++          git config user.name 'DentAYA native validation'
++          git config user.email 'github-actions[bot]@users.noreply.github.com'
++          $allowed = @('windows-native-result.json','native-inference-report.json','native-acceptance.txt','source-info.json','publisher-model-metadata.json','official-4b-metadata.json','publisher-model-card-proof.json','official-instruct-2507-metadata.json')
++          foreach ($name in $allowed) { $file = Join-Path $env:AYA_EVIDENCE_DIRECTORY $name; if (Test-Path -LiteralPath $file) { git add -- $file; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } } }
++          git diff --cached --quiet
++          if ($LASTEXITCODE -eq 1) { git commit -m 'Record isolated Windows native inference evidence'; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; git pull --rebase origin codex/aya-native-validation; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; git push origin HEAD:codex/aya-native-validation; exit $LASTEXITCODE }
++          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+diff --git a/scripts/run-windows-aya-native.cjs b/scripts/run-windows-aya-native.cjs
+index 8e8a9c5..1a93ae2 100644
+--- a/scripts/run-windows-aya-native.cjs
++++ b/scripts/run-windows-aya-native.cjs
+@@ -47,11 +47,13 @@ async function runWindowsAcceptance(input={},deps={}){
+  const nativeFile=path.join(output,'native-inference-report.json'),resultFile=path.join(output,'windows-native-result.json');
+  const result={release:require('../package.json').version,platform,provenance:trusted?'controlled-windows-native':'test-fixture',status:'blocked',nativeInferenceObserved:false,semanticReviewRequired:true,semanticAcceptance:'pending-human-review',model:{bytes:MODEL.bytes,sha256:MODEL.sha256,verified:false},engine:{version:ENGINE.version,archiveSHA256:ENGINE.sha256},casesAttempted:0,casesSucceeded:0,weightsIncludedInInstaller:false,report:'native-inference-report.json'};
+  let directory,runtime;
++ const cacheDirectory=input.assetCache?path.resolve(input.assetCache):null;
+  // Never allow an earlier successful run to survive as evidence of this one.
+  await Promise.all([nativeFile,resultFile,path.join(output,'native-acceptance.txt')].map(file=>fs.rm(file,{force:true})));
+  try{
+   if(platform!=='win32')throw Error('WINDOWS_REQUIRED');
+-  directory=await fs.mkdtemp(path.join(os.tmpdir(),'dentaya-native-ci-'));
++  directory=cacheDirectory??await fs.mkdtemp(path.join(os.tmpdir(),'dentaya-native-ci-'));
++  if(cacheDirectory)await fs.mkdir(directory,{recursive:true});
+   runtime=makeRuntime({directory});
+   const accepted=await runtime.installAll('windows-native-ci');
+   if(!accepted.ok)throw Error(safeCode(accepted.error));
+@@ -82,11 +84,10 @@ async function runWindowsAcceptance(input={},deps={}){
+  }catch(error){result.error=safeCode(error?.message);result.status=['WINDOWS_REQUIRED','AYA_DOWNLOAD_FAILED','AYA_DOWNLOAD_TIMEOUT','AYA_DOWNLOAD_HOST','AYA_DOWNLOAD_REDIRECT'].includes(result.error)?'blocked':'failed';}
+  finally{
+   runtime?.cancelInstall('windows-native-ci');runtime?.dispose();
+-  if(directory)try{await fs.rm(directory,{recursive:true,force:true,maxRetries:4,retryDelay:500});}catch{result.cleanupError='TEMPORARY_MODEL_CLEANUP_FAILED';}
++  if(directory&&!cacheDirectory)try{await fs.rm(directory,{recursive:true,force:true,maxRetries:4,retryDelay:500});}catch{result.cleanupError='TEMPORARY_MODEL_CLEANUP_FAILED';}
++  if(cacheDirectory)result.assetCachePolicy='pinned-assets-retained-outside-source-and-installer; size and SHA-256 reverified on every restore';
+   // Failed installation has a fresh explicit report as well, never a stale PASS.
+   try{await fs.access(nativeFile);}catch{await fs.writeFile(nativeFile,JSON.stringify({nativeInference:false,mock:false,stage:'installation',contractPass:false,blocked:true,error:result.error,checks:[],caseCounts:{attempted:0,succeeded:0},semanticReviewRequired:true},null,2)+'\n');}
+-  const transcript=path.join(output,'native-acceptance.txt');
+-  try{await fs.access(transcript);}catch{await fs.writeFile(transcript,'No inference transcript was produced. '+safeCode(result.error)+'\n');}
+   result.milliseconds=Math.max(0,now()-started);
+   await fs.writeFile(resultFile,JSON.stringify(result,null,2)+'\n');
+  }
+@@ -96,5 +97,5 @@ module.exports={runWindowsAcceptance,checkNativeReport};
+ if(require.main===module){
+  const {values}=parseArgs({options:{output:{type:'string'},help:{type:'boolean'}}});
+  if(values.help){console.log('node scripts/run-windows-aya-native.cjs --output ci-artifacts/native\nWindows CI only: downloads the existing pinned/hash-verified engine+model into a temporary folder, runs 9 real conversation/memory/CAD fixture calls, and removes weights. Reports never claim completed semantic or clinical acceptance.');}
+- else runWindowsAcceptance({output:values.output,onProgress:p=>console.log(JSON.stringify({stage:p.stage,completed:p.completed,total:p.total}))}).then(result=>{console.log(JSON.stringify(result,null,2));if(result.status!=='passed')process.exitCode=1;}).catch(()=>{console.error('NATIVE_ACCEPTANCE_FAILED');process.exitCode=1;});
++ else runWindowsAcceptance({output:values.output,assetCache:process.env.AYA_NATIVE_ASSET_CACHE,onProgress:p=>console.log(JSON.stringify({stage:p.stage,completed:p.completed,total:p.total}))}).then(result=>{console.log(JSON.stringify(result,null,2));if(result.status!=='passed')process.exitCode=1;}).catch(()=>{console.error('NATIVE_ACCEPTANCE_FAILED');process.exitCode=1;});
+ }
+diff --git a/scripts/verify-aya-native.cjs b/scripts/verify-aya-native.cjs
+index 1521cb1..f0f78d1 100644
+--- a/scripts/verify-aya-native.cjs
++++ b/scripts/verify-aya-native.cjs
+@@ -5,11 +5,13 @@ const {spawn,spawnSync}=require('node:child_process');
+ const {parseArgs}=require('node:util');
+ const {createManagedAya,MODEL}=require('../electron/aya/managed-runtime.cjs');
+ const {createLocalAya}=require('../electron/aya-local.cjs');
++const {CONTEXT_MARKER}=require('../electron/aya/agent.cjs');
+ const {values}=parseArgs({options:{engine:{type:'string'},model:{type:'string'},report:{type:'string'},help:{type:'boolean'}}});
+ if(values.help){console.log('node scripts/verify-aya-native.cjs --engine /external/llama-server --model /external/Qwen3-1.7B-Q8_0.gguf [--report /external/results.json]\nEnvironment alternatives: AYA_NATIVE_ENGINE, AYA_NATIVE_MODEL. Uses the pinned model, actual loopback inference and a temporary imported model copy; downloads nothing. Linux x64 server binary must match the official b9380 CPU release. Ordinary replies use free-text streaming; separate bounded memory extraction and structured CAD calls match the application architecture. CAD evidence is a synthetic fixture; no real geometry operation occurs. Contract checks and basic memory signals do not replace semantic review.');process.exit(0);}
+ const engine=values.engine||process.env.AYA_NATIVE_ENGINE,modelFile=values.model||process.env.AYA_NATIVE_MODEL;
+ if(!engine||!modelFile){console.error('Provide --engine and --model paths. Use --help for details.');process.exit(2);}
+ const result={nativeInference:false,mock:false,syntheticCadFixture:true,platform:process.platform,stage:'engine-validation',engineVersion:'',engineBinarySHA256:'',model:{bytes:MODEL.bytes,sha256:MODEL.sha256,verified:false},checks:[],transport:[],caseCounts:{attempted:0,succeeded:0,conversation:{attempted:0,succeeded:0,streamedUpdates:0},memory:{attempted:0,succeeded:0},cad:{attempted:0,succeeded:0}},semanticReviewRequired:true,semanticReview:{status:'pending',criteria:['Identity: answer name and purpose directly in natural prose without a canned response.','Novel non-dental request: fulfill the requested perspective and content without forcing a CAD workflow.','New wording: remember unit 46 and preserve outer contour while manually reducing occlusal height.','Separate memory extraction: retain explicit user decisions rather than facts invented by the assistant reply.','Memory-only follow-up: recover the unit and contour decision without replaying user history.','Partial memory correction: clear only the requested goal, preserving decisions and open questions.','Missing antagonist/report: do not grant closure safety or invent exact wall thickness; propose an available check.','Tool result: distinguish a closed single-component mesh and a shell offset estimate from production clearance. Save failure must remain a failure with local recovery preserved.']}};
++function checkAcceptance(label,check){try{check();}catch(error){(result.failedAssertions??=[]).push({label,error:error.message});console.error(JSON.stringify({acceptanceAssertionFailed:label,error:error.message}));}}
+ async function hashFile(file){const hash=crypto.createHash('sha256');for await(const chunk of require('node:fs').createReadStream(file))hash.update(chunk);return hash.digest('hex');}
+ (async()=>{
+  result.engineBinarySHA256=await hashFile(path.resolve(engine));
+@@ -17,11 +19,15 @@ async function hashFile(file){const hash=crypto.createHash('sha256');for await(c
+  const version=spawnSync(path.resolve(engine),['--version'],{encoding:'utf8',stdio:['ignore','pipe','pipe']});assert.equal(version.status,0,'Engine version check must succeed');result.engineVersion=(version.stdout+version.stderr).trim();assert.match(result.engineVersion,/9380/,'Use the documented b9380 engine');
+  result.stage='model-validation';assert.equal((await fs.stat(modelFile)).size,MODEL.bytes,'Use the pinned Qwen model size');assert.equal(await hashFile(modelFile),MODEL.sha256,'Use the pinned Qwen model SHA-256');result.model.verified=true;
+  const directory=await fs.mkdtemp(path.join(os.tmpdir(),'dentaya-native-'));
++ let renderedPrompt='';
+  const runtime=createManagedAya({directory,engineBinary:path.resolve(engine),spawnImpl:(binary,args,options)=>{assert.equal(options.shell,false);assert.equal(args[args.indexOf('--host')+1],'127.0.0.1');return spawn(binary,args,options);},fetchImpl:async(url,options)=>{
+   const u=new URL(url);assert.equal(u.hostname,'127.0.0.1');assert.match(options?.headers?.Authorization??'',/^Bearer [a-f0-9]{64}$/);
+-  if(u.pathname==='/v1/chat/completions'){const payload=JSON.parse(options.body);result.transport.push({stream:payload.stream,responseFormat:payload.response_format,thinking:payload.chat_template_kwargs,roles:payload.messages.map(m=>m.role)});}
+-  return fetch(url,options);
++  if(u.pathname==='/v1/chat/completions'){const payload=JSON.parse(options.body);result.transport.push({stream:payload.stream,responseFormat:payload.response_format,thinking:payload.chat_template_kwargs,sampling:{temperature:payload.temperature,top_p:payload.top_p,top_k:payload.top_k,min_p:payload.min_p,presence_penalty:payload.presence_penalty,repeat_penalty:payload.repeat_penalty},roles:payload.messages.map(m=>m.role),messages:payload.messages,renderedPrompt});}
++  const response=await fetch(url,options);if(u.pathname==='/apply-template'&&response.ok)renderedPrompt=(await response.clone().json()).prompt;return response;
+  }});
++ // Capture raw synthetic outputs for semantic/schema review without changing
++ // the bridge's validation or exposing structured JSON through the UI callback.
++ const managedChat=runtime.chat;runtime.chat=async input=>{let raw='';const reply=await managedChat({...input,onToken:output=>{raw=output;input.onToken?.(output);}});result.transport.at(-1).rawCompletion=raw;return reply;};
+  try{
+   result.stage='inference';
+   assert.equal((await runtime.importModel(path.resolve(modelFile))).ok,true);
+@@ -43,23 +49,47 @@ async function hashFile(file){const hash=crypto.createHash('sha256');for await(c
+    result.caseCounts.succeeded++;result.caseCounts[kind].succeeded++;
+    return reply;
+   }
+-  const identity=await turn('natural-identity','Sana nasıl seslenmeliyim ve bu uygulamada bana ne için yardımcı oluyorsun?');assert.match(identity.output,/AYA/,'Name and purpose must be answered by actual free-text inference');
++  if(process.env.AYA_NATIVE_CONTROLS_ONLY==='1'){
++   result.purpose='minimal-template-versus-bridge-diagnostics';
++   const plainEn='You are AYA, a helpful local assistant. Reply in English.',plainTr='You are AYA, a helpful local assistant. Reply in Turkish.';
++   const negative='Bir rüzgâr çanının ağzından, yağmuru ilk kez duyan çocuklara üç yeni cümle kur. Konuyu diş veya yazılıma bağlama.';
++   const emptyContext=CONTEXT_MARKER+JSON.stringify({workingMemory:{goal:'',decisions:[],openQuestions:[]}});
++   const controls=[
++    {name:'direct-minimal-english',locale:'en',system:plainEn,prompt:'What is your name and purpose?'},
++    {name:'bridge-english',bridge:true,locale:'en',prompt:'What is your name and purpose?'},
++    {name:'direct-minimal-turkish',locale:'tr',system:plainTr,prompt:'Adın ne, görevin ne?'},
++    {name:'bridge-turkish',bridge:true,locale:'tr',prompt:'Adın ne, görevin ne?'},
++    {name:'direct-negative-request',locale:'tr',system:plainTr,prompt:negative},
++    {name:'bridge-negative-request',bridge:true,locale:'tr',prompt:negative},
++    {name:'direct-adjacent-users',locale:'tr',system:plainTr,prompt:'Adın ne, görevin ne?',context:emptyContext},
++    {name:'direct-merged-user',locale:'tr',system:plainTr,prompt:emptyContext+'\n\nCURRENT USER REQUEST:\nAdın ne, görevin ne?'}
++   ];
++   for(const control of controls){
++    const started=Date.now();let streamed=0;
++    result.caseCounts.attempted++;result.caseCounts.conversation.attempted++;
++    const reply=control.bridge?await api.chat({model,locale:control.locale,agent:false,prompt:control.prompt,options:{maxTokens:512,creativity:0,useKnowledge:false}},'native-control',s=>s,()=>streamed++):{ok:true,...await runtime.chat({model,options:{maxTokens:512,creativity:0},messages:[{role:'system',content:control.system},...(control.context?[{role:'user',content:control.context}]:[]),{role:'user',content:control.prompt}],onToken:()=>streamed++})};
++    const check={name:control.name,kind:'conversation',prompt:control.prompt,reply,streamedUpdates:streamed,wallMilliseconds:Date.now()-started};result.checks.push(check);console.log(JSON.stringify(check));
++    assert.equal(reply.ok,true);assert.ok(reply.output?.trim());result.nativeInference=true;result.caseCounts.succeeded++;result.caseCounts.conversation.succeeded++;result.caseCounts.conversation.streamedUpdates+=streamed;
++   }
++   result.stage='template-controls-complete';result.contractPass=false;result.error='DIAGNOSTIC_ONLY_NO_ACCEPTANCE';return;
++  }
++  const identity=await turn('natural-identity','Sana nasıl seslenmeliyim ve bu uygulamada bana ne için yardımcı oluyorsun?');checkAcceptance('identity-name',()=>assert.match(identity.output,/AYA/,'Name and purpose must be answered by actual free-text inference'));
+   await turn('novel-non-dental-request','Bir rüzgâr çanının ağzından, yağmuru ilk kez duyan çocuklara üç yeni cümle kur. Konuyu diş veya yazılıma bağlama.');
+   const prompt='Bu akşamki çalışma planımız şu: önce 46 numaralı implant üstü kronu inceleyeceğiz. Kararımız, dış konturu koruyup oklüzal yüksekliği elle azaltmak. Hedefi ve kararı aklında tut; henüz işlem yapma.';
+   const first=await turn('novel-natural-language',prompt);
+   const remembered=await turn('separate-memory-extraction',prompt,{agent:true,task:'memory',assistantReply:first.output});
+-  assert.match(JSON.stringify(remembered.workingMemory),/46/,'Working memory must retain the user\'s unit');assert.match(JSON.stringify(remembered.workingMemory),/kontur|contour/i,'Working memory must retain the contour decision');
++  checkAcceptance('remember-unit',()=>assert.match(JSON.stringify(remembered.workingMemory),/46/,'Working memory must retain the user\'s unit'));checkAcceptance('remember-contour',()=>assert.match(JSON.stringify(remembered.workingMemory),/kontur|contour/i,'Working memory must retain the contour decision'));
+   const follow=await turn('working-memory-follow-up','Az önce hangi diş ve hangi biçim kararını konuşmuştuk? Sadece hatırladıklarını söyle.',{workingMemory:remembered.workingMemory,history:[]});
+-  assert.match(follow.output,/46/,'The memory-only answer must recover the unit');assert.match(follow.output,/kontur|contour/i,'The memory-only answer must recover the contour decision');
++  checkAcceptance('recall-unit',()=>assert.match(follow.output,/46/,'The memory-only answer must recover the unit'));checkAcceptance('recall-contour',()=>assert.match(follow.output,/kontur|contour/i,'The memory-only answer must recover the contour decision'));
+   const partialPrompt='Çalışma hedefini şimdilik kaldır; dış kontur hakkında anlaştığımız kararı ve varsa açık soruları aynen koru.';
+   const partialReply=await turn('natural-partial-memory-correction',partialPrompt,{workingMemory:remembered.workingMemory,history:[]});
+   const partial=await turn('separate-partial-memory-correction',partialPrompt,{agent:true,task:'memory',assistantReply:partialReply.output,workingMemory:remembered.workingMemory,history:[]});
+-  assert.equal(partial.workingMemory.goal,'','A novel partial reset can clear the goal');assert.deepEqual(partial.workingMemory.decisions,remembered.workingMemory.decisions,'A partial reset preserves the user decision');assert.deepEqual(partial.workingMemory.openQuestions,remembered.workingMemory.openQuestions);assert.deepEqual(partial.proposals,[]);
++  checkAcceptance('partial-clear-goal',()=>assert.equal(partial.workingMemory.goal,'','A novel partial reset can clear the goal'));checkAcceptance('partial-preserve-decisions',()=>assert.deepEqual(partial.workingMemory.decisions,remembered.workingMemory.decisions,'A partial reset preserves the user decision'));checkAcceptance('partial-preserve-questions',()=>assert.deepEqual(partial.workingMemory.openQuestions,remembered.workingMemory.openQuestions));assert.deepEqual(partial.proposals,[]);
+   const cadContext={scope:'native-fixture:source-a:46',snapshot:'snap-a',dataToken:'data-a',unit:'46',restoration:'implant crown',stage:'contacts',task:'contacts',setupComplete:true,sourceReady:true,modelReady:true,placed:true,visible:true,unsaved:true,saveFailed:false,isSaving:false,upperReady:false,lowerReady:true,antagonistReady:false,marginPoints:84,openingMm:0,tool:'measure',view:'natural',undoCount:1,redoCount:0,availableTools:['inspect','save','undo','tool-measure','view-thickness'],report:null};
+   const cadPrompt='Bu iş kapanış açısından güvenli mi? Duvar kalınlığının kesin değerini de söyle ve yapılabilecek ilk kontrolü öner.';
+   const cad=await turn('cad-missing-evidence',cadPrompt,{agent:true,cadContext,workingMemory:remembered.workingMemory});assert.ok(cad.proposals.every(p=>cadContext.availableTools.includes(p.tool)&&p.scope===cadContext.scope&&p.snapshot===cadContext.snapshot));
+   const after={...cadContext,snapshot:'snap-b',saveFailed:true,recentActions:[{scope:cadContext.scope,snapshot:'snap-b',dataToken:cadContext.dataToken,tool:'inspect',ok:true,result:'Mesh kapalı, tek bileşen. Antagonist bulunamadı. Kaynak uzaklığı haritası gerçek duvar kalınlığı değildir.'},{scope:cadContext.scope,snapshot:'snap-b',dataToken:cadContext.dataToken,tool:'save',ok:false,result:'Sunucu kayıt isteği başarısız. Yerel kurtarma korundu; kaydedildi veya çıkıldı sayılmaz.'}],report:{dataToken:'data-a',triangles:5000,boundaryEdges:0,nonManifoldEdges:0,components:1,watertight:true,minimumWallEstimateMm:0.65,targetWallMm:0.8,contactReference:'unavailable',wallMethod:'shell-offset-estimate',warnings:['Kabuk offset tahmini minimum 0.65 mm; üretim kalınlığı onayı değildir.']}};
+   await turn('cad-tool-results-and-report-limits','Kontrol ve kayıt denemesinin sonucuna göre neredeyiz? Eksik olanı ve sıradaki uygulanabilir yardımı açıkla.',{agent:true,cadContext:after,workingMemory:cad.workingMemory,history:[{role:'user',content:cadPrompt},{role:'assistant',content:cad.output}]});
+-  result.contractPass=true;result.stage='complete';
++  result.contractPass=!result.failedAssertions?.length;result.stage='complete';if(!result.contractPass){result.error='Acceptance assertions failed; see failedAssertions';process.exitCode=1;}
+  }finally{runtime.dispose();await fs.rm(directory,{recursive:true,force:true});}
+ })().catch(error=>{result.contractPass=false;result.blocked=error.code==='ENOENT'&&(result.stage==='engine-validation'||result.stage==='model-validation');result.error=error.message;console.error(error);process.exitCode=1;}).finally(async()=>{if(values.report)await fs.writeFile(path.resolve(values.report),JSON.stringify(result,null,2));console.log(JSON.stringify({contractPass:result.contractPass,nativeInference:result.nativeInference,mock:false,stage:result.stage,cases:result.checks.length,caseCounts:result.caseCounts,semanticReviewRequired:true}));});
+diff --git a/scripts/verify-native-asset-cache.cjs b/scripts/verify-native-asset-cache.cjs
+new file mode 100644
+index 0000000..094d6e8
+--- /dev/null
++++ b/scripts/verify-native-asset-cache.cjs
+@@ -0,0 +1,19 @@
++'use strict';
++// Diagnostic CI cache only. Restored bytes never bypass the production pin gate.
++const fs=require('node:fs/promises'),path=require('node:path'),crypto=require('node:crypto');
++const {ENGINE,MODEL}=require('../electron/aya/managed-runtime.cjs');
++async function verifyPinnedAssetCache(directory,specs=[{...ENGINE,file:'engine-'+ENGINE.version+'.zip'},{...MODEL,file:path.join('models',MODEL.name)}]){
++ if(typeof directory!=='string'||!directory)throw Error('CACHE_DIRECTORY_REQUIRED');
++ for(const spec of specs){
++  const file=path.join(directory,'aya-local',spec.file);
++  if((await fs.stat(file)).size!==spec.bytes)throw Error('CACHE_SIZE_MISMATCH');
++  const hash=crypto.createHash('sha256');for await(const chunk of require('node:fs').createReadStream(file))hash.update(chunk);
++  if(hash.digest('hex')!==spec.sha256)throw Error('CACHE_HASH_MISMATCH');
++ }
++ return true;
++}
++module.exports={verifyPinnedAssetCache};
++if(require.main===module)verifyPinnedAssetCache(process.env.AYA_NATIVE_ASSET_CACHE).then(async()=>{
++ console.log('Pinned engine archive and model cache size/SHA-256 verified.');
++ if(process.env.GITHUB_OUTPUT)await fs.appendFile(process.env.GITHUB_OUTPUT,'verified=true\n');
++}).catch(()=>{console.error('Pinned asset cache is absent or invalid; it must not be saved.');process.exitCode=1;});

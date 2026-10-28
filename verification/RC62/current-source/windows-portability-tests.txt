@@ -1,0 +1,68 @@
+✔ ASAR reader handles a real pinned @electron/asar archive and binds all Electron sources (84.905925ms)
+✔ ASAR source drift, missing files and wrong application version are rejected (32.8242ms)
+✔ an environment file or model weight hidden inside ASAR fails acceptance (34.413674ms)
+✔ truncated ASAR header and payload cannot pass archive inspection (15.276052ms)
+✔ Next payload comparison checks bytes and rejects extra environment files (11.801175ms)
+✔ integrity manifest is checked against exact current checkout bytes (8.583278ms)
+✔ receipt paths cannot escape output and Windows acceptance cannot run on Linux (1.158519ms)
+✔ desktop smoke requires genuine IPC bridge, isolated renderer and real guest route controls (0.719462ms)
+✔ desktop smoke environment is per-process and removes inherited model or Electron overrides (0.329613ms)
+✔ Node WebSocket CDP client matches out-of-order responses and preserves renderer exceptions (17.695628ms)
+✔ CDP timeout or renderer disconnect rejects acceptance instead of hanging (5.053766ms)
+✔ Windows Git checkout preserves source hashes, legacy line endings and binary bytes (82.824897ms)
+✔ CI source guard binds clean checkout, lockfile version and dereferenced tag to the exact commit (4.335303ms)
+✔ CI source guard refuses modified tracked source and missing exact commit (1.57416ms)
+✔ verified installer release includes actual failed native evidence and keeps semantic limits (16.157244ms)
+✔ release guard rejects changed installer, source, report and unsupported native pass (21.499923ms)
+✔ publisher cannot call the network for a branch or a mismatched source commit (0.923933ms)
+✔ publisher creates a draft, uploads verified bytes and publishes only after all hashes match (16.987171ms)
+✔ publisher refuses a changed upload and leaves the release as a draft (0.640418ms)
+✔ publisher rejects native evidence from another workflow run before calling GitHub (0.188358ms)
+✔ installed matching Windows runtime, original config and prepared Next are reused (49.599338ms)
+✔ DLL locks get a fresh directory and bounded backoff; old output is retained (22.954911ms)
+✔ persistent lock fails after three attempts and writes no success receipt (17.651481ms)
+✔ unrelated packaging errors stop on the first attempt (12.155763ms)
+✔ exit zero without a usable installer is rejected (15.206111ms)
+✔ an empty or non-Windows installer is never reported as success (20.371974ms)
+✔ different or missing Next build data prevents packaging (10.942005ms)
+✔ different Electron version and wrong architecture are rejected (26.550481ms)
+✔ a missing runtime without its own package installer stops before packaging (13.109991ms)
+fake builder process completed
+✔ real child-process invocation preserves spaced paths and disables publishing (47.465441ms)
+✔ a success receipt cannot reveal an installer outside its output folder (12.199883ms)
+✔ non-Windows packaging fails explicitly (0.233984ms)
+fixture installer completed
+✔ missing electron/dist is installed through the declared installer before packaging (45.09634ms)
+✔ a valid runtime with no version marker is queried without fabricating a marker (8.150033ms)
+fixture installer completed
+✔ the on-demand install-electron entry and package-resolved runtime path are supported (37.986589ms)
+fixture installer completed
+✔ a partial legacy runtime is preserved so the installer cannot skip a missing DLL (42.399191ms)
+fixture download failure
+✔ installer errors preserve a diagnostic log and prevent packaging (39.700907ms)
+fixture no-op
+✔ installer exit zero is insufficient unless the binary and data files exist (40.631811ms)
+✔ an installer that creates only a version marker is rejected (36.565441ms)
+fixture installer completed
+✔ a wrong installed runtime version is rejected after the installer finishes (35.855948ms)
+✔ a mismatched npm package version is rejected without running an installer (4.993071ms)
+✔ an installer declared outside the Electron package is never executed (6.412325ms)
+✔ installer environment is scoped, pins x64/win32 and removes download-skip overrides (0.569292ms)
+✔ the version probe handles the real --version child-process protocol (5.808587ms)
+✔ the pinned Electron dependency requires Node 22.12 or later (0.321161ms)
+✔ npm version uses Node and npm-cli.js even with spaces and shell characters in its path (38.528252ms)
+✔ Windows npm fallback resolves the CLI beside Node without executing npm.cmd (5.506721ms)
+✔ Windows npm with no JavaScript entry fails without spawning a shell (5.490671ms)
+✔ PE validation rejects MZ-only, forged signature, truncated headers and truncated sections (6.324449ms)
+✔ PE validation accepts NSIS x86 installers and requires x64 for the Electron application (5.999152ms)
+✔ a builder exit zero cannot publish an MZ-only installer (10.689147ms)
+DentAYA afterPack OK: standalone + node_modules pakete kopyalandi.
+✔ afterPack excludes every .env file while preserving originals and Next assets (13.738618ms)
+ℹ tests 52
+ℹ suites 0
+ℹ pass 52
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 735.525835

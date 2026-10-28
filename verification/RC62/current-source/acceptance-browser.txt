@@ -1,0 +1,13 @@
+{
+  "pass": true,
+  "explicitStart": true,
+  "sameTurnDoubleClick": true,
+  "preflightBusyCoordinator": true,
+  "nineSyntheticSteps": true,
+  "fullRawTranscriptAndExport": true,
+  "isolatedHistoryNotebookDraft": true,
+  "cancel": true,
+  "desktopIPC": "mock",
+  "nativeInference": false,
+  "semanticReviewRequired": true
+}

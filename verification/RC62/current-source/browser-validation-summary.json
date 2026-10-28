@@ -1,0 +1,110 @@
+{
+  "pass": true,
+  "sourceHeadAfterValidation": "982b4488049877cde1199cc4b6a00f939e4cd501",
+  "recordedAt": "2026-10-28T10:17:48.282Z",
+  "suites": [
+    {
+      "name": "continuity",
+      "script": "scripts/verify-aya-chat-workspace-browser.mjs",
+      "status": "pass",
+      "log": "/workspace/dentaya-rc62-validation/continuity-browser.txt",
+      "logSha256": "420687a429d0d01765e8b52e670082f5247fcd01d03d2e083e15720f21359439",
+      "completedAt": "2026-10-28T10:04:08.448Z",
+      "nativeInference": false,
+      "liveBackendVerified": false
+    },
+    {
+      "name": "professional-modules",
+      "script": "scripts/verify-professional-modules-browser.mjs",
+      "status": "pass",
+      "log": "/workspace/dentaya-rc62-validation/professional-modules-browser.txt",
+      "logSha256": "40ee6e5bc13420d869bdae4f52ad5c196445bb67e9912cb8dc46f198a81e6794",
+      "completedAt": "2026-10-28T10:03:42.016Z",
+      "nativeInference": false,
+      "liveBackendVerified": false
+    },
+    {
+      "name": "conversation",
+      "script": "scripts/verify-aya-conversation-browser.mjs",
+      "status": "pass",
+      "log": "/workspace/dentaya-rc62-validation/conversation-browser.txt",
+      "logSha256": "f1e0c3838f1de331cdeb214a678c9e7d762ffe1c1854d8a42fd008f9fa7d1f9d",
+      "completedAt": "2026-10-28T10:04:50.111Z",
+      "nativeInference": false,
+      "liveBackendVerified": false
+    },
+    {
+      "name": "state",
+      "script": "scripts/verify-aya-state-browser.mjs",
+      "status": "pass",
+      "log": "/workspace/dentaya-rc62-validation/state-browser.txt",
+      "logSha256": "5c2d93a146e55c8a37920c8eb0baf251317c76360f5078f7119bde56cf315ed3",
+      "completedAt": "2026-10-28T10:06:32.346Z",
+      "nativeInference": false,
+      "liveBackendVerified": false
+    },
+    {
+      "name": "work",
+      "script": "scripts/verify-aya-work-browser.mjs",
+      "status": "pass",
+      "log": "/workspace/dentaya-rc62-validation/work-browser.txt",
+      "logSha256": "1055a8fc43f9bbdefe8840a9b8d4dfdc52d00f6f2918cb6b181e53117588e2c6",
+      "completedAt": "2026-10-28T10:07:06.478Z",
+      "nativeInference": false,
+      "liveBackendVerified": false
+    },
+    {
+      "name": "cad-daily",
+      "script": "scripts/verify-cad-daily-browser.mjs",
+      "status": "pass",
+      "log": "/workspace/dentaya-rc62-validation/cad-daily-browser.txt",
+      "logSha256": "afe2286c0631faa1456bb0a60082d73f8dc96ba598e121f85da602868ffa5c0f",
+      "completedAt": "2026-10-28T10:16:57.741Z",
+      "nativeInference": false,
+      "liveBackendVerified": false
+    }
+  ],
+  "realWebGLCadSceneVerified": true,
+  "syntheticDesktopTransport": true,
+  "syntheticBackend": true,
+  "fixes": [
+    "Pending appointment commit keeps focus inside modal; failure unlock retains dialog focus.",
+    "AYA IME Enter and keyCode229 cannot send or consume the working draft."
+  ],
+  "fixtureCorrections": [
+    "Use exact accessible textbox/combobox roles and clickable tooth button.",
+    "Visible model inspector replaces old collapsed-details assumption.",
+    "CAD asks wait actual new prompt+increased bridge call count and composer idle; queued autosave settles first."
+  ],
+  "retainedEarlierFailures": [
+    "cad-daily-browser-first-failure.txt",
+    "CAD_failure_first.png",
+    "cad-daily-browser-receipt-failure.txt",
+    "CAD_failure_receipt.png"
+  ],
+  "onboarding": {
+    "pass": true,
+    "command": "NEXT_TELEMETRY_DISABLED=1 npm run dev -- --hostname 127.0.0.1 --port 3010",
+    "backendEnvironmentProvided": false,
+    "noLocalEnvFile": true,
+    "routes": [
+      {
+        "path": "/workspace",
+        "status": 200,
+        "bytes": 70241
+      },
+      {
+        "path": "/ai",
+        "status": 200,
+        "bytes": 70518
+      },
+      {
+        "path": "/settings",
+        "status": 200,
+        "bytes": 71464
+      }
+    ],
+    "liveBackendVerified": false,
+    "checkedAt": "2026-10-28T10:17:08.926Z"
+  }
+}

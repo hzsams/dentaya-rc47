@@ -1,0 +1,15 @@
+# Yeni ChatGPT'ye doğrudan verilecek başlangıç isteği
+
+DentAYA masaüstü uygulamasını bu tam kaynak devir paketinden devam ettirmeni istiyorum. ZIP'i ayrı bir klasöre aç; `package.json`, `electron`, `src` ve `AGENTS.md` içeren klasörü çalışma kökü yap. `dentaya-website` web sitesi deposudur; bu görevin kaynağı `hzsams/dentaya-rc47` ve bu ZIP'tir.
+
+Önce **YENI_CHATGPT_ICIN_TAM_DEVIR.md dosyasının tamamını**, sonra **DEVIR_DURUMU.json**, **AGENTS.md**, **CODEX_BASLANGIC_PROMPTU.md**, **CODEX_DEVIR_NOTLARI.md**, **RC62_KONTROL_RAPORU.md** ve **devir/2026-10-28/CAD_HANDOFF.md, WINDOWS_HANDOFF.md, NATIVE_HANDOFF.md** dosyalarının tamamını oku. Bunların hangi sürümü/kaynağı anlattığını ayır. Ardından `node scripts/verify-source-integrity.mjs` ile devir kaynağını doğrula.
+
+Ben Windows EXE kullanıyorum; bilgisayarımda 16 GB RAM ve 512 GB SSD var. AYA'yı kaldırmanı istemiyorum: gerçek yerel modelle yeni cümleleri anlayıp hedef/karar belleği ve gerçek CAD verisiyle çalışan bir asistan istiyorum. Hazır cevap/soru sayısını artırmak bu isteğimin yerine geçmez. CAD manuel ve deterministik kalmalı; model önerisi ancak kullanıcı Uygula dediğinde mevcut tipli aracı çalıştırmalı.
+
+Görünüm premium masaüstü CAD uygulaması gibi olmalı; mevcut Studio panel düzenini koru, internet sitesi görünümüne dönüştürme. Beş saniyelik yükleme kuralı iptal edildi. Robotu geri getirme. Arka plan referanslarım mini oyun için değildi. Önceki kararlar ve gerçek içerik sayıları devir belgesindedir.
+
+Kaynak `1.0.0-rc.62` WIP'tir. **Yeni Qwen3.5 + bitişik bellek adayı henüz ana üründe değil; dokuz teknik kontrolün geçmesi semantik kabul değildir.** Deneysel patch/son koşuyu okuyup gerçek çıktıları değerlendir. Son gerçek denemede CAD planlayıcısının kendi yorumlarını kullanıcı kararı gibi belleğe ekleyip beş karar kapasitesini aşması somut kök neden olarak bulundu. Plan/host gözlemi ile kullanıcı-yetkili bellek çıkarımını ayır; eski kararı silme veya sınırı gevşetme. Ayrıca bellek işlemi başarı iddiası, kaynak mesafesi/gerçek duvar kalınlığı ayrımı, başarısız kayıt/yerel kurtarma ve tamamlanmış kontrolü tekrar önerme sorunlarını düzelt. Hazır cevap ekleyerek veya test gevşeterek yeşile boyama.
+
+Koleye yerleştirme, ünite/vaka değişimi, şekillendirme/undo, tam mesh kaydı, yerel kurtarma ve kaydet/çık kapıları korunacak. Ana üründe normal kayıt hatasının AYA'ya ulaşması yeni düzeltildi; bu düzeltmeyi kaybetme. Kullanıcının model tercihlerini/kurulumunu veya yerel kayıtlarını silme. Buluta otomatik geçiş ekleme.
+
+Kaynakta gerçekten değişiklik yap, gerekli testleri sıralı çalıştır, ham native yanıtları incele ve doğrulanan son kaynak için gerçek Windows kurucusunu tamamla. Eski Windows ön kontrolünü yeni kaynakla aynı sayma. Rutin geri alınabilir işlerde tekrar onay bekleme; somut ilerle. Bitmeyeni açık söyle, model/klinik kaliteyi veya üretilmemiş EXE'yi hazır diye sunma. Kısa Türkçe ilerleme bilgisi ver. Çalışma ortamın yoksa dosya okuduğunu/test çalıştırdığını varsayma; sınırını açık anlat.

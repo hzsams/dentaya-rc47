@@ -1,0 +1,43 @@
+Checking desktop shell /workspace
+Checking desktop shell /patients
+Checking desktop shell /appointments
+Checking desktop shell /finance
+Checking desktop shell /messages
+Checking desktop shell /ai
+{
+  "pass": true,
+  "release": "RC58",
+  "routes": [
+    "/workspace",
+    "/patients",
+    "/appointments",
+    "/finance",
+    "/messages",
+    "/ai"
+  ],
+  "folderDestinations": 24,
+  "cadNavigationRoute": "/design",
+  "desktopViewports": [
+    "1366×768",
+    "1440×1000"
+  ],
+  "mobileViewport": "390×844",
+  "checks": [
+    "unauthenticated workspace exposes local CAD and opens local AYA",
+    "guest local Settings stays accessible with persisted workspace/AYA preferences and no account or organization writes",
+    "single upper-left module button; nested UL/LI folders; preserved 24 destinations; active ancestry; keyboard collapse/expand/parent/Home/End; nested search and restored folds; real appointments and cross-folder Messages navigation reset old search and reveal new active paths; same-path reopening preserves search and user collapse",
+    "390px mobile native folder menu fits viewport, nested search and real Messages leaf navigation",
+    "Alt+M module menu and search; queued close preserves newer focus; single navigation owner; Ctrl+K search and active descendant; modal Escape/focus restoration; Ctrl+, local preferences; folder menu remains available with activity rail hidden",
+    "network status follows real browser online/offline events without a connected-backend claim",
+    "real patient search/create entry, appointment planner/form, finance record controls, bounded message composer, honest unavailable AYA state with preserved question",
+    "persisted reduced motion; light and dark presets; Arabic RTL desktop and mobile",
+    "existing CAD module command shares folder menu; CAD retains its own header and no sidebar; CAD Escape focus and Alt+M; real Workspace leaf navigation"
+  ],
+  "samples": 24,
+  "screenshots": "/workspace/dentaya-rc62-validation",
+  "backend": "synthetic intercepted HTTP only; no live clinic/backend verification",
+  "automaticReadReceiptsIntercepted": 2,
+  "automaticOnboardingSyncIntercepted": 0,
+  "cadGeometryLifecycle": "separate verify-cad-daily-browser test",
+  "pageErrors": 0
+}

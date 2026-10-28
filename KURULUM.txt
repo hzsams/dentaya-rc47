@@ -1,4 +1,8 @@
-DentAYA RC62 — TAM KAYNAK GÜNCELLEME PAKETİ
+BU PAKET YENİ CHATGPT İÇİN GELİŞTİRME DEVRİDİR; SON RC62 WINDOWS TESLİMATI DEĞİLDİR.
+Önce YENI_CHATGPT_ICIN_TAM_DEVIR.md ve YENI_CHATGPT_BASLANGIC_PROMPTU.md dosyalarını okuyun.
+Yeni model yalnız deneysel patch olarak taşınır; ana ürüne uygulanmadı. Aşağıdaki derleme adımları geliştirici içindir.
+
+DentAYA RC62 — GELİŞTİRME DEVİR PAKETİ
 Sürüm: 1.0.0-rc.62 / AYA Core 0.18.0
 
 1. GitHub kaynak ZIP'ini yeni klasöre çıkarın; package.json bulunan klasörü açın.

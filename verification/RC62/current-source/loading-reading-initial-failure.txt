@@ -1,0 +1,25 @@
+▲ Next.js 16.3.8
+- Local:         http://127.0.0.1:3052
+- Network:       http://127.0.0.1:3052
+✓ Ready in 0ms
+✓ Running next.config took 2ms
+
+Completed timing measurements []
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+browserType.launch: Executable doesn't exist at /home/agent/.cache/ms-playwright/chromium_headless_shell-1200/chrome-headless-shell-linux64/chrome-headless-shell
+╔═════════════════════════════════════════════════════════════════════════╗
+║ Looks like Playwright Test or Playwright was just installed or updated. ║
+║ Please run the following command to download new browsers:              ║
+║                                                                         ║
+║     npx playwright install                                              ║
+║                                                                         ║
+║ <3 Playwright Team                                                      ║
+╚═════════════════════════════════════════════════════════════════════════╝
+    at /workspace/dentaya-rc47/scripts/verify-loading-reading-browser.mjs:22:25 {
+  name: 'Error'
+}
+
+Node.js v24.19.0

@@ -1,0 +1,6 @@
+PASS: financial loading failure, stale/zero-row write, exact currency, draft protection and duplicate submission guards.
+PASS: case commit locks same-turn open/close/duplicate callbacks and every mutable field; failed retry preserves draft and identity; late unmounted RPC cannot navigate.
+PASS: dirty appointment forms guard Escape/backdrop/close/Cancel/routes, pristine close has no prompt, and pending writes lock fields and trap focus.
+PASS: desktop composer and Send fit 1366×768 / 1440×1000, long histories scroll internally without body growth, and mobile remains accessible without horizontal overflow.
+PASS: newest message paging, stale thread isolation, per-recipient drafts, verified duplicate recovery and send-in-flight editing.
+{"status":"pass","backend":"synthetic intercepted Supabase HTTP","liveBackendVerified":false,"finance":true,"cases":true,"casePendingCommitGuard":true,"caseRetryIdentity":true,"unmountedCaseResponseCannotNavigate":true,"appointments":true,"appointmentDirtyCloseGuards":true,"appointmentPendingFocusTrap":true,"messaging":true,"imeEnterNeverPosts":true}

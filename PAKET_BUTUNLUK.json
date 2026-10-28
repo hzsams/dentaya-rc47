@@ -1,34 +1,53 @@
 {
-  "release": "1.0.0-rc.61",
-  "status": "source-release-candidate",
-  "date": "2026-10-27",
-  "baseRelease": "1.0.0-rc.60",
-  "baseCommit": "2e8787484a33b7ac8e90a8987d36d1a367d6591a",
+  "release": "1.0.0-rc.62",
+  "status": "development-handoff-not-final-release",
+  "date": "2026-10-28",
+  "baseRelease": "1.0.0-rc.61",
+  "baseCommit": "4b6a36047410eeae1ba5057b6a7a69604f662909",
   "nativeModelInferenceVerified": false,
+  "experimentalNativeContractPassed": true,
+  "experimentalNativeSemanticAccepted": false,
   "windowsInstallerProduced": false,
+  "windowsDiagnosticPreflightProduced": true,
   "liveOrganizationBackendVerified": false,
   "dentalFactsActual": 500,
   "dentalFactSourcesActual": 60,
   "brandLogosActual": 120,
   "ayaQuestionCatalogueActual": 1008,
   "dentalFactsTarget": 30000,
-  "nativeGrammarVerified": true,
-  "nativeGrammarChecks": 22,
   "miniGamesActual": 5,
-  "nativeModelWeightsAvailable": false,
-  "nativeModelInferenceStatus": "blocked-model-weights",
-  "verification": "RC61_KONTROL_RAPORU.md",
-  "sourceVerification": "verification/RC61/source-verification.json",
+  "appearanceOptionsActual": 72,
+  "typedCadToolsActual": 27,
+  "modelWeightsIncluded": false,
+  "verification": "RC62_KONTROL_RAPORU.md",
+  "sourceVerification": "verification/RC62/source-verification.json",
+  "handoff": "YENI_CHATGPT_ICIN_TAM_DEVIR.md",
+  "handoffState": "DEVIR_DURUMU.json",
+  "handoffTag": "devir-2026-10-28-rc62-wip",
+  "experimentalNativeContractSourceCommit": "08899dcee1310e3a6a00adca38c315557edda151",
+  "latestGroundingActualRequests": 9,
+  "latestGroundingAcceptedReplies": 8,
+  "latestGroundingStatus": "failed",
   "files": [
     {
       "path": ".env.example",
       "size": 1010,
-      "sha256": "afa148a0f2d2a4158893a84d5305757acc7aa19aab3fc3ce5dfdc5a60b2951b2"
+      "sha256": "3486d38b7ad4297a05b2bea7348b1a4abb95a4e9397dfd78c0d19cef99ae28bd"
     },
     {
       "path": ".env.release.example",
       "size": 407,
-      "sha256": "cfe5370598d80cdc5eae1858c67c5c6d65b0976d7eefb4c4aac17c71bf30a2f4"
+      "sha256": "105c050f45d6ee45a467a0ee35513a621b2c1b392b2870b02b13bee93fb5d06a"
+    },
+    {
+      "path": ".gitattributes",
+      "size": 175,
+      "sha256": "e8ee1c26e6ac7e386a6f2137bd8cd380f52011498eb8e8b5c74ffe2fef60d4ed"
+    },
+    {
+      "path": ".github/workflows/windows-release.yml",
+      "size": 7187,
+      "sha256": "55dfd51db423fcc93690cf4a818181afe64c0150308d604fa5d7bb8ac00c66b4"
     },
     {
       "path": ".gitignore",
@@ -42,8 +61,8 @@
     },
     {
       "path": "AGENTS.md",
-      "size": 10056,
-      "sha256": "e8593688527c6d0ff63085e7be3dba08ea667466d1a305e6cf6f3206f6b11fa3"
+      "size": 11320,
+      "sha256": "55644393e9f65a2aadb29513d6357ed319a6a369ba5bffba120e5cc81eac66b6"
     },
     {
       "path": "AYA_ACTIONS_QA.md",
@@ -168,7 +187,12 @@
     {
       "path": "DENTAYA_GUNCELLE_DERLE.cmd",
       "size": 3129,
-      "sha256": "a59849befd0625788306169ae6d2faeac65f9f719320a7cf0f4548ef17db99ec"
+      "sha256": "5fd0ddff899af7118e46b1e0332643ac98d1670d6d1f09a81e9ebc92e5f5fd71"
+    },
+    {
+      "path": "DEVIR_DURUMU.json",
+      "size": 8145,
+      "sha256": "7732ac0a1e03dee91a795c2b719d3b4c9e7c944d69e130f815c3160ff968031a"
     },
     {
       "path": "DentAYA_CAD_Degisiklikler.txt",
@@ -207,8 +231,8 @@
     },
     {
       "path": "KURULUM.txt",
-      "size": 5553,
-      "sha256": "e08ec3911c74652c8334612fb3673a773b6cfbecaf09a4d07dfb2e998c4b65c8"
+      "size": 5880,
+      "sha256": "e789773fbc3a604bfe8bc6b4a17e768779045e1c5b6aad71ca1114862dc03d00"
     },
     {
       "path": "LOGO_GUNCELLEME.txt",
@@ -766,6 +790,21 @@
       "sha256": "813b37bfcea3b80b60f6c2e6e1d212a4b2d89979b6033eabef672dcc1e1098d2"
     },
     {
+      "path": "RC62_AYA_1008_SORU_CEVAP.json",
+      "size": 365775,
+      "sha256": "93a02f9da94fea0cbaa55b51f70b65b7a63287afdcedfc38f25a6695abdf9f9c"
+    },
+    {
+      "path": "RC62_KONTROL_RAPORU.md",
+      "size": 6340,
+      "sha256": "b256b894793a4c4e4f009cf500326ccf79e24cb3c823dbb927b885e60534a54e"
+    },
+    {
+      "path": "RC62_KULLANIM.md",
+      "size": 4003,
+      "sha256": "b1ed968ecf374ef03e4b4f61bf66f7b1b72cc7468de826ffb83ec48be84dd1e7"
+    },
+    {
       "path": "RC6_CHANGELOG.md",
       "size": 805,
       "sha256": "3da664df997388f7c74588f417e0676b263ac4aa225fced31091f5f197b6a03f"
@@ -782,8 +821,8 @@
     },
     {
       "path": "README.md",
-      "size": 11261,
-      "sha256": "db781ce64f9ae9e9e13afb7abad02677c7f781c191d3bd7c3f160de66f7b60f9"
+      "size": 11271,
+      "sha256": "34f28e3bb5f8a91cc129d8ce5c58e622e6c50c1d092db517f6b6564fc83d80a2"
     },
     {
       "path": "README_BUILD_FIX_01.md",
@@ -1026,6 +1065,56 @@
       "sha256": "645b665e2dc2ec76fbb2acdf53688705c86ba9d8748a61911edb4473da2a22a3"
     },
     {
+      "path": "YENI_CHATGPT_BASLANGIC_PROMPTU.md",
+      "size": 3253,
+      "sha256": "150606f68ae0a7bb1f274ad3b97cdff69739d9849f89a5526ae44b8710d0887c"
+    },
+    {
+      "path": "YENI_CHATGPT_ICIN_TAM_DEVIR.md",
+      "size": 39016,
+      "sha256": "8c02506de833d7b858a6f3181c637ca235c29eb25fa66073022b22f8cfbc3446"
+    },
+    {
+      "path": "devir/2026-10-28/CAD_HANDOFF.md",
+      "size": 6198,
+      "sha256": "c65e62677b24c71b618aac8c23d1c8a6866a76a31539e234140d03f7653c9a02"
+    },
+    {
+      "path": "devir/2026-10-28/NATIVE_HANDOFF.md",
+      "size": 17938,
+      "sha256": "39ecac45d083ebdea866a53d04f2ca482b0c612cbba2ee978c36a16a2f8d9893"
+    },
+    {
+      "path": "devir/2026-10-28/NATIVE_STATUS.json",
+      "size": 4223,
+      "sha256": "e3218a16aeae4ffc8addfdc167b887923b5318727e195f5354ff09ad7b2cb134"
+    },
+    {
+      "path": "devir/2026-10-28/WINDOWS_HANDOFF.md",
+      "size": 19701,
+      "sha256": "7b5a3c230000e0924928e8d08456ad52fba70c28ae703825d67a4268117a12e0"
+    },
+    {
+      "path": "devir/2026-10-28/experimental-native-candidate.patch",
+      "size": 37553,
+      "sha256": "6b88244a566e7bef15cb61fda477746fc15bc385a0a83981b5a1e753b5f5b779"
+    },
+    {
+      "path": "devir/2026-10-28/experimental-native-diagnostics.patch",
+      "size": 29780,
+      "sha256": "3549b02768cd5e4e029844697b5f195da821deb93f40ab22b3fc07848c27d473"
+    },
+    {
+      "path": "devir/2026-10-28/run-dentaya-check.py",
+      "size": 742,
+      "sha256": "fc13791333a1afa71242064217b1e10c12b03e154ff98b441a7c49bfdc31fb1d"
+    },
+    {
+      "path": "devir/2026-10-28/seal-dentaya-source.py",
+      "size": 1506,
+      "sha256": "6ac63c81646b06a626b31b0cc133caaeecf164bc0cf6ba4d0064baf11e06b608"
+    },
+    {
       "path": "electron-builder.yml",
       "size": 617,
       "sha256": "e9e18c4695869d68f31a538a005ba78b81f70bbbc3d546569a0cbd90ac392242"
@@ -1041,6 +1130,16 @@
       "sha256": "85ca0e172d61030ceaab98f4c33b9cfbf650ff0bec06786a798b9b550140afcf"
     },
     {
+      "path": "electron/aya/acceptance.cjs",
+      "size": 10659,
+      "sha256": "ed57701df4179816eaeffba6c4391aeea61d6803ad4dead3e70d73de1133d67c"
+    },
+    {
+      "path": "electron/aya/acceptance.d.cts",
+      "size": 1888,
+      "sha256": "7c47bded59fddaa79eb8a83cb242f432bdacda480739aeab034012200fba1382"
+    },
+    {
       "path": "electron/aya/agent.cjs",
       "size": 20287,
       "sha256": "175b2b2baa8214cadafafc9b333435581e97346628482f6401fd0c319fde456f"
@@ -1053,7 +1152,7 @@
     {
       "path": "electron/aya/assistant.cjs",
       "size": 11382,
-      "sha256": "5b6d33b0e9919565d4d5ff78e9031fa328ec61486e4db8c161822d642c447d54"
+      "sha256": "43ce485dcbc54270097fb514266cc986886ab0b2fce23e730722e64036dad278"
     },
     {
       "path": "electron/aya/assistant.d.cts",
@@ -1138,7 +1237,7 @@
     {
       "path": "electron/aya/licenses/THIRD_PARTY.md",
       "size": 1361,
-      "sha256": "056e3925e930e15b90bc40d6cb1778ed07f5dc4803d87baa1b1bb9501b5d6524"
+      "sha256": "bbea990cd339d74488e7f2ada74403295ed52a447766d24f155d589a86282ea9"
     },
     {
       "path": "electron/aya/licenses/llama.cpp-MIT.txt",
@@ -2052,8 +2151,8 @@
     },
     {
       "path": "electron/main.cjs",
-      "size": 17311,
-      "sha256": "e1f7905c81f868a7638ab817705de92147011f509d753c738f51f10b187b99b9"
+      "size": 17429,
+      "sha256": "048ac964c7eb9c12498a0c7a92665553ede7169c99513e9eb60aa4797755d047"
     },
     {
       "path": "electron/preload.cjs",
@@ -2078,12 +2177,12 @@
     {
       "path": "package-lock.json",
       "size": 354831,
-      "sha256": "19f4f5a2e45fcec76cf9e5709313ebcc9115e5b24b763a694a8150b9a6532fee"
+      "sha256": "c61d4c4e8ae3f091de1f74cbf3e37ecfcd386b3b90ec55897ef08f960ba6c3ad"
     },
     {
       "path": "package.json",
-      "size": 10601,
-      "sha256": "76c9742df794f51282ecd13c32870f76150d293df7490b97151aed878e7fac9c"
+      "size": 11065,
+      "sha256": "3d870d86ab22ed999394ba42a02fd21498ab1b7a480f991d1e9c724bc9ff9056"
     },
     {
       "path": "public/brand/DentAYA_Premium_Atelier.svg",
@@ -7187,8 +7286,8 @@
     },
     {
       "path": "scripts/after-pack.cjs",
-      "size": 1435,
-      "sha256": "db7f5aceb812be6f8ff7300a9c4b68c216db2e8155a2fb18f3c170b434ab5590"
+      "size": 1648,
+      "sha256": "3412419fe4e13ccd70cb3286aa769bd7ba4d8c1e6d20bdc5cca547c6e4b9c438"
     },
     {
       "path": "scripts/audit-dental-sources.py",
@@ -7236,6 +7335,11 @@
       "sha256": "13a94c3ec1df33a243cdcd71070d6fbbb2739736695ac837de6daba5a3293d8f"
     },
     {
+      "path": "scripts/evaluate-aya-local.cjs",
+      "size": 2549,
+      "sha256": "af90439ad1449597cf3998fe3948c8d82b655191f7448b19c331272a230164d9"
+    },
+    {
       "path": "scripts/export-aya-catalog.mjs",
       "size": 1000,
       "sha256": "96938e8627d1a7d48f631c575cde75a2d1527dd40f025539f0151b20f22db76f"
@@ -7276,14 +7380,19 @@
       "sha256": "46a1647e37c600b6a7423b20d94f3c66ea2332f3024107cbc49fa1bc8da840a3"
     },
     {
+      "path": "scripts/fixtures/rc62-aya-acceptance.tsx",
+      "size": 1344,
+      "sha256": "042960a054a185158a1c1810b32d5ac5e7a3bdc22c89226e543c59630165b63a"
+    },
+    {
       "path": "scripts/import-dental-facts.ts",
       "size": 2874,
       "sha256": "878a39f33d42b2cccfeea1cfbad3d15e1c877b06edc856f80c3f1683c85ded70"
     },
     {
       "path": "scripts/localize-ui.mjs",
-      "size": 11728,
-      "sha256": "0e48b78dd3b77f110896d4292ba0b73097e4db45a68b045d5cec6b8f82fba0b6"
+      "size": 11734,
+      "sha256": "b484c641e95ad96aa22f4dd8c6c4f004c1a865d6d210de4bc15a3945e3566448"
     },
     {
       "path": "scripts/morphology-english.json",
@@ -7292,13 +7401,18 @@
     },
     {
       "path": "scripts/package-windows.mjs",
-      "size": 15404,
-      "sha256": "475194ae2236bdf47f60321e489b36207ab6e7e54cd552f581984fb8eec626d1"
+      "size": 18199,
+      "sha256": "9fd88022ec03b38d9f0c7a11a44a0d3a9d96480f721a0cdaf77a534def89e5ca"
     },
     {
       "path": "scripts/prepare-release-env.mjs",
       "size": 958,
       "sha256": "25dc435a1ff79dac3af587037a503b2932c9ed6d445c88e0952d8dc9d7fbad46"
+    },
+    {
+      "path": "scripts/publish-windows-release.mjs",
+      "size": 11108,
+      "sha256": "5dfc85896bfd5982001c8654619e6164c66b476508fe2e49406237c0dc7e72d1"
     },
     {
       "path": "scripts/render-brand-assets.mjs",
@@ -7311,14 +7425,24 @@
       "sha256": "b6b2dfbf829b963a6180b91b6e378611ffd8bb95d70109b7feded23e141fac2d"
     },
     {
+      "path": "scripts/run-windows-aya-native.cjs",
+      "size": 8579,
+      "sha256": "41b500f853c497ebfd44e1af71bbdfd6bf291d08ba7b6337b0fd4a62dbb816ef"
+    },
+    {
       "path": "scripts/setup-windows.ps1",
       "size": 2612,
       "sha256": "e01ced49900032472e0f40705f1a96ed7b904353b88a8833ea13f36b5831359e"
     },
     {
+      "path": "scripts/smoke-windows-desktop.mjs",
+      "size": 11023,
+      "sha256": "6ebe8e2b6c895bb33b24f04d17fa5576fb7eccf16d97dbf6868324af2a599aa3"
+    },
+    {
       "path": "scripts/ui-visible-keys.mjs",
-      "size": 4004,
-      "sha256": "9d7936fe90d2083c6338131ece0476bd152e9e3f449ad276dc1888aab5179c5c"
+      "size": 3999,
+      "sha256": "d37518545bd13b2b1fb1918ec358d3a7de1bb19be9832383ee260f3f3f8841be"
     },
     {
       "path": "scripts/verify-appearance-browser.mjs",
@@ -7329,6 +7453,16 @@
       "path": "scripts/verify-appointment-planner.ts",
       "size": 1062,
       "sha256": "1c4a4e69e4da48e0e60408b6398bdad04f03fdd57185859db3f9e9daaa5f22a1"
+    },
+    {
+      "path": "scripts/verify-aya-acceptance-browser.mjs",
+      "size": 9241,
+      "sha256": "3856b1f68a3432c0247d10b94ac192dae1cf9a5ce6025cfbc8b3617d11494523"
+    },
+    {
+      "path": "scripts/verify-aya-acceptance.cjs",
+      "size": 6665,
+      "sha256": "278b156fe82fbcaf4ec42cb00c2fd7e0605f40e0bab4158c1e2d114d9b67bc43"
     },
     {
       "path": "scripts/verify-aya-agent.cjs",
@@ -7349,6 +7483,16 @@
       "path": "scripts/verify-aya-catalog.cjs",
       "size": 5535,
       "sha256": "dcd7e3a17b09a90809005d973ad4e407692f9da7214195fb290a992d3028bc99"
+    },
+    {
+      "path": "scripts/verify-aya-chat-workspace-browser.mjs",
+      "size": 21359,
+      "sha256": "9e8b1b503bc38baf5ec7eebed010f806b350361262c1fc6b0f4bdd5de6591718"
+    },
+    {
+      "path": "scripts/verify-aya-chat-workspace.ts",
+      "size": 5395,
+      "sha256": "3d55b24e05acae8c7894dd0e15e2b5dd6ad1e29011ccb3228101f01dd1554882"
     },
     {
       "path": "scripts/verify-aya-config.cjs",
@@ -7447,8 +7591,8 @@
     },
     {
       "path": "scripts/verify-aya-setup-browser.mjs",
-      "size": 13350,
-      "sha256": "42e84d12ffaaf5ce781720611beb51ca9148a29e76eaf2077ed2186d50f8cade"
+      "size": 14555,
+      "sha256": "cea325409a355f479c360e8e467da7afa71f0e934eb3f5ec1a0a72f70ef0a93b"
     },
     {
       "path": "scripts/verify-aya-setup.ts",
@@ -7457,8 +7601,8 @@
     },
     {
       "path": "scripts/verify-aya-state-browser.mjs",
-      "size": 28647,
-      "sha256": "0336f5a50eaecdb920f00c0c76c0e198d36d5bbf0fa62990aaa2f380c0221aff"
+      "size": 36407,
+      "sha256": "9191ed79cd0ebc7bb32cfb4878fc731a6661e3707861496768938bff0127e545"
     },
     {
       "path": "scripts/verify-aya-tasks.cjs",
@@ -7502,8 +7646,8 @@
     },
     {
       "path": "scripts/verify-cad-daily-browser.mjs",
-      "size": 58693,
-      "sha256": "8c8b6206996caf3097958f3be91ebd168cbc1266894eacdd796fb4e752c07e15"
+      "size": 62298,
+      "sha256": "4a8b864f96eac41069ff8fc175ab8b8d810fc5155ac7fc93914ee0b575dbf5ec"
     },
     {
       "path": "scripts/verify-cad-daily.ts",
@@ -7522,8 +7666,8 @@
     },
     {
       "path": "scripts/verify-cad-guided-browser.mjs",
-      "size": 33638,
-      "sha256": "e698b18e949215b31d33d3310df43a570b106c65e6b3b27218a5b20e7539d8cc"
+      "size": 33635,
+      "sha256": "520eb6a84051c62f2e15a553c7cc86131f0cd934bfd65ffe7de22ace467da2e9"
     },
     {
       "path": "scripts/verify-cad-guided.ts",
@@ -7617,8 +7761,8 @@
     },
     {
       "path": "scripts/verify-dental-facts.ts",
-      "size": 8060,
-      "sha256": "7d35d8a8df7e3a8bfc3b4b10042d51fa31ac8238e92974ad1f3caf83970f7d05"
+      "size": 8114,
+      "sha256": "6e80685ccd2e2031233273a93ab10a7eaf66d621c1f56bccc13e0fedcbab3268"
     },
     {
       "path": "scripts/verify-desktop-brand.cjs",
@@ -7627,13 +7771,13 @@
     },
     {
       "path": "scripts/verify-desktop-language.cjs",
-      "size": 6854,
-      "sha256": "c685283264de407a96c726ebe2fb50035ab250f7b53960f6f398d0df65fe9627"
+      "size": 7128,
+      "sha256": "4e70ea5c1dc0761969103876ea612f09b24bd6da019c057ce23d302215ba33fb"
     },
     {
       "path": "scripts/verify-desktop-shell-browser.mjs",
-      "size": 42814,
-      "sha256": "975c3bf763b1f20295b3922062348f432771f25402a18e633ad0454499251aac"
+      "size": 46872,
+      "sha256": "f0f6e67cb60de9a18e3a8638925c8a6cd1c6d904632c883097cc39112213fec6"
     },
     {
       "path": "scripts/verify-e2e-workflow.ts",
@@ -7737,8 +7881,8 @@
     },
     {
       "path": "scripts/verify-professional-modules-browser.mjs",
-      "size": 20909,
-      "sha256": "1c3b383723d2c8dd09c79cfd285ff2fd086922f27353f35e48699e671a7c73b6"
+      "size": 35986,
+      "sha256": "150ae85b026e339aa90d8dd61459a6648cf9fe890c1e5d63e9d923112d708e90"
     },
     {
       "path": "scripts/verify-professional-shell-browser.mjs",
@@ -7772,8 +7916,8 @@
     },
     {
       "path": "scripts/verify-runtime.mjs",
-      "size": 942,
-      "sha256": "1dcba55213641d7dd7e4a88d9ce0bca72dc9bbf37b4d935255922d2ac805c46d"
+      "size": 817,
+      "sha256": "2b3f97ce10fc8370e248470d9a5310d968c02b4ffa60e180df7a2c68adbb52d0"
     },
     {
       "path": "scripts/verify-sculpt-integrity.ts",
@@ -7832,13 +7976,38 @@
     },
     {
       "path": "scripts/verify-visible-translations.mjs",
-      "size": 997,
-      "sha256": "3b8906aba1a2ba4d710207199c561c8eb391a1ccc550af840dd9b81e07c77138"
+      "size": 1722,
+      "sha256": "b98ab866bddc3b52dad6926a3bae93c01e51eb873ec8ba272bef631197d76090"
+    },
+    {
+      "path": "scripts/verify-windows-artifact.mjs",
+      "size": 17571,
+      "sha256": "9ced524fc0c558a12efb61e4ea83fd09d977160e36f1497d3176e54ed4783088"
+    },
+    {
+      "path": "scripts/verify-windows-artifact.test.mjs",
+      "size": 9858,
+      "sha256": "72d324bb9fca45eb11b40e51404e705f4f57629d20a75479ed7cd8fec80c246d"
+    },
+    {
+      "path": "scripts/verify-windows-ci-source.mjs",
+      "size": 1969,
+      "sha256": "27e60813ac2c903b6aec6d2dcff00a927ad5a08fafb38f33d17bec157c1c02c8"
+    },
+    {
+      "path": "scripts/verify-windows-ci.mjs",
+      "size": 12942,
+      "sha256": "718ea323fd673c26de832d9ea303461c65735946f13c88eede8fb9c24c1cb279"
+    },
+    {
+      "path": "scripts/verify-windows-native-orchestration.cjs",
+      "size": 4633,
+      "sha256": "337c201a22b53662bfc93886b5e973de80a441dada9833022fcb53235cb23bd9"
     },
     {
       "path": "scripts/verify-windows-packaging.mjs",
-      "size": 18081,
-      "sha256": "f6fcbdce709a25ffd9c66313cd1e057f4b36ad149a7b1c38bdefcf8d8203e6d6"
+      "size": 23819,
+      "sha256": "f6f0128d7dd29af66a6d69e16d37b3b34546d45feb2813cd35457df975d26d43"
     },
     {
       "path": "scripts/verify-workflow-safety.ts",
@@ -7987,13 +8156,18 @@
     },
     {
       "path": "src/app/WorkspaceChrome.tsx",
-      "size": 15269,
-      "sha256": "d0bc08cca12df30d9d4e879750897d37906e510ee4f91427412a9206f2c417c3"
+      "size": 17277,
+      "sha256": "029211e24bf47d51b1d1a7720fab71777f304445c0328d1e83fcf541e689d6ca"
     },
     {
       "path": "src/app/WorkspaceLauncher.tsx",
       "size": 18457,
       "sha256": "87d4d8f5fd5b78cdd03ac8414f2366ea94251a5e8ff81ace91f669c2235476f3"
+    },
+    {
+      "path": "src/app/ai/AyaAcceptancePanel.tsx",
+      "size": 5020,
+      "sha256": "f32fd7931a01e9f86ec40aa0bd919b70184dafcbc30b917c56a270e33b153794"
     },
     {
       "path": "src/app/ai/AyaCatalogReference.tsx",
@@ -8002,8 +8176,8 @@
     },
     {
       "path": "src/app/ai/AyaChat.tsx",
-      "size": 31120,
-      "sha256": "a772d7ec69608bbc87ee9ee0921f1dda808a5594f319cdd30ec663661f446ca8"
+      "size": 35101,
+      "sha256": "7338586fc0795d3e0550f6e0708868499f2d2471325f479d2f93aead2a0e382f"
     },
     {
       "path": "src/app/ai/AyaConnection.tsx",
@@ -8012,8 +8186,8 @@
     },
     {
       "path": "src/app/ai/AyaEngineSetup.tsx",
-      "size": 5537,
-      "sha256": "fb35e2aef80cd4700574ec2e1f582d99778ef6687007b34230163692964947a3"
+      "size": 6982,
+      "sha256": "a91cd68d86a2970c2f6682c6b40fbcf70ee205d72c745a6af63516bf3f265e0e"
     },
     {
       "path": "src/app/ai/AyaHealth.tsx",
@@ -8041,6 +8215,11 @@
       "sha256": "bf1c9ead074f3ee4716733f31b9f06fdeb78c7927d70f42f8955d05ac09e8994"
     },
     {
+      "path": "src/app/ai/AyaSetupProgress.tsx",
+      "size": 1390,
+      "sha256": "bef203b4ab60d939554991ef57d26949c70bbc8e44edfdbb52029c1ddae11125"
+    },
+    {
       "path": "src/app/ai/AyaSources.tsx",
       "size": 1964,
       "sha256": "50bdbca4f9f75eaa392e65ae4bffdd4b10ecb2ba39cd7105cb49fdc961fadce6"
@@ -8059,6 +8238,11 @@
       "path": "src/app/ai/aya-catalog.css",
       "size": 12480,
       "sha256": "820fd23399063f97c8051a0eec29b0b1695ff3393f2292d3f8ba3f58719b21b8"
+    },
+    {
+      "path": "src/app/ai/aya-engine-setup.css",
+      "size": 2233,
+      "sha256": "df47afc57821cdb2de8f1605d338efb4c70890b2ccee7228605fcbda22a5a269"
     },
     {
       "path": "src/app/ai/aya-sources.css",
@@ -8102,8 +8286,8 @@
     },
     {
       "path": "src/app/appointments/page.tsx",
-      "size": 31818,
-      "sha256": "4f562fdbe61516aab92add114bca5fc4245062a7275e10ca1ccfd53f3af6c959"
+      "size": 33848,
+      "sha256": "070fb430ea163034bf3c833002483a7b4e02cf2e37b4d6cfb0b0d9aa0a2276b5"
     },
     {
       "path": "src/app/cad-library/CadFormLibrary.tsx",
@@ -8137,8 +8321,8 @@
     },
     {
       "path": "src/app/cases/page.tsx",
-      "size": 43640,
-      "sha256": "dd9baf012fea93e0d8482991200da78824ccb594c7a2c249d14ed13de34dde96"
+      "size": 45421,
+      "sha256": "88ba2ea498df5f45c14bec1c28089ee07ccad762c62849c755ad301ae87d74a6"
     },
     {
       "path": "src/app/clinic/page.tsx",
@@ -8182,8 +8366,8 @@
     },
     {
       "path": "src/app/design/CadAyaPanel.tsx",
-      "size": 18593,
-      "sha256": "e308e47293f6a09fc87b225d397d137335874bb94a2ec4017c0d8f52ce95a7b2"
+      "size": 19975,
+      "sha256": "d86470ae6c7a4d919de356d6117550292c1f6ef64109a93be61fc15a29ed8dda"
     },
     {
       "path": "src/app/design/CadBrushPresets.tsx",
@@ -8237,8 +8421,8 @@
     },
     {
       "path": "src/app/design/DesignStudioClient.tsx",
-      "size": 180120,
-      "sha256": "a9c1c9567ecc134be8ba9b70b7263f19236e07101382cc03d3b0cec90190fd76"
+      "size": 181045,
+      "sha256": "29efb57c50da0c088851661fcabe684993a571e55ac8336d22f1a4fbbc98fd6d"
     },
     {
       "path": "src/app/design/DesignViewport.tsx",
@@ -8247,8 +8431,8 @@
     },
     {
       "path": "src/app/design/cad-workspace.css",
-      "size": 57660,
-      "sha256": "07fb6fa9c6baa44d2978d5d2ddbf5145e416edab563d59f133063c080aaa14db"
+      "size": 58411,
+      "sha256": "6325df08f9b73d816efba9843a5cd93d78b0e1e3ffbd941566f3bd5bdb206590"
     },
     {
       "path": "src/app/design/page.tsx",
@@ -8257,8 +8441,8 @@
     },
     {
       "path": "src/app/desktop-shell.css",
-      "size": 19997,
-      "sha256": "678a0fd1df012a932d564850e992731dbd9776ca78aa37feae6219958ea55167"
+      "size": 20168,
+      "sha256": "7811b43560df99a7307444adfb55e26093b75be2c3b61e28c8158d04ff3cedf7"
     },
     {
       "path": "src/app/error.tsx",
@@ -8372,8 +8556,8 @@
     },
     {
       "path": "src/app/messages/page.tsx",
-      "size": 37083,
-      "sha256": "5fb1bae7d671dab1eda86fa6558d4bf665f1bfb3bd675c07d073be05b0eccfaa"
+      "size": 37140,
+      "sha256": "c2bacf243580515c57af88bb2e7b07601163d80299649ca12839c69829cc0ce6"
     },
     {
       "path": "src/app/mini-game/page.tsx",
@@ -8471,14 +8655,19 @@
       "sha256": "fdb6be653a89ec3f82060f21c2327529fbd297b3932818179967f52b952588c5"
     },
     {
+      "path": "src/app/settings/GuestLocalSettings.tsx",
+      "size": 4545,
+      "sha256": "0ae5c6ede4e9586dfa371987a0594399d0dbf486c3dc235c195661822239c83b"
+    },
+    {
       "path": "src/app/settings/page.tsx",
-      "size": 81222,
-      "sha256": "301df03e8598849663a8fa8b034fc4f8f44fa3d056d34b4625eeba2e2e386945"
+      "size": 81240,
+      "sha256": "8bf6c11ca23fc1c43a349063607a357c5787ba380e6869842c8fd05b669a6af6"
     },
     {
       "path": "src/app/settings/settings.css",
-      "size": 8768,
-      "sha256": "af447a46b9ee59f4740a2f2f682db510459e52077864bbae0ac4cb3fc3603883"
+      "size": 10392,
+      "sha256": "61ccf8319bb1f9faa52209786e9bcdfaecb849f212f819d21accda717770937a"
     },
     {
       "path": "src/app/start/page.tsx",
@@ -8529,6 +8718,11 @@
       "path": "src/lib/aya-cad-assistance.ts",
       "size": 3844,
       "sha256": "efcb1dc90f339010394adc337f5318ed41350d8472503258e2b52ef16d269c8a"
+    },
+    {
+      "path": "src/lib/aya-chat-workspace.ts",
+      "size": 5796,
+      "sha256": "034be3da3dadcaa4086bb83737fb9b771154b18a2466c154bbc4e86683b52845"
     },
     {
       "path": "src/lib/aya-command-engine.ts",
@@ -8856,14 +9050,24 @@
       "sha256": "958b02963713a868b7f217a29c876a1ed4e71113a0bc01afbbf3ea52aae9104a"
     },
     {
+      "path": "src/lib/i18n/aya-acceptance.ts",
+      "size": 4217,
+      "sha256": "2959c7bf253385d84371dae4fe67e1e1cf7cd9487c7eb1f7b2b24ed2630adf38"
+    },
+    {
       "path": "src/lib/i18n/aya-agent.ts",
-      "size": 7147,
-      "sha256": "cf76c0632902308e831a46f24c5cb982ec19de83bd5e905ee70bf47eeb0f11af"
+      "size": 7682,
+      "sha256": "0c2fa91938f9ce5967d8e3bf8dbcc14300b34ee75156635a949222243ec9d628"
     },
     {
       "path": "src/lib/i18n/aya-catalog.ts",
       "size": 1491,
       "sha256": "c473dcd1998a66bc89d05b8f83bc2189290785d8b1f10d772c6f52e93dfae47e"
+    },
+    {
+      "path": "src/lib/i18n/aya-chat-workspace.ts",
+      "size": 494,
+      "sha256": "de479d4b4a1451ccbf53cc8a2fa0c74836364c24c20350ef6260a9f736136c6f"
     },
     {
       "path": "src/lib/i18n/aya-experience.ts",
@@ -8872,8 +9076,8 @@
     },
     {
       "path": "src/lib/i18n/aya-setup.ts",
-      "size": 974,
-      "sha256": "97c72fe2b6af9f33ea60bab201d9c3a1e3d02ddb6f2cea32ff312f53bf12e500"
+      "size": 2973,
+      "sha256": "832023abc242c53b0acb1210715a8de5c80222c731fb62e2be1f5f5f33e19bef"
     },
     {
       "path": "src/lib/i18n/brand.ts",
@@ -8939,6 +9143,11 @@
       "path": "src/lib/i18n/loading-play.ts",
       "size": 2540,
       "sha256": "2a4d6bdbbd977d62e15be978ba3edf7ef5f1c4e5644f11e3f69415aade25301b"
+    },
+    {
+      "path": "src/lib/i18n/local-settings.ts",
+      "size": 1209,
+      "sha256": "47edde7774e33360b21561089ce58c6f32823d95e4f537b30d5e70d77f54fcae"
     },
     {
       "path": "src/lib/i18n/locales.ts",
@@ -9448,7 +9657,7 @@
     {
       "path": "src/lib/release.ts",
       "size": 418,
-      "sha256": "777cfc4a3b235be837f55cef464629c976f6a1a25403c41679ea2784bbf5e14a"
+      "sha256": "d0a14ade44e374d0c88187397516e1063eea4844fb1cc869fed5ea238649a56c"
     },
     {
       "path": "src/lib/retry.ts",
@@ -9483,7 +9692,7 @@
     {
       "path": "src/lib/supabase.ts",
       "size": 1108,
-      "sha256": "4044cd14cc3edeb91409bb620cbba545487793669d1feff2b0476d310c0aacbf"
+      "sha256": "fb38e0176f2940494cf87a4a1b75e580f4361dad274a105cbc522169e0b459b9"
     },
     {
       "path": "src/lib/system-messages.ts",
@@ -13229,6 +13438,871 @@
       "path": "verification/RC61/work-browser.txt",
       "size": 1592,
       "sha256": "198bbf9748c17cebf400b968ce5071614b966fb5b5c63fdb96399d5416e21d8a"
+    },
+    {
+      "path": "verification/RC62/current-source/AYA_RC50_callback_failure_and_stale_proposal.png",
+      "size": 130370,
+      "sha256": "f8e44431ee0f334df6e3d378d5e0402a88bbcaa015dbec3584375386c503a3a1"
+    },
+    {
+      "path": "verification/RC62/current-source/AYA_RC50_model_receives_explicit_memory.png",
+      "size": 69946,
+      "sha256": "0f7d45f656425f0ed09dfa445698b3a83b4ae0e9ab94fa113089c622578b1bd0"
+    },
+    {
+      "path": "verification/RC62/current-source/AYA_RC50_offline_place_proposal.png",
+      "size": 105567,
+      "sha256": "2c37b767c525dc10e2246965b2e75cc9e694adfb879c7181bb31ccec9e4975c7"
+    },
+    {
+      "path": "verification/RC62/current-source/AYA_RC54_memory_conflict.png",
+      "size": 117800,
+      "sha256": "0eefce41c39c582679ee6143a3b4bbcf77dd6f24a8cd9a34b2d09d7a6abca217"
+    },
+    {
+      "path": "verification/RC62/current-source/AYA_RC56_scoped_followup.png",
+      "size": 130423,
+      "sha256": "ee2b522d6ffbf09fe1bc4660f25494662f1d5181e977b76ff61eb2ea4cc47e63"
+    },
+    {
+      "path": "verification/RC62/current-source/AYA_RC61_explicit_guide_after_model_failure.png",
+      "size": 83610,
+      "sha256": "8236b085e13773ee18f4caad221e06db50a65386cdaf991038c88b337f91375b"
+    },
+    {
+      "path": "verification/RC62/current-source/AYA_RC61_memory_and_unavailable_model.png",
+      "size": 81286,
+      "sha256": "ccb3b38aff70c8ba4f1693b1bafbe7d9462e6cdf9bcf9f0b89521b35a691ffb1"
+    },
+    {
+      "path": "verification/RC62/current-source/AYA_RC61_unavailable_model.png",
+      "size": 49645,
+      "sha256": "23e6363bd109ff94ceba2e62179cacc4788f871281a2bd5da2785734f9e8f0fc"
+    },
+    {
+      "path": "verification/RC62/current-source/AYA_conversation_desktop.png",
+      "size": 57823,
+      "sha256": "528329692c89b67198364bccfb953c8f87394c6c57b2e427481f867b732427b8"
+    },
+    {
+      "path": "verification/RC62/current-source/CAD_failure.png",
+      "size": 242746,
+      "sha256": "18234af757b2c1448bd712a56d00ffda004c471ca790059b06f0e28c64815eb6"
+    },
+    {
+      "path": "verification/RC62/current-source/CAD_failure_first.png",
+      "size": 284631,
+      "sha256": "8f38b4c9959daad5436b0a3d2013e89db909838ec22500266678bae0feba95d2"
+    },
+    {
+      "path": "verification/RC62/current-source/CAD_failure_receipt.png",
+      "size": 271586,
+      "sha256": "c51e6173e1df3f1847296fc526358a9ea598c13431b8a1cf47e4746346426679"
+    },
+    {
+      "path": "verification/RC62/current-source/RC40_CAD_AYA.png",
+      "size": 249721,
+      "sha256": "31bbbce29ebb5baf6b0346e3ae9428c5bebcdc8620c464d0f8b83de3c5beb660"
+    },
+    {
+      "path": "verification/RC62/current-source/RC51_CAD_daily.png",
+      "size": 229250,
+      "sha256": "205e758dcd74ce6ce9c907e58c796f13a34dd9eff0d3012ad66822fb9370358e"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_ai_1366.png",
+      "size": 113251,
+      "sha256": "d3180d0671f9d0b1ea61dc561837a7b5212470b0bdcb5b23028be65a2f285266"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_ai_1440.png",
+      "size": 128523,
+      "sha256": "d32742bfdf31ebf716ea7d5af5095f07a93e738e19035e287650c076f4b7c6e8"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_ai_390.png",
+      "size": 39255,
+      "sha256": "6125899e1862bb5d0b49d66ead3447cc0e1f1e73a255c589ba947a5ffbfb1b51"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_appointments_1366.png",
+      "size": 123440,
+      "sha256": "85f6e824be6b7f6f0aef0e6e639de4a6941cb4af8ea6d05e75b0141a15ffa768"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_appointments_1440.png",
+      "size": 143446,
+      "sha256": "007e39d3efd30901cea0ea948f9e863a9abaf81ef9390661be77e92611327098"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_appointments_390.png",
+      "size": 48976,
+      "sha256": "d06ace57ef4a1f312688d2c9ee09b4b84ff94d349d45698a35e9a5446588a73a"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_finance_1366.png",
+      "size": 150899,
+      "sha256": "1449041d00f0c46f86f34fd5e227fd8276d786cbafdec1af995504d5186a7392"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_finance_1440.png",
+      "size": 181760,
+      "sha256": "e58f33c5ab58cb353db28cc2adc9aaf16fa6bab54815c608f3f1b786ad72d296"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_finance_390.png",
+      "size": 55338,
+      "sha256": "162c46c65c5e4d653f0420b7d409ac3d0b6c857930bba59f59bd2f487ba860d1"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_messages_1366.png",
+      "size": 146999,
+      "sha256": "d5bb01c83aa4602f6dbaed26ffce15eba2a80f84fa5335ff86becdbac3fe8320"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_messages_1440.png",
+      "size": 190347,
+      "sha256": "f7293fbc5d9da232f82674e3329e9e5b240c895dac2d82be5bc30724a10ad7b4"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_messages_390.png",
+      "size": 63067,
+      "sha256": "e056c62a37cdffb1f9f261403ec0960daeb44e355983a82f8d9634bd0c4d34e4"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_patients-light_1440.png",
+      "size": 117663,
+      "sha256": "9307bd2d9bb1b1be9641bdd2cd1b224ab371e2b9fee0c03c1872ad963f4fff6e"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_patients-rtl_1440.png",
+      "size": 124406,
+      "sha256": "a67f1f52cfc7d1eee22b57a2f5e9e6a780ff78e5d9e8ba5b56f4ddce23694feb"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_patients-rtl_390.png",
+      "size": 48683,
+      "sha256": "b73b03b98f1b685e9a9d227e8a68fed15edea5dae4ef9c5043d3129cc12bcfe8"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_patients_1366.png",
+      "size": 106679,
+      "sha256": "d842f8f5053048cd941b0f60719155a0ae3b329e4d569e42200d945e5fefa91a"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_patients_1440.png",
+      "size": 119296,
+      "sha256": "0c31400a6d670e3ff1ff41771d56ad863a94d7ff43530f9f3ccb2cfc35ff6b94"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_patients_390.png",
+      "size": 45553,
+      "sha256": "25170d1eba1cee450b9068c3a282c52545505ac752a98d727e285ecdbcefe4e5"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_settings-guest_1366.png",
+      "size": 114404,
+      "sha256": "55077e9beec64b23f3cd45eb6697a07133bebfcd5165f3146de99b49fc895232"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_settings-guest_390.png",
+      "size": 46381,
+      "sha256": "f76fa0d80d0a4e8bf51aba89439252485fd6ae193212d51eab0de8b78e99c5e2"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_workspace-guest_1440.png",
+      "size": 151272,
+      "sha256": "21babc15e1789c82114343f782740486a63d368413cb80f435a57d3047e3d8d7"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_workspace_1366.png",
+      "size": 134679,
+      "sha256": "7e142d1ce6a4c08f3117e03058a279ce2821819239da5e3ff65973c6786c9945"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_workspace_1440.png",
+      "size": 148070,
+      "sha256": "c4124ea23a246474fee390ac1ede4d2da4ce0feb2c2be0004f7f3710afb5c496"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Desktop_workspace_390.png",
+      "size": 56094,
+      "sha256": "038940490db83a32b27e7a90548c44332b979648c2949c90dc35001c9d8a1049"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Module_Folders_CAD.png",
+      "size": 151970,
+      "sha256": "1c405a3cf0ea267fb24df8ad91f592c42164278f142d3f65405e1f9798c2de66"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Module_Folders_Desktop.png",
+      "size": 174236,
+      "sha256": "da20b67cedbcc8b37ce69bf65c6fd516c4cf522545a08a6d13ebc05f8f11322e"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Module_Folders_Mobile.png",
+      "size": 88947,
+      "sha256": "5458addb200c5fbc59875385ab2fe3dab40948c48f2e76831f35365edf3bd394"
+    },
+    {
+      "path": "verification/RC62/current-source/RC58_Module_Folders_Nested_Search.png",
+      "size": 152697,
+      "sha256": "741704c80f4745d81065462c2749a52eaf940d4447d8669bbf8c9f6258ac99f9"
+    },
+    {
+      "path": "verification/RC62/current-source/RC60_AYA_Setup_Cancel_Recovery.png",
+      "size": 71526,
+      "sha256": "52c2580daa06b2d6c1f3741fe3bfe0b406f2b5c727de5d4ce7a9a05e45b406c7"
+    },
+    {
+      "path": "verification/RC62/current-source/RC60_AYA_Setup_Other_Window.png",
+      "size": 71344,
+      "sha256": "86d898bb39aaaa7ac4a7c09170157547a97437953807e2fa9d5e364d30a2763e"
+    },
+    {
+      "path": "verification/RC62/current-source/RC60_CAD_AYA_Draft_Preserved.png",
+      "size": 283669,
+      "sha256": "79866ffe73ccb89e63204f9d37a8637d5488045579ed078432bbbc672ebaee4d"
+    },
+    {
+      "path": "verification/RC62/current-source/RC60_CAD_Current_Shell_QC.png",
+      "size": 279470,
+      "sha256": "89b50d357387b41a08be51da2073825234fb91bd58a6ab5871ef861c4f7db21c"
+    },
+    {
+      "path": "verification/RC62/current-source/RC60_CAD_Stale_QC.png",
+      "size": 196770,
+      "sha256": "3efbfa47413b1ae4e7e718e8b6a4dd9a50ecc9b3fdb2a253f2f279bf1a122fb2"
+    },
+    {
+      "path": "verification/RC62/current-source/RC60_Host_Action_Receipt.png",
+      "size": 278974,
+      "sha256": "09e79be786650958a74a158198d86643a4a40afa4f0eb4cbb68cf40712f4a19e"
+    },
+    {
+      "path": "verification/RC62/current-source/RC61_AYA_Cited_QA_Readonly.png",
+      "size": 65310,
+      "sha256": "5e62021ca5e0a212def8c1dca77c39b0d2d5bd7c3660ae78d0aaffa465a750ab"
+    },
+    {
+      "path": "verification/RC62/current-source/RC61_AYA_Deleted_Record_Recovery.png",
+      "size": 101747,
+      "sha256": "fbf143d5fef7ef5a1ee652921ace6ede00440964c3a6b22b40a5632e877691c5"
+    },
+    {
+      "path": "verification/RC62/current-source/RC61_AYA_Diagnostic_Draft.png",
+      "size": 119307,
+      "sha256": "60fc5d736b09be97b9ff9f4a209c191a97f931b595c557bb998146039c8a6de3"
+    },
+    {
+      "path": "verification/RC62/current-source/RC61_AYA_Diagnostic_Isolation.png",
+      "size": 115658,
+      "sha256": "b2cc490fe1394fb43a2c73ae02d667ea5f175adf876c1d42590bffe7218a0a39"
+    },
+    {
+      "path": "verification/RC62/current-source/RC61_AYA_Empty_Memory_Reload.png",
+      "size": 49505,
+      "sha256": "28e77356677d3248772155e32f029c1112c1288106dd49e4f299866c2b49b430"
+    },
+    {
+      "path": "verification/RC62/current-source/RC61_AYA_Focus_Model_Recovery.png",
+      "size": 117613,
+      "sha256": "d5b8215440ae172b82f012a0762900df91fcecbf3da3df03ec2094a816fb6370"
+    },
+    {
+      "path": "verification/RC62/current-source/RC61_AYA_Installed_Model_Busy.png",
+      "size": 127583,
+      "sha256": "a94db168055678e9f6b2c13bfb203b06f7330bb01c69f5f3fbb6f24ae61f3565"
+    },
+    {
+      "path": "verification/RC62/current-source/RC61_AYA_Optional_Ollama_4B_Setup.png",
+      "size": 73601,
+      "sha256": "98f8f6d6c6d82c46a20121910393d7399a649bd8a1c0a5b49107135394233e6a"
+    },
+    {
+      "path": "verification/RC62/current-source/RC61_AYA_Read_Only_History.png",
+      "size": 83624,
+      "sha256": "1da795c7f101495e380d6258faba9c9b38a23f4ebe9df9f7aefdaf2fcb5bab02"
+    },
+    {
+      "path": "verification/RC62/current-source/RC61_AYA_Two_Window_Conflict.png",
+      "size": 91576,
+      "sha256": "0ef09c6c06353c98f0188b814b2993c350a5e768d0182ec257d33389420cea52"
+    },
+    {
+      "path": "verification/RC62/current-source/RC61_AYA_unavailable_mobile.png",
+      "size": 58440,
+      "sha256": "17bb7e57271e47c2fb0c3fb66361162dd5b5489c0c370157595a0bf9c1c4473c"
+    },
+    {
+      "path": "verification/RC62/current-source/RC62_AYA_Acceptance_Isolated.png",
+      "size": 87841,
+      "sha256": "9e640fced2fa30a74d30dad6dab199f554a6d27246cabea3467730f8172a2d95"
+    },
+    {
+      "path": "verification/RC62/current-source/RC62_AYA_Interrupted_Question_Recovery.png",
+      "size": 62478,
+      "sha256": "7fbadea74c2a04e7cc9da0aea2dce81566ed0903762812eaecfecfe798ef845c"
+    },
+    {
+      "path": "verification/RC62/current-source/RC62_AYA_Temporary_Route_Return.png",
+      "size": 52863,
+      "sha256": "717c0924bc74b3bdeac9c42fc4fb034174a364f6aee0dc8e49820988cf916185"
+    },
+    {
+      "path": "verification/RC62/current-source/RC62_CAD_Host_Facts_English.png",
+      "size": 52372,
+      "sha256": "a567aebf06650b5b8ee3a36434700411fef44383335a71ccca24e7cf68253c48"
+    },
+    {
+      "path": "verification/RC62/current-source/RC62_CAD_Host_Failure_Discovery.png",
+      "size": 242746,
+      "sha256": "18234af757b2c1448bd712a56d00ffda004c471ca790059b06f0e28c64815eb6"
+    },
+    {
+      "path": "verification/RC62/current-source/RC62_CAD_Host_Save_Failure.png",
+      "size": 242769,
+      "sha256": "1a870e2f92d522683f0bc10971a1a051ed5f052be007385abec08a0c99d6fa37"
+    },
+    {
+      "path": "verification/RC62/current-source/acceptance-browser.txt",
+      "size": 323,
+      "sha256": "958dc00d82ea4debfbc710e43e1add6ee53942b431f7e5b39412846cda49884e"
+    },
+    {
+      "path": "verification/RC62/current-source/appointment-pending-commit.png",
+      "size": 30215,
+      "sha256": "1fe8ed88849ffab30178bbd2b8d315ca029e9c925100e9a94c4203ef1760c0d1"
+    },
+    {
+      "path": "verification/RC62/current-source/browser-validation-summary.json",
+      "size": 3920,
+      "sha256": "468cf46a297a3160c2609ff1e5c8bfdefa7ea6820642a323ffbd4c85042cfea8"
+    },
+    {
+      "path": "verification/RC62/current-source/cad-daily-browser-first-failure.txt",
+      "size": 15465,
+      "sha256": "175073e09472e329d9a665ec92846cac76bae6217aeb2c31bc37abbdc5992719"
+    },
+    {
+      "path": "verification/RC62/current-source/cad-daily-browser-receipt-failure.txt",
+      "size": 12002,
+      "sha256": "78d5deec5d8007b6719ad3652e784a609c0e761d0d4614e9bf312f33a08e3250"
+    },
+    {
+      "path": "verification/RC62/current-source/cad-daily-browser.txt",
+      "size": 2708,
+      "sha256": "afe2286c0631faa1456bb0a60082d73f8dc96ba598e121f85da602868ffa5c0f"
+    },
+    {
+      "path": "verification/RC62/current-source/cad-live-facts-browser.txt",
+      "size": 2758,
+      "sha256": "fc5ed1cee8a8a2431b2fe4ce966a70531bb23d9768c34cbdc921e3ce2def6058"
+    },
+    {
+      "path": "verification/RC62/current-source/cad-live-facts-host-failure-discovery.txt",
+      "size": 38574,
+      "sha256": "a55a579dfe93e60f12d7d37b2722b48201772922c7a45ba95bfbd5204a6217f9"
+    },
+    {
+      "path": "verification/RC62/current-source/cad-live-facts-typecheck.txt",
+      "size": 271,
+      "sha256": "2b7f90a7ddcc4603707beda467d3f4ab4bfa08e3959e830faf808c51888dbeea"
+    },
+    {
+      "path": "verification/RC62/current-source/cad-live-facts-validation.json",
+      "size": 6281,
+      "sha256": "4c5b346cbd1ba8dd359cdf348be655215f26d49ed1fc3a428bbee3d274446a2e"
+    },
+    {
+      "path": "verification/RC62/current-source/case-pending-commit.png",
+      "size": 172497,
+      "sha256": "7511445d9705b011d64ad25a8b850063f4c9d95c9c1b3835a3d07764d6dd1f59"
+    },
+    {
+      "path": "verification/RC62/current-source/continuity-browser.txt",
+      "size": 866,
+      "sha256": "420687a429d0d01765e8b52e670082f5247fcd01d03d2e083e15720f21359439"
+    },
+    {
+      "path": "verification/RC62/current-source/conversation-browser.txt",
+      "size": 1312,
+      "sha256": "f1e0c3838f1de331cdeb214a678c9e7d762ffe1c1854d8a42fd008f9fa7d1f9d"
+    },
+    {
+      "path": "verification/RC62/current-source/desktop-shell-browser-report.json",
+      "size": 28891,
+      "sha256": "566216257d5e0d8653e31220cfe400a6929c5ee0f6fb2d910670c83eaab10d1a"
+    },
+    {
+      "path": "verification/RC62/current-source/desktop-shell-browser.txt",
+      "size": 2256,
+      "sha256": "b38d131c44c26b3bcbaf7a6578717891cf89e2f736e00cc485dff1a75d2c528a"
+    },
+    {
+      "path": "verification/RC62/current-source/finance-records.png",
+      "size": 175322,
+      "sha256": "a8b2f95331fb54bfd3ed379cd64d72c6634170e146ab844117cd25c74aca1b8f"
+    },
+    {
+      "path": "verification/RC62/current-source/full-verify-handoff-result.json",
+      "size": 217,
+      "sha256": "39494d3673754d33dc41a8dc07d163b6a8be0fbed0395feda23aad5be269be4e"
+    },
+    {
+      "path": "verification/RC62/current-source/full-verify-handoff.txt",
+      "size": 56913,
+      "sha256": "9bf58e2d81a0b76f78ef3257056b593adf32e909b17b76a509037d1154dabab4"
+    },
+    {
+      "path": "verification/RC62/current-source/full-verify-initial-failure-result.json",
+      "size": 232,
+      "sha256": "0df571258f1307cba0949eb6a5fa9f8c5899e1eb1be3e4c1d28f2702ef8dc617"
+    },
+    {
+      "path": "verification/RC62/current-source/full-verify-initial-failure.txt",
+      "size": 29775,
+      "sha256": "d6cf788697a8fa41f6ff7791e470536218556da8aab07a86d3ceb62ba5fb4d22"
+    },
+    {
+      "path": "verification/RC62/current-source/full-verify-result.json",
+      "size": 200,
+      "sha256": "fa1106aef295f29bf61254a9b4ea2a95d0b5c58bc00603ce598178944667781c"
+    },
+    {
+      "path": "verification/RC62/current-source/full-verify.txt",
+      "size": 58163,
+      "sha256": "10b33f7b3e708c364800ad8ac690b95819dede5ce98000099a5d4307cb766345"
+    },
+    {
+      "path": "verification/RC62/current-source/lint.txt",
+      "size": 279,
+      "sha256": "af177eb573840d74d82b8fe5826cb53f1c553f4e55195d423bbf8d6f74bba5c4"
+    },
+    {
+      "path": "verification/RC62/current-source/loading-reading-initial-failure.txt",
+      "size": 1465,
+      "sha256": "f10460bc58649c8c428ccb4570e0ab07bfc3d6057d753df724069d149ca080d5"
+    },
+    {
+      "path": "verification/RC62/current-source/loading-reading-result.json",
+      "size": 234,
+      "sha256": "00b0d5164446ff46492e3e784866d5015ac994c30f66a6fa35019f0c4cfe89e4"
+    },
+    {
+      "path": "verification/RC62/current-source/loading-reading.txt",
+      "size": 721,
+      "sha256": "11d4b2c06d5d4e138e5edfb06bd169215d008a45f31b9eaaffe4d8af04764b61"
+    },
+    {
+      "path": "verification/RC62/current-source/loading-ready-mobile.png",
+      "size": 23220,
+      "sha256": "f2d65dc5fb59e1475f5ccefca76e84166d181a73ac60815142683c7524f62709"
+    },
+    {
+      "path": "verification/RC62/current-source/message-records-mobile.png",
+      "size": 58932,
+      "sha256": "8be1801ed3c9118eb2b06881c60b76e16954adbc7561340f3c3c5c312daa79c9"
+    },
+    {
+      "path": "verification/RC62/current-source/message-records.png",
+      "size": 160433,
+      "sha256": "a5eae4fdab3c69a87281908e47ca114d4fe1204d2b37411d1330113bd5649d64"
+    },
+    {
+      "path": "verification/RC62/current-source/onboarding-startup-report.json",
+      "size": 508,
+      "sha256": "7ae4a1d08b7909be194997f3e1d67d53728afb2e6b1bc384bfdbee4d0cb0d62f"
+    },
+    {
+      "path": "verification/RC62/current-source/onboarding-startup-result.txt",
+      "size": 508,
+      "sha256": "7ae4a1d08b7909be194997f3e1d67d53728afb2e6b1bc384bfdbee4d0cb0d62f"
+    },
+    {
+      "path": "verification/RC62/current-source/onboarding-startup.txt",
+      "size": 521,
+      "sha256": "39377ff6d2286d2b709131e851363bf215022190dc502543d3a02dca4d5c76a3"
+    },
+    {
+      "path": "verification/RC62/current-source/professional-modules-browser.txt",
+      "size": 1097,
+      "sha256": "40ee6e5bc13420d869bdae4f52ad5c196445bb67e9912cb8dc46f198a81e6794"
+    },
+    {
+      "path": "verification/RC62/current-source/setup-browser.txt",
+      "size": 815,
+      "sha256": "f91e27b6313402991e200ef08c5e76194324f57136299b0fdf1a27e4e152b336"
+    },
+    {
+      "path": "verification/RC62/current-source/state-browser.txt",
+      "size": 1736,
+      "sha256": "5c2d93a146e55c8a37920c8eb0baf251317c76360f5078f7119bde56cf315ed3"
+    },
+    {
+      "path": "verification/RC62/current-source/state-live-facts-browser.txt",
+      "size": 2054,
+      "sha256": "ade96596bf15b94f406f384187a1ee786316b1e65195ec162c7819560ae2daea"
+    },
+    {
+      "path": "verification/RC62/current-source/state-live-facts-selector-failure.txt",
+      "size": 747,
+      "sha256": "b17a3cdab713f59552558a89b40e7d10e903343d418f752956a8e52a02174e94"
+    },
+    {
+      "path": "verification/RC62/current-source/windows-portability-tests.txt",
+      "size": 5167,
+      "sha256": "0c7679be22528782a56647b27413b95fa7f647434abeea595208fd279be51f1c"
+    },
+    {
+      "path": "verification/RC62/current-source/work-browser.txt",
+      "size": 1478,
+      "sha256": "1055a8fc43f9bbdefe8840a9b8d4dfdc52d00f6f2918cb6b181e53117588e2c6"
+    },
+    {
+      "path": "verification/RC62/installer-preflight/SCOPE.md",
+      "size": 709,
+      "sha256": "58cddfcb995e958c452fd71304953d4d15d9e829913b774e4a4d1f85719e2f66"
+    },
+    {
+      "path": "verification/RC62/installer-preflight/SHA256SUMS.txt",
+      "size": 96,
+      "sha256": "d159bc12522dcdfa1405154cbbb51207f7fd5b1400e9034efb1b27e9baec7234"
+    },
+    {
+      "path": "verification/RC62/installer-preflight/artifact.txt",
+      "size": 200,
+      "sha256": "ac7ada33bcbcfb4704b915b5c68d0f5b9885e171673302afcc8002f684b96c30"
+    },
+    {
+      "path": "verification/RC62/installer-preflight/dependency-install.txt",
+      "size": 897,
+      "sha256": "94a6000eb412def4a8c53f572d1985285c281fd5e51330ca101c31e215738b03"
+    },
+    {
+      "path": "verification/RC62/installer-preflight/desktop-smoke-report.json",
+      "size": 806,
+      "sha256": "851b01e3cdd5e2349100643cb6191756f37ed7e0eb20951b49831fe158d588e9"
+    },
+    {
+      "path": "verification/RC62/installer-preflight/full-verify.txt",
+      "size": 48642,
+      "sha256": "d3f9686cdfa208ada7bd8000aa78a9428c65e66a6e823749c5ec13f93b8b5b53"
+    },
+    {
+      "path": "verification/RC62/installer-preflight/packaging.txt",
+      "size": 2662,
+      "sha256": "d6a70be8fa15e9362e57c1a044b5c6219222f322fc341ff0e9f320f5717e4fdc"
+    },
+    {
+      "path": "verification/RC62/installer-preflight/result.json",
+      "size": 841,
+      "sha256": "b5a5561f8e3b6096eb6310d0d9183f006b67b795295fa36d677e803ed7fab784"
+    },
+    {
+      "path": "verification/RC62/installer-preflight/source-check.txt",
+      "size": 192,
+      "sha256": "097442b2e94acfa0c7dd026dd1d2b97a49f8a57128b6920357c5352ed142b379"
+    },
+    {
+      "path": "verification/RC62/installer-preflight/windows-build-receipt.json",
+      "size": 2383,
+      "sha256": "d5a3e91a5ffb26f74156e86d6ea4e8912d9772c40729e189cd506b02156cba18"
+    },
+    {
+      "path": "verification/RC62/native-experiments/SCOPE.md",
+      "size": 804,
+      "sha256": "cab06e0c55313afa816994e84f0ffe1ada302e9f840c46d561be281eaab48f45"
+    },
+    {
+      "path": "verification/RC62/native-experiments/baseline-1.7b/native-acceptance.txt",
+      "size": 6859,
+      "sha256": "9d1cdc52ec2039c067949b24efcdf436d4f6cbe16988c1f1a19cc3136f895e4a"
+    },
+    {
+      "path": "verification/RC62/native-experiments/baseline-1.7b/native-inference-report.json",
+      "size": 18007,
+      "sha256": "632d422cabf088b5a2d88e42f0cd2a3266c91abde70fac94b72e7429a23f35cd"
+    },
+    {
+      "path": "verification/RC62/native-experiments/baseline-1.7b/official-model-metadata.json",
+      "size": 314,
+      "sha256": "360c27dd8311a3b3cf4fd25fc81a93724ae1a48cd109cf3f82fd83549163c253"
+    },
+    {
+      "path": "verification/RC62/native-experiments/baseline-1.7b/semantic-review.md",
+      "size": 1596,
+      "sha256": "33fdad2ad3fe489382133182b1834195a9684f14ff893719c29c1c29f686c841"
+    },
+    {
+      "path": "verification/RC62/native-experiments/baseline-1.7b/source-info.json",
+      "size": 776,
+      "sha256": "e8e44e11c0361d54807995404ba7c5152f1baeec994161d74c580f764f30c1a6"
+    },
+    {
+      "path": "verification/RC62/native-experiments/baseline-1.7b/windows-native-result.json",
+      "size": 819,
+      "sha256": "9c9d541c4f3b6fdae27b6a69bb01b92372b251eebb6036fa96f673bc757dd3de"
+    },
+    {
+      "path": "verification/RC62/native-experiments/controlled-4b/native-acceptance.txt",
+      "size": 5996,
+      "sha256": "3b03ba8476695ca2436db53b766a95c111017971acf76e40f5ad7ef06ead702f"
+    },
+    {
+      "path": "verification/RC62/native-experiments/controlled-4b/native-inference-report.json",
+      "size": 17107,
+      "sha256": "3fc3a4d76f2674f658fc22f02df0489d5a26f8bb028a47d033cf70188f8a2af3"
+    },
+    {
+      "path": "verification/RC62/native-experiments/controlled-4b/official-4b-metadata.json",
+      "size": 911,
+      "sha256": "88f2ed39dc1f2ef84dfb398939f660e35ac35bb365fe80ee8fbd57e490f8cac3"
+    },
+    {
+      "path": "verification/RC62/native-experiments/controlled-4b/official-model-metadata.json",
+      "size": 1168,
+      "sha256": "8bad49acd187c755d348a485c62438eb8fb3aa8484b619fd767bdd0855aa66be"
+    },
+    {
+      "path": "verification/RC62/native-experiments/controlled-4b/semantic-review.md",
+      "size": 3523,
+      "sha256": "9dd4557e0b0ea8eedaa135366f94b15692ce31d48c169a7e8f1e610fea4e3e88"
+    },
+    {
+      "path": "verification/RC62/native-experiments/controlled-4b/source-info.json",
+      "size": 776,
+      "sha256": "fc868e1650a4e233498745f4617fb85ab5dc0c1541bddfa4760b90c817d57b97"
+    },
+    {
+      "path": "verification/RC62/native-experiments/controlled-4b/windows-native-result.json",
+      "size": 819,
+      "sha256": "5b19348b7cace65084556aacc4fc45eaf2170e5371a76656f3bee54c49fc21e2"
+    },
+    {
+      "path": "verification/RC62/native-experiments/english-policy-sampling/native-acceptance.txt",
+      "size": 7702,
+      "sha256": "7532120b8d8423637bd162bd94d7501ff0e563df8264fa41a20a685c517757aa"
+    },
+    {
+      "path": "verification/RC62/native-experiments/english-policy-sampling/native-inference-report.json",
+      "size": 31265,
+      "sha256": "8766d0b4a4b52887969f9a78aa819dec75dc034ffd9b59072d012f27173f7730"
+    },
+    {
+      "path": "verification/RC62/native-experiments/english-policy-sampling/official-instruct-2507-metadata.json",
+      "size": 329,
+      "sha256": "76bb16ea2d29523378234e1a1bfaa49f66e98fa527fc66bb58b68b7e4899b845"
+    },
+    {
+      "path": "verification/RC62/native-experiments/english-policy-sampling/official-model-card-proof.json",
+      "size": 1249,
+      "sha256": "2c7d8dd17a5a2f2cf47048913221545b5ae85bc51359bf04290b9c4d4675f737"
+    },
+    {
+      "path": "verification/RC62/native-experiments/english-policy-sampling/official-model-metadata.json",
+      "size": 1168,
+      "sha256": "8bad49acd187c755d348a485c62438eb8fb3aa8484b619fd767bdd0855aa66be"
+    },
+    {
+      "path": "verification/RC62/native-experiments/english-policy-sampling/semantic-review.md",
+      "size": 1906,
+      "sha256": "83c83b011910af576df36807d218171996ad98f92f690316f80ef80c10e3274f"
+    },
+    {
+      "path": "verification/RC62/native-experiments/english-policy-sampling/source-info.json",
+      "size": 877,
+      "sha256": "e67b819a974698a3edad3a304ea420d9da339c14994173404b35db0c2e4bb8e2"
+    },
+    {
+      "path": "verification/RC62/native-experiments/english-policy-sampling/windows-native-result.json",
+      "size": 819,
+      "sha256": "885b624f6f41f1a41a40c49e0b93ac85a12964b899fe407018f06e98d59e8281"
+    },
+    {
+      "path": "verification/RC62/native-experiments/instruct-2507/native-acceptance.txt",
+      "size": 9489,
+      "sha256": "343e869d0610c3ef7889a3e94fec48b8fe9baad0f47c4d03759fda13df1f110e"
+    },
+    {
+      "path": "verification/RC62/native-experiments/instruct-2507/native-inference-report.json",
+      "size": 34984,
+      "sha256": "b28de49affa047e04603432979ff8c4f8ed5f7740f765ee1c60bb8091140726c"
+    },
+    {
+      "path": "verification/RC62/native-experiments/instruct-2507/publisher-model-card-proof.json",
+      "size": 857,
+      "sha256": "5296b68f6994431f76931fd76208c545ded1e557b9baca8a082636be08317a94"
+    },
+    {
+      "path": "verification/RC62/native-experiments/instruct-2507/publisher-model-metadata.json",
+      "size": 6078,
+      "sha256": "c25ec0a7c77fcf73c3db213d118f9bf843cdfac975058e9e5c9cb4c3ed51ae81"
+    },
+    {
+      "path": "verification/RC62/native-experiments/instruct-2507/source-info.json",
+      "size": 877,
+      "sha256": "e01b78214651ecac7fdc4a066478b9229fc1e9e42381b478ab2c5e5a90e9a1ae"
+    },
+    {
+      "path": "verification/RC62/native-experiments/instruct-2507/windows-native-result.json",
+      "size": 819,
+      "sha256": "dab4b031a5cd3cf8986745fe7357e5c811cd0052bd4cddda861c863a342cf179"
+    },
+    {
+      "path": "verification/RC62/native-experiments/qwen35-discovery/candidates-metadata.json",
+      "size": 9448,
+      "sha256": "ca451a7aee8de33f2a9a0168cbb0b4ea750344c2723c0cd21c11d37bae0e1704"
+    },
+    {
+      "path": "verification/RC62/native-experiments/qwen35-grounding/native-acceptance.txt",
+      "size": 7441,
+      "sha256": "30570c338f3b32ec09eba60ea78dca5b42f5b90c0a5775a90509adf7cb3cd33c"
+    },
+    {
+      "path": "verification/RC62/native-experiments/qwen35-grounding/native-inference-report.json",
+      "size": 84440,
+      "sha256": "efc5ecdb1cb58bb0a1938562cf86a45626e9576f21a63e742706e19787d3c91e"
+    },
+    {
+      "path": "verification/RC62/native-experiments/qwen35-grounding/publisher-model-card-proof.json",
+      "size": 2046,
+      "sha256": "cd08d6d6159b14d5747f544ce597868157d9fe2804346799cbabe9ccf8195455"
+    },
+    {
+      "path": "verification/RC62/native-experiments/qwen35-grounding/publisher-model-metadata.json",
+      "size": 5526,
+      "sha256": "512e834fe4117d84b6e9d6b5b17738a5733f869bd25344c638583dcc9aef82d4"
+    },
+    {
+      "path": "verification/RC62/native-experiments/qwen35-grounding/semantic-review.md",
+      "size": 2320,
+      "sha256": "db955d8b3aa2a8ce65f5fe39e7fb102f02d94359e5e963af347c2e7915705fbe"
+    },
+    {
+      "path": "verification/RC62/native-experiments/qwen35-grounding/source-info.json",
+      "size": 981,
+      "sha256": "427b00ccae246dda5b33551665ec3bd941c0a40e7a38b709fbabe467d34f56d9"
+    },
+    {
+      "path": "verification/RC62/native-experiments/qwen35-grounding/windows-native-result.json",
+      "size": 942,
+      "sha256": "1967d95a0b4f5adeee92753737eec2d32b9c6015a4a24fe0ac5dce98a87002b7"
+    },
+    {
+      "path": "verification/RC62/native-experiments/qwen35-ops/native-acceptance.txt",
+      "size": 9555,
+      "sha256": "0585c352e272aaf395c733d8636ead4bda8a7e25947e9e4ec8176c0666d75580"
+    },
+    {
+      "path": "verification/RC62/native-experiments/qwen35-ops/native-inference-report.json",
+      "size": 88406,
+      "sha256": "a535006839a26f3c34bd5f1c3c7d091ba05d8d11b1505fcff930ad8f59c3649b"
+    },
+    {
+      "path": "verification/RC62/native-experiments/qwen35-ops/publisher-model-card-proof.json",
+      "size": 2046,
+      "sha256": "cd08d6d6159b14d5747f544ce597868157d9fe2804346799cbabe9ccf8195455"
+    },
+    {
+      "path": "verification/RC62/native-experiments/qwen35-ops/publisher-model-metadata.json",
+      "size": 5526,
+      "sha256": "512e834fe4117d84b6e9d6b5b17738a5733f869bd25344c638583dcc9aef82d4"
+    },
+    {
+      "path": "verification/RC62/native-experiments/qwen35-ops/semantic-review.md",
+      "size": 2354,
+      "sha256": "8039d258fde61a2e6967f06c7420e79de4abec3ee87185d8089699fa3e4cfd4c"
+    },
+    {
+      "path": "verification/RC62/native-experiments/qwen35-ops/source-info.json",
+      "size": 981,
+      "sha256": "5c6f7fc7d2f93c854e394ddc361df2651c546015e8409148baa40f0fb664630e"
+    },
+    {
+      "path": "verification/RC62/native-experiments/qwen35-ops/windows-native-result.json",
+      "size": 905,
+      "sha256": "3addc4c80e4c127f9caab61c8127249f0fb39b3579a8aee2197a43bc0f80a340"
+    },
+    {
+      "path": "verification/RC62/native-experiments/template-controls/native-acceptance.txt",
+      "size": 4922,
+      "sha256": "e21d69f8e78405b649d4b503fbec879be20d59b905ac88ad6f6a188e9f4bc7d2"
+    },
+    {
+      "path": "verification/RC62/native-experiments/template-controls/native-inference-report.json",
+      "size": 27639,
+      "sha256": "5b0df7c0032bf0c672394caaa160aa68ea211b9c545b422191b8c954dea5cfa3"
+    },
+    {
+      "path": "verification/RC62/native-experiments/template-controls/publisher-model-card-proof.json",
+      "size": 857,
+      "sha256": "5296b68f6994431f76931fd76208c545ded1e557b9baca8a082636be08317a94"
+    },
+    {
+      "path": "verification/RC62/native-experiments/template-controls/publisher-model-metadata.json",
+      "size": 6078,
+      "sha256": "c25ec0a7c77fcf73c3db213d118f9bf843cdfac975058e9e5c9cb4c3ed51ae81"
+    },
+    {
+      "path": "verification/RC62/native-experiments/template-controls/source-info.json",
+      "size": 877,
+      "sha256": "d2f88e956db8208bcb7d9e9a82cc0a7014ddb828434e57f7d460bd60e9988879"
+    },
+    {
+      "path": "verification/RC62/native-experiments/template-controls/windows-native-result.json",
+      "size": 819,
+      "sha256": "11a7ac0c1f02f956f3c52ecf45fe1b349ec7f327f3612122a89fa07853e94b30"
+    },
+    {
+      "path": "verification/RC62/native-experiments/turkish-policy-greedy/native-acceptance.txt",
+      "size": 5197,
+      "sha256": "dc1f0219d368b5c7ae6099ea87792c9208a71421481f04741efeef02cf119441"
+    },
+    {
+      "path": "verification/RC62/native-experiments/turkish-policy-greedy/native-inference-report.json",
+      "size": 11561,
+      "sha256": "8b64ef9cdf5b07a9cfa316a54e337cb36dc349e5bde71a893901ee49036c3f34"
+    },
+    {
+      "path": "verification/RC62/native-experiments/turkish-policy-greedy/source-info.json",
+      "size": 877,
+      "sha256": "1cc1a03257d8577ee4d4eee45bd3e6f5a3df0e23dade2621364dde234880bc09"
+    },
+    {
+      "path": "verification/RC62/native-experiments/turkish-policy-greedy/windows-native-result.json",
+      "size": 819,
+      "sha256": "417c43af77ab067f153d9b59ea03e635d8fdb5fdd70b2e773a177fb3baadbc14"
+    },
+    {
+      "path": "verification/RC62/native-experiments/turkish-policy-sampling/native-acceptance.txt",
+      "size": 3926,
+      "sha256": "76229b9df3955fca4d82786a9e958a56728709087cb2bc8ecea5389abadf974d"
+    },
+    {
+      "path": "verification/RC62/native-experiments/turkish-policy-sampling/native-inference-report.json",
+      "size": 12542,
+      "sha256": "d73a731883416038aa18dbc5b493847b3d01fd474d394eb8dd4f4c50d94f0cbb"
+    },
+    {
+      "path": "verification/RC62/native-experiments/turkish-policy-sampling/semantic-review.md",
+      "size": 1601,
+      "sha256": "276a9bcd7c9c8b166c08cdc9ddf285825c9f30b1f052dd848764ffc48d43e964"
+    },
+    {
+      "path": "verification/RC62/native-experiments/turkish-policy-sampling/source-info.json",
+      "size": 877,
+      "sha256": "9ffc60e9ee820a55d0fb655bb39ecd6cea77ad5c8a8660f5ab69028573d7a3e3"
+    },
+    {
+      "path": "verification/RC62/native-experiments/turkish-policy-sampling/windows-native-result.json",
+      "size": 819,
+      "sha256": "5850529afa26c5df9ba672923708bf0d346245525afbedd5f52a1afab3cc1351"
+    },
+    {
+      "path": "verification/RC62/source-verification.json",
+      "size": 4328,
+      "sha256": "c2c1c24f2f1f32dd16643d9d846a7505ed7c67cb9b00f72329bdb2ca56679787"
     },
     {
       "path": "verification/professional/aya.json",

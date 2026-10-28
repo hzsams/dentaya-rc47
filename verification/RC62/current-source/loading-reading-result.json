@@ -1,0 +1,11 @@
+{
+  "name": "loading-reading",
+  "command": [
+    "node",
+    "scripts/verify-loading-reading-browser.mjs"
+  ],
+  "startedAt": "2026-10-28T10:25:40.620390+00:00",
+  "seconds": 22.012,
+  "exitCode": 0,
+  "log": "loading-reading.txt"
+}

@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-28",
+  "timezone": "Europe/Istanbul",
+  "purpose": "complete development handoff; not final RC62 release",
+  "handoffTag": "devir-2026-10-28-rc62-wip",
+  "repository": "https://github.com/hzsams/dentaya-rc47.git",
+  "productBranch": "professional-workflow",
+  "productCodeCommit": "a8e34b4e3eb5614e7120b03051fb14bd005ae467",
+  "lastReleasedMainCommit": "4b6a36047410eeae1ba5057b6a7a69604f662909",
+  "packageVersion": "1.0.0-rc.62",
+  "ayaCoreVersion": "0.18.0",
+  "finalRc62Released": false,
+  "user": {
+    "locale": "tr",
+    "platform": "Windows installed EXE",
+    "ramGiB": 16,
+    "ssdGB": 512,
+    "gpu": "unknown; not a blocker for CPU model"
+  },
+  "mainModel": {
+    "id": "aya-local:qwen3-1.7b-q8",
+    "name": "Qwen3-1.7B-Q8_0.gguf",
+    "bytes": 1834426016,
+    "sha256": "061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+    "newCandidateMerged": false
+  },
+  "nativeCandidate": {
+    "generatedAt": "2026-10-28T17:15:43.676496+00:00",
+    "mainRepository": "/workspace/dentaya-rc47",
+    "mainModel": "Qwen3 1.7B Q8_0 baseline; experimental candidate NOT adopted",
+    "experimentalRepository": "/workspace/dentaya-native-ci-check",
+    "experimentalBranch": "codex/aya-native-validation",
+    "latestCandidateCommit": "2760095b4c14085dfcb7497644509bf384319012",
+    "preflight": {
+      "status": "passed",
+      "checks": [
+        "verify-local-aya including full 27 tools + section + 2048 output reserve",
+        "verify-aya-agent",
+        "verify-aya-core",
+        "verify-aya-memory-task-schema",
+        "verify-aya-memory-task",
+        "targeted ESLint and diff-check"
+      ]
+    },
+    "verifiedContractCandidate": {
+      "sourceCommit": "08899dcee1310e3a6a00adca38c315557edda151",
+      "runId": "40728527664",
+      "evidenceCommit": "589e603",
+      "nativeRequestsAttempted": 9,
+      "nativeRequestsSucceeded": 9,
+      "contractPass": true,
+      "manualSemanticAcceptance": "REJECTED",
+      "evidenceDirectory": "native-validation-evidence/qwen35-ops"
+    },
+    "latestGroundingExperiment": {
+      "sourceCommit": "9dc9956cdf81f2dc4492e8afef6429b13fe221e8",
+      "runId": "40730934136",
+      "url": "https://github.com/hzsams/dentaya-rc47/actions/runs/40730934136",
+      "statusAtHandoff": "completed failed: 9 actual requests, 8 complete bridge replies; final combined CAD/memory plan rejected",
+      "evidenceDirectory": "native-validation-evidence/qwen35-grounding",
+      "latestBudgetFix": "2760095b4c14085dfcb7497644509bf384319012",
+      "budgetFixNativeVerified": false,
+      "note": "Run tests prior9dc9956 grounding prompt. Latest compact2760095 source still needs native revalidation. CAD planner writes its own conclusions into decision memory; separate planning/result evidence from explicit user-memory updates.",
+      "evidenceCommit": "131415a",
+      "contractPass": false,
+      "nativeRequestsAttempted": 9,
+      "acceptedReplies": 8,
+      "error": "cad-tool-results-and-report-limits: LOCAL_INVALID_PLAN",
+      "manualSemanticAcceptance": "NOT ACCEPTED",
+      "reproducedFailure": {
+        "stack": "agent.cjs union -> updateMemory -> readAgentReply",
+        "priorDecisions": 5,
+        "newDistinctModelConclusions": 2,
+        "union": 7,
+        "capacity": 5,
+        "guard": "correct atomic rejection; do not evict old decisions or raise capacity to force pass"
+      }
+    },
+    "model": {
+      "name": "Qwen3.5-4B-Q4_K_M.gguf",
+      "publisher": "unsloth",
+      "baseModel": "Qwen/Qwen3.5-4B",
+      "license": "Apache-2.0",
+      "revision": "e87f176479d0855a907a41277aca2f8ee7a09523",
+      "bytes": 2740937888,
+      "sha256": "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4"
+    },
+    "minimalPatch": "devir/2026-10-28/experimental-native-candidate.patch",
+    "patchFiles": [
+      "electron/aya-local.cjs",
+      "electron/aya/core.cjs",
+      "electron/aya/dialogue.cjs",
+      "electron/aya/agent.cjs",
+      "electron/aya/managed-runtime.cjs",
+      "electron/aya/memory-task.cjs",
+      "scripts/verify-aya-memory-task.cjs",
+      "scripts/verify-aya-memory-task-schema.cjs",
+      "scripts/verify-aya-managed.cjs"
+    ],
+    "doNotAdoptUntil": "Read raw replies and pass semantic criteria, revalidate exact compacted source, then integrate only reviewed files and all version/UI/license/test updates.",
+    "handoffComplete": true,
+    "freezeScope": "Documentation, status and immutable evidence only; no main product candidate adoption",
+    "topNextAction": {
+      "problem": "CAD planner promotes its own conclusions/proposals into user decision memory; strict capacity correctly rejects the next combined plan.",
+      "proof": "Run40730934136, actual9requests/8accepted; prior5+generated2=union7; reproducedagent.cjs union->updateMemory rejection.",
+      "requiredChange": "Separate CAD planning and host observations from latest-user-authoritative task:memory extraction; preserve scope/turn/revision/cancellation gates.",
+      "mustNotDo": [
+        "drop old decisions",
+        "raise capacity5 to force pass",
+        "weaken parser or tests",
+        "merge unqualified model candidate"
+      ]
+    },
+    "diagnosticToolingPatch": "devir/2026-10-28/experimental-native-diagnostics.patch",
+    "nativeHandoffCommit": "8d032ff6dc9e184d6bfd5081345ccdcd680b0ce8"
+  },
+  "validation": {
+    "fullSourceVerify": {
+      "name": "full-verify-handoff",
+      "command": [
+        "npm",
+        "run",
+        "verify"
+      ],
+      "startedAt": "2026-10-28T16:57:08.254178+00:00",
+      "seconds": 117.688,
+      "exitCode": 0,
+      "log": "full-verify-handoff.txt"
+    },
+    "latestCadProof": "verification/RC62/current-source/cad-live-facts-validation.json",
+    "browserProof": "verification/RC62/current-source/browser-validation-summary.json",
+    "finalWindowsInstallerProduced": false,
+    "windowsDiagnosticPreflightPassed": true,
+    "windowsDiagnosticRun": "40673513656",
+    "windowsDiagnosticSourceCommit": "61ee56824704c8937fbace10e77947e30d96653a",
+    "nativeCandidateContractPassNotSemanticAcceptance": true,
+    "liveOrganizationBackendVerified": false,
+    "clinicalProductionAcceptance": false
+  },
+  "counts": {
+    "dentalFacts": 500,
+    "factSourceGroups": 60,
+    "qaCatalogue": 1008,
+    "volumeSvgLogos": 120,
+    "actual3DLogoMeshes": false,
+    "miniGames": 5,
+    "appearances": 72,
+    "typedCadTools": 27,
+    "languages": 46,
+    "dentalFactCapacityTarget": 30000
+  },
+  "readOrder": [
+    "YENI_CHATGPT_ICIN_TAM_DEVIR.md",
+    "YENI_CHATGPT_BASLANGIC_PROMPTU.md",
+    "AGENTS.md",
+    "CODEX_BASLANGIC_PROMPTU.md",
+    "CODEX_DEVIR_NOTLARI.md",
+    "RC62_KONTROL_RAPORU.md",
+    "devir/2026-10-28/CAD_HANDOFF.md",
+    "devir/2026-10-28/WINDOWS_HANDOFF.md",
+    "devir/2026-10-28/NATIVE_HANDOFF.md"
+  ],
+  "forbiddenConflations": [
+    "source ZIP is not Windows installer",
+    "fixture transport is not real native inference",
+    "9 contract checks are not 9 semantically correct answers",
+    "preflight installer uses older source",
+    "model-card pin is not proof of quality",
+    "30000 capacity is not actual content",
+    "SVG depth effect is not 3D mesh",
+    "working RC62 metadata is not final RC62 release"
+  ],
+  "excludedFromArchive": [
+    ".git",
+    "node_modules",
+    ".next",
+    "personal .env",
+    "model weights",
+    "final EXE",
+    "patient files"
+  ],
+  "nextWork": [
+    "Fix confirmed CAD planner self-observations entering user decision memory; preserve strict5 capacity and prior decisions",
+    "Read current native handoff and pending grounding run; preserve manual rejection",
+    "Fix semantic tool/evidence/Turkish/memory-completion behavior without canned replies",
+    "Validate compact 2760095 candidate with full context and actual native output",
+    "Adopt only qualified minimal candidate, update UI/license/fixtures while keeping prior preferences",
+    "Run final source checks and regenerate final-release manifest",
+    "Build exact tagged Windows installer and inspect its actual native reports",
+    "Publish verified RC62 installer/source links and check downloads"
+  ]
+}

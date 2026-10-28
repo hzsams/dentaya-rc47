@@ -1,0 +1,73 @@
+{
+  "release": "1.0.0-rc.62",
+  "status": "pass-development-handoff",
+  "date": "2026-10-28T17:08:16.519653+00:00",
+  "scope": "main product source checks and synthetic integration; experimental model patch not applied",
+  "codeCommit": "a8e34b4e3eb5614e7120b03051fb14bd005ae467",
+  "baseRelease": "1.0.0-rc.61",
+  "baseCommit": "4b6a36047410eeae1ba5057b6a7a69604f662909",
+  "nativeModelInferenceVerified": false,
+  "experimentalNativeContractPassed": true,
+  "experimentalNativeSemanticAcceptance": "REJECTED; later compact source not yet native verified",
+  "windowsInstallerProduced": false,
+  "windowsDiagnosticPreflightProduced": true,
+  "windowsDiagnosticSource": "61ee56824704c8937fbace10e77947e30d96653a",
+  "liveOrganizationBackendVerified": false,
+  "clinicalProductionAcceptance": false,
+  "fullSourceVerify": {
+    "name": "full-verify-handoff",
+    "command": [
+      "npm",
+      "run",
+      "verify"
+    ],
+    "startedAt": "2026-10-28T16:57:08.254178+00:00",
+    "seconds": 117.688,
+    "exitCode": 0,
+    "log": "full-verify-handoff.txt"
+  },
+  "latestCadBrowserProof": "current-source/cad-live-facts-validation.json",
+  "latestCadBrowserProofSHA256": "4c5b346cbd1ba8dd359cdf348be655215f26d49ed1fc3a428bbee3d274446a2e",
+  "earlierBrowserProof": "current-source/browser-validation-summary.json",
+  "historicalUiScope": "acceptance/setup/desktop shell logs predate release metadata/CAD host patch; latest state/CAD daily explicitly rechecked new host behavior",
+  "runtime": {
+    "node": "v24.19.0",
+    "npm": "11.9.0",
+    "os": "Linux"
+  },
+  "sourceHashesAtHandoff": {
+    "package.json": "3d870d86ab22ed999394ba42a02fd21498ab1b7a480f991d1e9c724bc9ff9056",
+    "package-lock.json": "c61d4c4e8ae3f091de1f74cbf3e37ecfcd386b3b90ec55897ef08f960ba6c3ad",
+    "AGENTS.md": "55644393e9f65a2aadb29513d6357ed319a6a369ba5bffba120e5cc81eac66b6",
+    "src/lib/release.ts": "d0a14ade44e374d0c88187397516e1063eea4844fb1cc869fed5ea238649a56c",
+    "src/lib/supabase.ts": "fb38e0176f2940494cf87a4a1b75e580f4361dad274a105cbc522169e0b459b9",
+    "electron/main.cjs": "048ac964c7eb9c12498a0c7a92665553ede7169c99513e9eb60aa4797755d047",
+    "electron/preload.cjs": "14c9a77ca146c450c820ef8d78d8670c74ddb8e9dba305b51c2b29d6185562d3",
+    "electron/aya-local.cjs": "85ca0e172d61030ceaab98f4c33b9cfbf650ff0bec06786a798b9b550140afcf",
+    "electron/aya/core.cjs": "98f3d9e64d9fc7bf5ada33f72a3babde154449b9cf3a7fce0b22fefda88a9c3b",
+    "electron/aya/agent.cjs": "175b2b2baa8214cadafafc9b333435581e97346628482f6401fd0c319fde456f",
+    "electron/aya/managed-runtime.cjs": "35a95db4d27db8f46d69be5adb9d824d097aad2efb080c058018f71925e8c111",
+    "src/app/ai/AyaChat.tsx": "7338586fc0795d3e0550f6e0708868499f2d2471325f479d2f93aead2a0e382f",
+    "src/app/ai/AyaEngineSetup.tsx": "a91cd68d86a2970c2f6682c6b40fbcf70ee205d72c745a6af63516bf3f265e0e",
+    "src/lib/aya-chat-workspace.ts": "034be3da3dadcaa4086bb83737fb9b771154b18a2466c154bbc4e86683b52845",
+    "src/app/design/CadAyaPanel.tsx": "d86470ae6c7a4d919de356d6117550292c1f6ef64109a93be61fc15a29ed8dda",
+    "src/app/design/DesignStudioClient.tsx": "29efb57c50da0c088851661fcabe684993a571e55ac8336d22f1a4fbbc98fd6d",
+    "src/app/design/DesignViewport.tsx": "870555936e332c0f184fce5e5a0a43c725998e75a2bcf37dd38f766d78a172dd",
+    "src/app/design/cad-workspace.css": "6325df08f9b73d816efba9843a5cd93d78b0e1e3ffbd941566f3bd5bdb206590",
+    "src/lib/i18n/aya-agent.ts": "0c2fa91938f9ce5967d8e3bf8dbcc14300b34ee75156635a949222243ec9d628",
+    "scripts/verify-cad-daily-browser.mjs": "4a8b864f96eac41069ff8fc175ab8b8d810fc5155ac7fc93914ee0b575dbf5ec",
+    "scripts/verify-aya-state-browser.mjs": "9191ed79cd0ebc7bb32cfb4878fc731a6661e3707861496768938bff0127e545",
+    ".github/workflows/windows-release.yml": "55dfd51db423fcc93690cf4a818181afe64c0150308d604fa5d7bb8ac00c66b4"
+  },
+  "sourceIntegrity": "sealed separately after handoff files are complete",
+  "experimentalNativeContractSourceCommit": "08899dcee1310e3a6a00adca38c315557edda151",
+  "latestGrounding": {
+    "runId": "40730934136",
+    "sourceCommit": "9dc9956",
+    "actualRequests": 9,
+    "acceptedReplies": 8,
+    "status": "failed",
+    "rootCause": "CAD planner adds its observations into user decision memory, causing 5+2 overflow; strict capacity correctly rejects",
+    "compactCandidateNativeVerified": false
+  }
+}

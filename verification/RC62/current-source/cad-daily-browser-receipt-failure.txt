@@ -1,0 +1,334 @@
+PASS: measured left-stacked docks, continuous real canvas, keyboard detach and explicit redock.
+PASS: implant-abutment crown appears on its offset margin, sized locally.
+PASS: explicitly selected CAD tool guide uses live context; real manual checks preserve the mesh.
+PASS: CAD drafts survive close/reopen and success, invalid output, engine failure, or cancellation during bounded QC interpretation.
+▲ Next.js 16.3.8 (Turbopack)
+- Local:         http://127.0.0.1:3049
+- Network:       http://127.0.0.1:3049
+✓ Ready in 412ms
+✓ Running next.config.ts took 34ms
+
+ GET /design?case=33333333-3333-4333-8333-333333333333 200 in 1667ms (next.js: 1078ms, application-code: 589ms)
+ GET /design?case=33333333-3333-4333-8333-333333333333 200 in 137ms (next.js: 5ms, application-code: 132ms)
+[browser] Image with src "http://127.0.0.1:3049/logos/01_dental_form.svg?brand=premium-4" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/logos/01_dental_form.svg?brand=premium-4" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+
+CAD failure diagnostic {
+  "state": {
+    "url": "http://127.0.0.1:3049/design?case=33333333-3333-4333-8333-333333333333",
+    "status": "CAD projesi kaydedildi.602.stl · mm268 üçgen · Yerel 10:12:07",
+    "case": "33333333-3333-4333-8333-333333333333",
+    "saveState": "saving",
+    "modalOpen": false,
+    "headerButtons": [
+      {
+        "label": "Kaydediliyor…",
+        "disabled": true
+      },
+      {
+        "label": "Araçlar",
+        "disabled": false
+      },
+      {
+        "label": "",
+        "disabled": true
+      },
+      {
+        "label": "Tarama verisi",
+        "disabled": false
+      },
+      {
+        "label": "Preparasyon marjini",
+        "disabled": false
+      },
+      {
+        "label": "3İç yüzey",
+        "disabled": false
+      },
+      {
+        "label": "4Anatomi",
+        "disabled": false
+      },
+      {
+        "label": "5Serbest şekillendirme",
+        "disabled": true
+      },
+      {
+        "label": "6Temas & karşıt çene",
+        "disabled": true
+      },
+      {
+        "label": "7Kalınlık & kontrol",
+        "disabled": true
+      },
+      {
+        "label": "8Son kontrol",
+        "disabled": true
+      },
+      {
+        "label": "Modüller",
+        "disabled": false
+      },
+      {
+        "label": "Adım adım",
+        "disabled": false
+      },
+      {
+        "label": "Uzman",
+        "disabled": false
+      },
+      {
+        "label": "Görünüm ve ses ayarları",
+        "disabled": false
+      },
+      {
+        "label": "Araç kataloğu",
+        "disabled": false
+      },
+      {
+        "label": "Kısayollar",
+        "disabled": false
+      },
+      {
+        "label": "Panel konumunu sıfırla",
+        "disabled": false
+      },
+      {
+        "label": "Odak görünümü",
+        "disabled": false
+      },
+      {
+        "label": "Kaydet ve çık",
+        "disabled": true
+      },
+      {
+        "label": "Form kütüphanesi",
+        "disabled": false
+      },
+      {
+        "label": "AYA",
+        "disabled": false
+      }
+    ],
+    "history": "0 / 0"
+  },
+  "serverVersion": "2026-10-28T10:12:09.532Z",
+  "serverUnit": "unit-46-0",
+  "serverSavedAt": 1793182327326,
+  "writeCount": 8,
+  "requestLog": [
+    {
+      "at": 6628,
+      "method": "GET",
+      "case": "eq.33333333-3333-4333-8333-333333333333",
+      "serverVersion": "2026-10-28T10:11:16.776Z"
+    },
+    {
+      "at": 9057,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T10:11:16.776Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793182285756,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T10:11:16.776Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T10:11:25.839Z"
+    },
+    {
+      "at": 22556,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T10:11:25.839Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793182299141,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T10:11:25.839Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T10:11:39.339Z"
+    },
+    {
+      "at": 22972,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T10:11:39.339Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793182299686,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T10:11:39.339Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T10:11:39.756Z"
+    },
+    {
+      "at": 28013,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T10:11:39.756Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793182304737,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T10:11:39.756Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T10:11:44.798Z"
+    },
+    {
+      "at": 43620,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T10:11:44.798Z",
+      "unit": "unit-47-1",
+      "stage": "margin",
+      "localSavedAt": 1793182320301,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T10:11:44.798Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T10:12:00.406Z"
+    },
+    {
+      "at": 45276,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T10:12:00.406Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793182321993,
+      "held": false,
+      "heldMillis": 0,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T10:12:00.406Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T10:12:02.063Z"
+    },
+    {
+      "at": 45930,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T10:12:02.063Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793182322664,
+      "held": true,
+      "heldMillis": 1291,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T10:12:02.063Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T10:12:04.010Z"
+    },
+    {
+      "at": 50651,
+      "method": "PATCH",
+      "id": "eq.55555555-5555-4555-8555-555555555555",
+      "expected": "eq.2026-10-28T10:12:04.010Z",
+      "unit": "unit-46-0",
+      "stage": "margin",
+      "localSavedAt": 1793182327326,
+      "held": true,
+      "heldMillis": 2092,
+      "transportFailure": null,
+      "serverVersion": "2026-10-28T10:12:04.010Z",
+      "status": 200,
+      "responseVersion": "2026-10-28T10:12:09.532Z"
+    }
+  ],
+  "navigationLog": [
+    {
+      "at": 3404,
+      "url": "http://127.0.0.1:3049/design?case=33333333-3333-4333-8333-333333333333",
+      "kind": "document",
+      "navigation": true
+    },
+    {
+      "at": 6628,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at&case_id=eq.33333333-3333-4333-8333-333333333333",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 6649,
+      "url": "http://127.0.0.1:54321/rest/v1/design_versions?select=id%2Cversion_number%2Cstatus%2Cnote%2Ccreated_at&project_id=eq.55555555-5555-4555-8555-555555555555&order=version_number.desc",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 9056,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T10%3A11%3A16.776Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 22555,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T10%3A11%3A25.839Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 22970,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T10%3A11%3A39.339Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 28012,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T10%3A11%3A39.756Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 43615,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T10%3A11%3A44.798Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 45274,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T10%3A12%3A00.406Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 45928,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T10%3A12%3A02.063Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    },
+    {
+      "at": 50648,
+      "url": "http://127.0.0.1:54321/rest/v1/design_projects?id=eq.55555555-5555-4555-8555-555555555555&updated_at=eq.2026-10-28T10%3A12%3A04.010Z&select=id%2Ccase_id%2Clab_org_id%2Csource_scan_id%2Ctitle%2Crestoration_type%2Ctooth_codes%2Cmaterial%2Cshade%2Cworkflow_stage%2Cstatus%2Csettings%2Cmargin_points%2Cmeasurements%2Cupdated_at",
+      "kind": "fetch",
+      "navigation": false
+    }
+  ]
+}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: A late save result cannot be relabelled as evidence for a unit left and reopened while pending
+
+1 !== 0
+
+    at <anonymous> (/workspace/dentaya-rc47/scripts/verify-cad-daily-browser.mjs:287:64) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 1,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

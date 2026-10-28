@@ -1,0 +1,12 @@
+{
+  "name": "full-verify-handoff",
+  "command": [
+    "npm",
+    "run",
+    "verify"
+  ],
+  "startedAt": "2026-10-28T16:57:08.254178+00:00",
+  "seconds": 117.688,
+  "exitCode": 0,
+  "log": "full-verify-handoff.txt"
+}

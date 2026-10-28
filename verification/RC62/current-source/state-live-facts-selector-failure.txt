@@ -1,0 +1,22 @@
+▲ Next.js 16.3.8 (Turbopack)
+- Local:         http://127.0.0.1:3068
+- Network:       http://127.0.0.1:3068
+✓ Ready in 341ms
+✓ Running next.config.ts took 89ms
+
+ GET /rc54-aya-state-preview 200 in 2.5s (next.js: 2.0s, application-code: 486ms)
+ GET /rc54-aya-state-preview 200 in 76ms (next.js: 7ms, application-code: 68ms)
+
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#cad-test').getByRole('log').getByText('SYNTHETIC FALSE CLAIM: CAD projesi kaydedildi. Üretim onaylı.', { exact: true }) to be visible[22m
+
+    at /workspace/dentaya-rc47/scripts/verify-aya-state-browser.mjs:171:117 {
+  name: 'TimeoutError'
+}
+
+Node.js v24.19.0

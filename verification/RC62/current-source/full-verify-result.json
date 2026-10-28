@@ -1,0 +1,12 @@
+{
+  "name": "full-verify",
+  "command": [
+    "npm",
+    "run",
+    "verify"
+  ],
+  "startedAt": "2026-10-28T10:21:56.993398+00:00",
+  "seconds": 146.34,
+  "exitCode": 0,
+  "log": "full-verify.txt"
+}
