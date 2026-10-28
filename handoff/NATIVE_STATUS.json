@@ -1,0 +1,61 @@
+{
+  "generatedAt": "2026-10-28T16:59:55.587157+00:00",
+  "mainRepository": "/workspace/dentaya-rc47",
+  "mainModel": "Qwen3 1.7B Q8_0 baseline; experimental candidate NOT adopted",
+  "experimentalRepository": "/workspace/dentaya-native-ci-check",
+  "experimentalBranch": "codex/aya-native-validation",
+  "latestCandidateCommit": "2760095b4c14085dfcb7497644509bf384319012",
+  "preflight": {
+    "status": "passed",
+    "checks": [
+      "verify-local-aya including full 27 tools + section + 2048 output reserve",
+      "verify-aya-agent",
+      "verify-aya-core",
+      "verify-aya-memory-task-schema",
+      "verify-aya-memory-task",
+      "targeted ESLint and diff-check"
+    ]
+  },
+  "verifiedContractCandidate": {
+    "sourceCommit": "08899dcee1310e3a6a00adca38c315557edda151",
+    "runId": "40728527664",
+    "evidenceCommit": "589e603",
+    "nativeRequestsAttempted": 9,
+    "nativeRequestsSucceeded": 9,
+    "contractPass": true,
+    "manualSemanticAcceptance": "REJECTED",
+    "evidenceDirectory": "native-validation-evidence/qwen35-ops"
+  },
+  "latestGroundingExperiment": {
+    "sourceCommit": "9dc9956",
+    "runId": "40730934136",
+    "url": "https://github.com/hzsams/dentaya-rc47/actions/runs/40730934136",
+    "statusAtHandoff": "pending; inspect actual run and new evidence before any acceptance",
+    "evidenceDirectory": "native-validation-evidence/qwen35-grounding",
+    "latestBudgetFix": "2760095b4c14085dfcb7497644509bf384319012",
+    "budgetFixNativeVerified": false,
+    "note": "Budget fix commit has [skip ci]; current in-flight run tests the prior 9dc9956 prompt. Exact latest source still needs native revalidation."
+  },
+  "model": {
+    "name": "Qwen3.5-4B-Q4_K_M.gguf",
+    "publisher": "unsloth",
+    "baseModel": "Qwen/Qwen3.5-4B",
+    "license": "Apache-2.0",
+    "revision": "e87f176479d0855a907a41277aca2f8ee7a09523",
+    "bytes": 2740937888,
+    "sha256": "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4"
+  },
+  "minimalPatch": "handoff/NATIVE_CANDIDATE_UNQUALIFIED.patch",
+  "patchFiles": [
+    "electron/aya-local.cjs",
+    "electron/aya/core.cjs",
+    "electron/aya/dialogue.cjs",
+    "electron/aya/agent.cjs",
+    "electron/aya/managed-runtime.cjs",
+    "electron/aya/memory-task.cjs",
+    "scripts/verify-aya-memory-task.cjs",
+    "scripts/verify-aya-memory-task-schema.cjs",
+    "scripts/verify-aya-managed.cjs"
+  ],
+  "doNotAdoptUntil": "Read raw replies and pass semantic criteria, revalidate exact compacted source, then integrate only reviewed files and all version/UI/license/test updates."
+}
