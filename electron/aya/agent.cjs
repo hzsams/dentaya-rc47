@@ -121,7 +121,7 @@ const TOOL_HELP={
  save:'Save and stay.', 'save-exit':'Save before exit.',
  undo:'Undo mesh.',redo:'Redo mesh.','fit-camera':'Frame scene.',
  'show-all':'Restore visibility.','isolate':'Active restoration only.','recorded-bite':'Registered jaws; no alignment.',
- 'view-natural':'Natural shading.','view-contact':'Antagonist distance.','view-thickness':'Preparation-reference surface-distance map. Shows distance to the source surface only. Actual wall measurement and bite approval remain unavailable from this tool.',
+ 'view-natural':'Natural shading.','view-contact':'Antagonist distance.','view-thickness':'Distance to the preparation-reference surface only; actual wall measurement and bite approval unavailable.',
  'view-undercut':'Insertion-axis undercut.','view-section':'Section.',
  'tool-margin':'Manual margin.','tool-measure':'Two-point distance.','tool-add':'Add brush.','tool-reduce':'Reduce brush.','tool-smooth':'Smooth brush.',
  'internal-fit':'Current fit settings; undoable.',
@@ -134,10 +134,10 @@ function prepareAgent(input){
  const cad=normalizeWorkspace(input?.cadContext),memory=normalizeMemory(input?.workingMemory);
  const current=[];
  if(cad){
-  if(cad.saveFailed)current.push('Latest save FAILED: server save is unconfirmed and local recovery is retained. State this failure first and offer a save retry; a successful mesh check does not change the failed save.');
-  if(!cad.antagonistReady)current.push('Antagonist evidence is missing: bite safety is UNKNOWN, not established safe or unsafe. Explain the missing reference.');
-  if(!cad.report)current.push('No current QC report exists; exact wall thickness is unavailable.');
-  if(cad.report?.minimumWallEstimateMm!==undefined)current.push('The reported '+cad.report.minimumWallEstimateMm+' mm is a shell-offset ESTIMATE only; it cannot certify actual wall thickness or production.');
+  if(cad.saveFailed)current.push('Latest server save FAILED; local recovery retained. State this first, then suggest retry. Mesh QC does not confirm save.');
+  if(!cad.antagonistReady)current.push('No antagonist: bite safety UNKNOWN, neither proven safe nor unsafe.');
+  if(!cad.report)current.push('No current QC report or exact wall measurement.');
+  if(cad.report?.minimumWallEstimateMm!==undefined)current.push('Report '+cad.report.minimumWallEstimateMm+' mm is a shell-offset ESTIMATE, not actual wall or production approval.');
  }
  return {cad,memory,schema:responseSchema(cad),instructions:
   (current.length?'Authoritative current host facts: '+current.join(' ')+' ':'')+
