@@ -2,7 +2,7 @@
 // Metadata only. Community quantizations are identified by their actual publisher.
 const fs=require('node:fs/promises');
 const path=require('node:path');
-const repos=['Qwen/Qwen3-4B-Instruct-2507','unsloth/Qwen3-4B-Instruct-2507-GGUF','bartowski/Qwen_Qwen3-4B-Instruct-2507-GGUF'];
+const repos=['Qwen/Qwen3.5-4B','Qwen/Qwen3.5-4B-GGUF','unsloth/Qwen3.5-4B-GGUF','bartowski/Qwen_Qwen3.5-4B-GGUF'];
 async function officialJSON(url){
  const parsed=new URL(url);
  if(parsed.protocol!=='https:'||parsed.hostname!=='huggingface.co')throw Error('METADATA_HOST');
@@ -24,7 +24,7 @@ async function inspect(repo){
  return result;
 }
 async function main(){
- const output=path.resolve('native-validation-evidence/instruct-2507-discovery/candidates-metadata.json');
+ const output=path.resolve('native-validation-evidence/qwen35-discovery/candidates-metadata.json');
  await fs.mkdir(path.dirname(output),{recursive:true});
  const result={purpose:'instruction-model-publisher-pin-discovery',nativeInferenceAttempted:false,nativeAcceptance:null,queriedAt:new Date().toISOString(),testedCommit:process.env.GITHUB_SHA??null,runId:process.env.GITHUB_RUN_ID??null,candidates:await Promise.all(repos.map(inspect))};
  try{result.officialQwenModelNames=(await officialJSON('https://huggingface.co/api/models?author=Qwen&search=Qwen3-4B&limit=30')).map(model=>model.id);}catch(error){result.officialQwenModelListingError=/^[A-Z0-9_]+$/.test(error.message)?error.message:'METADATA_UNAVAILABLE';}
