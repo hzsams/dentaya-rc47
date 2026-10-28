@@ -76,13 +76,12 @@ try{
  await memory.getByRole('button',{name:'Belleği kaydet',exact:true}).click();
  assert.match(await memory.textContent(),/Modelin güncel teslim hedefi/);
  await main.getByRole('button',{name:'Genel',exact:true}).click();
- const setup=main.locator('.aya-engine-setup');if(!await setup.evaluate(node=>node.open))await setup.locator(':scope>summary').click();
+ const setup=main.locator('.aya-engine-setup');await setup.waitFor();
  await page.evaluate(()=>{window.rc54State.mode='polling';window.rc54State.polls=0;});
  await setup.getByRole('button',{name:'Motoru ve modelleri yenile',exact:true}).click();
  await page.waitForFunction(()=>window.rc54State.pendingStatus);await page.waitForFunction(()=>window.rc54State.polls>=3&&document.querySelector('.aya-status--model'));
  await page.evaluate(()=>{window.rc54State.mode='ready';window.rc54State.pendingStatus({ok:true,models:[],progress:{running:true,status:'model',completed:10,total:100}});window.rc54State.pendingStatus=null;});
  await page.waitForTimeout(100);
- if(!await setup.evaluate(node=>node.open))await setup.locator(':scope>summary').click();
  assert.equal(await setup.getByRole('combobox',{name:'Kurulu yerel model',exact:true}).inputValue(),'synthetic-local-model','Late polling cannot remove a newly ready selected model');
  assert.match(await main.locator('.aya-status').textContent(),/Yerel model/);
  assert.equal(await setup.getByRole('button',{name:'İndirmeyi durdur',exact:true}).count(),0,'A late status cannot revive finished installation');
@@ -98,9 +97,7 @@ try{
  assert.equal(await page.evaluate(()=>window.rc54State.calls.length),callsWhileUnavailable,'Main chat does not invoke an unavailable model');
  await page.evaluate(()=>{window.rc54State.mode='ready';window.dispatchEvent(new Event('focus'));});
  await page.waitForFunction(()=>document.querySelector('#main-test .aya-status--model'));
- // The native details element closes when its model list becomes available;
- // reopen it before querying its accessible controls, as after polling above.
- if(!await setup.evaluate(node=>node.open))await setup.locator(':scope>summary').click();
+ // The ready-model inspector keeps its current selection visible after recovery.
  assert.equal(await setup.getByRole('combobox',{name:'Kurulu yerel model',exact:true}).inputValue(),'synthetic-preferred-model','Recovery retains the chosen model instead of silently switching to the first installed model');
  // A selected installed model that is temporarily busy is not a missing model.
  await page.evaluate(()=>{window.rc54State.mode='busy';window.dispatchEvent(new Event('focus'));});
