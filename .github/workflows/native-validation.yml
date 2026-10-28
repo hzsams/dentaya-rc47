@@ -21,7 +21,6 @@ jobs:
     timeout-minutes: 30
     env:
       AYA_EVIDENCE_DIRECTORY: native-validation-evidence/qwen35-ops
-      AYA_NATIVE_ASSET_CACHE: ${{ runner.temp }}/dentaya-pinned-native-assets
     permissions:
       contents: write
     steps:
@@ -42,7 +41,7 @@ jobs:
         id: pins
         shell: pwsh
         run: |
-          node -e "const fs=require('node:fs');const {MODEL,ENGINE}=require('./electron/aya/managed-runtime.cjs');fs.appendFileSync(process.env.GITHUB_OUTPUT,'key=aya-pinned-v1-windows-'+ENGINE.sha256+'-'+MODEL.sha256+'\n')"
+          node -e "const fs=require('node:fs');const {MODEL,ENGINE}=require('./electron/aya/managed-runtime.cjs');fs.appendFileSync(process.env.GITHUB_OUTPUT,'key=aya-pinned-v1-windows-'+ENGINE.sha256+'-'+MODEL.sha256+'\n');fs.appendFileSync(process.env.GITHUB_ENV,'AYA_NATIVE_ASSET_CACHE='+require('node:path').join(process.env.RUNNER_TEMP,'dentaya-pinned-native-assets')+'\n')"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
         id: asset-cache
