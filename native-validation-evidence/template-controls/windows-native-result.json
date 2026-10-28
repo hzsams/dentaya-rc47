@@ -3,7 +3,7 @@
   "platform": "win32",
   "provenance": "controlled-windows-native",
   "status": "failed",
-  "nativeInferenceObserved": false,
+  "nativeInferenceObserved": true,
   "semanticReviewRequired": true,
   "semanticAcceptance": "pending-human-review",
   "model": {
@@ -16,11 +16,11 @@
     "archiveSHA256": "cd44b61422671f0565cae98d856a70d55ef10392197a49246671f85bacb50dc3",
     "binarySHA256": "052539ab0e0f77725efa10e7ae857153fcdbdfdfe8dc59d711c64a3c916c627d"
   },
-  "casesAttempted": 0,
-  "casesSucceeded": 0,
+  "casesAttempted": 8,
+  "casesSucceeded": 8,
   "weightsIncludedInInstaller": false,
   "report": "native-inference-report.json",
-  "checkerExitCode": 1,
+  "checkerExitCode": 0,
   "error": "NATIVE_CONTRACT_FAILED",
-  "milliseconds": 34098
+  "milliseconds": 144538
 }

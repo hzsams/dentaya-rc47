@@ -1,15 +1,15 @@
 {
-  "testedCommit": "b78ebcc3ac7d99123cad487a7c7e49d40cb2d230",
+  "testedCommit": "39ab7a544637385847d296d61a3280c48d9c23c6",
   "runnerOS": "win32",
   "node": "v24.19.0",
-  "runId": "40672858037",
+  "runId": "40673336791",
   "sourceHashes": {
     "electron/aya-local.cjs": "dfed165426e9b643b8f760bab921434a2506bc6807647603d8c7af6460d50e5f",
     "electron/aya/managed-runtime.cjs": "023c43c1dac02d2e42c09fad3f2f961fdad6446eb36d4b90fc652fe63d8a455a",
     "electron/aya/core.cjs": "ef72d00d2ac91b25a9aced7ab276866f863550209b537d7f971094d1364dbfc1",
     "electron/aya/dialogue.cjs": "21324ffbd54fc2dfa97bdd5f5c9222d2e00d64fc8be6d7fa744bfaaaf6ba288c",
     "electron/aya/agent.cjs": "69a98a8255c727024493f302a502c9eb48bad1d159df43d3f62d079bdfaa4342",
-    "scripts/verify-aya-native.cjs": "29e0af083946d2e1a26cb7a8af4b78ff68ca79e51a325be4d48d8cfa8811db98",
+    "scripts/verify-aya-native.cjs": "1992c185eafd7a39df334513f8b701924bce0600fa5b1da2f09e572dc017ecb2",
     "scripts/run-windows-aya-native.cjs": "f0a97fabaefd516fc0599f287ba2c33e542e70e8db537e6e720c00a8f1922532"
   }
 }
