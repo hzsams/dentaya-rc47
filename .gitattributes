@@ -1,0 +1,3 @@
+# Keep source checkouts identical to the SHA-256 release manifest on Windows.
+# Git detects binary files; existing legacy CRLF blobs remain byte-preserved.
+* text=auto eol=lf

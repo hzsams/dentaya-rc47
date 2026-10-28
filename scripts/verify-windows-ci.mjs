@@ -4,6 +4,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
 import {createHash} from 'node:crypto';
+import {execFile} from 'node:child_process';
+import {promisify} from 'node:util';
 import {verifyWindowsCiSource} from './verify-windows-ci-source.mjs';
 import {prepareWindowsRelease, publishWindowsRelease} from './publish-windows-release.mjs';
 
@@ -18,6 +20,42 @@ async function fixture(t) {
   await json('package-lock.json', {version, packages: {'': {version}}});
   return {project, write, json};
 }
+
+test('Windows Git checkout preserves source hashes, legacy line endings and binary bytes', async t => {
+  const f = await fixture(t), run = promisify(execFile);
+  const git = async (...args) => (await run('git', ['-C', f.project, ...args], {shell: false, windowsHide: true})).stdout.trim();
+  const sources = new Map([
+    ['package.json', await fs.readFile(path.join(f.project, 'package.json'))],
+    ['package-lock.json', await fs.readFile(path.join(f.project, 'package-lock.json'))],
+    ['legacy.cmd', Buffer.from('@echo off\r\necho DentAYA\r\n')],
+    ['legacy-log.txt', Buffer.from('old record\nWindows record\r\n')],
+    ['asset.bin', Buffer.from([0, 1, 10, 13, 10, 255])],
+  ]);
+  for (const [name, data] of sources) await f.write(name, data);
+  await git('init');
+  await git('config', 'core.autocrlf', 'false');
+  const commitFixture = async message => {
+    await git('add', '.');
+    await git('-c', 'user.name=DentAYA fixture', '-c', 'user.email=fixture@example.invalid', '-c', 'commit.gpgsign=false', 'commit', '-m', message);
+  };
+  const checkout = async () => {
+    for (const name of sources.keys()) await fs.rm(path.join(f.project, name));
+    await git('checkout', 'HEAD', '--', '.');
+  };
+  await commitFixture('Original source bytes');
+  await git('config', 'core.autocrlf', 'true');
+  await checkout();
+  assert.notEqual(sha256(await fs.readFile(path.join(f.project, 'package.json'))), sha256(sources.get('package.json')), 'Unprotected Windows checkout would invalidate the source manifest');
+  await git('config', 'core.autocrlf', 'false');
+  await checkout();
+  await f.write('.gitattributes', await fs.readFile(new URL('../.gitattributes', import.meta.url)));
+  await commitFixture('Preserve cross-platform release bytes');
+  await git('config', 'core.autocrlf', 'true');
+  await checkout();
+  for (const [name, data] of sources) assert.deepEqual(await fs.readFile(path.join(f.project, name)), data, `${name}: checkout retains exact source bytes`);
+  const head = await git('rev-parse', 'HEAD');
+  assert.equal((await verifyWindowsCiSource({project: f.project, commit: head})).commit, head, 'Actual checkout remains clean under the CI source guard');
+});
 
 test('CI source guard binds clean checkout, lockfile version and dereferenced tag to the exact commit', async t => {
   const f = await fixture(t), calls = [];
