@@ -57,5 +57,5 @@ jobs:
           $allowed = @('windows-native-result.json','native-inference-report.json','native-acceptance.txt','source-info.json','official-model-metadata.json','official-4b-metadata.json')
           foreach ($name in $allowed) { $file = "native-validation-evidence/$name"; if (Test-Path -LiteralPath $file) { git add -- $file; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } } }
           git diff --cached --quiet
-          if ($LASTEXITCODE -eq 1) { git commit -m 'Record isolated Windows native inference evidence'; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; git push origin HEAD:codex/aya-native-validation; exit $LASTEXITCODE }
+          if ($LASTEXITCODE -eq 1) { git commit -m 'Record isolated Windows native inference evidence'; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; git pull --rebase origin codex/aya-native-validation; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; git push origin HEAD:codex/aya-native-validation; exit $LASTEXITCODE }
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

@@ -19,9 +19,12 @@ async function hashFile(file){const hash=crypto.createHash('sha256');for await(c
  const directory=await fs.mkdtemp(path.join(os.tmpdir(),'dentaya-native-'));
  const runtime=createManagedAya({directory,engineBinary:path.resolve(engine),spawnImpl:(binary,args,options)=>{assert.equal(options.shell,false);assert.equal(args[args.indexOf('--host')+1],'127.0.0.1');return spawn(binary,args,options);},fetchImpl:async(url,options)=>{
   const u=new URL(url);assert.equal(u.hostname,'127.0.0.1');assert.match(options?.headers?.Authorization??'',/^Bearer [a-f0-9]{64}$/);
-  if(u.pathname==='/v1/chat/completions'){const payload=JSON.parse(options.body);result.transport.push({stream:payload.stream,responseFormat:payload.response_format,thinking:payload.chat_template_kwargs,roles:payload.messages.map(m=>m.role)});}
+  if(u.pathname==='/v1/chat/completions'){const payload=JSON.parse(options.body);result.transport.push({stream:payload.stream,responseFormat:payload.response_format,thinking:payload.chat_template_kwargs,sampling:{temperature:payload.temperature,top_p:payload.top_p,top_k:payload.top_k,min_p:payload.min_p},roles:payload.messages.map(m=>m.role)});}
   return fetch(url,options);
  }});
+ // Capture raw synthetic outputs for semantic/schema review without changing
+ // the bridge's validation or exposing structured JSON through the UI callback.
+ const managedChat=runtime.chat;runtime.chat=async input=>{let raw='';const reply=await managedChat({...input,onToken:output=>{raw=output;input.onToken?.(output);}});result.transport.at(-1).rawCompletion=raw;return reply;};
  try{
   result.stage='inference';
   assert.equal((await runtime.importModel(path.resolve(modelFile))).ok,true);
