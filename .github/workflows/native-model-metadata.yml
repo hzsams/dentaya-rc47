@@ -1,4 +1,4 @@
-name: Discover official non-thinking model metadata
+name: Discover instruction model publisher metadata
 on:
   push:
     branches: [codex/aya-native-validation]
@@ -21,7 +21,7 @@ jobs:
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
         with:
           node-version: 24.19.0
-      - name: Read official immutable metadata without downloading weights
+      - name: Read immutable publisher metadata without downloading weights
         run: node scripts/fetch-official-instruct-metadata.cjs
       - name: Preserve metadata evidence only
         if: always()
@@ -29,7 +29,7 @@ jobs:
         run: |
           git config user.name 'DentAYA native validation'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git add -- native-validation-evidence/instruct-2507-discovery/official-metadata.json
+          git add -- native-validation-evidence/instruct-2507-discovery/candidates-metadata.json
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           git diff --cached --quiet
           if ($LASTEXITCODE -eq 1) { git commit -m 'Record official non-thinking model metadata'; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; git pull --rebase origin codex/aya-native-validation; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; git push origin HEAD:codex/aya-native-validation; exit $LASTEXITCODE }
