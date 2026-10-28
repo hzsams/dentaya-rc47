@@ -7697,8 +7697,8 @@
     },
     {
       "path": "scripts/verify-dental-facts.ts",
-      "size": 8060,
-      "sha256": "7d35d8a8df7e3a8bfc3b4b10042d51fa31ac8238e92974ad1f3caf83970f7d05"
+      "size": 8114,
+      "sha256": "6e80685ccd2e2031233273a93ab10a7eaf66d621c1f56bccc13e0fedcbab3268"
     },
     {
       "path": "scripts/verify-desktop-brand.cjs",
@@ -13445,5 +13445,6 @@
       "size": 192,
       "sha256": "dcaadee75372ebe9ebd6a62c2296d1c9e4bccec7edc0d1e4071166d32ecf3409"
     }
-  ]
+  ],
+  "diagnosticSourceBaseCommit": "4588013e07da3a7c9fc1fce10f0df38903c0998b"
 }
