@@ -1,0 +1,542 @@
+
+> dentaya-production-rc@1.0.0-rc.62 verify
+> npm run verify:runtime && npm run verify:professional-shell && npm run verify:lab-workspace && npm run verify:workflow-safety && npm run verify:brand-assets && npm run verify:desktop-brand && npm run verify:release && npm run verify:windows-package && npm run verify:release-env && npm run verify:security && npm run verify:localization && npm run verify:system-translations && npm run verify:aya && npm run verify:local-aya && npm run verify:aya-natural && npm run verify:aya-agent && npm run verify:aya-cad-agent && npm run verify:aya-section && npm run verify:aya-core && npm run verify:aya-managed && npm run verify:language-packs && npm run verify:desktop-language && npm run verify:experience && npm run verify:dental-facts && npm run verify:loading-play && npm run verify:rc44 && npm run verify:tooth-appearance && npm run verify:tooth-forms && npm run verify:cad-library && npm run verify:sculpt-integrity && npm run verify:morphology-sculpt && npm run verify:tooth-layout && npm run verify:cad-display && npm run verify:cad-view && npm run verify:cad-inspection && npm run verify:cad-section && npm run verify:performance && npm run verify:pilot && npm run lint -- --max-warnings=0 && npm run typecheck && npm run verify:cad && npm run verify:cad-setup && npm run verify:cad-daily && npm run verify:cad-restoration && npm run verify:cad-interaction && npm run verify:cad-workflow && npm run verify:cad-panel && npm run verify:cad-guided && npm run verify:migrations && npm run verify:e2e && npm run verify:community && npm run verify:operations && npm run verify:validation && npm run build
+
+
+> dentaya-production-rc@1.0.0-rc.62 verify:runtime
+> node scripts/verify-runtime.mjs
+
+PASS · Node.js 22.12+ · v24.19.0
+PASS · npm 11+ · 11.9.0
+Runtime verification PASS (2/2)
+
+> dentaya-production-rc@1.0.0-rc.62 verify:professional-shell
+> node --import tsx scripts/verify-professional-shell.ts
+
+PASS: public connection, local tools, launcher ownership, preserved module destinations, active folder paths, and nested multilingual module search.
+
+> dentaya-production-rc@1.0.0-rc.62 verify:lab-workspace
+> node scripts/verify-lab-workspace.mjs
+
+{
+  "pass": true,
+  "organizationScoped": true,
+  "exactCountsBeyondPagination": true,
+  "allNineQueueFilters": true,
+  "stableDistinctPages": true,
+  "caseAndCadNextActions": true,
+  "localPageSearch": true,
+  "homePreviewFilters": true,
+  "staleRefreshGate": true,
+  "failedReadRejectsPartialResults": true,
+  "fixtureCases": 230,
+  "backend": "synthetic query fixture; no production data"
+}
+
+> dentaya-production-rc@1.0.0-rc.62 verify:workflow-safety
+> node --import tsx scripts/verify-workflow-safety.ts
+
+{"status":"pass","idempotentRetries":true,"exactMoney":true,"honestPaymentStates":true,"desktopInvitationCodes":true,"calendarDateValidation":true,"localeSafeAppointmentEditing":true}
+
+> dentaya-production-rc@1.0.0-rc.62 verify:brand-assets
+> node scripts/verify-brand-assets.mjs
+
+{"pass":true,"uniqueMarks":120,"svgVariants":840,"smallIconRenders":360,"windowsIcoSizes":7,"preservedPriorMarks":100,"preservedPriorAssetFiles":900,"priorAssetsByteIdentical":true,"outlinedWordmark":"DENTAYA","uiAndDesktopAllowlistMatch":true,"shippedAtelierArtwork":true}
+
+> dentaya-production-rc@1.0.0-rc.62 verify:desktop-brand
+> node scripts/verify-desktop-brand.cjs
+
+PASS: allowlist, platform, icon persistence, shortcut create/update, foreign shortcut protection, failure result. Windows shell is mocked.
+
+> dentaya-production-rc@1.0.0-rc.62 verify:release
+> node scripts/verify-release.mjs
+
+PASS: package, lockfile, runtime release, client identifier and installer agree; one CMD entry point.
+
+> dentaya-production-rc@1.0.0-rc.62 verify:windows-package
+> node --test scripts/verify-windows-packaging.mjs scripts/verify-windows-artifact.test.mjs scripts/verify-windows-ci.mjs && node scripts/verify-windows-native-orchestration.cjs
+
+✔ ASAR reader handles a real pinned @electron/asar archive and binds all Electron sources (130.883ms)
+✔ ASAR source drift, missing files and wrong application version are rejected (237.0879ms)
+✔ an environment file or model weight hidden inside ASAR fails acceptance (338.3979ms)
+✔ truncated ASAR header and payload cannot pass archive inspection (80.9093ms)
+✔ Next payload comparison checks bytes and rejects extra environment files (65.121ms)
+✔ integrity manifest is checked against exact current checkout bytes (13.1411ms)
+✔ receipt paths cannot escape output and Windows acceptance cannot run on Linux (0.9134ms)
+✔ desktop smoke requires genuine IPC bridge, isolated renderer and real guest route controls (1.3221ms)
+✔ desktop smoke environment is per-process and removes inherited model or Electron overrides (0.5552ms)
+✔ Node WebSocket CDP client matches out-of-order responses and preserves renderer exceptions (33.0358ms)
+✔ CDP timeout or renderer disconnect rejects acceptance instead of hanging (13.1846ms)
+✔ Windows Git checkout preserves source hashes, legacy line endings and binary bytes (1949.378ms)
+✔ CI source guard binds clean checkout, lockfile version and dereferenced tag to the exact commit (22.1753ms)
+✔ CI source guard refuses modified tracked source and missing exact commit (4.8325ms)
+✔ verified installer release includes actual failed native evidence and keeps semantic limits (164.8078ms)
+✔ release guard rejects changed installer, source, report and unsupported native pass (121.2307ms)
+✔ publisher cannot call the network for a branch or a mismatched source commit (0.8563ms)
+✔ publisher creates a draft, uploads verified bytes and publishes only after all hashes match (142.2114ms)
+✔ publisher refuses a changed upload and leaves the release as a draft (0.8421ms)
+✔ publisher rejects native evidence from another workflow run before calling GitHub (0.2814ms)
+✔ installed matching Windows runtime, original config and prepared Next are reused (106.9724ms)
+✔ DLL locks get a fresh directory and bounded backoff; old output is retained (79.3177ms)
+✔ persistent lock fails after three attempts and writes no success receipt (640.844ms)
+✔ unrelated packaging errors stop on the first attempt (258.3731ms)
+✔ exit zero without a usable installer is rejected (96.9283ms)
+✔ an empty or non-Windows installer is never reported as success (148.8131ms)
+✔ different or missing Next build data prevents packaging (184.1436ms)
+✔ different Electron version and wrong architecture are rejected (144.5886ms)
+✔ a missing runtime without its own package installer stops before packaging (129.3333ms)
+fake builder process completed
+✔ real child-process invocation preserves spaced paths and disables publishing (337.6304ms)
+✔ a success receipt cannot reveal an installer outside its output folder (111.506ms)
+✔ non-Windows packaging fails explicitly (0.406ms)
+fixture installer completed
+✔ missing electron/dist is installed through the declared installer before packaging (293.013ms)
+✔ a valid runtime with no version marker is queried without fabricating a marker (178.2938ms)
+fixture installer completed
+✔ the on-demand install-electron entry and package-resolved runtime path are supported (290.4866ms)
+fixture installer completed
+✔ a partial legacy runtime is preserved so the installer cannot skip a missing DLL (293.0975ms)
+fixture download failure
+✔ installer errors preserve a diagnostic log and prevent packaging (170.3884ms)
+fixture no-op
+✔ installer exit zero is insufficient unless the binary and data files exist (176.2906ms)
+✔ an installer that creates only a version marker is rejected (173.4673ms)
+fixture installer completed
+✔ a wrong installed runtime version is rejected after the installer finishes (180.2508ms)
+✔ a mismatched npm package version is rejected without running an installer (41.971ms)
+✔ an installer declared outside the Electron package is never executed (70.1174ms)
+✔ installer environment is scoped, pins x64/win32 and removes download-skip overrides (0.5021ms)
+✔ the version probe handles the real --version child-process protocol (36.6058ms)
+✔ the pinned Electron dependency requires Node 22.12 or later (0.2998ms)
+✔ npm version uses Node and npm-cli.js even with spaces and shell characters in its path (189.4664ms)
+✔ Windows npm fallback resolves the CLI beside Node without executing npm.cmd (86.6917ms)
+✔ Windows npm with no JavaScript entry fails without spawning a shell (60.4846ms)
+✔ PE validation rejects MZ-only, forged signature, truncated headers and truncated sections (36.1835ms)
+✔ PE validation accepts NSIS x86 installers and requires x64 for the Electron application (38.5629ms)
+✔ a builder exit zero cannot publish an MZ-only installer (51.9433ms)
+DentAYA afterPack OK: standalone + node_modules pakete kopyalandi.
+✔ afterPack excludes every .env file while preserving originals and Next assets (89.099ms)
+ℹ tests 52
+ℹ suites 0
+ℹ pass 52
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4826.2115
+PASS: pinned asset gate,9case+exitstatus contract, stale evidence removal,3fresh reports on installation failure, bounded waiting, cleanup, private error exclusion and mock provenance. No native inference.
+
+> dentaya-production-rc@1.0.0-rc.62 verify:release-env
+> node scripts/verify-release-env.mjs
+
+PASS: old release label migration, preserved connection settings, LF/CRLF, repeat execution and environment validation.
+
+> dentaya-production-rc@1.0.0-rc.62 verify:security
+> node scripts/verify-security.mjs
+
+PASS · nosniff header
+PASS · frame deny
+PASS · HSTS
+PASS · courier geolocation allowed only to self
+PASS · camera remains disabled
+PASS · request guard has rate budget
+PASS · request guard checks JSON
+PASS · request guard checks content length
+PASS · AYA authenticated
+PASS · AYA rate limited
+PASS · AYA body capped
+PASS · geocode authenticated
+PASS · geocode admin restricted
+PASS · geocode rate limited
+PASS · routes authenticated
+PASS · routes rate limited
+PASS · health details auth-gated
+PASS · health no-store
+PASS · release env has no public service role assignment
+PASS · release env has no public OpenAI key
+PASS · server maps keys are not public
+Security verification PASS (21/21)
+
+> dentaya-production-rc@1.0.0-rc.62 verify:localization
+> node --import tsx scripts/verify-localization.ts
+
+PASS: 46 complete locales / all 24 EU official locales; 220 existing strings×19 translations, 37 bootstrap strings×11 new EU locales; 4864 full-pack source keys; all 103 UI renderers connected (104 files total, including runtimes). Templates/entities/unknown user text safe. All 45 translated catalogs are bundled; source Turkish included. Coverage does not claim native-language editorial approval.
+
+> dentaya-production-rc@1.0.0-rc.62 verify:system-translations
+> node scripts/verify-visible-translations.mjs && node --import tsx scripts/verify-system-translations.ts
+
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Displayed values missing from language packs: [{"source":"Model kabul oturumu","file":"src\\lib\\i18n\\aya-acceptance.ts","line":4},{"source":"Model acceptance session","file":"src\\lib\\i18n\\aya-acceptance.ts","line":4},{"source":"Seçili modele 9 ayrı deneme gönderir: konuşma, bellek sözleşmesi ve örnek CAD bağlamı. Sorular sentetiktir; sohbet geçmişi, kişisel notlar ve gerçek CAD işlemleri bu oturuma girmez.","file":"src\\lib\\i18n\\aya-acceptance.ts","line":4},{"source":"Sends 9 trials to the selected model: conversation, memory contract and sample CAD context. Prompts are synthetic; chat history, personal notes and real CAD operations are excluded.","file":"src\\lib\\i18n\\aya-acceptance.ts","line":4},{"source":"Yanıt kaynağı","file":"src\\lib\\i18n\\aya-agent.ts","line":7},{"source":"Reply source","file":"src\\lib\\i18n\\aya-agent.ts","line":15},{"source":"AYA work assistant","file":"src\\lib\\i18n\\aya-agent.ts","line":16},{"source":"AYA soru kütüphanesi","file":"src\\lib\\i18n\\aya-catalog.ts","line":3},{"source":"Başvuru","file":"src\\lib\\i18n\\aya-catalog.ts","line":3},{"source":"AYA question library","file":"src\\lib\\i18n\\aya-catalog.ts","line":4},{"source":"Reference","file":"src\\lib\\i18n\\aya-catalog.ts","line":4},{"source":"Çalışma asistanınız","file":"src\\lib\\i18n\\aya-experience.ts","line":6},{"source":"Sorunuzu veya yapmak istediğiniz işi yazın…","file":"src\\lib\\i18n\\aya-experience.ts","line":12},{"source":"Your work assistant","file":"src\\lib\\i18n\\aya-experience.ts","line":26},{"source":"Write your question or the task you want to complete…","file":"src\\lib\\i18n\\aya-experience.ts","line":32},{"source":"4B yerel model seçeneği","file":"src\\lib\\i18n\\aya-setup.ts","line":4},{"source":"4B local model option","file":"src\\lib\\i18n\\aya-setup.ts","line":4},{"source":"16 GB RAM için Qwen3 4B seçeneği. Önce Ollama’nın bu bilgisayarda kurulu ve açık olması gerekir. İndirme tamamlanınca modeli listeden seçip yanıtını test edin. Hız işlemciye bağlıdır.","file":"src\\lib\\i18n\\aya-setup.ts","line":4},{"source":"Qwen3 4B is an option for 16 GB RAM. Ollama must be installed and running on this computer first. After downloading, select the model and test its reply. Speed depends on the processor.","file":"src\\lib\\i18n\\aya-setup.ts","line":4},{"source":"Local AYA setup","file":"src\\lib\\i18n\\aya-setup.ts","line":9},{"source":"Uzman inceleme","file":"src\\lib\\i18n\\cad-inspection.ts","line":2},{"source":"Expert inspection","file":"src\\lib\\i18n\\cad-inspection.ts","line":3},{"source":"Görüntülenen tarama","file":"src\\lib\\i18n\\cad-section.ts","line":2},{"source":"Sarı: restorasyon · mavi: görüntülenen tarama. Büyük taramalar sadeleştirilmiş önizleme kullanabilir. Kesit alanı, duvar kalınlığı veya iç uyum ölçümü değildir.","file":"src\\lib\\i18n\\cad-section.ts","line":2},{"source":"Displayed scan","file":"src\\lib\\i18n\\cad-section.ts","line":3},{"source":"Gold: restoration · cyan: displayed scan. Large scans may use a simplified preview. Section area is not wall thickness or internal fit.","file":"src\\lib\\i18n\\cad-section.ts","line":3},{"source":"İpucu","file":"src\\lib\\i18n\\loading-play.ts","line":2},{"source":"Source","file":"src\\lib\\i18n\\loading-play.ts","line":3},{"source":"Hint","file":"src\\lib\\i18n\\loading-play.ts","line":3},{"source":"Bu cihazın ayarları","file":"src\\lib\\i18n\\local-settings.ts","line":5},{"source":"Settings on this computer","file":"src\\lib\\i18n\\local-settings.ts","line":5},{"source":"Görünüm, çalışma düzeni, dil ve AYA tercihleri bu cihazda saklanır. Hesap ve kurum ayarları için oturum açın.","file":"src\\lib\\i18n\\local-settings.ts","line":5},{"source":"Appearance, workspace, language and AYA preferences are saved on this computer. Sign in to manage an account or organization.","file":"src\\lib\\i18n\\local-settings.ts","line":5},{"source":"Modül veya klasör ara…","file":"src\\lib\\i18n\\module-navigation.ts","line":10},{"source":"Search modules or folders…","file":"src\\lib\\i18n\\module-navigation.ts","line":20}]
++ actual - expected
+
++ [
++   {
++     file: 'src\\lib\\i18n\\aya-acceptance.ts',
++     line: 4,
++     source: 'Model kabul oturumu'
++   },
++   {
++     file: 'src\\lib\\i18n\\aya-acceptance.ts',
++     line: 4,
++     source: 'Model acceptance session'
++   },
++   {
++     file: 'src\\lib\\i18n\\aya-acceptance.ts',
++     line: 4,
++     source: 'Seçili modele 9 ayrı deneme gönderir: konuşma, bellek sözleşmesi ve örnek CAD bağlamı. Sorular sentetiktir; sohbet geçmişi, kişisel notlar ve gerçek CAD işlemleri bu oturuma girmez.'
++   },
++   {
++     file: 'src\\lib\\i18n\\aya-acceptance.ts',
++     line: 4,
++     source: 'Sends 9 trials to the selected model: conversation, memory contract and sample CAD context. Prompts are synthetic; chat history, personal notes and real CAD operations are excluded.'
++   },
++   {
++     file: 'src\\lib\\i18n\\aya-agent.ts',
++     line: 7,
++     source: 'Yanıt kaynağı'
++   },
++   {
++     file: 'src\\lib\\i18n\\aya-agent.ts',
++     line: 15,
++     source: 'Reply source'
++   },
++   {
++     file: 'src\\lib\\i18n\\aya-agent.ts',
++     line: 16,
++     source: 'AYA work assistant'
++   },
++   {
++     file: 'src\\lib\\i18n\\aya-catalog.ts',
++     line: 3,
++     source: 'AYA soru kütüphanesi'
++   },
++   {
++     file: 'src\\lib\\i18n\\aya-catalog.ts',
++     line: 3,
++     source: 'Başvuru'
++   },
++   {
++     file: 'src\\lib\\i18n\\aya-catalog.ts',
++     line: 4,
++     source: 'AYA question library'
++   },
++   {
++     file: 'src\\lib\\i18n\\aya-catalog.ts',
++     line: 4,
++     source: 'Reference'
++   },
++   {
++     file: 'src\\lib\\i18n\\aya-experience.ts',
++     line: 6,
++     source: 'Çalışma asistanınız'
++   },
++   {
++     file: 'src\\lib\\i18n\\aya-experience.ts',
++     line: 12,
++     source: 'Sorunuzu veya yapmak istediğiniz işi yazın…'
++   },
++   {
++     file: 'src\\lib\\i18n\\aya-experience.ts',
++     line: 26,
++     source: 'Your work assistant'
++   },
++   {
++     file: 'src\\lib\\i18n\\aya-experience.ts',
++     line: 32,
++     source: 'Write your question or the task you want to complete…'
++   },
++   {
++     file: 'src\\lib\\i18n\\aya-setup.ts',
++     line: 4,
++     source: '4B yerel model seçeneği'
++   },
++   {
++     file: 'src\\lib\\i18n\\aya-setup.ts',
++     line: 4,
++     source: '4B local model option'
++   },
++   {
++     file: 'src\\lib\\i18n\\aya-setup.ts',
++     line: 4,
++     source: '16 GB RAM için Qwen3 4B seçeneği. Önce Ollama’nın bu bilgisayarda kurulu ve açık olması gerekir. İndirme tamamlanınca modeli listeden seçip yanıtını test edin. Hız işlemciye bağlıdır.'
++   },
++   {
++     file: 'src\\lib\\i18n\\aya-setup.ts',
++     line: 4,
++     source: 'Qwen3 4B is an option for 16 GB RAM. Ollama must be installed and running on this computer first. After downloading, select the model and test its reply. Speed depends on the processor.'
++   },
++   {
++     file: 'src\\lib\\i18n\\aya-setup.ts',
++     line: 9,
++     source: 'Local AYA setup'
++   },
++   {
++     file: 'src\\lib\\i18n\\cad-inspection.ts',
++     line: 2,
++     source: 'Uzman inceleme'
++   },
++   {
++     file: 'src\\lib\\i18n\\cad-inspection.ts',
++     line: 3,
++     source: 'Expert inspection'
++   },
++   {
++     file: 'src\\lib\\i18n\\cad-section.ts',
++     line: 2,
++     source: 'Görüntülenen tarama'
++   },
++   {
++     file: 'src\\lib\\i18n\\cad-section.ts',
++     line: 2,
++     source: 'Sarı: restorasyon · mavi: görüntülenen tarama. Büyük taramalar sadeleştirilmiş önizleme kullanabilir. Kesit alanı, duvar kalınlığı veya iç uyum ölçümü değildir.'
++   },
++   {
++     file: 'src\\lib\\i18n\\cad-section.ts',
++     line: 3,
++     source: 'Displayed scan'
++   },
++   {
++     file: 'src\\lib\\i18n\\cad-section.ts',
++     line: 3,
++     source: 'Gold: restoration · cyan: displayed scan. Large scans may use a simplified preview. Section area is not wall thickness or internal fit.'
++   },
++   {
++     file: 'src\\lib\\i18n\\loading-play.ts',
++     line: 2,
++     source: 'İpucu'
++   },
++   {
++     file: 'src\\lib\\i18n\\loading-play.ts',
++     line: 3,
++     source: 'Source'
++   },
++   {
++     file: 'src\\lib\\i18n\\loading-play.ts',
++     line: 3,
++     source: 'Hint'
++   },
++   {
++     file: 'src\\lib\\i18n\\local-settings.ts',
++     line: 5,
++     source: 'Bu cihazın ayarları'
++   },
++   {
++     file: 'src\\lib\\i18n\\local-settings.ts',
++     line: 5,
++     source: 'Settings on this computer'
++   },
++   {
++     file: 'src\\lib\\i18n\\local-settings.ts',
++     line: 5,
++     source: 'Görünüm, çalışma düzeni, dil ve AYA tercihleri bu cihazda saklanır. Hesap ve kurum ayarları için oturum açın.'
++   },
++   {
++     file: 'src\\lib\\i18n\\local-settings.ts',
++     line: 5,
++     source: 'Appearance, workspace, language and AYA preferences are saved on this computer. Sign in to manage an account or organization.'
++   },
++   {
++     file: 'src\\lib\\i18n\\module-navigation.ts',
++     line: 10,
++     source: 'Modül veya klasör ara…'
++   },
++   {
++     file: 'src\\lib\\i18n\\module-navigation.ts',
++     line: 20,
++     source: 'Search modules or folders…'
++   }
++ ]
+- []
+
+    at file:///D:/a/dentaya-rc47/dentaya-rc47/scripts/verify-visible-translations.mjs:8:8
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [
+    {
+      source: 'Model kabul oturumu',
+      file: 'src\\lib\\i18n\\aya-acceptance.ts',
+      line: 4
+    },
+    {
+      source: 'Model acceptance session',
+      file: 'src\\lib\\i18n\\aya-acceptance.ts',
+      line: 4
+    },
+    {
+      source: 'Seçili modele 9 ayrı deneme gönderir: konuşma, bellek sözleşmesi ve örnek CAD bağlamı. Sorular sentetiktir; sohbet geçmişi, kişisel notlar ve gerçek CAD işlemleri bu oturuma girmez.',
+      file: 'src\\lib\\i18n\\aya-acceptance.ts',
+      line: 4
+    },
+    {
+      source: 'Sends 9 trials to the selected model: conversation, memory contract and sample CAD context. Prompts are synthetic; chat history, personal notes and real CAD operations are excluded.',
+      file: 'src\\lib\\i18n\\aya-acceptance.ts',
+      line: 4
+    },
+    {
+      source: 'Yanıt kaynağı',
+      file: 'src\\lib\\i18n\\aya-agent.ts',
+      line: 7
+    },
+    {
+      source: 'Reply source',
+      file: 'src\\lib\\i18n\\aya-agent.ts',
+      line: 15
+    },
+    {
+      source: 'AYA work assistant',
+      file: 'src\\lib\\i18n\\aya-agent.ts',
+      line: 16
+    },
+    {
+      source: 'AYA soru kütüphanesi',
+      file: 'src\\lib\\i18n\\aya-catalog.ts',
+      line: 3
+    },
+    {
+      source: 'Başvuru',
+      file: 'src\\lib\\i18n\\aya-catalog.ts',
+      line: 3
+    },
+    {
+      source: 'AYA question library',
+      file: 'src\\lib\\i18n\\aya-catalog.ts',
+      line: 4
+    },
+    {
+      source: 'Reference',
+      file: 'src\\lib\\i18n\\aya-catalog.ts',
+      line: 4
+    },
+    {
+      source: 'Çalışma asistanınız',
+      file: 'src\\lib\\i18n\\aya-experience.ts',
+      line: 6
+    },
+    {
+      source: 'Sorunuzu veya yapmak istediğiniz işi yazın…',
+      file: 'src\\lib\\i18n\\aya-experience.ts',
+      line: 12
+    },
+    {
+      source: 'Your work assistant',
+      file: 'src\\lib\\i18n\\aya-experience.ts',
+      line: 26
+    },
+    {
+      source: 'Write your question or the task you want to complete…',
+      file: 'src\\lib\\i18n\\aya-experience.ts',
+      line: 32
+    },
+    {
+      source: '4B yerel model seçeneği',
+      file: 'src\\lib\\i18n\\aya-setup.ts',
+      line: 4
+    },
+    {
+      source: '4B local model option',
+      file: 'src\\lib\\i18n\\aya-setup.ts',
+      line: 4
+    },
+    {
+      source: '16 GB RAM için Qwen3 4B seçeneği. Önce Ollama’nın bu bilgisayarda kurulu ve açık olması gerekir. İndirme tamamlanınca modeli listeden seçip yanıtını test edin. Hız işlemciye bağlıdır.',
+      file: 'src\\lib\\i18n\\aya-setup.ts',
+      line: 4
+    },
+    {
+      source: 'Qwen3 4B is an option for 16 GB RAM. Ollama must be installed and running on this computer first. After downloading, select the model and test its reply. Speed depends on the processor.',
+      file: 'src\\lib\\i18n\\aya-setup.ts',
+      line: 4
+    },
+    {
+      source: 'Local AYA setup',
+      file: 'src\\lib\\i18n\\aya-setup.ts',
+      line: 9
+    },
+    {
+      source: 'Uzman inceleme',
+      file: 'src\\lib\\i18n\\cad-inspection.ts',
+      line: 2
+    },
+    {
+      source: 'Expert inspection',
+      file: 'src\\lib\\i18n\\cad-inspection.ts',
+      line: 3
+    },
+    {
+      source: 'Görüntülenen tarama',
+      file: 'src\\lib\\i18n\\cad-section.ts',
+      line: 2
+    },
+    {
+      source: 'Sarı: restorasyon · mavi: görüntülenen tarama. Büyük taramalar sadeleştirilmiş önizleme kullanabilir. Kesit alanı, duvar kalınlığı veya iç uyum ölçümü değildir.',
+      file: 'src\\lib\\i18n\\cad-section.ts',
+      line: 2
+    },
+    {
+      source: 'Displayed scan',
+      file: 'src\\lib\\i18n\\cad-section.ts',
+      line: 3
+    },
+    {
+      source: 'Gold: restoration · cyan: displayed scan. Large scans may use a simplified preview. Section area is not wall thickness or internal fit.',
+      file: 'src\\lib\\i18n\\cad-section.ts',
+      line: 3
+    },
+    {
+      source: 'İpucu',
+      file: 'src\\lib\\i18n\\loading-play.ts',
+      line: 2
+    },
+    {
+      source: 'Source',
+      file: 'src\\lib\\i18n\\loading-play.ts',
+      line: 3
+    },
+    {
+      source: 'Hint',
+      file: 'src\\lib\\i18n\\loading-play.ts',
+      line: 3
+    },
+    {
+      source: 'Bu cihazın ayarları',
+      file: 'src\\lib\\i18n\\local-settings.ts',
+      line: 5
+    },
+    {
+      source: 'Settings on this computer',
+      file: 'src\\lib\\i18n\\local-settings.ts',
+      line: 5
+    },
+    {
+      source: 'Görünüm, çalışma düzeni, dil ve AYA tercihleri bu cihazda saklanır. Hesap ve kurum ayarları için oturum açın.',
+      file: 'src\\lib\\i18n\\local-settings.ts',
+      line: 5
+    },
+    {
+      source: 'Appearance, workspace, language and AYA preferences are saved on this computer. Sign in to manage an account or organization.',
+      file: 'src\\lib\\i18n\\local-settings.ts',
+      line: 5
+    },
+    {
+      source: 'Modül veya klasör ara…',
+      file: 'src\\lib\\i18n\\module-navigation.ts',
+      line: 10
+    },
+    {
+      source: 'Search modules or folders…',
+      file: 'src\\lib\\i18n\\module-navigation.ts',
+      line: 20
+    }
+  ],
+  expected: [],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
