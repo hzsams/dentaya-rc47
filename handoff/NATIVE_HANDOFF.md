@@ -2,6 +2,12 @@
 
 Tarih: 28 Ekim 2026. Bu not, ana masaüstü deposundaki genel devir belgesinin native/model bölümüdür. Kullanıcı Windows EXE kullanıyor; 16 GB RAM / 512 GB SSD, GPU bilinmiyor. Amaç hazır cevap sayısını artırmak değil; gerçek yerel model, güvenilir çalışma belleği ve gerçek CAD kanıtıyla uygulanabilir yardım.
 
+## EN ÖNCE YAPILACAK İŞ — GERÇEK TESTLE KANITLANAN MİMARİ SORUN
+
+**CAD planlayıcısı kendi bulgularını/önerilerini kullanıcının karar belleğine yazıyor.** Gerçek 40730934136 kaydında ilk CAD yanıtı beş karar yuvasını doldurdu; sonraki iki model cümlesiyle birleşim 7 oldu. Strict 5 karar sınırı son yanıtı doğru şekilde atomik reddetti. Sonuç: 9 gerçek istek, 8 kabul edilmiş bridge yanıtı; aday bitmedi.
+
+Planı ve host gözlemlerini kullanıcı tarafından yetkilendirilen çalışma belleği çıkarımından AYIR. Gerçek araç sonuçları zaten fresh recentActions/report kanalındadır. Kullanıcı kararlarını yalnız son kullanıcı isteğine bağlı ayrı task:memory ile, mevcut scope/tur/revizyon/iptal kapıları altında güncelle. **Eski kararları atma, sınırı 5'ten yükseltme veya parser/testi gevşeterek yeşile boyama.** Bu mimari ayrım henüz uygulanmadı; ekli minimal aday yama da bu eksikliği çözmez. Önce bu işi bitir, sonra aynı cached native senaryoları tam yeni kaynak üzerinde tekrar çalıştır.
+
 ## 1. Kökler ve teslim durumu
 
 - Ana ürün: `/workspace/dentaya-rc47`, `professional-workflow`. RC62 / AYA Core 0.18.0 hazırlığı burada. Buradaki model hâlâ RC61 tabanındaki Qwen3 1.7B Q8_0'dır; deneysel 3.5 adayı ana ürüne ALINMADI.
@@ -106,7 +112,7 @@ Cold kurulum pahalıdır; cached sonraki deney aynı modelde yeniden indirme yap
 
 ## 9. Ana ürüne aktarılabilecek DOSYA LİSTESİ — henüz kabul edilmemiş
 
-`NATIVE_CANDIDATE_UNQUALIFIED.patch` yalnız bu 9 dosyadır; ana repo üzerinden `git apply --check` ile uygulanabilirlik kontrolü yapıldı. **Semantik kabul değildir; otomatik uygulama.**
+`NATIVE_CANDIDATE_UNQUALIFIED.patch` yalnız bu 9 dosyadır; ana repo üzerinden `git apply --check` ile uygulanabilirlik kontrolü yapıldı. **Semantik kabul değildir; kabul edilmedikçe ana ürüne uygulamayın.**
 
 1. electron/aya-local.cjs — yalnız memory task için ayrı parser.
 2. electron/aya/core.cjs — ayrı bellek schema/policy, kısa konuşma policy'si.

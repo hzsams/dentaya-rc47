@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-28T17:14:29.312321+00:00",
+  "generatedAt": "2026-10-28T17:15:43.676496+00:00",
   "mainRepository": "/workspace/dentaya-rc47",
   "mainModel": "Qwen3 1.7B Q8_0 baseline; experimental candidate NOT adopted",
   "experimentalRepository": "/workspace/dentaya-native-ci-check",
@@ -71,5 +71,18 @@
     "scripts/verify-aya-memory-task-schema.cjs",
     "scripts/verify-aya-managed.cjs"
   ],
-  "doNotAdoptUntil": "Read raw replies and pass semantic criteria, revalidate exact compacted source, then integrate only reviewed files and all version/UI/license/test updates."
+  "doNotAdoptUntil": "Read raw replies and pass semantic criteria, revalidate exact compacted source, then integrate only reviewed files and all version/UI/license/test updates.",
+  "handoffComplete": true,
+  "freezeScope": "Documentation, status and immutable evidence only; no main product candidate adoption",
+  "topNextAction": {
+    "problem": "CAD planner promotes its own conclusions/proposals into user decision memory; strict capacity correctly rejects the next combined plan.",
+    "proof": "Run40730934136, actual9requests/8accepted; prior5+generated2=union7; reproducedagent.cjs union->updateMemory rejection.",
+    "requiredChange": "Separate CAD planning and host observations from latest-user-authoritative task:memory extraction; preserve scope/turn/revision/cancellation gates.",
+    "mustNotDo": [
+      "drop old decisions",
+      "raise capacity5 to force pass",
+      "weaken parser or tests",
+      "merge unqualified model candidate"
+    ]
+  }
 }
