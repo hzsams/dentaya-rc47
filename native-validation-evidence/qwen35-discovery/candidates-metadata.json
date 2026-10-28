@@ -2,9 +2,9 @@
   "purpose": "instruction-model-publisher-pin-discovery",
   "nativeInferenceAttempted": false,
   "nativeAcceptance": null,
-  "queriedAt": "2026-10-28T10:32:44.135Z",
-  "testedCommit": "d3bb087497007958b9c8a3bd37a5a4bf96ddce28",
-  "runId": "40672898585",
+  "queriedAt": "2026-10-28T10:37:49.467Z",
+  "testedCommit": "aad71926c27b1e14cf36d2f556494041caf8fd7a",
+  "runId": "40673567707",
   "candidates": [
     {
       "repository": "Qwen/Qwen3.5-4B",
@@ -18,7 +18,45 @@
         "Qwen/Qwen3.5-4B-Base"
       ],
       "modelType": "qwen3_5",
-      "files": []
+      "files": [],
+      "cardProof": {
+        "url": "https://huggingface.co/Qwen/Qwen3.5-4B/resolve/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a/README.md",
+        "httpStatus": 200,
+        "sha256": "1406be1b6b8fd8a6545870da516912804756593628a1d0fb0a7965211e82a7bb",
+        "bytes": 77661,
+        "relevantLines": [
+          "> To disable thinking content and obtain direct response, refer to the examples [here](#instruct-or-non-thinking-mode).",
+          "> - Thinking mode for general tasks: `temperature=1.0, top_p=0.95, top_k=20, min_p=0.0, presence_penalty=1.5, repetition_penalty=1.0`",
+          "> - Thinking mode for precise coding tasks (e.g. WebDev): `temperature=0.6, top_p=0.95, top_k=20, min_p=0.0, presence_penalty=0.0, repetition_penalty=1.0`",
+          "> - Instruct (or non-thinking) mode for general tasks: `temperature=0.7, top_p=0.8, top_k=20, min_p=0.0, presence_penalty=1.5, repetition_penalty=1.0`",
+          "> - Instruct (or non-thinking) mode for reasoning tasks: `temperature=1.0, top_p=0.95, top_k=20, min_p=0.0, presence_penalty=1.5, repetition_penalty=1.0`",
+          "    temperature=1.0,",
+          "    top_p=0.95,",
+          "    presence_penalty=1.5,",
+          "        \"top_k\": 20,",
+          "    temperature=1.0,",
+          "    top_p=0.95,",
+          "    presence_penalty=1.5,",
+          "        \"top_k\": 20,",
+          "    temperature=1.0,",
+          "    top_p=0.95,",
+          "    presence_penalty=1.5,",
+          "        \"top_k\": 20,",
+          "#### Instruct (or Non-Thinking) Mode",
+          "    temperature=0.7,",
+          "    top_p=0.8,",
+          "    presence_penalty=1.5,",
+          "        \"top_k\": 20,",
+          "## Best Practices",
+          "       `temperature=1.0`, `top_p=0.95`, `top_k=20`, `min_p=0.0`, `presence_penalty=1.5`, `repetition_penalty=1.0`  ",
+          "       `temperature=0.6`, `top_p=0.95`, `top_k=20`, `min_p=0.0`, `presence_penalty=0.0`, `repetition_penalty=1.0`  ",
+          "     - **Instruct (or non-thinking) mode for general tasks**:  ",
+          "       `temperature=0.7`, `top_p=0.8`, `top_k=20`, `min_p=0.0`, `presence_penalty=1.5`, `repetition_penalty=1.0`  ",
+          "     - **Instruct (or non-thinking) mode for reasoning tasks**:  ",
+          "       `temperature=1.0`, `top_p=1.0`, `top_k=40`, `min_p=0.0`, `presence_penalty=2.0`, `repetition_penalty=1.0`  ",
+          "   - For supported frameworks, you can adjust the `presence_penalty` parameter between 0 and 2 to reduce endless repetitions. However, using a higher value may occasionally result in language mixing and a slight decrease in model performance."
+        ]
+      }
     },
     {
       "repository": "Qwen/Qwen3.5-4B-GGUF",
@@ -45,7 +83,45 @@
           "sha256": "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4",
           "url": "https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/e87f176479d0855a907a41277aca2f8ee7a09523/Qwen3.5-4B-Q4_K_M.gguf"
         }
-      ]
+      ],
+      "cardProof": {
+        "url": "https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/e87f176479d0855a907a41277aca2f8ee7a09523/README.md",
+        "httpStatus": 200,
+        "sha256": "28546f5fc4f22ee1b3f17b908957f17fcfa66174032136265bdb27f404bc1e6c",
+        "bytes": 78906,
+        "relevantLines": [
+          "> To disable thinking content and obtain direct response, refer to the examples [here](#instruct-or-non-thinking-mode).",
+          "> - Thinking mode for general tasks: `temperature=1.0, top_p=0.95, top_k=20, min_p=0.0, presence_penalty=1.5, repetition_penalty=1.0`",
+          "> - Thinking mode for precise coding tasks (e.g. WebDev): `temperature=0.6, top_p=0.95, top_k=20, min_p=0.0, presence_penalty=0.0, repetition_penalty=1.0`",
+          "> - Instruct (or non-thinking) mode for general tasks: `temperature=0.7, top_p=0.8, top_k=20, min_p=0.0, presence_penalty=1.5, repetition_penalty=1.0`",
+          "> - Instruct (or non-thinking) mode for reasoning tasks: `temperature=1.0, top_p=0.95, top_k=20, min_p=0.0, presence_penalty=1.5, repetition_penalty=1.0`",
+          "    temperature=1.0,",
+          "    top_p=0.95,",
+          "    presence_penalty=1.5,",
+          "        \"top_k\": 20,",
+          "    temperature=1.0,",
+          "    top_p=0.95,",
+          "    presence_penalty=1.5,",
+          "        \"top_k\": 20,",
+          "    temperature=1.0,",
+          "    top_p=0.95,",
+          "    presence_penalty=1.5,",
+          "        \"top_k\": 20,",
+          "#### Instruct (or Non-Thinking) Mode",
+          "    temperature=0.7,",
+          "    top_p=0.8,",
+          "    presence_penalty=1.5,",
+          "        \"top_k\": 20,",
+          "## Best Practices",
+          "       `temperature=1.0`, `top_p=0.95`, `top_k=20`, `min_p=0.0`, `presence_penalty=1.5`, `repetition_penalty=1.0`  ",
+          "       `temperature=0.6`, `top_p=0.95`, `top_k=20`, `min_p=0.0`, `presence_penalty=0.0`, `repetition_penalty=1.0`  ",
+          "     - **Instruct (or non-thinking) mode for general tasks**:  ",
+          "       `temperature=0.7`, `top_p=0.8`, `top_k=20`, `min_p=0.0`, `presence_penalty=1.5`, `repetition_penalty=1.0`  ",
+          "     - **Instruct (or non-thinking) mode for reasoning tasks**:  ",
+          "       `temperature=1.0`, `top_p=1.0`, `top_k=40`, `min_p=0.0`, `presence_penalty=2.0`, `repetition_penalty=1.0`  ",
+          "   - For supported frameworks, you can adjust the `presence_penalty` parameter between 0 and 2 to reduce endless repetitions. However, using a higher value may occasionally result in language mixing and a slight decrease in model performance."
+        ]
+      }
     },
     {
       "repository": "bartowski/Qwen_Qwen3.5-4B-GGUF",
@@ -63,7 +139,14 @@
           "sha256": "13c16f426047e2de38cd075bdade4a7bcbc8c774384876f677740cda65f8a983",
           "url": "https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/4168f45a16a1290d65a4ec0fa312ae917a4c15d6/Qwen_Qwen3.5-4B-Q4_K_M.gguf"
         }
-      ]
+      ],
+      "cardProof": {
+        "url": "https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/4168f45a16a1290d65a4ec0fa312ae917a4c15d6/README.md",
+        "httpStatus": 200,
+        "sha256": "385066b55f515ade2629bfa5c0c43213b13fa2610f94ccc183f010df3e9fb55a",
+        "bytes": 13706,
+        "relevantLines": []
+      }
     }
   ],
   "officialQwenModelNames": [
