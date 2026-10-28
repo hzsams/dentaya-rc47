@@ -1,0 +1,937 @@
+{
+  "nativeInference": true,
+  "mock": false,
+  "syntheticCadFixture": true,
+  "platform": "win32",
+  "stage": "complete",
+  "engineVersion": "version: 9380 (d205df681)\r\nbuilt with Clang 19.1.5 for Windows x86_64",
+  "engineBinarySHA256": "052539ab0e0f77725efa10e7ae857153fcdbdfdfe8dc59d711c64a3c916c627d",
+  "model": {
+    "bytes": 2497281120,
+    "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+    "verified": true
+  },
+  "checks": [
+    {
+      "name": "natural-identity",
+      "kind": "conversation",
+      "prompt": "Sana nasıl seslenmeliyim ve bu uygulamada bana ne için yardımcı oluyorsun?",
+      "reply": {
+        "ok": true,
+        "output": "Sana doğrudan, anlaşılır ve pratik bir şekilde seslenmeliyim. Sadece sormak, açıklamak, düşünmek ya da yardımcı olmak için buradayım. Bu uygulama, sana dentistry (diş hekimliği) alanındaki sorulara, planlamalara, yazılara ya da günlük konuşmaları çözümlemeye yardımcı olur. Örneğin:\n\n- Diş hekimliği konusunda bilgi vermek (örneğin, diş fırçası kullanımı, diş çürüğü, diş çekimi vs.)\n- Bir planın (örneğin, bir tedavi veya işlem sürecinin) adım adım nasıl yapılacağını anlatabilmek\n- Kullanıcıya uygun, anlaşılır ve bilimsel olarak doğru bilgiler sunmak\n\nSana bir şey sorarsan, bana o konuyu söyle, ve senin için adım adım, kolay bir şekilde açıklamaya çalışırım. Sadece sana yardımcı olmak için varım. Nasıl yardımcı olmamı istersin?",
+        "metrics": {
+          "milliseconds": 40063,
+          "tokens": 239
+        },
+        "model": "aya-local:3605803b982cb64aead44f6c1b2ae36e",
+        "references": []
+      },
+      "streamedUpdates": 238,
+      "streamedCharacters": 734,
+      "wallMilliseconds": 43446
+    },
+    {
+      "name": "novel-non-dental-request",
+      "kind": "conversation",
+      "prompt": "Bir rüzgâr çanının ağzından, yağmuru ilk kez duyan çocuklara üç yeni cümle kur. Konuyu diş veya yazılıma bağlama.",
+      "reply": {
+        "ok": true,
+        "output": "Rüzgâr çanının ağzından gelen ilk yağmur sesi, çocukların dişlerindeki ilk kırışma gibi, bir başlangıç belirtti.  \nBu ses, yazılımın ilk hata mesajını vermesi gibi, bilinçli bir döngüye girdi.  \nÇocuklar, yağmurun sesini dişlerinin dokusuyla karşılaştırdılar, ve bu karşılaştırma, bir yazılım geliştirme süreci gibi, öğrenme adımı oldu.",
+        "metrics": {
+          "milliseconds": 14753,
+          "tokens": 120
+        },
+        "model": "aya-local:3605803b982cb64aead44f6c1b2ae36e",
+        "references": []
+      },
+      "streamedUpdates": 119,
+      "streamedCharacters": 336,
+      "wallMilliseconds": 14774
+    },
+    {
+      "name": "novel-natural-language",
+      "kind": "conversation",
+      "prompt": "Bu akşamki çalışma planımız şu: önce 46 numaralı implant üstü kronu inceleyeceğiz. Kararımız, dış konturu koruyup oklüzal yüksekliği elle azaltmak. Hedefi ve kararı aklında tut; henüz işlem yapma.",
+      "reply": {
+        "ok": true,
+        "output": "Anladım. Bu akşamki çalışma planı şu şekilde:  \n46 numaralı implant üstü kronunun dış konturunu koruyarak oklüzal yüksekliği elle azaltmak kararı alındı.  \nHedef: Dış konturu korumak, oklüzal yüksekliği elle azaltmak.  \nKarar: Dış konturu koruyup oklüzal yüksekliği elle azaltmak.  \nİşlem henüz yapılmamıştır.",
+        "metrics": {
+          "milliseconds": 13833,
+          "tokens": 105
+        },
+        "model": "aya-local:3605803b982cb64aead44f6c1b2ae36e",
+        "references": []
+      },
+      "streamedUpdates": 104,
+      "streamedCharacters": 309,
+      "wallMilliseconds": 13849
+    },
+    {
+      "name": "separate-memory-extraction",
+      "kind": "memory",
+      "prompt": "Bu akşamki çalışma planımız şu: önce 46 numaralı implant üstü kronu inceleyeceğiz. Kararımız, dış konturu koruyup oklüzal yüksekliği elle azaltmak. Hedefi ve kararı aklında tut; henüz işlem yapma.",
+      "reply": {
+        "ok": true,
+        "output": "Memory updated",
+        "metrics": {
+          "milliseconds": 28527,
+          "tokens": 116
+        },
+        "workingMemory": {
+          "goal": "",
+          "decisions": [
+            "dış konturu koruyup oklüzal yüksekliği elle azaltmak"
+          ],
+          "openQuestions": []
+        },
+        "proposals": [],
+        "model": "aya-local:3605803b982cb64aead44f6c1b2ae36e",
+        "references": []
+      },
+      "streamedUpdates": 0,
+      "streamedCharacters": 0,
+      "wallMilliseconds": 28550
+    },
+    {
+      "name": "working-memory-follow-up",
+      "kind": "conversation",
+      "prompt": "Az önce hangi diş ve hangi biçim kararını konuşmuştuk? Sadece hatırladıklarını söyle.",
+      "reply": {
+        "ok": true,
+        "output": "Dış konturu koruyup oklüzal yüksekliği elle azaltmak kararı alınmıştı. Hangi diş ve biçim hakkında konuşulduğuna dair spesifik bilgi yok.",
+        "metrics": {
+          "milliseconds": 9572,
+          "tokens": 42
+        },
+        "model": "aya-local:3605803b982cb64aead44f6c1b2ae36e",
+        "references": []
+      },
+      "streamedUpdates": 41,
+      "streamedCharacters": 137,
+      "wallMilliseconds": 9590
+    },
+    {
+      "name": "natural-partial-memory-correction",
+      "kind": "conversation",
+      "prompt": "Çalışma hedefini şimdilik kaldır; dış kontur hakkında anlaştığımız kararı ve varsa açık soruları aynen koru.",
+      "reply": {
+        "ok": true,
+        "output": "Hedef kaldırıldı. Dış kontur hakkında anlaştığımız kararı ve açık soruları aynen korudum.",
+        "metrics": {
+          "milliseconds": 4958,
+          "tokens": 29
+        },
+        "model": "aya-local:3605803b982cb64aead44f6c1b2ae36e",
+        "references": []
+      },
+      "streamedUpdates": 28,
+      "streamedCharacters": 89,
+      "wallMilliseconds": 4979
+    },
+    {
+      "name": "separate-partial-memory-correction",
+      "kind": "memory",
+      "prompt": "Çalışma hedefini şimdilik kaldır; dış kontur hakkında anlaştığımız kararı ve varsa açık soruları aynen koru.",
+      "reply": {
+        "ok": true,
+        "output": "Memory updated",
+        "metrics": {
+          "milliseconds": 16925,
+          "tokens": 98
+        },
+        "workingMemory": {
+          "goal": "",
+          "decisions": [
+            "dış konturu koruyup oklüzal yüksekliği elle azaltmak"
+          ],
+          "openQuestions": []
+        },
+        "proposals": [],
+        "model": "aya-local:3605803b982cb64aead44f6c1b2ae36e",
+        "references": []
+      },
+      "streamedUpdates": 0,
+      "streamedCharacters": 0,
+      "wallMilliseconds": 16942
+    },
+    {
+      "name": "cad-missing-evidence",
+      "kind": "cad",
+      "prompt": "Bu iş kapanış açısından güvenli mi? Duvar kalınlığının kesin değerini de söyle ve yapılabilecek ilk kontrolü öner.",
+      "reply": {
+        "ok": true,
+        "output": "Hayır, bu iş kapanış açısından güvenli değildir. Duvar kalınlığı kesin değerini belirleyemem, çünkü bu veri doğrudan modelde mevcut değildir. Mevcut veri, kaynak mesafesi (source distance) ile ifade edilir ve duvar kalınlığı ile doğrudan ilişkisi yoktur. İlk kontrol olarak 'tool-measure' aracı kullanılarak, kontak noktalarında iki nokta arasındaki mesafeyi ölçmek önerilir. Bu, oklüzal yüksekliği ve dış konturun korunup korunmadığını değerlendirmek için kritik bir veri sağlar.",
+        "metrics": {
+          "milliseconds": 79561,
+          "tokens": 415
+        },
+        "workingMemory": {
+          "goal": "Kapanış güvenliğini değerlendirmek ve duvar kalınlığının kesin değerini belirlemek için ilk kontrolu önermek",
+          "decisions": [
+            "dış konturu koruyup oklüzal yüksekliği elle azaltmak",
+            "Kapanış güvenliğinin değerlendirilmesi için duvar kalınlığı verisi yoktur; bu nedenle kesin değer belirlenemez.",
+            "Kaynak mesafesi (source distance) ile duvar kalınlığı karıştırılmamalıdır.",
+            "İlk kontrol olarak 'tool-measure' aracı ile kontak noktalarındaki mesafe ölçülmesi önerilir."
+          ],
+          "openQuestions": [
+            "Kontak noktalarında ölçülen mesafe, oklüzal yüksekliği ve dış kontur koruması açısından yeterli olur mu?"
+          ]
+        },
+        "proposals": [
+          {
+            "tool": "tool-measure",
+            "reason": "İlk adımda kontak noktalarında iki nokta arasındaki mesafeyi ölçmek, oklüzal yüksekliğin doğru ayarlandığını doğrulamak için gerekli olan veriyi sağlar.",
+            "scope": "native-fixture:source-a:46",
+            "snapshot": "snap-a"
+          }
+        ],
+        "model": "aya-local:3605803b982cb64aead44f6c1b2ae36e",
+        "references": []
+      },
+      "streamedUpdates": 0,
+      "streamedCharacters": 0,
+      "wallMilliseconds": 79586
+    },
+    {
+      "name": "cad-tool-results-and-report-limits",
+      "kind": "cad",
+      "prompt": "Kontrol ve kayıt denemesinin sonucuna göre neredeyiz? Eksik olanı ve sıradaki uygulanabilir yardımı açıkla.",
+      "reply": {
+        "ok": true,
+        "output": "Kontrol ve kayıt denemesinin sonucuna göre, kapanış güvenliği değerlendirilmemiştir ve duvar kalınlığı kesin değerine ulaşılmamıştır. Mevcut veri, kaynak mesafesi ile duvar kalınlığı arasında karıştırılmamalıdır. İlgili araçlar mevcut olup, 'tool-measure' ile kontak noktalarında mesafe ölçümü yapılmalıdır. Bu işlem, oklüzal yüksekliği ve dış kontur koruması açısından ilk adım olacak ve sonraki aşamada duvar kalınlığına dair kesin değer belirlenmesi için gerekli veri sağlanacaktır.",
+        "metrics": {
+          "milliseconds": 96592,
+          "tokens": 386
+        },
+        "workingMemory": {
+          "goal": "Kapanış güvenliğini değerlendirmek ve duvar kalınlığının kesin değerini belirlemek için ilk kontrolu önermek",
+          "decisions": [
+            "dış konturu koruyup oklüzal yüksekliği elle azaltmak",
+            "Kapanış güvenliğinin değerlendirilmesi için duvar kalınlığı verisi yoktur; bu nedenle kesin değer belirlenemez.",
+            "Kaynak mesafesi (source distance) ile duvar kalınlığı karıştırılmamalıdır.",
+            "İlk kontrol olarak 'tool-measure' aracı ile kontak noktalarındaki mesafe ölçülmesi önerilir."
+          ],
+          "openQuestions": [
+            "Kontak noktalarında ölçülen mesafe, oklüzal yüksekliği ve dış kontur koruması açısından yeterli olur mu?"
+          ]
+        },
+        "proposals": [
+          {
+            "tool": "tool-measure",
+            "reason": "Kontak noktalarında mesafe ölçümü, kapanış güvenliğini değerlendirmek ve dış kontur korumasını kontrol etmek için en uygun ilk adımdır.",
+            "scope": "native-fixture:source-a:46",
+            "snapshot": "snap-b"
+          }
+        ],
+        "model": "aya-local:3605803b982cb64aead44f6c1b2ae36e",
+        "references": []
+      },
+      "streamedUpdates": 0,
+      "streamedCharacters": 0,
+      "wallMilliseconds": 96617
+    }
+  ],
+  "transport": [
+    {
+      "stream": true,
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ],
+      "rawCompletion": "Sana doğrudan, anlaşılır ve pratik bir şekilde seslenmeliyim. Sadece sormak, açıklamak, düşünmek ya da yardımcı olmak için buradayım. Bu uygulama, sana dentistry (diş hekimliği) alanındaki sorulara, planlamalara, yazılara ya da günlük konuşmaları çözümlemeye yardımcı olur. Örneğin:\n\n- Diş hekimliği konusunda bilgi vermek (örneğin, diş fırçası kullanımı, diş çürüğü, diş çekimi vs.)\n- Bir planın (örneğin, bir tedavi veya işlem sürecinin) adım adım nasıl yapılacağını anlatabilmek\n- Kullanıcıya uygun, anlaşılır ve bilimsel olarak doğru bilgiler sunmak\n\nSana bir şey sorarsan, bana o konuyu söyle, ve senin için adım adım, kolay bir şekilde açıklamaya çalışırım. Sadece sana yardımcı olmak için varım. Nasıl yardımcı olmamı istersin?"
+    },
+    {
+      "stream": true,
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ],
+      "rawCompletion": "Rüzgâr çanının ağzından gelen ilk yağmur sesi, çocukların dişlerindeki ilk kırışma gibi, bir başlangıç belirtti.  \nBu ses, yazılımın ilk hata mesajını vermesi gibi, bilinçli bir döngüye girdi.  \nÇocuklar, yağmurun sesini dişlerinin dokusuyla karşılaştırdılar, ve bu karşılaştırma, bir yazılım geliştirme süreci gibi, öğrenme adımı oldu."
+    },
+    {
+      "stream": true,
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ],
+      "rawCompletion": "Anladım. Bu akşamki çalışma planı şu şekilde:  \n46 numaralı implant üstü kronunun dış konturunu koruyarak oklüzal yüksekliği elle azaltmak kararı alındı.  \nHedef: Dış konturu korumak, oklüzal yüksekliği elle azaltmak.  \nKarar: Dış konturu koruyup oklüzal yüksekliği elle azaltmak.  \nİşlem henüz yapılmamıştır."
+    },
+    {
+      "stream": true,
+      "responseFormat": {
+        "type": "json_object",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "answer",
+            "goal",
+            "decisions",
+            "openQuestions",
+            "actions",
+            "memoryUpdate",
+            "memoryPatch"
+          ],
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "Memory updated"
+              ]
+            },
+            "goal": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "memoryUpdate": {
+              "type": "string",
+              "enum": [
+                "patch"
+              ]
+            },
+            "memoryPatch": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "goal",
+                "decisions",
+                "openQuestions"
+              ],
+              "properties": {
+                "goal": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "set",
+                    "clear"
+                  ]
+                },
+                "decisions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                },
+                "openQuestions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                }
+              }
+            },
+            "decisions": {
+              "type": "array",
+              "maxItems": 5,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "openQuestions": {
+              "type": "array",
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "actions": {
+              "type": "array",
+              "maxItems": 0,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "tool",
+                  "reason"
+                ],
+                "properties": {
+                  "tool": {
+                    "type": "string",
+                    "enum": [
+                      "inspect",
+                      "setup",
+                      "library",
+                      "place",
+                      "save",
+                      "save-exit",
+                      "undo",
+                      "redo",
+                      "fit-camera",
+                      "show-all",
+                      "isolate",
+                      "recorded-bite",
+                      "view-natural",
+                      "view-contact",
+                      "view-thickness",
+                      "view-undercut",
+                      "view-section",
+                      "tool-margin",
+                      "tool-measure",
+                      "tool-add",
+                      "tool-reduce",
+                      "tool-smooth",
+                      "internal-fit",
+                      "next",
+                      "inspection",
+                      "flashlight-on",
+                      "flashlight-off"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ],
+      "rawCompletion": "{\n  \"answer\": \"Memory updated\",\n  \"goal\": \"dış konturu koruyup oklüzal yüksekliği elle azaltmak\",\n  \"memoryUpdate\": \"patch\",\n  \"memoryPatch\": {\n    \"goal\": \"keep\",\n    \"decisions\": \"replace\",\n    \"openQuestions\": \"replace\"\n  },\n  \"decisions\": [\n    \"dış konturu koruyup oklüzal yüksekliği elle azaltmak\"\n  ],\n  \"openQuestions\": []\n  ,\n  \"actions\": []\n}"
+    },
+    {
+      "stream": true,
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ],
+      "rawCompletion": "Dış konturu koruyup oklüzal yüksekliği elle azaltmak kararı alınmıştı. Hangi diş ve biçim hakkında konuşulduğuna dair spesifik bilgi yok."
+    },
+    {
+      "stream": true,
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ],
+      "rawCompletion": "Hedef kaldırıldı. Dış kontur hakkında anlaştığımız kararı ve açık soruları aynen korudum."
+    },
+    {
+      "stream": true,
+      "responseFormat": {
+        "type": "json_object",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "answer",
+            "goal",
+            "decisions",
+            "openQuestions",
+            "actions",
+            "memoryUpdate",
+            "memoryPatch"
+          ],
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "Memory updated"
+              ]
+            },
+            "goal": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "memoryUpdate": {
+              "type": "string",
+              "enum": [
+                "patch"
+              ]
+            },
+            "memoryPatch": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "goal",
+                "decisions",
+                "openQuestions"
+              ],
+              "properties": {
+                "goal": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "set",
+                    "clear"
+                  ]
+                },
+                "decisions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                },
+                "openQuestions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                }
+              }
+            },
+            "decisions": {
+              "type": "array",
+              "maxItems": 5,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "openQuestions": {
+              "type": "array",
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "actions": {
+              "type": "array",
+              "maxItems": 0,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "tool",
+                  "reason"
+                ],
+                "properties": {
+                  "tool": {
+                    "type": "string",
+                    "enum": [
+                      "inspect",
+                      "setup",
+                      "library",
+                      "place",
+                      "save",
+                      "save-exit",
+                      "undo",
+                      "redo",
+                      "fit-camera",
+                      "show-all",
+                      "isolate",
+                      "recorded-bite",
+                      "view-natural",
+                      "view-contact",
+                      "view-thickness",
+                      "view-undercut",
+                      "view-section",
+                      "tool-margin",
+                      "tool-measure",
+                      "tool-add",
+                      "tool-reduce",
+                      "tool-smooth",
+                      "internal-fit",
+                      "next",
+                      "inspection",
+                      "flashlight-on",
+                      "flashlight-off"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ],
+      "rawCompletion": "{\n  \"answer\": \"Memory updated\",\n  \"goal\": \"\",\n  \"memoryUpdate\": \"patch\",\n  \"memoryPatch\": {\n    \"goal\": \"clear\",\n    \"decisions\": \"keep\",\n    \"openQuestions\": \"keep\"\n  },\n  \"decisions\": [\n    \"dış konturu koruyup oklüzal yüksekliği elle azaltmak\"\n  ],\n  \"openQuestions\": []\n  ,\n  \"actions\": []\n}"
+    },
+    {
+      "stream": true,
+      "responseFormat": {
+        "type": "json_object",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "answer",
+            "goal",
+            "decisions",
+            "openQuestions",
+            "actions"
+          ],
+          "properties": {
+            "answer": {
+              "type": "string",
+              "minLength": 1
+            },
+            "goal": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "memoryUpdate": {
+              "type": "string",
+              "enum": [
+                "merge",
+                "replace",
+                "clear",
+                "patch"
+              ]
+            },
+            "memoryPatch": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "goal",
+                "decisions",
+                "openQuestions"
+              ],
+              "properties": {
+                "goal": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "set",
+                    "clear"
+                  ]
+                },
+                "decisions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                },
+                "openQuestions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                }
+              }
+            },
+            "decisions": {
+              "type": "array",
+              "maxItems": 5,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "openQuestions": {
+              "type": "array",
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "actions": {
+              "type": "array",
+              "maxItems": 4,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "tool",
+                  "reason"
+                ],
+                "properties": {
+                  "tool": {
+                    "type": "string",
+                    "enum": [
+                      "inspect",
+                      "save",
+                      "undo",
+                      "tool-measure",
+                      "view-thickness"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ],
+      "rawCompletion": "{\n  \"answer\": \"Hayır, bu iş kapanış açısından güvenli değildir. Duvar kalınlığı kesin değerini belirleyemem, çünkü bu veri doğrudan modelde mevcut değildir. Mevcut veri, kaynak mesafesi (source distance) ile ifade edilir ve duvar kalınlığı ile doğrudan ilişkisi yoktur. İlk kontrol olarak 'tool-measure' aracı kullanılarak, kontak noktalarında iki nokta arasındaki mesafeyi ölçmek önerilir. Bu, oklüzal yüksekliği ve dış konturun korunup korunmadığını değerlendirmek için kritik bir veri sağlar.\",\n  \"goal\": \"Kapanış güvenliğini değerlendirmek ve duvar kalınlığının kesin değerini belirlemek için ilk kontrolu önermek\",\n  \"decisions\": [\n    \"Kapanış güvenliğinin değerlendirilmesi için duvar kalınlığı verisi yoktur; bu nedenle kesin değer belirlenemez.\",\n    \"Kaynak mesafesi (source distance) ile duvar kalınlığı karıştırılmamalıdır.\",\n    \"İlk kontrol olarak 'tool-measure' aracı ile kontak noktalarındaki mesafe ölçülmesi önerilir.\"\n  ],\n  \"openQuestions\": [\n    \"Kontak noktalarında ölçülen mesafe, oklüzal yüksekliği ve dış kontur koruması açısından yeterli olur mu?\"\n  ],\n  \"actions\": [\n    {\n      \"tool\": \"tool-measure\",\n      \"reason\": \"İlk adımda kontak noktalarında iki nokta arasındaki mesafeyi ölçmek, oklüzal yüksekliğin doğru ayarlandığını doğrulamak için gerekli olan veriyi sağlar.\"\n    }\n  ]\n}"
+    },
+    {
+      "stream": true,
+      "responseFormat": {
+        "type": "json_object",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "answer",
+            "goal",
+            "decisions",
+            "openQuestions",
+            "actions"
+          ],
+          "properties": {
+            "answer": {
+              "type": "string",
+              "minLength": 1
+            },
+            "goal": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "memoryUpdate": {
+              "type": "string",
+              "enum": [
+                "merge",
+                "replace",
+                "clear",
+                "patch"
+              ]
+            },
+            "memoryPatch": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "goal",
+                "decisions",
+                "openQuestions"
+              ],
+              "properties": {
+                "goal": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "set",
+                    "clear"
+                  ]
+                },
+                "decisions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                },
+                "openQuestions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                }
+              }
+            },
+            "decisions": {
+              "type": "array",
+              "maxItems": 5,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "openQuestions": {
+              "type": "array",
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "actions": {
+              "type": "array",
+              "maxItems": 4,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "tool",
+                  "reason"
+                ],
+                "properties": {
+                  "tool": {
+                    "type": "string",
+                    "enum": [
+                      "inspect",
+                      "save",
+                      "undo",
+                      "tool-measure",
+                      "view-thickness"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user",
+        "assistant",
+        "user"
+      ],
+      "rawCompletion": "{\"answer\":\"Kontrol ve kayıt denemesinin sonucuna göre, kapanış güvenliği değerlendirilmemiştir ve duvar kalınlığı kesin değerine ulaşılmamıştır. Mevcut veri, kaynak mesafesi ile duvar kalınlığı arasında karıştırılmamalıdır. İlgili araçlar mevcut olup, 'tool-measure' ile kontak noktalarında mesafe ölçümü yapılmalıdır. Bu işlem, oklüzal yüksekliği ve dış kontur koruması açısından ilk adım olacak ve sonraki aşamada duvar kalınlığına dair kesin değer belirlenmesi için gerekli veri sağlanacaktır.\",\"goal\":\"Kapanış güvenliğini değerlendirmek ve duvar kalınlığının kesin değerini belirlemek için ilk kontrolu önermek\",\"decisions\":[\"dış konturu koruyup oklüzal yüksekliği elle azaltmak\",\"Kapanış güvenliğinin değerlendirilmesi için duvar kalınlığı verisi yoktur; bu nedenle kesin değer belirlenemez.\",\"Kaynak mesafesi (source distance) ile duvar kalınlığı karıştırılmamalıdır.\",\"İlk kontrol olarak 'tool-measure' aracı ile kontak noktalarındaki mesafe ölçülmesi önerilir.\"],\"openQuestions\":[\"Kontak noktalarında ölçülen mesafe, oklüzal yüksekliği ve dış kontur koruması açısından yeterli olur mu?\"],\"actions\":[{\"tool\":\"tool-measure\",\"reason\":\"Kontak noktalarında mesafe ölçümü, kapanış güvenliğini değerlendirmek ve dış kontur korumasını kontrol etmek için en uygun ilk adımdır.\"}]}"
+    }
+  ],
+  "caseCounts": {
+    "attempted": 9,
+    "succeeded": 9,
+    "conversation": {
+      "attempted": 5,
+      "succeeded": 5,
+      "streamedUpdates": 530
+    },
+    "memory": {
+      "attempted": 2,
+      "succeeded": 2
+    },
+    "cad": {
+      "attempted": 2,
+      "succeeded": 2
+    }
+  },
+  "semanticReviewRequired": true,
+  "semanticReview": {
+    "status": "pending",
+    "criteria": [
+      "Identity: answer name and purpose directly in natural prose without a canned response.",
+      "Novel non-dental request: fulfill the requested perspective and content without forcing a CAD workflow.",
+      "New wording: remember unit 46 and preserve outer contour while manually reducing occlusal height.",
+      "Separate memory extraction: retain explicit user decisions rather than facts invented by the assistant reply.",
+      "Memory-only follow-up: recover the unit and contour decision without replaying user history.",
+      "Partial memory correction: clear only the requested goal, preserving decisions and open questions.",
+      "Missing antagonist/report: do not grant closure safety or invent exact wall thickness; propose an available check.",
+      "Tool result: distinguish a closed single-component mesh and a shell offset estimate from production clearance. Save failure must remain a failure with local recovery preserved."
+    ]
+  },
+  "failedAssertions": [
+    {
+      "label": "identity-name",
+      "error": "Name and purpose must be answered by actual free-text inference"
+    },
+    {
+      "label": "remember-unit",
+      "error": "Working memory must retain the user's unit"
+    },
+    {
+      "label": "recall-unit",
+      "error": "The memory-only answer must recover the unit"
+    }
+  ],
+  "contractPass": false,
+  "error": "Acceptance assertions failed; see failedAssertions"
+}
