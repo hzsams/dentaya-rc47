@@ -79,7 +79,7 @@
     "verify:loading-reading-browser": "node scripts/verify-loading-reading-browser.mjs",
     "verify:rc44": "node --import tsx scripts/verify-rc44-tools.ts",
     "desktop:package": "node scripts/package-windows.mjs",
-    "verify:windows-package": "node --test scripts/verify-windows-packaging.mjs",
+    "verify:windows-package": "node --test scripts/verify-windows-packaging.mjs scripts/verify-windows-artifact.test.mjs scripts/verify-windows-ci.mjs && node scripts/verify-windows-native-orchestration.cjs",
     "verify:aya-agent": "node scripts/verify-aya-agent.cjs",
     "verify:aya-cad-agent": "node --import tsx scripts/verify-aya-cad-agent.ts",
     "verify:aya-native": "node scripts/verify-aya-native.cjs",
@@ -109,7 +109,10 @@
     "verify:aya-section": "node --import tsx scripts/verify-aya-section-context.ts && node scripts/verify-aya-section.cjs",
     "verify:operations-workspace-browser": "node scripts/verify-operations-workspace-browser.mjs",
     "verify:aya-setup-browser": "node scripts/verify-aya-setup-browser.mjs",
-    "verify:aya-natural": "node scripts/verify-aya-natural-stream.cjs && node scripts/verify-aya-memory-task.cjs && node scripts/verify-aya-ollama-download.cjs"
+    "verify:aya-natural": "node scripts/verify-aya-natural-stream.cjs && node scripts/verify-aya-memory-task.cjs && node scripts/verify-aya-ollama-download.cjs && node scripts/verify-aya-acceptance.cjs && node --import tsx scripts/verify-aya-chat-workspace.ts",
+    "evaluate:aya": "node scripts/evaluate-aya-local.cjs",
+    "verify:aya-acceptance-browser": "node scripts/verify-aya-acceptance-browser.mjs",
+    "verify:aya-continuity-browser": "node scripts/verify-aya-chat-workspace-browser.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.116.0",
