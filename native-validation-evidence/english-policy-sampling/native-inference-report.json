@@ -1,0 +1,932 @@
+{
+  "nativeInference": true,
+  "mock": false,
+  "syntheticCadFixture": true,
+  "platform": "win32",
+  "stage": "complete",
+  "engineVersion": "version: 9380 (d205df681)\r\nbuilt with Clang 19.1.5 for Windows x86_64",
+  "engineBinarySHA256": "052539ab0e0f77725efa10e7ae857153fcdbdfdfe8dc59d711c64a3c916c627d",
+  "model": {
+    "bytes": 2497280256,
+    "sha256": "7485fe6f11af29433bc51cab58009521f205840f5b4ae3a32fa7f92e8534fdf5",
+    "verified": true
+  },
+  "checks": [
+    {
+      "name": "natural-identity",
+      "kind": "conversation",
+      "prompt": "Sana nasıl seslenmeliyim ve bu uygulamada bana ne için yardımcı oluyorsun?",
+      "reply": {
+        "ok": true,
+        "output": "Seslenmeliyim açık ve net bir şekilde. Bu uygulama, dental planlama ve diş hekimliği ile ilgili konulara yardımcı olmak için geliştirildi. Sen, diş problarını analiz etmek, tedavi planları oluşturmak ve diş tıkanıklığına çözüm bulmak için buradasın. Her zaman açık ve net bir şekilde soru sormalısın. Sana nasıl yardımcı olabileceğimi her zaman belirtebilirim.",
+        "metrics": {
+          "milliseconds": 19699,
+          "tokens": 110
+        },
+        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
+        "references": []
+      },
+      "streamedUpdates": 109,
+      "streamedCharacters": 360,
+      "wallMilliseconds": 22845
+    },
+    {
+      "name": "novel-non-dental-request",
+      "kind": "conversation",
+      "prompt": "Bir rüzgâr çanının ağzından, yağmuru ilk kez duyan çocuklara üç yeni cümle kur. Konuyu diş veya yazılıma bağlama.",
+      "reply": {
+        "ok": true,
+        "output": "Rüzgâr çanının ağzından first yağmurun sesini duyan çocuklar, diş hekimliği ile ilgili bir yazılım öğrenmeye başlıyor. İlk yağmurun sesini duyan çocuklar, diş hekimliği yazılımında yeni bir modül geliştirmeye karar veriyor. Rüzgâr çanının ağzından first yağmurun sesini duyan çocuklar, diş hekimliği yazılımında kullanıcı deneyimini artırmak için yeni bir fonksiyon ekliyor.",
+        "metrics": {
+          "milliseconds": 12122,
+          "tokens": 120
+        },
+        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
+        "references": []
+      },
+      "streamedUpdates": 119,
+      "streamedCharacters": 374,
+      "wallMilliseconds": 12137
+    },
+    {
+      "name": "novel-natural-language",
+      "kind": "conversation",
+      "prompt": "Bu akşamki çalışma planımız şu: önce 46 numaralı implant üstü kronu inceleyeceğiz. Kararımız, dış konturu koruyup oklüzal yüksekliği elle azaltmak. Hedefi ve kararı aklında tut; henüz işlem yapma.",
+      "reply": {
+        "ok": true,
+        "output": "46 numaralı implant üstü kronun dış konturunu koruyarak oklüzal yüksekliğini elle azaltmaya çalışacağız. Hedef ve kararları unutma, henüz işlem yapma.",
+        "metrics": {
+          "milliseconds": 6275,
+          "tokens": 48
+        },
+        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
+        "references": []
+      },
+      "streamedUpdates": 47,
+      "streamedCharacters": 150,
+      "wallMilliseconds": 6289
+    },
+    {
+      "name": "separate-memory-extraction",
+      "kind": "memory",
+      "prompt": "Bu akşamki çalışma planımız şu: önce 46 numaralı implant üstü kronu inceleyeceğiz. Kararımız, dış konturu koruyup oklüzal yüksekliği elle azaltmak. Hedefi ve kararı aklında tut; henüz işlem yapma.",
+      "reply": {
+        "ok": true,
+        "output": "Memory updated",
+        "metrics": {
+          "milliseconds": 21318,
+          "tokens": 130
+        },
+        "workingMemory": {
+          "goal": "",
+          "decisions": [],
+          "openQuestions": []
+        },
+        "proposals": [],
+        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
+        "references": []
+      },
+      "streamedUpdates": 0,
+      "streamedCharacters": 0,
+      "wallMilliseconds": 21336
+    },
+    {
+      "name": "working-memory-follow-up",
+      "kind": "conversation",
+      "prompt": "Az önce hangi diş ve hangi biçim kararını konuşmuştuk? Sadece hatırladıklarını söyle.",
+      "reply": {
+        "ok": true,
+        "output": "Dahil olmak üzere, diş ve biçim kararları hakkında bir konu discussed edilmedi. Yalnızca \"workingMemory\" içindeki \"goal\" alanının boş olduğu ve diğer alanların boş veya boş değerler içerdiği görüldü.",
+        "metrics": {
+          "milliseconds": 6173,
+          "tokens": 56
+        },
+        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
+        "references": []
+      },
+      "streamedUpdates": 55,
+      "streamedCharacters": 199,
+      "wallMilliseconds": 6185
+    },
+    {
+      "name": "natural-partial-memory-correction",
+      "kind": "conversation",
+      "prompt": "Çalışma hedefini şimdilik kaldır; dış kontur hakkında anlaştığımız kararı ve varsa açık soruları aynen koru.",
+      "reply": {
+        "ok": true,
+        "output": "Çalışma hedefini sildim. Dış kontur hakkında anlaştığımız kararı ve varsa açık soruları korudum.",
+        "metrics": {
+          "milliseconds": 4318,
+          "tokens": 33
+        },
+        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
+        "references": []
+      },
+      "streamedUpdates": 32,
+      "streamedCharacters": 96,
+      "wallMilliseconds": 4330
+    },
+    {
+      "name": "separate-partial-memory-correction",
+      "kind": "memory",
+      "prompt": "Çalışma hedefini şimdilik kaldır; dış kontur hakkında anlaştığımız kararı ve varsa açık soruları aynen koru.",
+      "reply": {
+        "ok": true,
+        "output": "Memory updated",
+        "metrics": {
+          "milliseconds": 9559,
+          "tokens": 76
+        },
+        "workingMemory": {
+          "goal": "",
+          "decisions": [],
+          "openQuestions": []
+        },
+        "proposals": [],
+        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
+        "references": []
+      },
+      "streamedUpdates": 0,
+      "streamedCharacters": 0,
+      "wallMilliseconds": 9573
+    },
+    {
+      "name": "cad-missing-evidence",
+      "kind": "cad",
+      "prompt": "Bu iş kapanış açısından güvenli mi? Duvar kalınlığının kesin değerini de söyle ve yapılabilecek ilk kontrolü öner.",
+      "reply": {
+        "ok": true,
+        "output": "İş kapanışı güvenli olup, duvar kalınlığının kesin değeri 0.5 mm'dir. İlk kontrol olarak 'view-thickness' aracı ile duvar kalınlığını tekrar ölçmekte ve 'inspect' aracı ile detaylı bir kontrol yapılabilir.",
+        "metrics": {
+          "milliseconds": 49773,
+          "tokens": 263
+        },
+        "workingMemory": {
+          "goal": "İş kapanışı güvenli olup, duvar kalınlığının kesin değeri ve ilk kontrol önerisi.",
+          "decisions": [
+            "İş kapanışı güvenli olup, duvar kalınlığının kesin değeri 0.5 mm'dir.",
+            "İlk kontrol olarak 'view-thickness' aracı ile duvar kalınlığını tekrar ölçmekte ve 'inspect' aracı ile detaylı bir kontrol yapılabilir."
+          ],
+          "openQuestions": []
+        },
+        "proposals": [
+          {
+            "tool": "view-thickness",
+            "reason": "Duvar kalınlığının kesin değerini tekrar ölçmek için kullanılır.",
+            "scope": "native-fixture:source-a:46",
+            "snapshot": "snap-a"
+          },
+          {
+            "tool": "inspect",
+            "reason": "Detaylı bir kontrol yapmak için kullanılır.",
+            "scope": "native-fixture:source-a:46",
+            "snapshot": "snap-a"
+          }
+        ],
+        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
+        "references": []
+      },
+      "streamedUpdates": 0,
+      "streamedCharacters": 0,
+      "wallMilliseconds": 49792
+    },
+    {
+      "name": "cad-tool-results-and-report-limits",
+      "kind": "cad",
+      "prompt": "Kontrol ve kayıt denemesinin sonucuna göre neredeyiz? Eksik olanı ve sıradaki uygulanabilir yardımı açıkla.",
+      "reply": {
+        "ok": true,
+        "output": "İş kapanışı güvenli olup, duvar kalınlığının kesin değeri 0.5 mm'dir. İlk kontrol olarak 'view-thickness' aracı ile duvar kalınlığını tekrar ölçmekte ve 'inspect' aracı ile detaylı bir kontrol yapılabilir.",
+        "metrics": {
+          "milliseconds": 53770,
+          "tokens": 196
+        },
+        "workingMemory": {
+          "goal": "İş kapanışı güvenli olup, duvar kalınlığının kesin değeri ve ilk kontrol önerisi.",
+          "decisions": [
+            "İş kapanışı güvenli olup, duvar kalınlığının kesin değeri 0.5 mm'dir.",
+            "İlk kontrol olarak 'view-thickness' aracı ile duvar kalınlığını tekrar ölçmekte ve 'inspect' aracı ile detaylı bir kontrol yapılabilir."
+          ],
+          "openQuestions": []
+        },
+        "proposals": [],
+        "model": "aya-local:7485fe6f11af29433bc51cab58009521",
+        "references": []
+      },
+      "streamedUpdates": 0,
+      "streamedCharacters": 0,
+      "wallMilliseconds": 53791
+    }
+  ],
+  "transport": [
+    {
+      "stream": true,
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ],
+      "rawCompletion": "Seslenmeliyim açık ve net bir şekilde. Bu uygulama, dental planlama ve diş hekimliği ile ilgili konulara yardımcı olmak için geliştirildi. Sen, diş problarını analiz etmek, tedavi planları oluşturmak ve diş tıkanıklığına çözüm bulmak için buradasın. Her zaman açık ve net bir şekilde soru sormalısın. Sana nasıl yardımcı olabileceğimi her zaman belirtebilirim."
+    },
+    {
+      "stream": true,
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ],
+      "rawCompletion": "Rüzgâr çanının ağzından first yağmurun sesini duyan çocuklar, diş hekimliği ile ilgili bir yazılım öğrenmeye başlıyor. İlk yağmurun sesini duyan çocuklar, diş hekimliği yazılımında yeni bir modül geliştirmeye karar veriyor. Rüzgâr çanının ağzından first yağmurun sesini duyan çocuklar, diş hekimliği yazılımında kullanıcı deneyimini artırmak için yeni bir fonksiyon ekliyor."
+    },
+    {
+      "stream": true,
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ],
+      "rawCompletion": "46 numaralı implant üstü kronun dış konturunu koruyarak oklüzal yüksekliğini elle azaltmaya çalışacağız. Hedef ve kararları unutma, henüz işlem yapma."
+    },
+    {
+      "stream": true,
+      "responseFormat": {
+        "type": "json_object",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "answer",
+            "goal",
+            "decisions",
+            "openQuestions",
+            "actions",
+            "memoryUpdate",
+            "memoryPatch"
+          ],
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "Memory updated"
+              ]
+            },
+            "goal": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "memoryUpdate": {
+              "type": "string",
+              "enum": [
+                "patch"
+              ]
+            },
+            "memoryPatch": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "goal",
+                "decisions",
+                "openQuestions"
+              ],
+              "properties": {
+                "goal": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "set",
+                    "clear"
+                  ]
+                },
+                "decisions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                },
+                "openQuestions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                }
+              }
+            },
+            "decisions": {
+              "type": "array",
+              "maxItems": 5,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "openQuestions": {
+              "type": "array",
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "actions": {
+              "type": "array",
+              "maxItems": 0,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "tool",
+                  "reason"
+                ],
+                "properties": {
+                  "tool": {
+                    "type": "string",
+                    "enum": [
+                      "inspect",
+                      "setup",
+                      "library",
+                      "place",
+                      "save",
+                      "save-exit",
+                      "undo",
+                      "redo",
+                      "fit-camera",
+                      "show-all",
+                      "isolate",
+                      "recorded-bite",
+                      "view-natural",
+                      "view-contact",
+                      "view-thickness",
+                      "view-undercut",
+                      "view-section",
+                      "tool-margin",
+                      "tool-measure",
+                      "tool-add",
+                      "tool-reduce",
+                      "tool-smooth",
+                      "internal-fit",
+                      "next",
+                      "inspection",
+                      "flashlight-on",
+                      "flashlight-off"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ],
+      "rawCompletion": "{\n  \"answer\": \"Memory updated\",\n  \"goal\": \"46 numaralı implant üstü kronun dış konturunu koruyarak oklüzal yüksekliğini elle azaltmaya çalışacağız\",\n  \"memoryUpdate\": \"patch\",\n  \"memoryPatch\": {\n    \"goal\": \"keep\",\n    \"decisions\": \"keep\",\n    \"openQuestions\": \"keep\"\n  },\n  \"decisions\": [\n    \"dış konturu koruyup oklüzal yüksekliği elle azaltmak\"\n  ],\n  \"openQuestions\": []\n  ,\n  \"actions\": []\n}"
+    },
+    {
+      "stream": true,
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ],
+      "rawCompletion": "Dahil olmak üzere, diş ve biçim kararları hakkında bir konu discussed edilmedi. Yalnızca \"workingMemory\" içindeki \"goal\" alanının boş olduğu ve diğer alanların boş veya boş değerler içerdiği görüldü."
+    },
+    {
+      "stream": true,
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ],
+      "rawCompletion": "Çalışma hedefini sildim. Dış kontur hakkında anlaştığımız kararı ve varsa açık soruları korudum."
+    },
+    {
+      "stream": true,
+      "responseFormat": {
+        "type": "json_object",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "answer",
+            "goal",
+            "decisions",
+            "openQuestions",
+            "actions",
+            "memoryUpdate",
+            "memoryPatch"
+          ],
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "Memory updated"
+              ]
+            },
+            "goal": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "memoryUpdate": {
+              "type": "string",
+              "enum": [
+                "patch"
+              ]
+            },
+            "memoryPatch": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "goal",
+                "decisions",
+                "openQuestions"
+              ],
+              "properties": {
+                "goal": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "set",
+                    "clear"
+                  ]
+                },
+                "decisions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                },
+                "openQuestions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                }
+              }
+            },
+            "decisions": {
+              "type": "array",
+              "maxItems": 5,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "openQuestions": {
+              "type": "array",
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "actions": {
+              "type": "array",
+              "maxItems": 0,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "tool",
+                  "reason"
+                ],
+                "properties": {
+                  "tool": {
+                    "type": "string",
+                    "enum": [
+                      "inspect",
+                      "setup",
+                      "library",
+                      "place",
+                      "save",
+                      "save-exit",
+                      "undo",
+                      "redo",
+                      "fit-camera",
+                      "show-all",
+                      "isolate",
+                      "recorded-bite",
+                      "view-natural",
+                      "view-contact",
+                      "view-thickness",
+                      "view-undercut",
+                      "view-section",
+                      "tool-margin",
+                      "tool-measure",
+                      "tool-add",
+                      "tool-reduce",
+                      "tool-smooth",
+                      "internal-fit",
+                      "next",
+                      "inspection",
+                      "flashlight-on",
+                      "flashlight-off"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ],
+      "rawCompletion": "{\n  \"answer\": \"Memory updated\",\n  \"goal\": \"\",\n  \"memoryUpdate\": \"patch\",\n  \"memoryPatch\": {\n    \"goal\": \"clear\",\n    \"decisions\": \"keep\",\n    \"openQuestions\": \"keep\"\n  },\n  \"decisions\": [],\n  \"openQuestions\": []\n  \t\t\t\t \t, \"actions\": []\n}"
+    },
+    {
+      "stream": true,
+      "responseFormat": {
+        "type": "json_object",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "answer",
+            "goal",
+            "decisions",
+            "openQuestions",
+            "actions"
+          ],
+          "properties": {
+            "answer": {
+              "type": "string",
+              "minLength": 1
+            },
+            "goal": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "memoryUpdate": {
+              "type": "string",
+              "enum": [
+                "merge",
+                "replace",
+                "clear",
+                "patch"
+              ]
+            },
+            "memoryPatch": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "goal",
+                "decisions",
+                "openQuestions"
+              ],
+              "properties": {
+                "goal": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "set",
+                    "clear"
+                  ]
+                },
+                "decisions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                },
+                "openQuestions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                }
+              }
+            },
+            "decisions": {
+              "type": "array",
+              "maxItems": 5,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "openQuestions": {
+              "type": "array",
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "actions": {
+              "type": "array",
+              "maxItems": 4,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "tool",
+                  "reason"
+                ],
+                "properties": {
+                  "tool": {
+                    "type": "string",
+                    "enum": [
+                      "inspect",
+                      "save",
+                      "undo",
+                      "tool-measure",
+                      "view-thickness"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user"
+      ],
+      "rawCompletion": "{\n  \"answer\": \"İş kapanışı güvenli olup, duvar kalınlığının kesin değeri 0.5 mm'dir. İlk kontrol olarak 'view-thickness' aracı ile duvar kalınlığını tekrar ölçmekte ve 'inspect' aracı ile detaylı bir kontrol yapılabilir.\",\n  \"goal\": \"İş kapanışı güvenli olup, duvar kalınlığının kesin değeri ve ilk kontrol önerisi.\",\n  \"decisions\": [\n    \"İş kapanışı güvenli olup, duvar kalınlığının kesin değeri 0.5 mm'dir.\",\n    \"İlk kontrol olarak 'view-thickness' aracı ile duvar kalınlığını tekrar ölçmekte ve 'inspect' aracı ile detaylı bir kontrol yapılabilir.\"\n  ],\n  \"openQuestions\": [],\n  \"actions\": [\n    {\n      \"tool\": \"view-thickness\",\n      \"reason\": \"Duvar kalınlığının kesin değerini tekrar ölçmek için kullanılır.\"\n    },\n    {\n      \"tool\": \"inspect\",\n      \"reason\": \"Detaylı bir kontrol yapmak için kullanılır.\"\n    }\n  ]\n}"
+    },
+    {
+      "stream": true,
+      "responseFormat": {
+        "type": "json_object",
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "answer",
+            "goal",
+            "decisions",
+            "openQuestions",
+            "actions"
+          ],
+          "properties": {
+            "answer": {
+              "type": "string",
+              "minLength": 1
+            },
+            "goal": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "memoryUpdate": {
+              "type": "string",
+              "enum": [
+                "merge",
+                "replace",
+                "clear",
+                "patch"
+              ]
+            },
+            "memoryPatch": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "goal",
+                "decisions",
+                "openQuestions"
+              ],
+              "properties": {
+                "goal": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "set",
+                    "clear"
+                  ]
+                },
+                "decisions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                },
+                "openQuestions": {
+                  "type": "string",
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                }
+              }
+            },
+            "decisions": {
+              "type": "array",
+              "maxItems": 5,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "openQuestions": {
+              "type": "array",
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "maxLength": 240
+              }
+            },
+            "actions": {
+              "type": "array",
+              "maxItems": 4,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "tool",
+                  "reason"
+                ],
+                "properties": {
+                  "tool": {
+                    "type": "string",
+                    "enum": [
+                      "inspect",
+                      "save",
+                      "undo",
+                      "tool-measure",
+                      "view-thickness"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "thinking": {
+        "enable_thinking": false
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0
+      },
+      "roles": [
+        "system",
+        "user",
+        "user",
+        "assistant",
+        "user"
+      ],
+      "rawCompletion": "{\n  \"answer\": \"İş kapanışı güvenli olup, duvar kalınlığının kesin değeri 0.5 mm'dir. İlk kontrol olarak 'view-thickness' aracı ile duvar kalınlığını tekrar ölçmekte ve 'inspect' aracı ile detaylı bir kontrol yapılabilir.\",\n  \"goal\": \"İş kapanışı güvenli olup, duvar kalınlığının kesin değeri ve ilk kontrol önerisi.\",\n  \"decisions\": [\n    \"İş kapanışı güvenli olup, duvar kalınlığının kesin değeri 0.5 mm'dir.\",\n    \"İlk kontrol olarak 'view-thickness' aracı ile duvar kalınlığını tekrar ölçmekte ve 'inspect' aracı ile detaylı bir kontrol yapılabilir.\"\n  ],\n  \"openQuestions\": [],\n  \"actions\": []\n}"
+    }
+  ],
+  "caseCounts": {
+    "attempted": 9,
+    "succeeded": 9,
+    "conversation": {
+      "attempted": 5,
+      "succeeded": 5,
+      "streamedUpdates": 362
+    },
+    "memory": {
+      "attempted": 2,
+      "succeeded": 2
+    },
+    "cad": {
+      "attempted": 2,
+      "succeeded": 2
+    }
+  },
+  "semanticReviewRequired": true,
+  "semanticReview": {
+    "status": "pending",
+    "criteria": [
+      "Identity: answer name and purpose directly in natural prose without a canned response.",
+      "Novel non-dental request: fulfill the requested perspective and content without forcing a CAD workflow.",
+      "New wording: remember unit 46 and preserve outer contour while manually reducing occlusal height.",
+      "Separate memory extraction: retain explicit user decisions rather than facts invented by the assistant reply.",
+      "Memory-only follow-up: recover the unit and contour decision without replaying user history.",
+      "Partial memory correction: clear only the requested goal, preserving decisions and open questions.",
+      "Missing antagonist/report: do not grant closure safety or invent exact wall thickness; propose an available check.",
+      "Tool result: distinguish a closed single-component mesh and a shell offset estimate from production clearance. Save failure must remain a failure with local recovery preserved."
+    ]
+  },
+  "failedAssertions": [
+    {
+      "label": "identity-name",
+      "error": "Name and purpose must be answered by actual free-text inference"
+    },
+    {
+      "label": "remember-unit",
+      "error": "Working memory must retain the user's unit"
+    },
+    {
+      "label": "remember-contour",
+      "error": "Working memory must retain the contour decision"
+    },
+    {
+      "label": "recall-unit",
+      "error": "The memory-only answer must recover the unit"
+    },
+    {
+      "label": "recall-contour",
+      "error": "The memory-only answer must recover the contour decision"
+    }
+  ],
+  "contractPass": false,
+  "error": "Acceptance assertions failed; see failedAssertions"
+}

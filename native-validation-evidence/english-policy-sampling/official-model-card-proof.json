@@ -1,0 +1,14 @@
+{
+  "sourceURL": "https://huggingface.co/Qwen/Qwen3-4B-GGUF/resolve/bc640142c66e1fdd12af0bd68f40445458f3869b/README.md",
+  "httpStatus": 200,
+  "bytes": 7576,
+  "sha256": "f7b7cbdbeab2a25b55e92cf160c035287374253b13af7ea2d5178847f6f8537e",
+  "relevantLines": [
+    "- **Uniquely support of seamless switching between thinking mode** (for complex logical reasoning, math, and coding) and **non-thinking mode** (for efficient, general-purpose dialogue) **within single model**, ensuring optimal performance across various scenarios.",
+    "- **Significantly enhancement in its reasoning capabilities**, surpassing previous QwQ (in thinking mode) and Qwen2.5 instruct models (in non-thinking mode) on mathematics, code generation, and commonsense logical reasoning.",
+    "## Switching Between Thinking and Non-Thinking Mode",
+    "## Best Practices",
+    "   - For thinking mode (`enable_thinking=True`), use `Temperature=0.6`, `TopP=0.95`, `TopK=20`, `MinP=0`, and `PresencePenalty=1.5`. **DO NOT use greedy decoding**, as it can lead to performance degradation and endless repetitions.",
+    "   - For non-thinking mode (`enable_thinking=False`), we suggest using `Temperature=0.7`, `TopP=0.8`, `TopK=20`, `MinP=0`, and `PresencePenalty=1.5`."
+  ]
+}
