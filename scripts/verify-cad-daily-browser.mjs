@@ -191,7 +191,20 @@ try {
  await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).fill('Bu ünite için henüz göndermediğim soru');
  await page.keyboard.press('Escape');assert.equal(await aya.count(),0);assert.equal(await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).evaluate(button=>document.activeElement===button),true,'Closing the sidebar restores keyboard focus');await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();await page.setViewportSize({width:1600,height:1000});
  assert.equal(await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).inputValue(),'Bu ünite için henüz göndermediğim soru','Closing and reopening the same CAD unit preserves an unsent draft');
- const ask=async text=>{await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).fill(text);await aya.getByRole('button',{name:'Gönder',exact:true}).click();await aya.getByRole('button',{name:'Gönder',exact:true}).waitFor();};
+ const ask=async text=>{
+  // Unit/shell edits queue a 900ms autosave. An intentionally blocked click
+  // must not let this fixture reuse a previous request as the new response.
+  await settleAutosave();
+  const composer=aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true});
+  const before={calls:await page.evaluate(()=>window.rc47CadModel.calls.length),messages:await aya.locator('.cad-aya-messages article').count(),guide:await aya.getByRole('combobox',{name:'Yanıt kaynağı',exact:true}).inputValue()==='guide'};
+  await composer.fill(text);
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  assert.equal(await composer.inputValue(),text,'An idle CAD composer retains the draft before explicit submission');
+  await aya.getByRole('button',{name:'Gönder',exact:true}).click();
+  if(before.guide)await page.waitForFunction(count=>document.querySelectorAll('.cad-aya-messages article').length>count,before.messages);
+  else await page.waitForFunction(({count,prompt})=>window.rc47CadModel.calls.length>count&&window.rc47CadModel.calls.at(-1).prompt===prompt,{count:before.calls,prompt:text});
+  await page.waitForFunction(()=>{const form=document.querySelector('.cad-aya-panel>form'),input=form?.querySelector('textarea');return input&&!input.disabled&&form?.querySelector('button[type=submit]');});
+ };
  await aya.getByRole('combobox',{name:'Yanıt kaynağı',exact:true}).selectOption('guide');
  // Explicit tool guide uses current host context without impersonating inference.
  // A catalogue placement definition is not evidence of a live scene assessment.
