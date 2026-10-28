@@ -1,0 +1,13 @@
+{
+  "sourceURL": "https://huggingface.co/unsloth/Qwen3-4B-Instruct-2507-GGUF/resolve/a06e946bb6b655725eafa393f4a9745d460374c9/README.md",
+  "httpStatus": 200,
+  "bytes": 11207,
+  "sha256": "c18c2d01645e709fcc0bfd593291d3dc43e51873f5af170a082c36ccd95988c3",
+  "relevantLines": [
+    "We introduce the updated version of the **Qwen3-4B non-thinking mode**, named **Qwen3-4B-Instruct-2507**, featuring the following key enhancements:",
+    "**NOTE: This model supports only non-thinking mode and does not generate ``<think></think>`` blocks in its output. Meanwhile, specifying `enable_thinking=False` is no longer required.**",
+    "|  | GPT-4.1-nano-2025-04-14 | Qwen3-30B-A3B Non-Thinking | Qwen3-4B Non-Thinking | Qwen3-4B-Instruct-2507 |",
+    "## Best Practices",
+    "   - We suggest using `Temperature=0.7`, `TopP=0.8`, `TopK=20`, and `MinP=0`."
+  ]
+}

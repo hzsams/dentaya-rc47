@@ -1,0 +1,3 @@
+ReferenceError: CONTEXT_MARKER is not defined
+    at D:\a\dentaya-rc47\dentaya-rc47\scripts\verify-aya-native.cjs:55:23
+{"contractPass":false,"nativeInference":false,"mock":false,"stage":"inference","cases":0,"caseCounts":{"attempted":0,"succeeded":0,"conversation":{"attempted":0,"succeeded":0,"streamedUpdates":0},"memory":{"attempted":0,"succeeded":0},"cad":{"attempted":0,"succeeded":0}},"semanticReviewRequired":true}
