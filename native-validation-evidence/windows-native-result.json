@@ -22,5 +22,5 @@
   "report": "native-inference-report.json",
   "checkerExitCode": 1,
   "error": "NATIVE_CONTRACT_FAILED",
-  "milliseconds": 221974
+  "milliseconds": 656687
 }
