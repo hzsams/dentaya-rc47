@@ -167,10 +167,10 @@ try {
   await newCase.click();
   const caseModal = casePage.getByRole('dialog', { name: 'Laboratuvara gönder', exact: true });
   await caseModal.waitFor();
-  await caseModal.getByLabel('Laboratuvar', { exact: true }).selectOption(ids.labA);
+  await caseModal.getByRole('combobox', { name: 'Laboratuvar', exact: true }).selectOption(ids.labA);
   await caseModal.getByRole('button', { name: 'Üstten', exact: true }).click();
-  await caseModal.locator('[data-tooth="11"]').click();
-  const caseNotes = caseModal.getByLabel('Klinik Not', { exact: true });
+  await caseModal.locator('button[data-tooth="11"]').click();
+  const caseNotes = caseModal.getByRole('textbox', { name: 'Klinik Not', exact: true });
   await caseNotes.fill('RC62 pending case draft must remain unchanged');
   await caseModal.getByLabel('Materyal', { exact: true }).fill('RC62 ceramic');
   const caseSend = caseModal.getByRole('button', { name: 'Vakayı Gönder', exact: true });
@@ -195,7 +195,7 @@ try {
   await casePage.waitForFunction(() => !document.querySelector('[role="dialog"] fieldset')?.disabled);
   await caseModal.getByRole('alert').waitFor();
   assert.equal(await caseNotes.inputValue(), 'RC62 pending case draft must remain unchanged', 'A failed case commit retains the editable draft');
-  assert.equal(await caseModal.locator('[data-tooth="11"]').getAttribute('aria-pressed'), 'true');
+  assert.equal(await caseModal.locator('button[data-tooth="11"]').getAttribute('aria-pressed'), 'true');
   assert.equal(new URL(casePage.url()).pathname, '/cases', 'Failure cannot navigate to a fabricated case');
   const failedCaseIdentity = fixture.caseWrites[0].p_request_id;
   assert.match(failedCaseIdentity, /^[0-9a-f-]{36}$/i);
@@ -228,7 +228,7 @@ try {
   appointmentPage.off('dialog', unexpectedPristinePrompt);
   assert.equal(pristinePrompts, 0, 'Closing an unchanged appointment form does not ask to discard changes');
   await addAppointment.click(); await appointmentModal.waitFor();
-  const appointmentNotes = appointmentModal.getByLabel('Not', { exact: true });
+  const appointmentNotes = appointmentModal.getByRole('textbox', { name: 'Not', exact: true });
   const appointmentDraft = 'RC62 appointment draft survives every dismissed close';
   await appointmentNotes.fill(appointmentDraft);
   const closeAppointment = appointmentModal.getByRole('button', { name: '×', exact: true });

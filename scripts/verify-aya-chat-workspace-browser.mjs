@@ -95,6 +95,21 @@ try{
 
  // History OFF keeps the conversation only in this tab's live module cache.
  const temporary=await harness();
+ // Some IMEs end composition with Enter/keyCode229 before isComposing resets.
+ // Neither browser signal may dispatch a chat request or consume its draft.
+ await temporary.page.evaluate(()=>window.rc62Work.saveAyaOptions({enterSends:true}));
+ const imeDraft='RC62 IME taslağı gönderilmeden korunacak';
+ await input(temporary.page).fill(imeDraft);
+ for(const mode of ['isComposing','keyCode229']) {
+  await input(temporary.page).evaluate((node,compositionMode)=>{
+   const event=new KeyboardEvent('keydown',{key:'Enter',code:'Enter',bubbles:true,cancelable:true,isComposing:compositionMode==='isComposing'});
+   if(compositionMode==='keyCode229')Object.defineProperty(event,'keyCode',{value:229});
+   node.dispatchEvent(event);
+  },mode);
+  await temporary.page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  assert.equal(await normalCalls(temporary.page),0,'IME Enter '+mode+' cannot submit the chat draft');
+  assert.equal(await input(temporary.page).inputValue(),imeDraft,'IME Enter '+mode+' preserves the complete draft');
+ }
  await ask(temporary.page,'Geçmiş kapalıyken yalnız bu sekmedeki konuşma');
  const temporaryMessages=await main(temporary.page).locator('.aya-message').allTextContents();
  const temporaryDraft='  GEÇİCİ TASLAK\nHenüz gönderilmedi.  ';
@@ -218,7 +233,7 @@ try{
  assert.equal(await workspace(page),null,'Route return cannot re-create storage after history is disabled');
  await saved.context.close();
  assert.deepEqual(errors,[],'Workspace transitions produce no React, hydration or page errors');
- console.log(JSON.stringify({pass:true,realReactAndNextRoutes:true,historyOffProcessContinuity:true,noHistoryOffReloadPersistence:true,perSessionDraftIsolation:true,newStartsEmpty:true,authoritativeReload:true,openerSessionStorageCloneCannotOverwriteHistory:true,interruptedQuestionRecovery:true,explicitRetryOnly:true,noPartialOutputPersistence:true,diagnosticRecoveryIsolation:true,reloadPendingQuestionRecovery:true,deleteEvictsDraft:true,deletedSessionCannotResurrect:true,historyOffClearsRecoveryImmediately:true,transportIsSynthetic:true,nativeInference:false,screenshots},null,2));
+ console.log(JSON.stringify({pass:true,realReactAndNextRoutes:true,historyOffProcessContinuity:true,imeEnterNeverSubmits:true,noHistoryOffReloadPersistence:true,perSessionDraftIsolation:true,newStartsEmpty:true,authoritativeReload:true,openerSessionStorageCloneCannotOverwriteHistory:true,interruptedQuestionRecovery:true,explicitRetryOnly:true,noPartialOutputPersistence:true,diagnosticRecoveryIsolation:true,reloadPendingQuestionRecovery:true,deleteEvictsDraft:true,deletedSessionCannotResurrect:true,historyOffClearsRecoveryImmediately:true,transportIsSynthetic:true,nativeInference:false,screenshots},null,2));
 }catch(error){console.error(logs);throw error;}finally{
  await browser?.close();await stopServer();if(owned)await fs.rm(route,{recursive:true,force:true});await fs.rm(path.join(root,'.next/dev/types'),{recursive:true,force:true});
 }

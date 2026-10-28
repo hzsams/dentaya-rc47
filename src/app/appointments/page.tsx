@@ -278,6 +278,11 @@ export default function AppointmentsPage() {
         document.addEventListener('keydown', key);
         return () => { document.removeEventListener('keydown', key); if(previous?.isConnected)previous.focus(); };
     }, [showCreate]);
+    // Disabling the focused field blurs it to the page body. Keep the pending
+    // commit inside its dialog without rerunning the open/close focus lifecycle.
+    useEffect(() => {
+        if(showCreate&&busy)modalRef.current?.focus();
+    }, [showCreate,busy]);
     async function setStatus(id: string, status: string) {
         if (!org || createLock.current)
             return;
