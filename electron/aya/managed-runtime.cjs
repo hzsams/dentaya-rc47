@@ -5,7 +5,7 @@ const {spawn}=require('node:child_process');
 const {unzipSync}=require('fflate');
 const {fitMessagesToBudget}=require('./agent.cjs');
 const ENGINE={version:'b9380',url:'https://github.com/ggml-org/llama.cpp/releases/download/b9380/llama-b9380-bin-win-cpu-x64.zip',sha256:'cd44b61422671f0565cae98d856a70d55ef10392197a49246671f85bacb50dc3',bytes:16067676};
-const MODEL={id:'aya-local:qwen3-4b-q4',name:'Qwen3-4B-Q4_K_M.gguf',label:'AYA Local · Qwen3 4B',url:'https://huggingface.co/Qwen/Qwen3-4B-GGUF/resolve/bc640142c66e1fdd12af0bd68f40445458f3869b/Qwen3-4B-Q4_K_M.gguf',sha256:'7485fe6f11af29433bc51cab58009521f205840f5b4ae3a32fa7f92e8534fdf5',bytes:2497280256};
+const MODEL={id:'aya-local:qwen3-4b-instruct-2507-q4',name:'Qwen3-4B-Instruct-2507-Q4_K_M.gguf',label:'AYA Local · Qwen3 4B Instruct 2507 · Unsloth Q4',url:'https://huggingface.co/unsloth/Qwen3-4B-Instruct-2507-GGUF/resolve/a06e946bb6b655725eafa393f4a9745d460374c9/Qwen3-4B-Instruct-2507-Q4_K_M.gguf',sha256:'3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597',bytes:2497281120};
 // Native output may contain local paths or the process key. Retain only a bounded
 // startup tail in memory and expose a fixed diagnosis, never the native text.
 function engineStartError(stderr,spawnCode){
