@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "pass": true,
+  "commit": "61ee56824704c8937fbace10e77947e30d96653a",
+  "tag": null,
+  "version": "1.0.0-rc.62",
+  "buildId": "RpPr4Way9_Aq_RlfTMDpm",
+  "installer": {
+    "file": "DentAYA-Setup-1.0.0-rc.62.exe",
+    "sha256": "22b9986ee83304da0843602185a7c5c8dd0f8a1973a6f1cfa152d4011ed81e78",
+    "bytes": 279376003,
+    "machine": 332
+  },
+  "executable": {
+    "file": "DentAYA.exe",
+    "sha256": "5e370102709534169cb496860cc60876e4eb42680b8b875c55a5150d01cf4b9b",
+    "machine": 34404
+  },
+  "source": {
+    "manifestSha256": "81d1d3cb9fb2b94c592ea4069cd8a12a251eaab6fe7dfd11780f7c582a44b907",
+    "releaseSha256": "d0a14ade44e374d0c88187397516e1063eea4844fb1cc869fed5ea238649a56c",
+    "electronFiles": 208,
+    "electronTreeSha256": "6a1430c9169336524df789fc4bc31d3d5484e645b26db900268fd8106155c6ac"
+  },
+  "payload": {
+    "extractedFromInstaller": true,
+    "asarSha256": "743fd18a3e9c4ee235e2c763c6d62a9f1ee62d3a52c2428ff096a7024c3d1968",
+    "nextBuildId": "RpPr4Way9_Aq_RlfTMDpm",
+    "standaloneFiles": 1924,
+    "staticFiles": 126,
+    "publicFiles": 1020
+  },
+  "extractionTools": {
+    "nsis": {
+      "file": "7z.exe",
+      "version": "26.04",
+      "sha256": "95fff19b73eff77c87c0d7bd32822e43fb90dd2932459f962eb532d8dfb6ba53"
+    },
+    "embedded": {
+      "file": "7za.exe",
+      "source": "app-builder-lib pinned checksum toolset",
+      "sha256": "223b873c50380fe9a39f1a22b6abf8d46db506e1c08d08312902f6f3cd1f7ac3"
+    }
+  },
+  "desktopSmoke": {
+    "pass": true,
+    "report": "desktop-smoke-report.json",
+    "sha256": "851b01e3cdd5e2349100643cb6191756f37ed7e0eb20951b49831fe158d588e9",
+    "routes": [
+      {
+        "requested": "/workspace",
+        "final": "/workspace",
+        "documentReady": true,
+        "bridge": true,
+        "ipc": true,
+        "unauthenticated": true
+      },
+      {
+        "requested": "/ai",
+        "final": "/ai",
+        "documentReady": true,
+        "bridge": true,
+        "ipc": true,
+        "unauthenticated": true
+      },
+      {
+        "requested": "/settings",
+        "final": "/settings",
+        "documentReady": true,
+        "bridge": true,
+        "ipc": true,
+        "unauthenticated": true
+      }
+    ],
+    "freshProfile": true
+  },
+  "claims": {
+    "windowsInstallerVerified": true,
+    "modelInferenceTested": false,
+    "liveOrganizationBackendTested": false
+  }
+}
