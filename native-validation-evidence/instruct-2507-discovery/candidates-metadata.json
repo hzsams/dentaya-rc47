@@ -1,0 +1,90 @@
+{
+  "purpose": "instruction-model-publisher-pin-discovery",
+  "nativeInferenceAttempted": false,
+  "nativeAcceptance": null,
+  "queriedAt": "2026-10-28T10:18:46.886Z",
+  "testedCommit": "888293cb5dc52af08f076bf47da0994a6b316c8c",
+  "runId": "40671061496",
+  "candidates": [
+    {
+      "repository": "Qwen/Qwen3-4B-Instruct-2507",
+      "publisher": "Qwen",
+      "discoveryURL": "https://huggingface.co/api/models/Qwen/Qwen3-4B-Instruct-2507?blobs=true",
+      "sourceURL": "https://huggingface.co/api/models/Qwen/Qwen3-4B-Instruct-2507/revision/cdbee75f17c01a7cc42f958dc650907174af0554?blobs=true",
+      "status": "verified-publisher-metadata",
+      "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+      "license": "apache-2.0",
+      "modelType": "qwen3",
+      "files": []
+    },
+    {
+      "repository": "unsloth/Qwen3-4B-Instruct-2507-GGUF",
+      "publisher": "unsloth",
+      "discoveryURL": "https://huggingface.co/api/models/unsloth/Qwen3-4B-Instruct-2507-GGUF?blobs=true",
+      "sourceURL": "https://huggingface.co/api/models/unsloth/Qwen3-4B-Instruct-2507-GGUF/revision/a06e946bb6b655725eafa393f4a9745d460374c9?blobs=true",
+      "status": "verified-publisher-metadata",
+      "revision": "a06e946bb6b655725eafa393f4a9745d460374c9",
+      "license": "apache-2.0",
+      "baseModel": [
+        "Qwen/Qwen3-4B-Instruct-2507"
+      ],
+      "files": [
+        {
+          "name": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+          "bytes": 2497281120,
+          "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+          "url": "https://huggingface.co/unsloth/Qwen3-4B-Instruct-2507-GGUF/resolve/a06e946bb6b655725eafa393f4a9745d460374c9/Qwen3-4B-Instruct-2507-Q4_K_M.gguf"
+        }
+      ]
+    },
+    {
+      "repository": "bartowski/Qwen_Qwen3-4B-Instruct-2507-GGUF",
+      "publisher": "bartowski",
+      "discoveryURL": "https://huggingface.co/api/models/bartowski/Qwen_Qwen3-4B-Instruct-2507-GGUF?blobs=true",
+      "sourceURL": "https://huggingface.co/api/models/bartowski/Qwen_Qwen3-4B-Instruct-2507-GGUF/revision/ae44f08e1392f39c0e474af10c3ff8355c8b6688?blobs=true",
+      "status": "verified-publisher-metadata",
+      "revision": "ae44f08e1392f39c0e474af10c3ff8355c8b6688",
+      "baseModel": "Qwen/Qwen3-4B-Instruct-2507",
+      "files": [
+        {
+          "name": "Qwen_Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+          "bytes": 2497280736,
+          "sha256": "2fde00ce69dd4899c70d020845e2638353015bba0fdf161b3eb965f2bca4464e",
+          "url": "https://huggingface.co/bartowski/Qwen_Qwen3-4B-Instruct-2507-GGUF/resolve/ae44f08e1392f39c0e474af10c3ff8355c8b6688/Qwen_Qwen3-4B-Instruct-2507-Q4_K_M.gguf"
+        }
+      ]
+    }
+  ],
+  "officialQwenModelNames": [
+    "Qwen/Qwen3.5-4B",
+    "Qwen/Qwen3-4B-Instruct-2507",
+    "Qwen/Qwen3-4B-GGUF",
+    "Qwen/Qwen3-Reranker-4B",
+    "Qwen/Qwen3-VL-4B-Instruct",
+    "Qwen/Qwen3-4B",
+    "Qwen/Qwen3-4B-Base",
+    "Qwen/Qwen3-14B-MLX-4bit",
+    "Qwen/Qwen3-4B-Thinking-2507",
+    "Qwen/Qwen3-VL-4B-Instruct-FP8",
+    "Qwen/Qwen3-VL-4B-Instruct-GGUF",
+    "Qwen/Qwen3-4B-FP8",
+    "Qwen/Qwen3-1.7B-MLX-4bit",
+    "Qwen/Qwen3-4B-MLX-bf16",
+    "Qwen/Qwen3-4B-MLX-8bit",
+    "Qwen/Qwen3-4B-MLX-6bit",
+    "Qwen/Qwen3-4B-MLX-4bit",
+    "Qwen/Qwen3-30B-A3B-MLX-4bit",
+    "Qwen/Qwen3-4B-Instruct-2507-FP8",
+    "Qwen/Qwen3Guard-Gen-4B",
+    "Qwen/Qwen3Guard-Stream-4B",
+    "Qwen/Qwen3-VL-4B-Thinking",
+    "Qwen/Qwen3-VL-4B-Thinking-FP8",
+    "Qwen/Qwen3-VL-4B-Thinking-GGUF",
+    "Qwen/Qwen3.5-4B-Base",
+    "Qwen/Qwen3-8B-MLX-4bit",
+    "Qwen/Qwen3-Embedding-4B",
+    "Qwen/Qwen3-Embedding-4B-GGUF",
+    "Qwen/Qwen3-32B-MLX-4bit",
+    "Qwen/Qwen3-235B-A22B-MLX-4bit"
+  ]
+}
