@@ -37,7 +37,7 @@ export function visibleKeys(root='src') {
     }
     walk(ast);
   }
-  function list(dir){for(const item of fs.readdirSync(dir,{withFileTypes:true})){const file=path.join(dir,item.name);if(item.isDirectory()){if(!file.includes('/i18n')&&!file.includes('rc29-preview'))list(file);}else if(/\.tsx?$/.test(file))inspect(file);}}
+  function list(dir){for(const item of fs.readdirSync(dir,{withFileTypes:true})){const file=path.join(dir,item.name);if(item.isDirectory()){if(item.name!=='i18n'&&!file.includes('rc29-preview'))list(file);}else if(/\.tsx?$/.test(file))inspect(file);}}
   list(root);
   return [...found.values()];
 }

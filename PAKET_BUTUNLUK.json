@@ -7327,8 +7327,8 @@
     },
     {
       "path": "scripts/localize-ui.mjs",
-      "size": 11728,
-      "sha256": "0e48b78dd3b77f110896d4292ba0b73097e4db45a68b045d5cec6b8f82fba0b6"
+      "size": 11734,
+      "sha256": "b484c641e95ad96aa22f4dd8c6c4f004c1a865d6d210de4bc15a3945e3566448"
     },
     {
       "path": "scripts/morphology-english.json",
@@ -7377,8 +7377,8 @@
     },
     {
       "path": "scripts/ui-visible-keys.mjs",
-      "size": 4004,
-      "sha256": "9d7936fe90d2083c6338131ece0476bd152e9e3f449ad276dc1888aab5179c5c"
+      "size": 3999,
+      "sha256": "d37518545bd13b2b1fb1918ec358d3a7de1bb19be9832383ee260f3f3f8841be"
     },
     {
       "path": "scripts/verify-appearance-browser.mjs",
@@ -7912,8 +7912,8 @@
     },
     {
       "path": "scripts/verify-visible-translations.mjs",
-      "size": 997,
-      "sha256": "3b8906aba1a2ba4d710207199c561c8eb391a1ccc550af840dd9b81e07c77138"
+      "size": 1722,
+      "sha256": "b98ab866bddc3b52dad6926a3bae93c01e51eb873ec8ba272bef631197d76090"
     },
     {
       "path": "scripts/verify-windows-artifact.mjs",
@@ -13444,6 +13444,26 @@
       "path": "windows-validation-evidence/40672561285-1/source-check.txt",
       "size": 192,
       "sha256": "dcaadee75372ebe9ebd6a62c2296d1c9e4bccec7edc0d1e4071166d32ecf3409"
+    },
+    {
+      "path": "windows-validation-evidence/40672924792-1/dependency-install.txt",
+      "size": 897,
+      "sha256": "94a6000eb412def4a8c53f572d1985285c281fd5e51330ca101c31e215738b03"
+    },
+    {
+      "path": "windows-validation-evidence/40672924792-1/full-verify.txt",
+      "size": 25875,
+      "sha256": "005794ef7998d5a9bcfd5cd107b4d7b389920393ee388fddbca533bcc2063f71"
+    },
+    {
+      "path": "windows-validation-evidence/40672924792-1/result.json",
+      "size": 841,
+      "sha256": "9f940af1144307c06074766309c1f3aedf79cc77e553e1c5ad7070c39518eec8"
+    },
+    {
+      "path": "windows-validation-evidence/40672924792-1/source-check.txt",
+      "size": 192,
+      "sha256": "e1bcd10116e7d6744cae10dc61ef89bce58e32b7598e40f90ded3363fca312a1"
     }
   ],
   "diagnosticSourceBaseCommit": "4588013e07da3a7c9fc1fce10f0df38903c0998b"
