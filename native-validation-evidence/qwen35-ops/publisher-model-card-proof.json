@@ -1,0 +1,33 @@
+{
+  "sourceURL": "https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/e87f176479d0855a907a41277aca2f8ee7a09523/README.md",
+  "httpStatus": 200,
+  "bytes": 78906,
+  "sha256": "28546f5fc4f22ee1b3f17b908957f17fcfa66174032136265bdb27f404bc1e6c",
+  "relevantLines": [
+    "> To disable thinking content and obtain direct response, refer to the examples [here](#instruct-or-non-thinking-mode).",
+    "> - Thinking mode for general tasks: `temperature=1.0, top_p=0.95, top_k=20, min_p=0.0, presence_penalty=1.5, repetition_penalty=1.0`",
+    "> - Thinking mode for precise coding tasks (e.g. WebDev): `temperature=0.6, top_p=0.95, top_k=20, min_p=0.0, presence_penalty=0.0, repetition_penalty=1.0`",
+    "> - Instruct (or non-thinking) mode for general tasks: `temperature=0.7, top_p=0.8, top_k=20, min_p=0.0, presence_penalty=1.5, repetition_penalty=1.0`",
+    "> - Instruct (or non-thinking) mode for reasoning tasks: `temperature=1.0, top_p=0.95, top_k=20, min_p=0.0, presence_penalty=1.5, repetition_penalty=1.0`",
+    "    temperature=1.0,",
+    "    top_p=0.95,",
+    "        \"top_k\": 20,",
+    "    temperature=1.0,",
+    "    top_p=0.95,",
+    "        \"top_k\": 20,",
+    "    temperature=1.0,",
+    "    top_p=0.95,",
+    "        \"top_k\": 20,",
+    "#### Instruct (or Non-Thinking) Mode",
+    "    temperature=0.7,",
+    "    top_p=0.8,",
+    "        \"top_k\": 20,",
+    "## Best Practices",
+    "       `temperature=1.0`, `top_p=0.95`, `top_k=20`, `min_p=0.0`, `presence_penalty=1.5`, `repetition_penalty=1.0`  ",
+    "       `temperature=0.6`, `top_p=0.95`, `top_k=20`, `min_p=0.0`, `presence_penalty=0.0`, `repetition_penalty=1.0`  ",
+    "     - **Instruct (or non-thinking) mode for general tasks**:  ",
+    "       `temperature=0.7`, `top_p=0.8`, `top_k=20`, `min_p=0.0`, `presence_penalty=1.5`, `repetition_penalty=1.0`  ",
+    "     - **Instruct (or non-thinking) mode for reasoning tasks**:  ",
+    "       `temperature=1.0`, `top_p=1.0`, `top_k=40`, `min_p=0.0`, `presence_penalty=2.0`, `repetition_penalty=1.0`  "
+  ]
+}
