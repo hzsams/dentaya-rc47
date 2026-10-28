@@ -1,6 +1,15 @@
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
+import os from 'node:os';
+import path from 'node:path';
 import {visibleKeys,normalize} from './ui-visible-keys.mjs';
+const fixture=fs.mkdtempSync(path.join(os.tmpdir(),'dentaya-visible-captions-'));
+try {
+  fs.mkdirSync(path.join(fixture,'i18n'));
+  fs.writeFileSync(path.join(fixture,'screen.tsx'),'<div title="Visible fixture label">Visible fixture caption</div>');
+  fs.writeFileSync(path.join(fixture,'i18n','metadata.ts'),'export const metadata={title:"Translation metadata is not a displayed caption"};');
+  assert.deepEqual(new Set(visibleKeys(fixture).map(item=>item.source)),new Set(['Visible fixture label','Visible fixture caption']),'Caption discovery excludes translation metadata on every filesystem platform');
+} finally {fs.rmSync(fixture,{recursive:true,force:true});}
 const manifest=JSON.parse(fs.readFileSync('src/lib/i18n/ui-manifest.json','utf8'));
 const known=new Set(manifest.keys.map(normalize));
 const sources=visibleKeys();

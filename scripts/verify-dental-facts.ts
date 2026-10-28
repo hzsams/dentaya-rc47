@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
 import { DENTAL_FACTS, dentalFactSource, shuffleFacts } from '../src/lib/dental-facts';
 import { DENTAL_FACT_CAPACITY, dentalFactFingerprint, validateDentalFactCatalog, type DentalFactCatalog } from '../src/lib/dental-fact-schema';
 
@@ -75,12 +76,12 @@ try {
   const input = join(temporary, 'synthetic-input.json');
   const output = join(temporary, 'synthetic-preview.json');
   writeFileSync(input, JSON.stringify(base));
-  const run = (...args: string[]) => spawnSync(process.execPath, ['--import', 'tsx', new URL('./import-dental-facts.ts', import.meta.url).pathname, '--input', input, ...args], { encoding: 'utf8' });
+  const run = (...args: string[]) => spawnSync(process.execPath, ['--import', 'tsx', fileURLToPath(new URL('./import-dental-facts.ts', import.meta.url)), '--input', input, ...args], { encoding: 'utf8' });
   const imported = run('--output', output);
   assert.equal(imported.status, 0, imported.stderr);
   assert.equal(JSON.parse(readFileSync(output, 'utf8')).facts.length, DENTAL_FACTS.length + 1);
   assert.equal(run('--output', output).status, 1, 'Existing user previews cannot be overwritten.');
-  assert.equal(run('--output', new URL('../src/lib/i18n/dental-facts.json', import.meta.url).pathname).status, 1, 'An importer cannot replace the shipped catalogue.');
+  assert.equal(run('--output', fileURLToPath(new URL('../src/lib/i18n/dental-facts.json', import.meta.url))).status, 1, 'An importer cannot replace the shipped catalogue.');
   assert.equal(run('--check').status, 0);
   writeFileSync(input, JSON.stringify({ ...base, facts: [{ ...base.facts[0], tr: DENTAL_FACTS[0].tr, en: DENTAL_FACTS[0].en }] }));
   assert.equal(run('--check').status, 1, 'An incoming pack cannot duplicate an inherited entry.');
