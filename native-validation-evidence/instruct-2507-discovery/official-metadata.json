@@ -1,0 +1,11 @@
+{
+  "purpose": "official-model-pin-discovery",
+  "nativeInferenceAttempted": false,
+  "nativeAcceptance": null,
+  "repository": "Qwen/Qwen3-4B-Instruct-2507-GGUF",
+  "queriedAt": "2026-10-28T10:16:31.117Z",
+  "testedCommit": "711740df71f458112cebf061cf6a40c273247195",
+  "runId": "40670752632",
+  "status": "failed",
+  "error": "OFFICIAL_METADATA_HTTP_401"
+}
