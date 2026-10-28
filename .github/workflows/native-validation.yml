@@ -13,14 +13,14 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: isolated-aya-native-validation-qwen35-ops
+  group: isolated-aya-native-validation-qwen35-grounding
   cancel-in-progress: false
 jobs:
   native:
     runs-on: windows-2025
     timeout-minutes: 30
     env:
-      AYA_EVIDENCE_DIRECTORY: native-validation-evidence/qwen35-ops
+      AYA_EVIDENCE_DIRECTORY: native-validation-evidence/qwen35-grounding
     permissions:
       contents: write
     steps:
