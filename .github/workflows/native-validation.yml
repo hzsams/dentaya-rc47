@@ -6,21 +6,22 @@ on:
       - .github/workflows/native-validation.yml
       - scripts/fetch-official-4b-metadata.cjs
       - scripts/run-windows-aya-native.cjs
+      - scripts/verify-native-asset-cache.cjs
       - scripts/verify-aya-native.cjs
       - electron/aya-local.cjs
       - electron/aya/**
 permissions:
   contents: read
 concurrency:
-  group: isolated-aya-native-validation-template-controls
+  group: isolated-aya-native-validation-qwen35-ops
   cancel-in-progress: false
 jobs:
   native:
     runs-on: windows-2025
     timeout-minutes: 30
     env:
-      AYA_EVIDENCE_DIRECTORY: native-validation-evidence/template-controls
-      AYA_NATIVE_CONTROLS_ONLY: "1"
+      AYA_EVIDENCE_DIRECTORY: native-validation-evidence/qwen35-ops
+      AYA_NATIVE_ASSET_CACHE: ${{ runner.temp }}/dentaya-pinned-native-assets
     permissions:
       contents: write
     steps:
@@ -37,8 +38,31 @@ jobs:
           if ((npm --version).Trim() -ne '11.9.0') { throw 'npm toolchain mismatch' }
       - name: Install locked production dependencies
         run: npm ci --omit=dev --ignore-scripts
+      - name: Read immutable cache identity
+        id: pins
+        shell: pwsh
+        run: |
+          node -e "const fs=require('node:fs');const {MODEL,ENGINE}=require('./electron/aya/managed-runtime.cjs');fs.appendFileSync(process.env.GITHUB_OUTPUT,'key=aya-pinned-v1-windows-'+ENGINE.sha256+'-'+MODEL.sha256+'\n')"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
+        id: asset-cache
+        with:
+          path: ${{ env.AYA_NATIVE_ASSET_CACHE }}
+          key: ${{ steps.pins.outputs.key }}
       - name: Actual pinned model inference
         run: node scripts/run-windows-aya-native.cjs --output $env:AYA_EVIDENCE_DIRECTORY
+      - name: Reverify cached assets before saving, regardless of semantic result
+        if: always()
+        id: verified-cache
+        shell: pwsh
+        run: |
+          node scripts/verify-native-asset-cache.cjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
+        if: ${{ always() && steps.verified-cache.outputs.verified == 'true' && steps.asset-cache.outputs.cache-hit != 'true' }}
+        with:
+          path: ${{ env.AYA_NATIVE_ASSET_CACHE }}
+          key: ${{ steps.pins.outputs.key }}
       - name: Record tested source and exact model publisher metadata
         if: always()
         shell: pwsh
@@ -46,11 +70,11 @@ jobs:
           @'
           const fs=require('node:fs'),crypto=require('node:crypto'),evidence=process.env.AYA_EVIDENCE_DIRECTORY,reportFile=name=>require('node:path').join(evidence,name);
           fs.mkdirSync(evidence,{recursive:true});
-          const names=['electron/aya-local.cjs','electron/aya/managed-runtime.cjs','electron/aya/core.cjs','electron/aya/dialogue.cjs','electron/aya/agent.cjs','scripts/verify-aya-native.cjs','scripts/run-windows-aya-native.cjs'];
+          const names=['electron/aya-local.cjs','electron/aya/managed-runtime.cjs','electron/aya/core.cjs','electron/aya/memory-task.cjs','electron/aya/dialogue.cjs','electron/aya/agent.cjs','scripts/verify-aya-native.cjs','scripts/run-windows-aya-native.cjs'];
           const hashes=Object.fromEntries(names.map(name=>[name,crypto.createHash('sha256').update(fs.readFileSync(name)).digest('hex')]));
           fs.writeFileSync(reportFile('source-info.json'),JSON.stringify({testedCommit:process.env.GITHUB_SHA,runnerOS:process.platform,node:process.version,runId:process.env.GITHUB_RUN_ID,sourceHashes:hashes},null,2)+'\n');
-          (async()=>{try{const r=await fetch('https://huggingface.co/api/models/unsloth/Qwen3-4B-Instruct-2507-GGUF/revision/a06e946bb6b655725eafa393f4a9745d460374c9?blobs=true',{signal:AbortSignal.timeout(20000)});const data=r.ok?await r.json():null;fs.writeFileSync(reportFile('publisher-model-metadata.json'),JSON.stringify({httpStatus:r.status,revision:data?.sha,files:data?.siblings?.filter(f=>f.rfilename.endsWith('.gguf')).map(f=>({name:f.rfilename,lfs:f.lfs}))},null,2)+'\n');}catch{fs.writeFileSync(reportFile('publisher-model-metadata.json'),JSON.stringify({error:'OFFICIAL_METADATA_UNAVAILABLE'})+'\n');}})();
-          (async()=>{const sourceURL='https://huggingface.co/unsloth/Qwen3-4B-Instruct-2507-GGUF/resolve/a06e946bb6b655725eafa393f4a9745d460374c9/README.md';try{const r=await fetch(sourceURL,{signal:AbortSignal.timeout(20000)});const content=r.ok?await r.text():'';fs.writeFileSync(reportFile('publisher-model-card-proof.json'),JSON.stringify({sourceURL,httpStatus:r.status,bytes:Buffer.byteLength(content),sha256:crypto.createHash('sha256').update(content).digest('hex'),relevantLines:content.split('\n').filter(line=>/temperature|top_p|top_k|min_p|greedy|best practices|non-thinking/i.test(line))},null,2)+'\n');}catch{fs.writeFileSync(reportFile('publisher-model-card-proof.json'),JSON.stringify({sourceURL,error:'OFFICIAL_MODELCARD_UNAVAILABLE'})+'\n');}})();
+          (async()=>{try{const r=await fetch('https://huggingface.co/api/models/unsloth/Qwen3.5-4B-GGUF/revision/e87f176479d0855a907a41277aca2f8ee7a09523?blobs=true',{signal:AbortSignal.timeout(20000)});const data=r.ok?await r.json():null;fs.writeFileSync(reportFile('publisher-model-metadata.json'),JSON.stringify({httpStatus:r.status,revision:data?.sha,files:data?.siblings?.filter(f=>f.rfilename.endsWith('.gguf')).map(f=>({name:f.rfilename,lfs:f.lfs}))},null,2)+'\n');}catch{fs.writeFileSync(reportFile('publisher-model-metadata.json'),JSON.stringify({error:'OFFICIAL_METADATA_UNAVAILABLE'})+'\n');}})();
+          (async()=>{const sourceURL='https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/e87f176479d0855a907a41277aca2f8ee7a09523/README.md';try{const r=await fetch(sourceURL,{signal:AbortSignal.timeout(20000)});const content=r.ok?await r.text():'';fs.writeFileSync(reportFile('publisher-model-card-proof.json'),JSON.stringify({sourceURL,httpStatus:r.status,bytes:Buffer.byteLength(content),sha256:crypto.createHash('sha256').update(content).digest('hex'),relevantLines:content.split('\n').filter(line=>/temperature|top_p|top_k|min_p|greedy|best practices|non-thinking/i.test(line))},null,2)+'\n');}catch{fs.writeFileSync(reportFile('publisher-model-card-proof.json'),JSON.stringify({sourceURL,error:'OFFICIAL_MODELCARD_UNAVAILABLE'})+'\n');}})();
           '@ | node
       - name: Commit only diagnostic reports to isolated branch
         if: always()

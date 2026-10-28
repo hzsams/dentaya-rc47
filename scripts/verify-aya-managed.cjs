@@ -1,11 +1,18 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs/promises'),os=require('node:os'),path=require('node:path'),crypto=require('node:crypto'),{EventEmitter}=require('node:events');
 const {zipSync}=require('fflate');
-const {createManagedAya,verifiedDownload,trustedResponse,extractEngine}=require('../electron/aya/managed-runtime.cjs');
+const {createManagedAya,verifiedDownload,trustedResponse,extractEngine,samplingOptions,MODEL}=require('../electron/aya/managed-runtime.cjs');
 const {createLocalAya}=require('../electron/aya-local.cjs');
 const {answerOwned,normalizeCad,ownedContext,calculate}=require('../electron/aya/assistant.cjs');
 const {CONTEXT_MARKER}=require('../electron/aya/agent.cjs');
 (async()=>{
+ const qwenProfile={temperature:.7,top_p:.8,top_k:20,min_p:0,presence_penalty:1.5,repeat_penalty:1};
+ for(const model of [MODEL.id,'aya-local:'+MODEL.sha256.slice(0,32)]){
+  assert.deepEqual(samplingOptions(model,{creativity:0}),qwenProfile,'Verified Qwen built-in and same imported weights avoid greedy decoding');
+  assert.deepEqual(samplingOptions(model,{creativity:0},{}),qwenProfile,'The same profile applies to grammar-constrained memory/CAD');
+ }
+ assert.deepEqual(samplingOptions('aya-local:unrelated',{creativity:.6}),{temperature:.6});
+ assert.deepEqual(samplingOptions('aya-local:unrelated',{creativity:.6},{}),{temperature:.2});
  const busyApi=createLocalAya({managed:{isBusy:()=>true}});assert.equal((await busyApi.chat({model:'aya-local:test',prompt:'test'},1)).error,'LOCAL_BUSY');
  const dir=await fs.mkdtemp(path.join(os.tmpdir(),'dentaya-managed-test-'));let runtime;
  try{
@@ -89,11 +96,11 @@ const {CONTEXT_MARKER}=require('../electron/aya/agent.cjs');
  assert.equal((await runtime.importModel(modelFile)).ok,true);const s=await runtime.status();assert.equal(s.models.length,1);const api=createLocalAya({managed:runtime,fetchImpl:async url=>{assert.equal(url,'http://127.0.0.1:11434/api/tags','Only read-only Ollama discovery is permitted; managed inference cannot fall through');throw Error('Ollama is not running in this fixture');}});
  assert.equal((await api.status()).models[0].name,s.models[0].name);
  const result=await api.chat({model:s.models[0].name,locale:'tr',options:{creativity:0},prompt:'Kurye saatimiz kaç?',knowledge:[{id:'kurye',title:'Kurye',content:'Kurye saatimiz 16:40.',kind:'memory'}],history:Array.from({length:8},()=>({role:'user',content:'z'.repeat(2000)}))},7,s=>s,()=>chunks++);
- assert.equal(result.ok,true,result.error);assert.equal(result.output,'Merhaba');assert.equal(payload.temperature,.7,'Qwen3 non-thinking must not use greedy decoding');assert.equal(payload.top_p,.8);assert.equal(payload.top_k,20);assert.equal(payload.min_p,0);assert.ok(chunks===2);assert.equal(result.metrics.tokens,11,'Reported tokens come from engine usage, not SSE chunk count');assert.equal(spawned,1);assert.ok(payload.messages.length<10,'Actual tokenizer removes history that exceeds the context window');assert.match(payload.messages[2].content,/^z/,'First task survives actual-token trimming');assert.match(payload.messages[1].content,/16:40/);assert.ok(result.references.some(r=>r.id==='knowledge-kurye'));
+ assert.equal(result.ok,true,result.error);assert.equal(result.output,'Merhaba');assert.equal(payload.temperature,0,'An unrelated imported GGUF preserves its selected temperature');assert.equal(payload.top_p,undefined);assert.equal(payload.top_k,undefined);assert.equal(payload.min_p,undefined);assert.ok(chunks===2);assert.equal(result.metrics.tokens,11,'Reported tokens come from engine usage, not SSE chunk count');assert.equal(spawned,1);assert.ok(payload.messages.length<10,'Actual tokenizer removes history that exceeds the context window');assert.match(payload.messages[2].content,/^z/,'First task survives actual-token trimming');assert.match(payload.messages[1].content,/16:40/);assert.ok(result.references.some(r=>r.id==='knowledge-kurye'));
  mode='trim-documents';const trimmed=await api.chat({model:s.models[0].name,prompt:'Kurye saatimiz kaç?',knowledge:[{id:'kurye',title:'Kurye',content:'Kurye saatimiz 16:40.',kind:'memory'}]},7);
  assert.equal(trimmed.ok,true);assert.equal(JSON.parse(payload.messages[1].content.slice(CONTEXT_MARKER.length)).documents.length,0);assert.ok(!trimmed.references.some(r=>r.id==='appointments'),'A source removed by token budgeting is absent from answer references');assert.ok(trimmed.references.some(r=>r.id==='knowledge-kurye'),'Retained personal evidence keeps its source');
  mode='structured';const structured=await api.chat({agent:true,model:s.models[0].name,options:{creativity:0},prompt:'Yeni ifadelerle kron kontrol hedefini sürdür',workingMemory:plan},7,s=>s,()=>chunks++);
- assert.equal(structured.ok,true);assert.equal(structured.output,plan.answer);assert.equal(payload.temperature,.7,'Structured generation also avoids greedy Qwen3 decoding');assert.equal(structured.metrics.tokens,77);assert.equal(chunks,2,'Structured JSON is withheld from token UI until validated');assert.equal(payload.response_format.type,'json_object');assert.equal(payload.response_format.schema.properties.actions.maxItems,0);assert.deepEqual(payload.stream_options,{include_usage:true});assert.match(payload.messages[1].content,/Kole korunacak/);
+ assert.equal(structured.ok,true);assert.equal(structured.output,plan.answer);assert.equal(payload.temperature,0,'An unrelated structured GGUF keeps the original temperature cap');assert.equal(structured.metrics.tokens,77);assert.equal(chunks,2,'Structured JSON is withheld from token UI until validated');assert.equal(payload.response_format.type,'json_object');assert.equal(payload.response_format.schema.properties.actions.maxItems,0);assert.deepEqual(payload.stream_options,{include_usage:true});assert.match(payload.messages[1].content,/Kole korunacak/);
  assert.deepEqual(templatePayload.response_format,payload.response_format,'The counted template includes the same schema as inference');assert.deepEqual(templatePayload.chat_template_kwargs,payload.chat_template_kwargs);
  mode='truncated';assert.equal((await api.chat({agent:true,model:s.models[0].name,prompt:'Kontrol'},7)).error,'LOCAL_INVALID_PLAN','Length-limited structured replies never become completed plans');
  mode='unconfirmed-plan';assert.equal((await api.chat({agent:true,model:s.models[0].name,prompt:'Kontrol'},7)).error,'LOCAL_INVALID_PLAN','A DONE marker without a normal model stop cannot confirm a plan');

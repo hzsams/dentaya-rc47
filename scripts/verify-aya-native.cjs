@@ -22,7 +22,7 @@ async function hashFile(file){const hash=crypto.createHash('sha256');for await(c
  let renderedPrompt='';
  const runtime=createManagedAya({directory,engineBinary:path.resolve(engine),spawnImpl:(binary,args,options)=>{assert.equal(options.shell,false);assert.equal(args[args.indexOf('--host')+1],'127.0.0.1');return spawn(binary,args,options);},fetchImpl:async(url,options)=>{
   const u=new URL(url);assert.equal(u.hostname,'127.0.0.1');assert.match(options?.headers?.Authorization??'',/^Bearer [a-f0-9]{64}$/);
-  if(u.pathname==='/v1/chat/completions'){const payload=JSON.parse(options.body);result.transport.push({stream:payload.stream,responseFormat:payload.response_format,thinking:payload.chat_template_kwargs,sampling:{temperature:payload.temperature,top_p:payload.top_p,top_k:payload.top_k,min_p:payload.min_p},roles:payload.messages.map(m=>m.role),messages:payload.messages,renderedPrompt});}
+  if(u.pathname==='/v1/chat/completions'){const payload=JSON.parse(options.body);result.transport.push({stream:payload.stream,responseFormat:payload.response_format,thinking:payload.chat_template_kwargs,sampling:{temperature:payload.temperature,top_p:payload.top_p,top_k:payload.top_k,min_p:payload.min_p,presence_penalty:payload.presence_penalty,repeat_penalty:payload.repeat_penalty},roles:payload.messages.map(m=>m.role),messages:payload.messages,renderedPrompt});}
   const response=await fetch(url,options);if(u.pathname==='/apply-template'&&response.ok)renderedPrompt=(await response.clone().json()).prompt;return response;
  }});
  // Capture raw synthetic outputs for semantic/schema review without changing

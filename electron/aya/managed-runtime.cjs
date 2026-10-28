@@ -5,7 +5,14 @@ const {spawn}=require('node:child_process');
 const {unzipSync}=require('fflate');
 const {fitMessagesToBudget}=require('./agent.cjs');
 const ENGINE={version:'b9380',url:'https://github.com/ggml-org/llama.cpp/releases/download/b9380/llama-b9380-bin-win-cpu-x64.zip',sha256:'cd44b61422671f0565cae98d856a70d55ef10392197a49246671f85bacb50dc3',bytes:16067676};
-const MODEL={id:'aya-local:qwen3-4b-instruct-2507-q4',name:'Qwen3-4B-Instruct-2507-Q4_K_M.gguf',label:'AYA Local · Qwen3 4B Instruct 2507 · Unsloth Q4',url:'https://huggingface.co/unsloth/Qwen3-4B-Instruct-2507-GGUF/resolve/a06e946bb6b655725eafa393f4a9745d460374c9/Qwen3-4B-Instruct-2507-Q4_K_M.gguf',sha256:'3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597',bytes:2497281120};
+const MODEL={id:'aya-local:qwen35-4b-q4-k-m',name:'Qwen3.5-4B-Q4_K_M.gguf',label:'AYA Local · Qwen3.5 4B',url:'https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/e87f176479d0855a907a41277aca2f8ee7a09523/Qwen3.5-4B-Q4_K_M.gguf',sha256:'00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4',bytes:2740937888};
+function samplingOptions(model,options,responseSchema){
+ const creativity=Number.isFinite(options?.creativity)?Math.max(0,Math.min(.8,options.creativity)):.3;
+ // Only the verified built-in model (or that exact imported content hash)
+ // receives its model-card profile. Other GGUF selections keep their settings.
+ if(model===MODEL.id||model==='aya-local:'+MODEL.sha256.slice(0,32))return {temperature:Math.max(.7,creativity),top_p:.8,top_k:20,min_p:0,presence_penalty:1.5,repeat_penalty:1};
+ return {temperature:responseSchema?Math.min(.2,creativity):creativity};
+}
 // Native output may contain local paths or the process key. Retain only a bounded
 // startup tail in memory and expose a fixed diagnosis, never the native text.
 function engineStartError(stderr,spawnCode){
@@ -154,7 +161,7 @@ function createManagedAya({directory,fetchImpl=fetch,spawnImpl=spawn,platform=pr
   onContext(messages);
   // Qwen3 non-thinking output degenerates under greedy decoding. Geometry remains
   // deterministic; language generation uses the model's recommended sampling range.
-  const started=Date.now();const response=await fetchImpl(base+'/v1/chat/completions',{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},redirect:'error',signal,body:JSON.stringify({model:'aya-local',messages,stream:true,stream_options:{include_usage:true},...templateOptions,temperature:Math.max(.7,options.creativity),top_p:.8,top_k:20,min_p:0,max_tokens:options.maxTokens})});
+  const started=Date.now();const response=await fetchImpl(base+'/v1/chat/completions',{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},redirect:'error',signal,body:JSON.stringify({model:'aya-local',messages,stream:true,stream_options:{include_usage:true},...templateOptions,...samplingOptions(model,options,responseSchema),max_tokens:options.maxTokens})});
   if(!response.ok||!response.body)throw Error('LOCAL_REQUEST_FAILED');
   const reader=response.body.getReader(),decoder=new TextDecoder();let pending='',output='',done=false,tokens=0,finishReason='';
   function line(value){if(!value.startsWith('data:'))return;const data=value.slice(5).trim();if(!data)return;if(data==='[DONE]'){done=true;return;}const event=JSON.parse(data);if(event.error)throw Error('LOCAL_REQUEST_FAILED');if(Number.isSafeInteger(event.usage?.completion_tokens)&&event.usage.completion_tokens>=0)tokens=event.usage.completion_tokens;const chunk=event.choices?.[0]?.delta?.content;if(typeof chunk==='string'&&chunk){output+=chunk;if(output.length>64000)throw Error('LOCAL_RESPONSE_TOO_LARGE');onToken(output);}if(event.choices?.[0]?.finish_reason){finishReason=event.choices[0].finish_reason;done=true;}}
@@ -166,4 +173,4 @@ function createManagedAya({directory,fetchImpl=fetch,spawnImpl=spawn,platform=pr
  }
  return {status,installAll,cancelInstall,importModel,chat,stop,dispose:()=>{disposed=true;install?.controller.abort();stop();},isBusy:()=>Boolean(install||startPromise)};
 }
-module.exports={createManagedAya,verifiedDownload,extractEngine,trustedResponse,ENGINE,MODEL};
+module.exports={createManagedAya,verifiedDownload,extractEngine,trustedResponse,samplingOptions,ENGINE,MODEL};

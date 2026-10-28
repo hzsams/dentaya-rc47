@@ -47,11 +47,13 @@ async function runWindowsAcceptance(input={},deps={}){
  const nativeFile=path.join(output,'native-inference-report.json'),resultFile=path.join(output,'windows-native-result.json');
  const result={release:require('../package.json').version,platform,provenance:trusted?'controlled-windows-native':'test-fixture',status:'blocked',nativeInferenceObserved:false,semanticReviewRequired:true,semanticAcceptance:'pending-human-review',model:{bytes:MODEL.bytes,sha256:MODEL.sha256,verified:false},engine:{version:ENGINE.version,archiveSHA256:ENGINE.sha256},casesAttempted:0,casesSucceeded:0,weightsIncludedInInstaller:false,report:'native-inference-report.json'};
  let directory,runtime;
+ const cacheDirectory=input.assetCache?path.resolve(input.assetCache):null;
  // Never allow an earlier successful run to survive as evidence of this one.
  await Promise.all([nativeFile,resultFile,path.join(output,'native-acceptance.txt')].map(file=>fs.rm(file,{force:true})));
  try{
   if(platform!=='win32')throw Error('WINDOWS_REQUIRED');
-  directory=await fs.mkdtemp(path.join(os.tmpdir(),'dentaya-native-ci-'));
+  directory=cacheDirectory??await fs.mkdtemp(path.join(os.tmpdir(),'dentaya-native-ci-'));
+  if(cacheDirectory)await fs.mkdir(directory,{recursive:true});
   runtime=makeRuntime({directory});
   const accepted=await runtime.installAll('windows-native-ci');
   if(!accepted.ok)throw Error(safeCode(accepted.error));
@@ -82,7 +84,8 @@ async function runWindowsAcceptance(input={},deps={}){
  }catch(error){result.error=safeCode(error?.message);result.status=['WINDOWS_REQUIRED','AYA_DOWNLOAD_FAILED','AYA_DOWNLOAD_TIMEOUT','AYA_DOWNLOAD_HOST','AYA_DOWNLOAD_REDIRECT'].includes(result.error)?'blocked':'failed';}
  finally{
   runtime?.cancelInstall('windows-native-ci');runtime?.dispose();
-  if(directory)try{await fs.rm(directory,{recursive:true,force:true,maxRetries:4,retryDelay:500});}catch{result.cleanupError='TEMPORARY_MODEL_CLEANUP_FAILED';}
+  if(directory&&!cacheDirectory)try{await fs.rm(directory,{recursive:true,force:true,maxRetries:4,retryDelay:500});}catch{result.cleanupError='TEMPORARY_MODEL_CLEANUP_FAILED';}
+  if(cacheDirectory)result.assetCachePolicy='pinned-assets-retained-outside-source-and-installer; size and SHA-256 reverified on every restore';
   // Failed installation has a fresh explicit report as well, never a stale PASS.
   try{await fs.access(nativeFile);}catch{await fs.writeFile(nativeFile,JSON.stringify({nativeInference:false,mock:false,stage:'installation',contractPass:false,blocked:true,error:result.error,checks:[],caseCounts:{attempted:0,succeeded:0},semanticReviewRequired:true},null,2)+'\n');}
   result.milliseconds=Math.max(0,now()-started);
@@ -94,5 +97,5 @@ module.exports={runWindowsAcceptance,checkNativeReport};
 if(require.main===module){
  const {values}=parseArgs({options:{output:{type:'string'},help:{type:'boolean'}}});
  if(values.help){console.log('node scripts/run-windows-aya-native.cjs --output ci-artifacts/native\nWindows CI only: downloads the existing pinned/hash-verified engine+model into a temporary folder, runs 9 real conversation/memory/CAD fixture calls, and removes weights. Reports never claim completed semantic or clinical acceptance.');}
- else runWindowsAcceptance({output:values.output,onProgress:p=>console.log(JSON.stringify({stage:p.stage,completed:p.completed,total:p.total}))}).then(result=>{console.log(JSON.stringify(result,null,2));if(result.status!=='passed')process.exitCode=1;}).catch(()=>{console.error('NATIVE_ACCEPTANCE_FAILED');process.exitCode=1;});
+ else runWindowsAcceptance({output:values.output,assetCache:process.env.AYA_NATIVE_ASSET_CACHE,onProgress:p=>console.log(JSON.stringify({stage:p.stage,completed:p.completed,total:p.total}))}).then(result=>{console.log(JSON.stringify(result,null,2));if(result.status!=='passed')process.exitCode=1;}).catch(()=>{console.error('NATIVE_ACCEPTANCE_FAILED');process.exitCode=1;});
 }

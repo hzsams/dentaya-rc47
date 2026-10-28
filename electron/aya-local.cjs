@@ -1,5 +1,6 @@
 'use strict';
 const {prepareContext,retainedReferences,guide}=require('./aya/core.cjs');
+const {readMemoryTaskReply}=require('./aya/memory-task.cjs');
 const {readAgentReply,normalizeHistory,fitMessagesToBudget,CONTEXT_MARKER}=require('./aya/agent.cjs');
 const ORIGIN='http://127.0.0.1:11434';
 const {LANGUAGES}=require('./aya/language-packs.cjs');
@@ -90,7 +91,7 @@ function createLocalAya({fetchImpl=fetch,managed}={}){
    const instructions='Reply in '+language+'. Base model: Qwen/user-selected. '+prepared.instructions;
    const messages=[{role:'system',content:instructions},{role:'user',content:CONTEXT_MARKER+JSON.stringify(prepared.context)},...history,{role:'user',content:input.prompt.trim()}];
    let references=prepared.references;
-   const finish=result=>{signal.throwIfAborted();return {ok:true,...result,...(prepared.agent?readAgentReply(result.output,input):{}),model:input.model,references};};
+   const finish=result=>{signal.throwIfAborted();return {ok:true,...result,...(memoryTask?readMemoryTaskReply(result.output,input):prepared.agent?readAgentReply(result.output,input):{}),model:input.model,references};};
    // Structured replies are displayed after validation, never streamed as executable JSON.
    if(managed&&input.model.startsWith('aya-local:')){
     const result=await managed.chat({model:input.model,options:prepared.options,responseSchema:prepared.agent?.schema,signal,onToken:prepared.agent?()=>{}:value=>{if(!signal.aborted)onToken(value);},onContext:budgeted=>{references=retainedReferences(prepared.references,budgeted);},messages});

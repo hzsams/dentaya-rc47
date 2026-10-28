@@ -5,7 +5,7 @@ const {CONTEXT_MARKER}=require('../electron/aya/agent.cjs');
 const model={name:'qwen3:4b',size:2500000000,details:{format:'gguf'}};
 const memory={goal:'Cuma teslimini hazırla',decisions:['Kole korunacak'],openQuestions:['Kurye saati?']};
 const input={task:'memory',agent:true,model:model.name,prompt:'Kurye saatini 16.40 olarak belirledik; diğer kararımız aynı.',assistantReply:'Teslim planını 16.40 kurye saatine göre sürdürebiliriz.',workingMemory:memory,locale:'tr',history:[{role:'user',content:'OLD_HISTORY_MUST_NOT_ENTER_MEMORY_EXTRACTION'}],cadContext:{scope:'source-a:46',snapshot:'current-a',unit:'46',stage:'inspect',restoration:'Kron',availableTools:['inspect'],marginPoints:32},knowledge:[{id:'note',title:'Kurye',content:'NOTE_MUST_NOT_ENTER_MEMORY_EXTRACTION'}],options:{useKnowledge:true,useNote:true,note:'PERSONAL_NOTE_MUST_NOT_ENTER_MEMORY_EXTRACTION',maxTokens:2048,creativity:.8}};
-const update={answer:'Memory updated',goal:memory.goal,decisions:[...memory.decisions,'Kurye 16.40'],openQuestions:[],memoryUpdate:'patch',memoryPatch:{goal:'keep',decisions:'replace',openQuestions:'replace'},actions:[]};
+const update={answer:'Memory updated',goal:{operation:'keep'},decisions:{operation:'replace',values:[...memory.decisions,'Kurye 16.40']},openQuestions:{operation:'replace',values:[]},actions:[]};
 (async()=>{
  let payload,mode='valid',calls=0;
  const api=createLocalAya({fetchImpl:async(url,options)=>{
@@ -15,13 +15,13 @@ const update={answer:'Memory updated',goal:memory.goal,decisions:[...memory.deci
   assert.ok(url.endsWith('/chat'));calls++;payload=JSON.parse(options.body);
   if(mode==='private-error')throw Error('PRIVATE_PATH_C:/patients/scan.stl');
   if(mode==='bad-json')return Response.json({done:true,message:{content:'invalid private model detail'}});
-  const reply=mode==='tool'?{...update,actions:[{tool:'inspect',reason:'Do this'}]}:mode==='clear'?{...update,goal:'',decisions:[],openQuestions:[],memoryUpdate:'clear',memoryPatch:undefined}:mode==='unchanged'?{answer:'Memory updated',goal:'',decisions:[],openQuestions:[],memoryUpdate:'patch',memoryPatch:{goal:'keep',decisions:'keep',openQuestions:'keep'},actions:[]}:update;
+  const reply=mode==='tool'?{...update,actions:[{tool:'inspect',reason:'Do this'}]}:mode==='clear'?{...update,goal:{operation:'clear'},decisions:{operation:'replace',values:[]},openQuestions:{operation:'replace',values:[]}}:mode==='unchanged'?{answer:'Memory updated',goal:{operation:'keep'},decisions:{operation:'keep'},openQuestions:{operation:'keep'},actions:[]}:update;
   return Response.json({done:true,message:{content:JSON.stringify(reply)}});
  }});
  const original=JSON.stringify(input);let tokens=0;
  let result=await api.chat(input,7,s=>s,()=>tokens++);
  assert.equal(result.ok,true,result.error);assert.deepEqual(result.workingMemory,{goal:memory.goal,decisions:[...memory.decisions,'Kurye 16.40'],openQuestions:[]});assert.deepEqual(result.proposals,[]);assert.deepEqual(result.references,[]);assert.equal(tokens,0,'Memory JSON must never stream into the conversation');
- assert.equal(payload.stream,false);assert.equal(payload.think,false);assert.equal(payload.options.num_predict,512);assert.equal(payload.options.temperature,0);assert.equal(payload.format.properties.actions.maxItems,0);assert.ok(payload.format.required.includes('memoryUpdate'));assert.ok(payload.format.required.includes('memoryPatch'));assert.deepEqual(payload.format.properties.memoryUpdate.enum,['patch']);
+ assert.equal(payload.stream,false);assert.equal(payload.think,false);assert.equal(payload.options.num_predict,512);assert.equal(payload.options.temperature,0);assert.equal(payload.format.properties.actions.maxItems,0);assert.deepEqual(payload.format.properties.goal.oneOf.map(branch=>branch.properties.operation.enum[0]),['keep','set','clear']);assert.equal(payload.format.properties.goal.oneOf[0].properties.value,undefined);
  assert.equal(payload.messages.length,3,'Only policy, bounded untrusted evidence and the latest user enter extraction');
  assert.equal(payload.messages.at(-1).content,input.prompt);
  const context=JSON.parse(payload.messages[1].content.slice(CONTEXT_MARKER.length));
@@ -44,6 +44,6 @@ const update={answer:'Memory updated',goal:memory.goal,decisions:[...memory.deci
  let managedInput;
  const managed=createLocalAya({managed:{isBusy:()=>false,chat:async value=>{managedInput=value;value.onToken('DO_NOT_DISPLAY_MEMORY_JSON');return {output:JSON.stringify(update)};}}});
  tokens=0;result=await managed.chat({...input,model:'aya-local:fixture'},7,s=>s,()=>tokens++);
- assert.equal(result.ok,true,result.error);assert.deepEqual(result.workingMemory.decisions,update.decisions);assert.deepEqual(result.proposals,[]);assert.equal(tokens,0);assert.equal(managedInput.responseSchema.properties.actions.maxItems,0);assert.equal(managedInput.options.maxTokens,512);
+ assert.equal(result.ok,true,result.error);assert.deepEqual(result.workingMemory.decisions,update.decisions.values);assert.deepEqual(result.proposals,[]);assert.equal(tokens,0);assert.equal(managedInput.responseSchema.properties.actions.maxItems,0);assert.equal(managedInput.options.maxTokens,512);
  console.log('PASS memory task: bounded separate structured extraction, latest-user authority, original memory retained on no-op, no CAD/history/RAG/personal-note input, no streamed JSON, immutable caller data, strict tool/reset rejection, static private-error handling, input limits, managed parity. Mock transport only; no semantic model inference.');
 })().catch(error=>{console.error(error);process.exitCode=1;});
