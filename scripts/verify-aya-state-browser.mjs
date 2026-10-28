@@ -117,6 +117,79 @@ try{
  await page.waitForFunction(()=>!document.querySelector('#aya-local-message').disabled);
  await screenshot(main.locator('.aya-conversation-shell'),'RC61_AYA_Focus_Model_Recovery.png');
  const cad=page.locator('#cad-test');
+ // Host facts stay visible with all detailed context closed, including when
+ // the supplied report belongs to another geometry or model prose contradicts a failed save.
+ const liveFacts=cad.locator('[data-aya-live-facts]');
+ const fact=name=>liveFacts.locator('[data-aya-fact='+name+']');
+ const originalCad=await page.evaluate(()=>window.rc50Work.getContext());
+ const cadCalls=()=>page.evaluate(()=>window.rc54State.calls.filter(call=>call.cadContext).length);
+ const beforeLiveCalls=await cadCalls();
+ assert.equal(await cad.locator('.cad-aya-context').evaluate(node=>node.open),false);
+ assert.equal(await liveFacts.isVisible(),true,'Host facts do not depend on opening the context details');
+ assert.equal(await fact('antagonist').getAttribute('data-state'),'missing');
+ assert.equal(await fact('report').getAttribute('data-state'),'missing');
+ assert.equal(await fact('save').getAttribute('data-state'),'unsaved');
+ await page.evaluate(()=>window.rc50Work.setContext(old=>({...old,antagonistReady:undefined,unsaved:undefined})));
+ await page.waitForFunction(()=>document.querySelector('#cad-test [data-aya-fact=save]')?.getAttribute('data-state')==='unknown'&&document.querySelector('#cad-test [data-aya-fact=antagonist]')?.getAttribute('data-state')==='unknown');
+ assert.match(await fact('save').textContent(),/Kayıt durumu bilinmiyor/,'Missing host save data is not a successful save');
+ assert.match(await fact('antagonist').textContent(),/Antagonist durumu bilinmiyor/,'Absent antagonist metadata is not evidence of a missing or loaded scan');
+ await page.evaluate(()=>window.rc50Work.setContext(old=>({...old,antagonistReady:true,dataToken:'rc62-current-data',report:{dataToken:'rc62-current-data',boundaryEdges:0,warnings:['CURRENT QC SENTINEL'],contactReference:'antagonist'},unsaved:false})));
+ await page.waitForFunction(()=>document.querySelector('#cad-test [data-aya-fact=report]')?.getAttribute('data-state')==='current');
+ assert.equal(await fact('antagonist').getAttribute('data-state'),'loaded');
+ assert.equal(await fact('save').getAttribute('data-state'),'saved');
+ assert.match(await fact('report').textContent(),/Güncel geometri kontrolü var/);
+ await page.evaluate(()=>window.rc50Work.setContext(old=>({...old,dataToken:'rc62-changed-geometry'})));
+ await page.waitForFunction(()=>document.querySelector('#cad-test [data-aya-fact=report]')?.getAttribute('data-state')==='missing');
+ assert.doesNotMatch(await cad.locator('.aya-cad-evidence').textContent(),/CURRENT QC SENTINEL/,'A mismatched report is absent from the detailed evidence as well as the visible facts');
+ await page.evaluate(()=>window.rc50Work.setContext(old=>({...old,dataToken:'rc62-current-data'})));
+ await page.waitForFunction(()=>document.querySelector('#cad-test [data-aya-fact=report]')?.getAttribute('data-state')==='current');
+ await page.evaluate(()=>window.rc50Work.setContext(old=>({...old,modelReady:false})));
+ await page.waitForFunction(()=>document.querySelector('#cad-test [data-aya-fact=report]')?.getAttribute('data-state')==='missing');
+ assert.doesNotMatch(await cad.locator('.aya-cad-evidence').textContent(),/CURRENT QC SENTINEL/,'An unloaded CAD model cannot advertise a current report');
+ await page.evaluate(()=>window.rc50Work.setContext(old=>({...old,modelReady:true})));
+ await page.waitForFunction(()=>document.querySelector('#cad-test [data-aya-fact=report]')?.getAttribute('data-state')==='current');
+ await page.evaluate(()=>window.rc50Work.setContext(old=>({...old,sourceReady:false})));
+ await page.waitForFunction(()=>document.querySelector('#cad-test [data-aya-fact=report]')?.getAttribute('data-state')==='missing');
+ assert.doesNotMatch(await cad.locator('.aya-cad-evidence').textContent(),/CURRENT QC SENTINEL/,'An unloaded source cannot advertise a current report');
+ await page.evaluate(()=>window.rc50Work.setContext(old=>({...old,sourceReady:true,modelReady:true,report:null,isSaving:true,saveFailed:true,unsaved:true})));
+ await page.waitForFunction(()=>document.querySelector('#cad-test [data-aya-fact=save]')?.getAttribute('data-state')==='saving');
+ assert.match(await fact('save').textContent(),/Kaydediliyor/,'An active host write has priority over its previous error');
+ await page.evaluate(()=>window.rc50Work.setContext(old=>({...old,isSaving:false})));
+ await page.waitForFunction(()=>document.querySelector('#cad-test [data-aya-fact=save]')?.getAttribute('data-state')==='failed');
+ assert.match(await fact('save').textContent(),/kaydedilemedi/,'Host failure has priority over unsaved changes');
+ const cadInput=cad.locator('.cad-aya-panel>form textarea'),imeDraft='RC62 CAD IME taslağı';
+ await cadInput.fill(imeDraft);
+ for(const modifier of ['ctrlKey','metaKey'])for(const mode of ['isComposing','keyCode229']) {
+  await cadInput.evaluate((node,{modifier,mode})=>{
+   const event=new KeyboardEvent('keydown',{key:'Enter',code:'Enter',bubbles:true,cancelable:true,[modifier]:true,isComposing:mode==='isComposing'});
+   if(mode==='keyCode229')Object.defineProperty(event,'keyCode',{value:229});
+   node.dispatchEvent(event);
+  },{modifier,mode});
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  assert.equal(await cadCalls(),beforeLiveCalls,'IME composition cannot send a CAD shortcut request');
+  assert.equal(await cadInput.inputValue(),imeDraft);
+ }
+ // The normal shortcut still works. Its deliberately false prose cannot change host facts.
+ await cadInput.press('Control+Enter');await page.waitForFunction(()=>window.rc54State.pendingReply&&window.rc54State.calls.at(-1)?.prompt==='RC62 CAD IME taslağı');
+ await page.evaluate(()=>{window.rc54State.pendingReply({ok:true,output:'SYNTHETIC FALSE CLAIM: CAD projesi kaydedildi. Üretim onaylı.',proposals:[]});window.rc54State.pendingReply=null;});
+ await cad.getByRole('log').locator('article').filter({hasText:'SYNTHETIC FALSE CLAIM: CAD projesi kaydedildi. Üretim onaylı.'}).waitFor();
+ assert.equal(await fact('save').getAttribute('data-state'),'failed','A model success claim cannot override the host save failure');
+ assert.equal(await fact('report').getAttribute('data-state'),'missing','A model clearance claim cannot create a geometry report');
+ assert.equal(await cadCalls(),beforeLiveCalls+1);
+ await page.evaluate(()=>window.rc50Work.setContext(old=>({...old,saveFailed:false})));
+ await page.waitForFunction(()=>document.querySelector('#cad-test [data-aya-fact=save]')?.getAttribute('data-state')==='unsaved');
+ await page.evaluate(()=>{window.rc50Work.setContext(old=>({...old,unsaved:false}));window.rc50Work.setLocale('en');});
+ await cad.locator('[data-aya-live-facts][aria-label="Live CAD status"]').waitFor();
+ assert.match(await fact('antagonist').textContent(),/Antagonist loaded/);
+ assert.match(await fact('report').textContent(),/No current geometry check/);
+ assert.match(await fact('save').textContent(),/CAD project saved/);
+ await screenshot(cad,'RC62_CAD_Host_Facts_English.png');
+ await page.evaluate(()=>window.rc50Work.setContext(old=>({...old,antagonistReady:undefined,unsaved:undefined})));
+ await page.waitForFunction(()=>document.querySelector('#cad-test [data-aya-fact=save]')?.getAttribute('data-state')==='unknown'&&document.querySelector('#cad-test [data-aya-fact=antagonist]')?.getAttribute('data-state')==='unknown');
+ assert.match(await fact('save').textContent(),/Save status unknown/);
+ assert.match(await fact('antagonist').textContent(),/Antagonist status unknown/);
+ await page.evaluate(original=>{window.rc50Work.setContext({...original,scope:original.scope+':after-live-facts'});window.rc50Work.setLocale('tr');},originalCad);
+ await page.waitForFunction(()=>document.querySelector('#cad-test [data-aya-live-facts]')?.getAttribute('aria-label')==='Canlı CAD durumu'&&document.querySelectorAll('#cad-test .cad-aya-messages article').length===0);
  await page.evaluate(()=>{window.rc54State.mode='installing';window.dispatchEvent(new Event('focus'));});
  await page.waitForFunction(()=>!document.querySelector('#cad-test select[aria-label="Kurulu yerel model"]'));
  const calls=await page.evaluate(()=>window.rc54State.calls.length);
@@ -239,7 +312,7 @@ try{
  await secondPage.close();
  assert.deepEqual(errors,[],'State transitions produce no React/hydration/page errors');
  await browser.close();browser=null;await stopServer();await fs.rm(route,{recursive:true,force:true});owned=false;await fs.rm(path.join(root,'.next/dev/types'),{recursive:true,force:true});
- console.log(JSON.stringify({pass:true,sessionEditorIsolation:true,pendingReplyMemoryConflict:true,userDraftPreserved:true,explicitMemoryReload:true,lateStatusCannotOverwriteReady:true,mainFocusRecoversEngineChanges:true,installedBusyModelKeepsLocalStatus:true,busyDiagnosticDisabledAndRecovers:true,explicitModelChoiceSurvivesUnavailable:true,recoveredStatusClearsTransportError:true,cadInstallAndUnavailableNeverFabricateReply:true,cadBusyPollingRecovers:true,memoryOnlyResetPersists:true,emptySessionNotCreated:true,newerStoredMemoryPreserved:true,readOnlyOpenPreservesHistoryBytes:true,readOnlyReloadPreservesActivity:true,localeDoesNotRewriteConversation:true,readOnlyWindowDoesNotBlockRealEdit:true,twoRealWindowsPreserveNewerStoredReply:true,explicitStoredReloadPreservesDraft:true,explicitSeparateCopyPreservesBoth:true,failedDeleteRetainsRecord:true,deletedConversationNotResurrected:true,modelCallsAreMock:true,cadCallbacksAreSynthetic:true,nativeInference:false,screenshots},null,2));
+ console.log(JSON.stringify({pass:true,sessionEditorIsolation:true,pendingReplyMemoryConflict:true,userDraftPreserved:true,explicitMemoryReload:true,lateStatusCannotOverwriteReady:true,mainFocusRecoversEngineChanges:true,installedBusyModelKeepsLocalStatus:true,busyDiagnosticDisabledAndRecovers:true,explicitModelChoiceSurvivesUnavailable:true,recoveredStatusClearsTransportError:true,cadInstallAndUnavailableNeverFabricateReply:true,cadBusyPollingRecovers:true,visibleHostFactsIndependentOfModel:true,staleReportExcludedFromVisibleAndDetailedEvidence:true,saveStateHostPriority:true,cadImeShortcutsPreserveDraft:true,normalCadShortcutStillSends:true,liveFactsTrEn:true,memoryOnlyResetPersists:true,emptySessionNotCreated:true,newerStoredMemoryPreserved:true,readOnlyOpenPreservesHistoryBytes:true,readOnlyReloadPreservesActivity:true,localeDoesNotRewriteConversation:true,readOnlyWindowDoesNotBlockRealEdit:true,twoRealWindowsPreserveNewerStoredReply:true,explicitStoredReloadPreservesDraft:true,explicitSeparateCopyPreservesBoth:true,failedDeleteRetainsRecord:true,deletedConversationNotResurrected:true,modelCallsAreMock:true,cadCallbacksAreSynthetic:true,nativeInference:false,screenshots},null,2));
 }catch(error){console.error(logs);throw error;}finally{
  await browser?.close();await stopServer();if(owned)await fs.rm(route,{recursive:true,force:true});await fs.rm(path.join(root,'.next/dev/types'),{recursive:true,force:true});
 }

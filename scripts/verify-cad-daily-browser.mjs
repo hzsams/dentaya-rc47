@@ -184,6 +184,10 @@ try {
  }else{
  await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();
  const aya=page.getByRole('dialog',{name:'AYA çalışma asistanı',exact:true});
+ const liveFact=name=>aya.locator('[data-aya-fact='+name+']');
+ await aya.locator('[data-aya-live-facts]').waitFor();
+ assert.equal(await liveFact('antagonist').getAttribute('data-state'),'missing','The real editor exposes missing antagonist data without opening context');
+ assert.equal(await liveFact('report').getAttribute('data-state'),'missing','An unanalysed placed crown cannot advertise a current geometry report');
  await page.setViewportSize({width:1366,height:768});await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).waitFor();const composerBox=await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).boundingBox();assert.ok(composerBox&&composerBox.y+composerBox.height<768,'The composer remains reachable on a laptop screen');
  // The knowledge notebook also contains a textarea. Opening during autosave
  // must focus the message composer after it becomes enabled.
@@ -213,6 +217,7 @@ try {
  assert.equal(await aya.locator('[data-proposal-tool=inspect]').count(),1,'The scoped review offers the actual available geometry check');
  assert.equal(await aya.locator('[data-check-id]').count(),7);await aya.locator('[data-aya-tool=inspect]').click();
  assert.equal(await aya.locator('[data-check-id=position]').getAttribute('data-check-state'),'ready');
+ await page.waitForFunction(()=>document.querySelector('[data-aya-fact=report]')?.getAttribute('data-state')==='current');
  assert.match(await aya.locator('.aya-cad-evidence').textContent(),/Antagonist karşılaştırması yok/);
  const again=await save();assert.deepEqual(unitMesh(again),unitMesh(snapshot),'AYA workspace checks must not change the placed crown');
  console.log('PASS: explicitly selected CAD tool guide uses live context; real manual checks preserve the mesh.');
@@ -272,10 +277,19 @@ try {
  await page.getByRole('button',{name:'Diş 47',exact:true}).click();await page.evaluate(()=>{for(const resolve of window.rc47CadModel.pending.splice(0))resolve();window.rc47CadModel.mode='ok';});
  assert.equal(await aya.getByRole('log').textContent(),'');assert.doesNotMatch(await aya.locator('.aya-working-memory').textContent(),/46 ünitesinin gerçek kontrol/);
  await page.getByRole('button',{name:'Diş 46',exact:true}).click();assert.match(await aya.locator('.aya-working-memory').textContent(),/46 ünitesinin gerçek kontrol/);assert.doesNotMatch(await aya.getByRole('log').textContent(),/Gecikmiş model yanıtı/);
+ // Ordinary Save failures are host state, independently of the exit dialog.
+ // Retrying in the same owner clears that failure only after server acknowledgment.
+ await settleAutosave();failWrites=true;await aya.locator('[data-aya-tool=save]').click();
+ await page.waitForFunction(()=>document.querySelector('[data-aya-fact=save]')?.getAttribute('data-state')==='failed'&&!document.querySelector('.cad-aya-panel>form textarea')?.disabled);
+ assert.equal(await page.locator('.cad-save-dialog[open]').count(),0,'Ordinary save failure does not require opening the exit modal');
+ failWrites=false;await aya.locator('[data-aya-tool=save]').click();
+ await page.waitForFunction(()=>document.querySelector('[data-aya-fact=save]')?.getAttribute('data-state')==='saved'&&!document.querySelector('.cad-aya-panel>form textarea')?.disabled);
  // A real asynchronous save result must reach a panel reopened while the save is pending.
  await settleAutosave();let finishAyaSave;holdWrite=new Promise(resolve=>{finishAyaSave=resolve;});assert.equal(await page.evaluate(()=>{const button=document.querySelector('.cad-aya-panel [data-aya-tool=save]');if(!(button instanceof HTMLButtonElement)||button.disabled)return false;button.click();return true;}),true,'The held user save starts from an available control');
+ await page.waitForFunction(()=>document.querySelector('[data-aya-fact=save]')?.getAttribute('data-state')==='saving');
  await page.locator('.cad-main-header').getByRole('button',{name:'Kaydediliyor…',exact:true}).waitFor();await aya.getByRole('button',{name:'Kapat',exact:true}).click();await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();assert.ok(await aya.getByRole('textbox').isDisabled(),'Reopened panel cannot start another model request during save');
- finishAyaSave();holdWrite=null;await aya.getByRole('log').getByText(/CAD işlem sonucu · Kaydet/).waitFor();await page.waitForFunction(()=>!document.querySelector('.cad-aya-panel textarea')?.disabled);
+ finishAyaSave();holdWrite=null;await aya.getByRole('log').getByText(/CAD işlem sonucu · Kaydet/).last().waitFor();await page.waitForFunction(()=>!document.querySelector('.cad-aya-panel textarea')?.disabled);
+ await page.waitForFunction(()=>document.querySelector('[data-aya-fact=save]')?.getAttribute('data-state')==='saved');
  await ask('Kaydın gerçek sonucunu dikkate alarak devam et');assert.equal((await page.evaluate(()=>window.rc47CadModel.calls.at(-1))).cadContext.recentActions.at(-1).tool,'save');assert.equal((await page.evaluate(()=>window.rc47CadModel.calls.at(-1))).cadContext.recentActions.at(-1).ok,true,JSON.stringify({event:(await page.evaluate(()=>window.rc47CadModel.calls.at(-1))).cadContext.recentActions.at(-1),status:await page.locator('.cad-status-bar').textContent()}));
  const savedContext=await page.evaluate(()=>window.rc47CadModel.calls.at(-1).cadContext);
  assert.equal(normalizeWorkspace(savedContext).recentActions.at(-1)?.tool,'save','A reopened panel passes the actual committed save receipt through model normalization');
@@ -353,6 +367,12 @@ try {
  await page.goto(url);await ready();
  await menu.locator('summary').click();await page.getByRole('button',{name:'Uzman',exact:true}).click();await page.getByRole('tab',{name:'Serbest',exact:true}).click();
  failWrites=true;await sculpt();
+ await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();
+ await page.waitForFunction(()=>document.querySelector('[data-aya-fact=save]')?.getAttribute('data-state')==='failed');
+ assert.equal(await liveFact('report').getAttribute('data-state'),'missing','A real mesh edit invalidates the visible QC status');
+ assert.match(await liveFact('save').textContent(),/kaydedilemedi/,'The failed host write stays explicit before local recovery/exit');
+ if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC62_CAD_Host_Save_Failure.png'),animations:'disabled',timeout:15000});}
+ await aya.getByRole('button',{name:'Kapat',exact:true}).click();
  await page.locator('.cad-main-header').getByRole('button',{name:'Kaydet ve çık',exact:true}).click();await modal.waitFor();await modal.getByRole('button',{name:'Yerel kaydet ve çık',exact:true}).waitFor();assert.ok(page.url().includes('/design'));
  const readDrafts=()=>page.evaluate(()=>new Promise((resolve,reject)=>{const r=indexedDB.open('dentaya-cad-recovery',1);r.onerror=()=>reject(r.error);r.onsuccess=()=>{const db=r.result,tx=db.transaction('drafts','readonly'),q=tx.objectStore('drafts').getAll();q.onsuccess=()=>{resolve(q.result);db.close();};q.onerror=()=>reject(q.error);};}));
  const beforeExit=await readDrafts();assert.equal(beforeExit.length,1);const offlineMesh=unitMesh(beforeExit[0].workspace.designSnapshot);assert.notDeepEqual(offlineMesh,edited);
@@ -419,7 +439,7 @@ try {
  console.log('PASS: desktop module navigation rejects conflicting saves, waits for retry acknowledgment and retains the requested destination and edited scene.');
 
  assert.deepEqual(errors,[]);
- console.log(JSON.stringify({pass:true,realEditor:true,realWebGL:true,syntheticImplantAbutments:true,localMarginSizing:true,hiddenZeroOpacityRecovered:true,ayaChecksDoNotChangeMesh:true,fullMeshPersistence:true,perUnitPersistence:true,cloudReopen:true,saveExitAcknowledged:true,modalEditGuard:true,offlineExitRecovery:true,retainedLocalCheckpoint:true,publishCheckpoint:true,saveAfterPublish:true,optimisticConflictRejected:true,desktopNavigationSaveGuard:true,pendingRecoveryBlocksNavigationAndSave:true,staleQcHiddenAfterSculptAndUnitSwitch:true,currentShellQcSurvivesGeometryCommitAndTabs:true,manualQcSharedWithAya:true,ayaContextGuide:true,ayaModelBridge:'mock; no native inference',ayaProposalClickOnly:true,ayaActualQcFollowup:true,ayaLateReplyGuard:true,ayaScopedMemory:true,saveBeforeCaseSwitch:true,caseFailureRetainsScene:true,targetReadFailureRestoresCase:true,ayaKeyboardAndLaptopComposer:true,noContactWithoutAntagonist:true,backend:'intercepted API fixture; no production data'},null,2));
+ console.log(JSON.stringify({pass:true,realEditor:true,realWebGL:true,syntheticImplantAbutments:true,localMarginSizing:true,hiddenZeroOpacityRecovered:true,ayaChecksDoNotChangeMesh:true,fullMeshPersistence:true,perUnitPersistence:true,cloudReopen:true,saveExitAcknowledged:true,modalEditGuard:true,offlineExitRecovery:true,retainedLocalCheckpoint:true,publishCheckpoint:true,saveAfterPublish:true,optimisticConflictRejected:true,desktopNavigationSaveGuard:true,pendingRecoveryBlocksNavigationAndSave:true,staleQcHiddenAfterSculptAndUnitSwitch:true,currentShellQcSurvivesGeometryCommitAndTabs:true,manualQcSharedWithAya:true,visibleHostFactsTrackRealChecksAndSave:true,ayaContextGuide:true,ayaModelBridge:'mock; no native inference',ayaProposalClickOnly:true,ayaActualQcFollowup:true,ayaLateReplyGuard:true,ayaScopedMemory:true,saveBeforeCaseSwitch:true,caseFailureRetainsScene:true,targetReadFailureRestoresCase:true,ayaKeyboardAndLaptopComposer:true,noContactWithoutAntagonist:true,backend:'intercepted API fixture; no production data'},null,2));
  }
 }catch(error){
  console.error(logs);

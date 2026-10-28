@@ -346,6 +346,8 @@ export default function DesignStudioClient() {
     const [contextLoading, setContextLoading] = useState(false);
     const [contextLoadError,setContextLoadError]=useState('');
     const [saving, setSaving] = useState(false);
+    const [saveFailure,setSaveFailure]=useState<{scope:string;generation:number}|null>(null);
+    const saveFailureOwner=useRef({scope:'',generation:0,active:false});
     const [submitting, setSubmitting] = useState(false);
     const [status, setStatus] = useState("DentAYA CAD hazırlanıyor…");
     const [blocked, setBlocked] = useState("");
@@ -387,6 +389,13 @@ export default function DesignStudioClient() {
     const jobSetup = settings.job_setup;
     const activeJobUnit = activeCadUnit(jobSetup);
     const recoveryKey = useMemo(() => project?.id && sourceKey ? makeCadRecoveryKey(project.id, sourceKey) : "", [project?.id, sourceKey]);
+    const saveFailureScope=JSON.stringify([user?.id,org?.id,project?.id,sourceKey,activeJobUnit?.id]);
+    useLayoutEffect(()=>{
+        const owner={scope:saveFailureScope,generation:saveFailureOwner.current.generation+1,active:true};
+        saveFailureOwner.current=owner;
+        return()=>{owner.active=false;};
+    },[saveFailureScope]);
+    const currentSaveFailure=saveFailure?.scope===saveFailureScope&&saveFailure.generation===saveFailureOwner.current.generation;
     const recoveryLookupReady = recoveryLookupKey === recoveryKey;
     const sources = useMemo<SourceItem[]>(() => {
         const scanSources: SourceItem[] = scans
@@ -1081,7 +1090,7 @@ export default function DesignStudioClient() {
             if(state.recoveryDecisionPending){setStatus('Kurtarma kaydı bulundu');document.querySelector<HTMLElement>('.cad-recovery-notice button')?.focus();return false;}
             if(!state.project||!state.user||!state.selectedCase||state.contextLoading||state.project.id!==requestedProject||state.project.case_id!==state.selectedCase.id)return false;
             const workspace=viewportRef.current?.captureWorkspace();if(state.activeSource&&!workspace){setStatus('Modelin yüklenmesini bekleyin.');return false;}
-            const revision=dirtyRevisionRef.current;setSaving(true);localExitReadyRef.current=false;
+            const revision=dirtyRevisionRef.current,owner=saveFailureOwner.current;setSaving(true);localExitReadyRef.current=false;
             if(showMessage)setStatus('Kaydediliyor…');
             try {
                 const record=workspace?await encodeCadWorkspace(workspace):state.settings.cad_workspace;
@@ -1093,6 +1102,7 @@ export default function DesignStudioClient() {
                 }
                 const {data,error}=await supabase.from('design_projects').update({source_scan_id:state.activeSource?.scanId??null,settings:payloadSettings,margin_points:state.marginPoints,measurements:state.measurements,workflow_stage:state.project.workflow_stage,status:state.project.status,restoration_type:state.selectedCase.case_type,tooth_codes:state.settings.job_setup.units.map(u=>u.tooth_code),material:state.selectedCase.material,shade:state.selectedCase.shade,updated_by:state.user.id}).eq('id',state.project.id).eq('updated_at',savedVersionRef.current.get(state.project.id)??state.project.updated_at).select('id,case_id,lab_org_id,source_scan_id,title,restoration_type,tooth_codes,material,shade,workflow_stage,status,settings,margin_points,measurements,updated_at').abortSignal(AbortSignal.timeout(20000)).single();
                 if(error||!data)throw error??Error('CAD_SAVE_FAILED');
+                if(owner.active&&saveFailureOwner.current===owner)setSaveFailure(null);
                 savedVersionRef.current.set(state.project.id,data.updated_at);
                 savedSettingsRef.current={projectId:state.project.id,settings:payloadSettings};
                 if(state.recoveryKey&&record)await acknowledgeCadRecoveryDraft(state.recoveryKey,record.savedAt).catch(()=>undefined);
@@ -1100,7 +1110,7 @@ export default function DesignStudioClient() {
                 if(revision===dirtyRevisionRef.current){cleanRevisionRef.current=revision;setHasUnsavedChanges(false);localExitReadyRef.current=false;setLocalRecoverySavedAt(null);}
                 if(showMessage){setStatus('CAD projesi kaydedildi.');playExperienceCue('complete');}
                 return true;
-            } catch(error){const conflict=error&&typeof error==='object'&&'code' in error&&error.code==='PGRST116';setStatus(conflict?'Kayıt tamamlanamadı. Bağlantıyı ve yetkinizi kontrol edip kayıtları yenileyin.':dentayaError(error,'CAD projesi kaydedilemedi.'));if(showMessage)playExperienceCue('error');return false;}
+            } catch(error){if(owner.active&&saveFailureOwner.current===owner)setSaveFailure({scope:owner.scope,generation:owner.generation});const conflict=error&&typeof error==='object'&&'code' in error&&error.code==='PGRST116';setStatus(conflict?'Kayıt tamamlanamadı. Bağlantıyı ve yetkinizi kontrol edip kayıtları yenileyin.':dentayaError(error,'CAD projesi kaydedilemedi.'));if(showMessage)playExperienceCue('error');return false;}
             finally{setSaving(false);}
         };
         const queued=saveChainRef.current.catch(()=>false).then(task);saveChainRef.current=queued;return queued;
@@ -1741,12 +1751,12 @@ export default function DesignStudioClient() {
     const ayaContext:AyaCadContext={
         sectionToken:ayaSectionKey,section:currentSection,
         inspectionFlashlight:inspectionContext.inspection_flashlight,inspectionFlashlightTarget:inspectionContext.inspection_flashlight_target,
-        scope:ayaScope,dataToken:ayaDataToken,snapshot:cadStateToken([ayaDataToken,ayaEpoch,activeStepId,panelTab,tool,viewMode,historyState,saving,exiting,submitting,contextLoading,cadReady,sceneState,currentSection,currentAyaReport]),
+        scope:ayaScope,dataToken:ayaDataToken,snapshot:cadStateToken([ayaDataToken,ayaEpoch,activeStepId,panelTab,tool,viewMode,historyState,saving,exiting,submitting,contextLoading,cadReady,sceneState,currentSection,currentAyaReport,exitFailure,currentSaveFailure]),
         unit:activeJobUnit?.tooth_code??'',restoration:activeJobUnit?cadRestorationLabel(activeJobUnit.design_type):'',
         stage:activeStepId,task:panelTab,upperReady:sceneState.upperReady,lowerReady:sceneState.lowerReady,antagonistReady:sceneState.antagonistReady,openingMm:sceneState.openingMm,
         setupComplete:jobSetup.complete,sourceReady:Boolean(activeSource),modelReady:cadReady&&!contextLoading&&recoveryLookupReady&&!recoveryDecisionPending,
         marginPoints:marginPoints.length,placed:viewportRef.current?.hasMarginPlacement()??false,visible:sceneState.activeVisible,
-        unsaved:dirtyRevisionRef.current!==cleanRevisionRef.current,saveFailed:exitFailure,isSaving:saving||exiting||submitting||contextLoading,
+        unsaved:dirtyRevisionRef.current!==cleanRevisionRef.current,saveFailed:exitFailure||currentSaveFailure,isSaving:saving||exiting||submitting||contextLoading,
         material:activeJobUnit?.material??project?.material??'',tool,view:viewMode,undoCount:historyState.undoCount,redoCount:historyState.redoCount,
         measurementsMm:measurements.map(m=>m.distance).slice(-8),designSettings:{cementGapMm:settings.cement_gap_mm,minimumThicknessMm:settings.minimum_thickness_mm,brushRadiusMm:settings.brush_radius_mm},
         report:currentAyaReport

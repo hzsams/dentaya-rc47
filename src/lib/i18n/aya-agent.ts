@@ -2,6 +2,7 @@
 import type {AyaCadTool} from '../../../electron/aya/agent.cjs';
 const tr={
  chatScope:'AYA hata yapabilir. Bu sohbet CAD dosyalarını otomatik görmez. CAD panelindeki işlemler yalnız Uygula düğmesine bastığınızda mevcut araçlarla çalışır.',
+ liveFacts:'Canlı CAD durumu',antagonistLoaded:'Antagonist yüklü',antagonistMissing:'Antagonist yüklü değil',antagonistUnknown:'Antagonist durumu bilinmiyor',reportCurrent:'Güncel geometri kontrolü var.',saving:'Kaydediliyor…',saveUnknown:'Kayıt durumu bilinmiyor',
  context:'Çalışma durumu',unsaved:'Kaydedilmemiş değişiklikler',contactHelp:'Temas haritası, yüklü antagonist yüzeyine göre örneklenmiş mesafeleri gösterir. Dinamik artikülatör veya klinik oklüzyon analizi değildir.',
  memory:'Çalışma belleği',goal:'Hedef',decisions:'Kararlar',questions:'Açık sorular',clear:'Belleği temizle',temporary:'Bu oturumda tutulur; geçmiş kaydı açıksa sohbetle birlikte saklanır.',
  model:'Yerel model ile konuşma',fallback:'Yerel model hazır değil · manuel CAD araçları kullanılabilir',source:'Yanıt kaynağı',localSource:'Yerel model',guide:'Araç rehberi',modelUnavailable:'Yerel model yanıt veremedi. AYA ayarlarından motoru ve modeli kontrol edin. Sorunuz korundu.',cancelled:'Yanıt durduruldu. Sorunuz korundu.',guideNoMatch:'Araç rehberinde bu istek için kayıt bulunamadı. Serbest sohbet için yerel modeli kullanın.',planning:'AYA yanıt ve işlem önerisi hazırlıyor…',invalid:'Modelin işlem önerisi doğrulanamadı. Sorunuz korundu; yeniden deneyebilirsiniz.',
@@ -10,6 +11,7 @@ const tr={
 };
 const en={
  chatScope:'AYA can make mistakes. This chat does not automatically see CAD files. CAD panel actions use the existing tools only when you click Apply.',
+ liveFacts:'Live CAD status',antagonistLoaded:'Antagonist loaded',antagonistMissing:'Antagonist not loaded',antagonistUnknown:'Antagonist status unknown',reportCurrent:'Current geometry check available.',saving:'Saving…',saveUnknown:'Save status unknown',
  context:'Workspace context',unsaved:'Unsaved changes',contactHelp:'The contact map shows sampled distances to the loaded antagonist surface. It is not a dynamic articulator or clinical occlusion analysis.',
  memory:'Working memory',goal:'Goal',decisions:'Decisions',questions:'Open questions',clear:'Clear memory',temporary:'Kept for this session; stored with the conversation when history is enabled.',
  model:'Conversation with local model',fallback:'Local model not ready · manual CAD tools available',source:'Reply source',localSource:'Local model',guide:'Tool guide',modelUnavailable:'The local model could not reply. Check the engine and model in AYA settings. Your question is kept.',cancelled:'Reply stopped. Your question is kept.',guideNoMatch:'The tool guide has no entry for this request. Use the local model for free-form conversation.',planning:'AYA is preparing a reply and suggested actions…',invalid:'The model’s action proposal could not be validated. Your question is kept; you can retry.',

@@ -300,6 +300,11 @@
 .cad-professional :is(.aya-working-memory,.aya-cad-evidence) p{margin:6px 0}
 .cad-professional .aya-working-memory>strong{display:block}
 .cad-professional .aya-agent-status{color:var(--cad-muted);font-size:12px}
+.cad-professional .cad-aya-live-facts{display:flex;flex-wrap:wrap;gap:4px;flex-shrink:0;margin:0;padding:0;list-style:none}
+.cad-professional .cad-aya-live-facts>li{padding:3px 6px;border:1px solid var(--cad-line);border-radius:3px;background:var(--cad-surface2);color:var(--cad-muted);font-size:11px;line-height:1.35;overflow-wrap:anywhere}
+.cad-professional .cad-aya-live-facts>li:is([data-state=missing],[data-state=failed],[data-state=unsaved]){border-inline-start:2px solid var(--cad-warning)}
+.cad-professional .cad-aya-live-facts>li[data-state=failed]{border-inline-start-color:var(--dy-danger,#a83d4b);color:var(--dy-danger,#a83d4b)}
+.cad-professional .cad-aya-live-facts>li[data-state=saving]{border-inline-start:2px solid var(--cad-accent)}
 .cad-professional .cad-aya-panel .aya-knowledge{padding:6px;border:1px solid var(--cad-line);border-radius:4px;font-size:12px}
 .cad-professional .aya-knowledge>div{display:grid;gap:6px;max-height:260px;overflow:auto}
 .cad-professional .aya-knowledge textarea,.cad-professional .aya-knowledge input:not([type=checkbox]){width:100%;min-width:0}
