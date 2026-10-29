@@ -1,0 +1,856 @@
+{
+  "sourceCommit": "2d9d0d74cfbfb26b7808026d6f386d6e053355ed",
+  "package": {
+    "name": "dentaya-production-rc",
+    "version": "1.0.0-rc.62",
+    "private": true,
+    "type": "module",
+    "description": "DentAYA klinik, laboratuvar ve dental CAD çalışma platformu",
+    "engines": {
+      "node": ">=22.12.0",
+      "npm": ">=11.0.0"
+    },
+    "packageManager": "npm@11.9.0",
+    "scripts": {
+      "dev": "next dev",
+      "build": "npm run verify:bundled-languages && next build",
+      "start": "next start",
+      "lint": "eslint .",
+      "typecheck": "tsc --noEmit",
+      "verify:cad": "node --import tsx scripts/verify-cad-kernel.ts",
+      "verify:cad-setup": "node --import tsx scripts/verify-cad-job-setup.ts",
+      "verify:cad-interaction": "node scripts/verify-cad-interaction.mjs",
+      "verify:cad-workflow": "node scripts/verify-cad-workflow.mjs",
+      "verify:cad-panel": "node scripts/verify-cad-panel.mjs",
+      "verify:migrations": "node --import tsx scripts/verify-migrations.ts",
+      "verify:e2e": "node --import tsx scripts/verify-e2e-workflow.ts",
+      "verify:operations": "node --import tsx scripts/verify-operations-center.ts",
+      "verify": "npm run verify:runtime && npm run verify:professional-shell && npm run verify:lab-workspace && npm run verify:workflow-safety && npm run verify:brand-assets && npm run verify:desktop-brand && npm run verify:release && npm run verify:windows-package && npm run verify:release-env && npm run verify:security && npm run verify:localization && npm run verify:system-translations && npm run verify:aya && npm run verify:local-aya && npm run verify:aya-natural && npm run verify:aya-agent && npm run verify:aya-cad-agent && npm run verify:aya-section && npm run verify:aya-core && npm run verify:aya-managed && npm run verify:language-packs && npm run verify:desktop-language && npm run verify:experience && npm run verify:dental-facts && npm run verify:loading-play && npm run verify:rc44 && npm run verify:tooth-appearance && npm run verify:tooth-forms && npm run verify:cad-library && npm run verify:sculpt-integrity && npm run verify:morphology-sculpt && npm run verify:tooth-layout && npm run verify:cad-display && npm run verify:cad-view && npm run verify:cad-inspection && npm run verify:cad-section && npm run verify:performance && npm run verify:pilot && npm run lint -- --max-warnings=0 && npm run typecheck && npm run verify:cad && npm run verify:cad-setup && npm run verify:cad-daily && npm run verify:cad-restoration && npm run verify:cad-interaction && npm run verify:cad-workflow && npm run verify:cad-panel && npm run verify:cad-guided && npm run verify:migrations && npm run verify:e2e && npm run verify:community && npm run verify:operations && npm run verify:validation && npm run build",
+      "check": "npm run verify",
+      "db:start": "supabase start",
+      "db:reset": "supabase db reset",
+      "db:push": "supabase db push",
+      "verify:security": "node scripts/verify-security.mjs",
+      "verify:performance": "node scripts/verify-performance.mjs",
+      "verify:release": "node scripts/verify-release.mjs",
+      "verify:runtime": "node scripts/verify-runtime.mjs",
+      "verify:pilot": "node scripts/verify-pilot-candidate.mjs",
+      "verify:env": "node scripts/verify-env.mjs",
+      "verify:final": "npm run verify:env && npm run verify",
+      "setup:windows": "powershell -ExecutionPolicy Bypass -File scripts/setup-windows.ps1",
+      "desktop:dev": "electron electron/main.cjs",
+      "desktop:dist": "npm run build && npm run desktop:package",
+      "verify:community": "node --import tsx scripts/verify-community.ts",
+      "verify:localization": "node --import tsx scripts/verify-localization.ts",
+      "verify:aya": "node --import tsx scripts/verify-aya-request.ts",
+      "verify:local-aya": "node scripts/verify-local-aya.cjs",
+      "verify:aya-core": "node scripts/verify-aya-core.cjs && npm run verify:aya-catalog && npm run verify:aya-work",
+      "verify:aya-catalog": "node scripts/verify-aya-catalog.cjs && npm run verify:aya-dialogue && node --import tsx scripts/verify-aya-conversation.ts && node scripts/export-aya-catalog.mjs --check",
+      "verify:source-integrity": "node scripts/verify-source-integrity.mjs",
+      "verify:aya-conversation-browser": "node scripts/verify-aya-conversation-browser.mjs",
+      "verify:language-packs": "node scripts/verify-language-packs.cjs",
+      "verify:desktop-language": "node scripts/verify-desktop-language.cjs",
+      "verify:experience": "node --import tsx scripts/verify-experience.ts",
+      "verify:cad-display": "node --import tsx scripts/verify-cad-display.ts",
+      "verify:ui-browser": "node scripts/verify-ui-browser.mjs",
+      "verify:cad-browser": "node scripts/verify-cad-browser.mjs",
+      "verify:bundled-languages": "node scripts/verify-bundled-languages.mjs",
+      "verify:system-translations": "node scripts/verify-visible-translations.mjs && node --import tsx scripts/verify-system-translations.ts",
+      "verify:validation": "node --import tsx scripts/verify-validation.ts",
+      "verify:validation-browser": "node scripts/verify-validation-browser.mjs",
+      "verify:release-env": "node scripts/verify-release-env.mjs",
+      "verify:appearance-browser": "node scripts/verify-appearance-browser.mjs",
+      "verify:cad-guided": "node --import tsx scripts/verify-cad-guided.ts",
+      "verify:cad-guided-browser": "node --import tsx scripts/verify-cad-guided-browser.mjs",
+      "verify:tooth-appearance": "node --import tsx scripts/verify-tooth-appearance.ts",
+      "verify:tooth-layout": "node --import tsx scripts/verify-tooth-layout.ts",
+      "verify:tooth-appearance-browser": "node scripts/verify-tooth-appearance-browser.mjs",
+      "verify:desktop-brand": "node scripts/verify-desktop-brand.cjs",
+      "verify:brand-browser": "node scripts/verify-brand-browser.mjs",
+      "verify:tooth-forms": "node --import tsx scripts/verify-legacy-forms.ts",
+      "verify:sculpt-integrity": "node --import tsx scripts/verify-sculpt-integrity.ts",
+      "verify:morphology-sculpt": "node --import tsx scripts/verify-morphology-sculpt.ts",
+      "verify:cad-daily": "node --import tsx scripts/verify-cad-daily.ts && node --import tsx scripts/verify-aya-guide.ts",
+      "verify:cad-daily-browser": "node --import tsx scripts/verify-cad-daily-browser.mjs",
+      "verify:cad-library": "node --import tsx scripts/verify-cad-form-library.ts",
+      "verify:cad-library-browser": "node --import tsx scripts/verify-cad-library-browser.mjs",
+      "verify:aya-managed": "node scripts/verify-aya-managed.cjs",
+      "verify:cad-view": "node --import tsx scripts/verify-cad-view-state.ts",
+      "verify:loading-play": "node --import tsx scripts/verify-loading-play.ts",
+      "verify:loading-play-browser": "node --import tsx scripts/verify-cad-guided-browser.mjs",
+      "verify:loading-reading-browser": "node scripts/verify-loading-reading-browser.mjs",
+      "verify:rc44": "node --import tsx scripts/verify-rc44-tools.ts",
+      "desktop:package": "node scripts/package-windows.mjs",
+      "verify:windows-package": "node --test scripts/verify-windows-packaging.mjs scripts/verify-windows-artifact.test.mjs scripts/verify-windows-ci.mjs && node scripts/verify-windows-native-orchestration.cjs",
+      "verify:aya-agent": "node scripts/verify-aya-agent.cjs",
+      "verify:aya-cad-agent": "node --import tsx scripts/verify-aya-cad-agent.ts",
+      "verify:aya-native": "node scripts/verify-aya-native.cjs",
+      "verify:aya-native-grammar": "node scripts/verify-aya-native-grammar.cjs",
+      "verify:professional-shell": "node --import tsx scripts/verify-professional-shell.ts",
+      "verify:brand-assets": "node scripts/verify-brand-assets.mjs",
+      "verify:dental-facts": "node --import tsx scripts/verify-dental-facts.ts",
+      "knowledge:import": "node --import tsx scripts/import-dental-facts.ts",
+      "verify:workflow-safety": "node --import tsx scripts/verify-workflow-safety.ts",
+      "verify:professional-shell-browser": "node scripts/verify-professional-shell-browser.mjs",
+      "verify:professional-modules-browser": "node scripts/verify-professional-modules-browser.mjs",
+      "verify:aya-dialogue": "node scripts/verify-aya-dialogue.cjs",
+      "verify:aya-work": "node scripts/verify-aya-memory.cjs && node scripts/verify-aya-tasks.cjs && node scripts/verify-aya-cad-dialogue.cjs && node --import tsx scripts/verify-aya-work.ts && npm run verify:aya-references && npm run verify:aya-state",
+      "verify:aya-work-browser": "node scripts/verify-aya-work-browser.mjs",
+      "verify:desktop-shell-browser": "node scripts/verify-desktop-shell-browser.mjs",
+      "verify:aya-references": "node --import tsx scripts/verify-aya-references.ts",
+      "verify:cad-inspection": "node --import tsx scripts/verify-cad-inspection.ts",
+      "verify:cad-inspection-browser": "node scripts/verify-cad-inspection-browser.mjs",
+      "verify:aya-state": "node --import tsx scripts/verify-aya-ui-state.ts && node --import tsx scripts/verify-aya-setup.ts",
+      "verify:aya-state-browser": "node scripts/verify-aya-state-browser.mjs",
+      "verify:cad-restoration": "node --import tsx scripts/verify-crown-anatomy.ts && node --import tsx scripts/verify-cad-margin-placement.ts && node --import tsx scripts/verify-cad-restoration-version.ts && node --import tsx scripts/verify-cad-restoration-surface.ts && node --import tsx scripts/verify-cad-preparation-envelope.ts",
+      "verify:cad-restoration-browser": "node --import tsx scripts/verify-cad-restoration-browser.mjs",
+      "verify:lab-workspace": "node scripts/verify-lab-workspace.mjs",
+      "verify:lab-workspace-browser": "node scripts/verify-lab-workspace-browser.mjs",
+      "verify:mini-games-browser": "node --import tsx scripts/verify-mini-games-browser.mjs",
+      "verify:cad-section": "node --import tsx scripts/verify-cad-section.ts",
+      "verify:aya-section": "node --import tsx scripts/verify-aya-section-context.ts && node scripts/verify-aya-section.cjs",
+      "verify:operations-workspace-browser": "node scripts/verify-operations-workspace-browser.mjs",
+      "verify:aya-setup-browser": "node scripts/verify-aya-setup-browser.mjs",
+      "verify:aya-natural": "node scripts/verify-aya-natural-stream.cjs && node scripts/verify-aya-memory-task.cjs && node scripts/verify-aya-ollama-download.cjs && node scripts/verify-aya-acceptance.cjs && node --import tsx scripts/verify-aya-chat-workspace.ts",
+      "evaluate:aya": "node scripts/evaluate-aya-local.cjs",
+      "verify:aya-acceptance-browser": "node scripts/verify-aya-acceptance-browser.mjs",
+      "verify:aya-continuity-browser": "node scripts/verify-aya-chat-workspace-browser.mjs"
+    },
+    "dependencies": {
+      "@supabase/supabase-js": "2.116.0",
+      "fflate": "0.8.3",
+      "next": "16.3.8",
+      "react": "19.3.0",
+      "react-dom": "19.3.0",
+      "three": "0.186.0"
+    },
+    "devDependencies": {
+      "@electric-sql/pglite": "0.5.8",
+      "@types/node": "26.6.2",
+      "@types/react": "19.3.0",
+      "@types/react-dom": "19.3.0",
+      "@types/three": "0.186.0",
+      "electron": "44.4.5",
+      "electron-builder": "26.15.3",
+      "eslint": "9.39.2",
+      "eslint-config-next": "16.3.8",
+      "fake-indexeddb": "6.2.5",
+      "supabase": "2.117.0",
+      "tsx": "4.23.15",
+      "typescript": "5.9.3"
+    },
+    "main": "electron/main.cjs"
+  },
+  "apiRoutes": [
+    {
+      "path": "src/app/api/ai-assistant/route.ts",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "path": "src/app/api/health/route.ts",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "src/app/api/maps/geocode/route.ts",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "src/app/api/maps/route/route.ts",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "src/app/api/pre-register/route.ts",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "pages": [
+    "src/app/ai/page.tsx",
+    "src/app/appointments/page.tsx",
+    "src/app/cad-library/page.tsx",
+    "src/app/cases/[id]/page.tsx",
+    "src/app/cases/page.tsx",
+    "src/app/clinic/page.tsx",
+    "src/app/community/page.tsx",
+    "src/app/community/post/[id]/page.tsx",
+    "src/app/community/profile/[handle]/page.tsx",
+    "src/app/design/page.tsx",
+    "src/app/finance/page.tsx",
+    "src/app/invite/page.tsx",
+    "src/app/lab/page.tsx",
+    "src/app/labs/page.tsx",
+    "src/app/logistics/page.tsx",
+    "src/app/messages/page.tsx",
+    "src/app/mini-game/page.tsx",
+    "src/app/notifications/page.tsx",
+    "src/app/operations/page.tsx",
+    "src/app/ops-health/page.tsx",
+    "src/app/page.tsx",
+    "src/app/patients/page.tsx",
+    "src/app/pilot-check/page.tsx",
+    "src/app/pilot-flow/page.tsx",
+    "src/app/release-check/page.tsx",
+    "src/app/scan-studio/page.tsx",
+    "src/app/scans/page.tsx",
+    "src/app/settings/page.tsx",
+    "src/app/start/page.tsx",
+    "src/app/team/page.tsx",
+    "src/app/training/page.tsx",
+    "src/app/twin/page.tsx",
+    "src/app/workspace/page.tsx"
+  ],
+  "migrationFiles": [
+    "supabase/migrations/20260918000000_production_foundation.sql",
+    "supabase/migrations/20260919000100_smart_notifications.sql",
+    "supabase/migrations/20260919000200_onboarding.sql",
+    "supabase/migrations/20260919000300_finance.sql",
+    "supabase/migrations/20260919000400_aya_copilot.sql",
+    "supabase/migrations/20260919000500_team_access.sql",
+    "supabase/migrations/20260919000600_settings_preferences.sql",
+    "supabase/migrations/20260919000700_preferences_messaging.sql",
+    "supabase/migrations/20260919000800_scan_purpose.sql",
+    "supabase/migrations/20260919000900_message_integrity.sql",
+    "supabase/migrations/20260919001000_function_execute_hardening.sql",
+    "supabase/migrations/20260919001100_message_role_hardening.sql",
+    "supabase/migrations/20260919001200_security_idempotency.sql",
+    "supabase/migrations/20260919001300_validation.sql",
+    "supabase/migrations/20260919001400_performance_indexes.sql",
+    "supabase/migrations/20260920000100_courier_flow.sql",
+    "supabase/migrations/20260920000200_e2e_workflow_lock.sql",
+    "supabase/migrations/20260920000300_atomic_case_actions.sql",
+    "supabase/migrations/20260920000400_organization_addresses.sql",
+    "supabase/migrations/20260920000500_production_courier_ops.sql",
+    "supabase/migrations/20260920000600_operational_notifications.sql",
+    "supabase/migrations/20260920000700_pilot_hardening_observability.sql",
+    "supabase/migrations/20260920000800_operations_control_center.sql",
+    "supabase/migrations/20260923000100_pre_registrations.sql",
+    "supabase/migrations/20260926000100_community_network.sql",
+    "supabase/migrations/20260926000200_community_bookmarks.sql",
+    "supabase/migrations/20261011000100_validation_records.sql"
+  ],
+  "tablesDeclaredInMigrations": {
+    "public.profiles": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 7
+      }
+    ],
+    "public.organizations": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 20
+      }
+    ],
+    "public.memberships": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 34
+      }
+    ],
+    "public.patients": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 51
+      }
+    ],
+    "public.cases": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 86
+      }
+    ],
+    "public.appointments": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 121
+      }
+    ],
+    "public.scan_sessions": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 144
+      }
+    ],
+    "public.attachments": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 185
+      }
+    ],
+    "public.case_events": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 207
+      }
+    ],
+    "public.case_messages": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 223
+      }
+    ],
+    "public.organization_conversations": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 241
+      }
+    ],
+    "public.organization_messages": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 258
+      }
+    ],
+    "public.notifications": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 277
+      }
+    ],
+    "public.user_preferences": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 301
+      }
+    ],
+    "public.user_notification_preferences": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 314
+      }
+    ],
+    "public.lab_profiles": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 325
+      }
+    ],
+    "public.ai_sessions": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 349
+      }
+    ],
+    "public.design_projects": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 365
+      }
+    ],
+    "public.design_versions": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 389
+      }
+    ],
+    "public.case_design_reviews": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 406
+      }
+    ],
+    "public.shipments": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 425
+      }
+    ],
+    "public.courier_drivers": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 458
+      }
+    ],
+    "public.courier_locations": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 477
+      }
+    ],
+    "public.scan_annotations": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 494
+      }
+    ],
+    "public.tooth_status": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 515
+      }
+    ],
+    "public.dental_records": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 528
+      }
+    ],
+    "public.organization_invites": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 541
+      }
+    ],
+    "public.user_onboarding": [
+      {
+        "file": "supabase/migrations/20260919000200_onboarding.sql",
+        "line": 4
+      }
+    ],
+    "public.lab_case_quotes": [
+      {
+        "file": "supabase/migrations/20260919000300_finance.sql",
+        "line": 19
+      }
+    ],
+    "public.clinic_case_finance": [
+      {
+        "file": "supabase/migrations/20260919000300_finance.sql",
+        "line": 81
+      }
+    ],
+    "public.shipment_delivery_proofs": [
+      {
+        "file": "supabase/migrations/20260920000500_production_courier_ops.sql",
+        "line": 44
+      }
+    ],
+    "public.operational_events": [
+      {
+        "file": "supabase/migrations/20260920000700_pilot_hardening_observability.sql",
+        "line": 4
+      }
+    ],
+    "public.organization_operations_settings": [
+      {
+        "file": "supabase/migrations/20260920000800_operations_control_center.sql",
+        "line": 3
+      }
+    ],
+    "public.pre_registrations": [
+      {
+        "file": "supabase/migrations/20260923000100_pre_registrations.sql",
+        "line": 1
+      }
+    ],
+    "public.community_profiles": [
+      {
+        "file": "supabase/migrations/20260926000100_community_network.sql",
+        "line": 3
+      }
+    ],
+    "public.community_moderators": [
+      {
+        "file": "supabase/migrations/20260926000100_community_network.sql",
+        "line": 18
+      }
+    ],
+    "public.community_posts": [
+      {
+        "file": "supabase/migrations/20260926000100_community_network.sql",
+        "line": 25
+      }
+    ],
+    "public.community_comments": [
+      {
+        "file": "supabase/migrations/20260926000100_community_network.sql",
+        "line": 42
+      }
+    ],
+    "public.community_likes": [
+      {
+        "file": "supabase/migrations/20260926000100_community_network.sql",
+        "line": 49
+      }
+    ],
+    "public.community_follows": [
+      {
+        "file": "supabase/migrations/20260926000100_community_network.sql",
+        "line": 50
+      }
+    ],
+    "public.community_reports": [
+      {
+        "file": "supabase/migrations/20260926000100_community_network.sql",
+        "line": 51
+      }
+    ],
+    "public.community_bookmarks": [
+      {
+        "file": "supabase/migrations/20260926000200_community_bookmarks.sql",
+        "line": 2
+      }
+    ],
+    "public.validation_runs": [
+      {
+        "file": "supabase/migrations/20261011000100_validation_records.sql",
+        "line": 2
+      }
+    ]
+  },
+  "functionsDeclaredInMigrations": {
+    "public.is_org_member": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 563
+      }
+    ],
+    "public.is_org_role": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 579
+      }
+    ],
+    "public.can_access_case": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 596
+      }
+    ],
+    "public.can_access_patient": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 614
+      }
+    ],
+    "public.handle_new_auth_user": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 645
+      }
+    ],
+    "public.set_updated_at": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 672
+      }
+    ],
+    "public.enforce_update_columns": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 683
+      }
+    ],
+    "public.set_patient_external_ref": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 698
+      }
+    ],
+    "public.create_my_organization": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 717
+      }
+    ],
+    "public.create_case_from_patient": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 764
+      }
+    ],
+    "public.dentaya_create_team_invite": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 841
+      }
+    ],
+    "public.dentaya_accept_team_invite": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 897
+      }
+    ],
+    "public.dentaya_revoke_team_invite": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 952
+      }
+    ],
+    "public.dentaya_team_members": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 968
+      }
+    ],
+    "public.dentaya_set_team_member_status": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 982
+      }
+    ],
+    "public.dentaya_set_team_member_role": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 1003
+      }
+    ],
+    "public.stamp_case_message_sender": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 1040
+      }
+    ],
+    "public.touch_conversation_after_message": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 1076
+      }
+    ],
+    "public.can_access_dentaya_object": [
+      {
+        "file": "supabase/migrations/20260918000000_production_foundation.sql",
+        "line": 1399
+      },
+      {
+        "file": "supabase/migrations/20260920000500_production_courier_ops.sql",
+        "line": 93
+      }
+    ],
+    "public.emit_org_notification": [
+      {
+        "file": "supabase/migrations/20260919000100_smart_notifications.sql",
+        "line": 24
+      }
+    ],
+    "public.notify_case_change": [
+      {
+        "file": "supabase/migrations/20260919000100_smart_notifications.sql",
+        "line": 72
+      }
+    ],
+    "public.notify_design_review": [
+      {
+        "file": "supabase/migrations/20260919000100_smart_notifications.sql",
+        "line": 107
+      }
+    ],
+    "public.notify_case_message": [
+      {
+        "file": "supabase/migrations/20260919000100_smart_notifications.sql",
+        "line": 132
+      }
+    ],
+    "public.notify_organization_message": [
+      {
+        "file": "supabase/migrations/20260919000100_smart_notifications.sql",
+        "line": 161
+      }
+    ],
+    "public.notify_shipment_change": [
+      {
+        "file": "supabase/migrations/20260919000100_smart_notifications.sql",
+        "line": 188
+      }
+    ],
+    "public.notify_lab_quote_change": [
+      {
+        "file": "supabase/migrations/20260919000300_finance.sql",
+        "line": 170
+      }
+    ],
+    "public.stamp_org_message_sender": [
+      {
+        "file": "supabase/migrations/20260919000900_message_integrity.sql",
+        "line": 3
+      }
+    ],
+    "public.sync_case_status_from_shipment": [
+      {
+        "file": "supabase/migrations/20260920000100_courier_flow.sql",
+        "line": 18
+      }
+    ],
+    "public.guard_case_status_transition": [
+      {
+        "file": "supabase/migrations/20260920000200_e2e_workflow_lock.sql",
+        "line": 8
+      }
+    ],
+    "public.guard_shipment_transition": [
+      {
+        "file": "supabase/migrations/20260920000200_e2e_workflow_lock.sql",
+        "line": 63
+      }
+    ],
+    "public.guard_design_review_decision": [
+      {
+        "file": "supabase/migrations/20260920000200_e2e_workflow_lock.sql",
+        "line": 142
+      }
+    ],
+    "public.dentaya_create_case_shipment": [
+      {
+        "file": "supabase/migrations/20260920000200_e2e_workflow_lock.sql",
+        "line": 172
+      },
+      {
+        "file": "supabase/migrations/20260920000400_organization_addresses.sql",
+        "line": 185
+      }
+    ],
+    "public.dentaya_assign_courier": [
+      {
+        "file": "supabase/migrations/20260920000200_e2e_workflow_lock.sql",
+        "line": 268
+      }
+    ],
+    "public.dentaya_review_design": [
+      {
+        "file": "supabase/migrations/20260920000200_e2e_workflow_lock.sql",
+        "line": 332
+      }
+    ],
+    "public.dentaya_submit_design_version": [
+      {
+        "file": "supabase/migrations/20260920000200_e2e_workflow_lock.sql",
+        "line": 411
+      }
+    ],
+    "public.dentaya_transition_case": [
+      {
+        "file": "supabase/migrations/20260920000300_atomic_case_actions.sql",
+        "line": 5
+      }
+    ],
+    "public.organization_route_address": [
+      {
+        "file": "supabase/migrations/20260920000400_organization_addresses.sql",
+        "line": 88
+      }
+    ],
+    "public.sync_open_shipments_from_org_address": [
+      {
+        "file": "supabase/migrations/20260920000400_organization_addresses.sql",
+        "line": 115
+      }
+    ],
+    "public.guard_courier_location_insert": [
+      {
+        "file": "supabase/migrations/20260920000500_production_courier_ops.sql",
+        "line": 129
+      }
+    ],
+    "public.dentaya_record_route_snapshot": [
+      {
+        "file": "supabase/migrations/20260920000500_production_courier_ops.sql",
+        "line": 217
+      }
+    ],
+    "public.dentaya_shipment_actual_distance_meters": [
+      {
+        "file": "supabase/migrations/20260920000500_production_courier_ops.sql",
+        "line": 278
+      }
+    ],
+    "public.require_delivery_proof_before_delivered": [
+      {
+        "file": "supabase/migrations/20260920000500_production_courier_ops.sql",
+        "line": 310
+      }
+    ],
+    "public.dentaya_complete_delivery": [
+      {
+        "file": "supabase/migrations/20260920000500_production_courier_ops.sql",
+        "line": 335
+      }
+    ],
+    "public.notify_shipment_eta_threshold": [
+      {
+        "file": "supabase/migrations/20260920000600_operational_notifications.sql",
+        "line": 3
+      }
+    ],
+    "public.dentaya_log_operational_event": [
+      {
+        "file": "supabase/migrations/20260920000700_pilot_hardening_observability.sql",
+        "line": 55
+      }
+    ],
+    "public.community_is_moderator": [
+      {
+        "file": "supabase/migrations/20260926000100_community_network.sql",
+        "line": 19
+      }
+    ],
+    "public.community_can_manage": [
+      {
+        "file": "supabase/migrations/20260926000100_community_network.sql",
+        "line": 22
+      }
+    ],
+    "public.community_validate_profile": [
+      {
+        "file": "supabase/migrations/20260926000100_community_network.sql",
+        "line": 53
+      }
+    ],
+    "public.community_validate_content": [
+      {
+        "file": "supabase/migrations/20260926000100_community_network.sql",
+        "line": 63
+      }
+    ],
+    "public.community_review_report": [
+      {
+        "file": "supabase/migrations/20260926000100_community_network.sql",
+        "line": 115
+      }
+    ],
+    "public.community_media_referenced": [
+      {
+        "file": "supabase/migrations/20260926000100_community_network.sql",
+        "line": 129
+      }
+    ],
+    "public.dentaya_record_validation_run": [
+      {
+        "file": "supabase/migrations/20261011000100_validation_records.sql",
+        "line": 33
+      }
+    ],
+    "public.dentaya_validation_immutable": [
+      {
+        "file": "supabase/migrations/20261011000100_validation_records.sql",
+        "line": 70
+      }
+    ]
+  },
+  "environmentExampleKeyNames": {
+    ".env.example": [
+      "NEXT_PUBLIC_DENTAYA_RELEASE_CHANNEL",
+      "NEXT_PUBLIC_DENTAYA_BUILD_LABEL",
+      "NEXT_PUBLIC_SUPABASE_URL",
+      "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+      "NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY",
+      "DENTAYA_AI_CLOUD_ENABLED",
+      "DENTAYA_AI_MODEL",
+      "GOOGLE_MAPS_GEOCODING_KEY",
+      "GOOGLE_MAPS_ROUTES_KEY",
+      "SUPABASE_SERVICE_ROLE_KEY"
+    ],
+    ".env.release.example": [
+      "NEXT_PUBLIC_DENTAYA_RELEASE_CHANNEL",
+      "NEXT_PUBLIC_DENTAYA_BUILD_LABEL",
+      "NEXT_PUBLIC_SUPABASE_URL",
+      "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+      "NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY",
+      "GOOGLE_MAPS_GEOCODING_KEY",
+      "GOOGLE_MAPS_ROUTES_KEY",
+      "SUPABASE_SERVICE_ROLE_KEY",
+      "DENTAYA_AI_CLOUD_ENABLED",
+      "DENTAYA_AI_MODEL",
+      "OPENAI_API_KEY"
+    ]
+  }
+}
