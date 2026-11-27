@@ -186,8 +186,9 @@ async function folderNavigation(page) {
     if (!await closed.count()) break;
     await closed.click();
   }
-  const destinations = await menu.locator('a.desktop-module-leaf').evaluateAll(nodes => nodes.map(node => node.getAttribute('href')).sort());
+  const destinations = await menu.locator('a.desktop-module-leaf').evaluateAll(nodes => nodes.map(node => node.pathname).sort());
   assert.deepEqual(destinations, [...moduleDestinations].sort(), 'Folder navigation retains every existing module destination exactly once');
+  assert.equal(await menu.locator('a[href="/ai?module=patients"]').count(), 1, 'The AYA folder entry carries the active module');
   const workTracking = menu.locator('a[href="/operations"]');
   assert.match(await workTracking.textContent(), /İş takibi/);
   assert.equal(await workTracking.evaluate(node => Boolean(node.closest('li')?.parentElement?.closest('li')?.querySelector('button[data-folder-id="management/work"]'))), true, 'Work tracking belongs inside the management work folder');
@@ -292,6 +293,75 @@ async function cadFolderNavigation(context) {
   await page.locator('.desktop-titlebar').waitFor();
   await menu.waitFor({ state: 'hidden' });
   checks.push('existing CAD module command shares folder menu; CAD retains its own header and no sidebar; CAD Escape focus and Alt+M; real Workspace leaf navigation');
+}
+
+async function contextualAyaNavigation() {
+  const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+  try {
+    await installFixture(context);
+    await context.addInitScript(() => {
+      const calls = [];
+      window.ayaModuleFixtureCalls = calls;
+      window.dentayaDesktop = {
+        localAyaStatus: async () => ({ok:true,models:[{name:'fixture-local',size:1000}],progress:{running:false,status:'ready',completed:0,total:0}}),
+        localAyaChat: async input => {
+          calls.push(input);
+          return {ok:true,output:'Fixture local reply',workingMemory:input.task==='memory'?input.workingMemory:undefined};
+        },
+        localAyaCancel: async () => ({ok:true}),
+      };
+    });
+    const page = await context.newPage(); debugPage = page;
+    await page.goto(`${base}/cases/${ids.case}?private=PRIVATE_QUERY`);
+    const caseAya = 'a[href="/ai?module=cases"]';
+    await page.locator(`.desktop-document-tabs ${caseAya}`).waitFor();
+    assert.equal(await page.locator(`.studio-activity-dock ${caseAya}`).count(),1);
+    await page.locator('.desktop-modules-button').click();
+    const menu = page.locator('.desktop-module-menu');
+    await menu.locator('input[type="search"]').fill('AYA çalışma asistanı');
+    await menu.locator(caseAya).click();
+    await page.waitForURL('**/ai?module=cases');
+
+    const chat = page.locator('.aya-conversation-shell');
+    const send = chat.locator('.aya-chat-composer button[type="submit"]');
+    await chat.locator('.aya-status--model').waitFor();
+    assert.match(await chat.locator('.aya-title-row p').textContent(), /Modül bağlamı.*Vakalar/);
+    assert.equal(await chat.locator('.aya-chat-header a').first().getAttribute('href'),'/cases');
+    await chat.locator('#aya-local-message').fill('Bu modülde yeni bir iş kaydını nasıl açarım?');
+    await send.click();
+    await chat.locator('.aya-message--assistant').waitFor();
+    await page.waitForFunction(() => window.ayaModuleFixtureCalls.some(call => call.task === 'memory'));
+    const calls = await page.evaluate(() => window.ayaModuleFixtureCalls);
+    assert.equal(calls[0].moduleId,'cases');
+    assert.equal(calls[0].agent,false);
+    assert.equal(calls.find(call => call.task === 'memory').moduleId,undefined);
+    assert.ok(!JSON.stringify(calls).includes(ids.case),'The case record identifier never enters AYA IPC');
+    assert.doesNotMatch(JSON.stringify(calls),/PRIVATE_QUERY|DESKTOP-ONLY-001/);
+
+    await chat.getByRole('button',{name:'Sohbet ayarları',exact:true}).click();
+    await chat.getByRole('button',{name:'Yerel yanıtı test et',exact:true}).click();
+    await chat.locator('.aya-diagnostic-result').waitFor();
+    assert.equal(await page.evaluate(() => window.ayaModuleFixtureCalls.at(-1).moduleId),undefined,'Model diagnostics omit the source module');
+    await chat.getByRole('link',{name:'Genel AYA',exact:true}).click();
+    await page.waitForURL('**/ai');
+    await chat.locator('.aya-chat-header a[href="/workspace"]').waitFor();
+
+    await ready(page, '/patients');
+    await page.locator('[data-dentaya-launcher]').waitFor();
+    await page.keyboard.press('Control+k');
+    const launcher = page.getByRole('dialog',{name:'DentAYA hızlı navigasyon',exact:true});
+    await launcher.getByRole('combobox').fill('AYA Copilot');
+    await launcher.getByRole('option',{name:/AYA Copilot/}).click();
+    await page.waitForURL('**/ai?module=patients');
+    await chat.locator('.aya-chat-header a[href="/patients"]').waitFor();
+
+    await page.goto(`${base}/ai?module=patients&module=appointments`);
+    await chat.locator('.aya-chat-header a[href="/workspace"]').waitFor();
+    assert.equal(await chat.getByRole('link',{name:'Genel AYA',exact:true}).count(),0,'An ambiguous module URL opens the general chat');
+    checks.push('contextual AYA tab, dock, folder and Ctrl+K, canonical module only at synthetic desktop IPC, no patient/case identifiers, diagnostic and memory isolation, ambiguous module fallback');
+  } finally {
+    await context.close();
+  }
 }
 
 async function keyboardAndPreferences(page) {
@@ -543,6 +613,7 @@ try {
   await installFixture(cadContext, true, { organizationType: 'laboratory', emptyCases: true });
   await cadFolderNavigation(cadContext);
   await cadContext.close();
+  await contextualAyaNavigation();
   debugPage = page;
 
   const submissions = interceptedWrites.filter(write => !(

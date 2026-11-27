@@ -2,6 +2,8 @@ name: Verified Windows desktop release
 
 on:
   push:
+    branches:
+      - 'codex/rc62-guncel-kaynak'
     tags:
       - 'v1.0.0-rc.*'
   workflow_dispatch:
@@ -67,6 +69,17 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           node scripts/verify-windows-ci-source.mjs --commit $env:GITHUB_SHA --ref $env:GITHUB_REF
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Summarize exact-source Windows verification
+        shell: pwsh
+        run: |
+          $receipt = Get-Content ci-artifacts/windows-release/windows-build-receipt.json -Raw | ConvertFrom-Json
+          @(
+            '## Windows installer'
+            "Source: $($receipt.commit)"
+            "Installer: $($receipt.installer.bytes) bytes, SHA-256 $($receipt.installer.sha256)"
+            "Extracted Electron architecture: $('0x{0:X4}' -f $receipt.executable.machine)"
+            "Fresh-profile routes: $($receipt.desktopSmoke.routes -join ', ')"
+          ) | Add-Content $env:GITHUB_STEP_SUMMARY
       - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: verified-windows-installer
@@ -117,6 +130,35 @@ jobs:
           New-Item -ItemType Directory -Force ci-artifacts/native | Out-Null
           node -e "const fs=require('node:fs');fs.writeFileSync('ci-artifacts/native/source-provenance.json',JSON.stringify({commit:process.env.GITHUB_SHA,version:require('./package.json').version,runId:process.env.GITHUB_RUN_ID,runAttempt:process.env.GITHUB_RUN_ATTEMPT,job:'windows-native'},null,2)+'\n')"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Summarize exact-source native AYA evidence
+        if: always()
+        shell: pwsh
+        run: |
+          $path = 'ci-artifacts/native/windows-native-result.json'
+          if (-not (Test-Path $path)) { 'Native report unavailable.' | Add-Content $env:GITHUB_STEP_SUMMARY; exit 0 }
+          $status = Get-Content $path -Raw | ConvertFrom-Json
+          $native = Get-Content ci-artifacts/native/native-inference-report.json -Raw | ConvertFrom-Json
+          $failed = @($native.semanticReview.signals | Where-Object { $_.pass -eq $false } | ForEach-Object { $_.id })
+          @(
+            '## Native AYA'
+            "Source: $env:GITHUB_SHA"
+            "Result: $($status.status) $($status.error)"
+            "Actual inference observed: $($status.nativeInferenceObserved)"
+            "Base cases: $($status.casesSucceeded)/$($status.casesAttempted)"
+            "Module cases: $($native.moduleCases.succeeded)/$($native.moduleCases.attempted)"
+            "Cancellation and restart: $($native.runtimeChecks.passed)"
+            "Runner RAM: $($native.hardware.memoryBytes) bytes"
+            "Failed behavior signals: $($failed -join ', ')"
+            'Review the synthetic responses for semantic quality.'
+            '<details><summary>Synthetic responses</summary>'
+          ) | Add-Content $env:GITHUB_STEP_SUMMARY
+          foreach ($check in $native.checks) {
+            $content = [string]$check.reply.output
+            if ($content.Length -gt 2000) { $content = $content.Substring(0, 2000) + ' [shortened]' }
+            $content = [System.Net.WebUtility]::HtmlEncode($content)
+            "<h4>$($check.name)</h4><pre>$content</pre>" | Add-Content $env:GITHUB_STEP_SUMMARY
+          }
+          '</details>' | Add-Content $env:GITHUB_STEP_SUMMARY
       - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         if: always()
         with:

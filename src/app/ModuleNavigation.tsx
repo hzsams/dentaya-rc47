@@ -6,6 +6,7 @@ import Link from "@/lib/i18n/UiLink";
 import DentayaIcon from './DentayaIcon';
 import { filterModuleTree, isCurrentModule, MODULE_TREE, moduleAncestorIds, moduleFolderIds, type ModuleNode } from '@/lib/module-navigation';
 import { moduleNavigationText } from '@/lib/i18n/module-navigation';
+import { ayaHrefFromPathname } from '@/lib/aya-module-navigation';
 
 export default function ModuleNavigation({ pathname }: { pathname: string }) {
   const { t: uiText, locale } = useTranslation();
@@ -59,7 +60,7 @@ export default function ModuleNavigation({ pathname }: { pathname: string }) {
   }
   function render(nodes: ModuleNode[], parent?: string) {
     return nodes.map(node => {
-      if (node.kind === 'module') return <UiNode as="li" key={node.href}><Link className="desktop-module-leaf" data-module-control="" data-parent-folder={parent} href={node.href} aria-current={isCurrentModule(pathname, node.href) ? 'page' : undefined} translateChildren={false}><DentayaIcon name={node.icon} size={17}/><UiNode as="span" translateChildren={false}>{label(node)}</UiNode></Link></UiNode>;
+      if (node.kind === 'module') return <UiNode as="li" key={node.href}><Link className="desktop-module-leaf" data-module-control="" data-parent-folder={parent} href={node.href === '/ai' ? ayaHrefFromPathname(pathname) : node.href} aria-current={isCurrentModule(pathname, node.href) ? 'page' : undefined} translateChildren={false}><DentayaIcon name={node.icon} size={17}/><UiNode as="span" translateChildren={false}>{label(node)}</UiNode></Link></UiNode>;
       const open = openFolders.has(node.id), childrenId = `${id}-${node.id.replaceAll('/', '-')}`;
       return <UiNode as="li" key={node.id} className={node.label === 'system' ? 'module-system-tools' : undefined}>
         <UiNode as="button" type="button" className="desktop-module-folder" data-module-control="" data-folder-id={node.id} data-parent-folder={parent} aria-expanded={open} aria-controls={childrenId} onClick={() => toggle(node.id)} translateChildren={false}>

@@ -10,7 +10,8 @@ import {Suspense} from 'react';
 import AyaChat from './AyaChat';
 
 function ModuleAwareChat() {
-    const sourceModule = ayaModuleFromParam(useSearchParams().get('module'));
+    const moduleIds = useSearchParams().getAll('module');
+    const sourceModule = ayaModuleFromParam(moduleIds.length === 1 ? moduleIds[0] : null);
     return <AyaChat key={sourceModule?.id ?? 'general'} sourceModule={sourceModule} />;
 }
 

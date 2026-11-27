@@ -4,6 +4,7 @@ import {useTranslation} from '@/lib/i18n';
 import UiNode from "@/lib/i18n/UiNode";
 import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties, } from "react";
 import { launcherRegistry } from '@/lib/launcher-ownership';
+import { ayaHrefFromPathname } from '@/lib/aya-module-navigation';
 import { professionalShellText } from '@/lib/i18n/professional-shell';
 import { usePathname, useRouter } from "next/navigation";
 import { dy } from "@/app/dentaya-theme";
@@ -116,9 +117,10 @@ export default function WorkspaceLauncher() {
     const activeIndex = Math.min(selectedIndex, Math.max(0, filtered.length - 1));
     useEffect(() => { if (open) document.getElementById(ownerId+'-result-'+activeIndex)?.scrollIntoView({block:'nearest'}); }, [open,activeIndex,ownerId]);
     function go(href: string) {
-        if (!window.dispatchEvent(new CustomEvent('dentaya:before-navigation', { cancelable: true, detail: { href } }))) return;
+        const destination = href === '/ai' ? ayaHrefFromPathname(pathname) : href;
+        if (!window.dispatchEvent(new CustomEvent('dentaya:before-navigation', { cancelable: true, detail: { href: destination } }))) return;
         setOpen(false);
-        router.push(href);
+        router.push(destination);
     }
     if (!isOwner || !org || pathname === "/design" || pathname === "/cad" || pathname === "/ai")
         return null;

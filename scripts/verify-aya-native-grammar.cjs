@@ -4,6 +4,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=r
 const {execFileSync,spawnSync}=require('node:child_process');
 const {parseArgs}=require('node:util');
 const {responseSchema}=require('../electron/aya/agent.cjs');
+const {memoryTaskSchema}=require('../electron/aya/memory-task.cjs');
 const {values}=parseArgs({options:{'engine-dir':{type:'string'},'json-header':{type:'string'},report:{type:'string'},cxx:{type:'string'},help:{type:'boolean'}}});
 if(values.help){console.log('node scripts/verify-aya-native-grammar.cjs --engine-dir /external/llama-b9380 --json-header /external/json.hpp [--report /external/grammar-report.json]\nRequires Linux x64 official b9380 CPU libraries and g++. Model weights are unnecessary; no download or inference occurs. Header: https://raw.githubusercontent.com/ggml-org/llama.cpp/b9380/vendor/nlohmann/json.hpp');process.exit(0);}
 if(!values['engine-dir']||!values['json-header']){console.error('Provide --engine-dir and --json-header. Use --help for details.');process.exit(2);}
@@ -51,6 +52,8 @@ int main(int argc,char**argv){try{
   // b9380 emits optional properties after required ones, even when schema properties interleave them.
   const withMemoryMode=memoryUpdate=>({...base,memoryUpdate});
   const withCadActions=actions=>({answer:base.answer,actions});
+  const keep={operation:'keep'};
+  const memory={answer:'Memory updated',goal:keep,decisions:keep,openQuestions:keep,actions:[]};
   const suite=[
    {name:'agent-no-cad',schema:responseSchema(null),checks:[
     {name:'empty-actions',value:base,accept:true},
@@ -64,6 +67,16 @@ int main(int argc,char**argv){try{
     {name:'unknown-top-level-field',value:{...base,shell:'ls'},accept:false},
     {name:'missing-required-actions',value:{answer:base.answer,goal:base.goal,decisions:[],openQuestions:[]},accept:false},
     {name:'empty-answer',value:{...base,answer:''},accept:false}
+   ]},
+   {name:'memory-task',schema:memoryTaskSchema(),checks:[
+    {name:'keep-all',value:memory,accept:true},
+    {name:'set-goal-with-value',value:{...memory,goal:{operation:'set',value:'Review unit 46'}},accept:true},
+    {name:'clear-goal-only',value:{...memory,goal:{operation:'clear'}},accept:true},
+    {name:'replace-list',value:{...memory,decisions:{operation:'replace',values:['Keep contour']}},accept:true},
+    {name:'keep-with-value-rejected',value:{...memory,goal:{operation:'keep',value:'Contradiction'}},accept:false},
+    {name:'set-without-value-rejected',value:{...memory,goal:{operation:'set'}},accept:false},
+    {name:'keep-with-list-rejected',value:{...memory,decisions:{operation:'keep',values:[]}},accept:false},
+    {name:'action-rejected',value:{...memory,actions:['inspect']},accept:false}
    ]},
    {name:'agent-cad',schema:responseSchema({availableTools:['inspect','undo','flashlight-on']}),checks:[
     {name:'empty-actions',value:withCadActions([]),accept:true},

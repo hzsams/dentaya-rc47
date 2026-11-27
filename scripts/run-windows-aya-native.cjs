@@ -34,7 +34,7 @@ function runNative({engine,model,report,timeoutMs}){
 }
 function checkNativeReport(report,exitCode){
  const counts=report?.caseCounts;
- return exitCode===0&&report?.contractPass===true&&report?.nativeInference===true&&report?.mock===false&&report?.model?.verified===true&&report.model.bytes===MODEL.bytes&&report.model.sha256===MODEL.sha256&&report?.semanticReviewRequired===true&&counts?.attempted===9&&counts?.succeeded===9&&counts.conversation?.succeeded===5&&counts.memory?.succeeded===2&&counts.cad?.succeeded===2&&Number.isSafeInteger(counts.conversation.streamedUpdates)&&counts.conversation.streamedUpdates>0;
+ return exitCode===0&&report?.contractPass===true&&report?.nativeInference===true&&report?.mock===false&&report?.model?.verified===true&&report.model.bytes===MODEL.bytes&&report.model.sha256===MODEL.sha256&&report?.semanticReviewRequired===true&&counts?.attempted===9&&counts?.succeeded===9&&counts.conversation?.succeeded===5&&counts.memory?.succeeded===2&&counts.cad?.succeeded===2&&report.moduleCases?.attempted===2&&report.moduleCases?.succeeded===2&&report.runtimeChecks?.passed===true&&report.runtimeChecks?.cancelledAfterFirstToken===true&&report.runtimeChecks?.restarted===true&&Number.isSafeInteger(counts.conversation.streamedUpdates)&&counts.conversation.streamedUpdates>0;
 }
 async function runWindowsAcceptance(input={},deps={}){
  const platform=deps.platform??process.platform,output=path.resolve(input.output||path.join('ci-artifacts','native'));
@@ -77,7 +77,7 @@ async function runWindowsAcceptance(input={},deps={}){
   result.checkerExitCode=processResult.exitCode;
   result.casesAttempted=native?.caseCounts?.attempted??0;result.casesSucceeded=native?.caseCounts?.succeeded??0;
   result.nativeInferenceObserved=trusted&&native?.nativeInference===true;
-  if(!checkNativeReport(native,processResult.exitCode))throw Error(processResult.timedOut?'NATIVE_ACCEPTANCE_TIMEOUT':processResult.error||'NATIVE_CONTRACT_FAILED');
+  if(!checkNativeReport(native,processResult.exitCode))throw Error(processResult.timedOut?'NATIVE_ACCEPTANCE_TIMEOUT':processResult.error||native?.error||'NATIVE_CONTRACT_FAILED');
   result.status='passed';
  }catch(error){result.error=safeCode(error?.message);result.status=['WINDOWS_REQUIRED','AYA_DOWNLOAD_FAILED','AYA_DOWNLOAD_TIMEOUT','AYA_DOWNLOAD_HOST','AYA_DOWNLOAD_REDIRECT'].includes(result.error)?'blocked':'failed';}
  finally{
@@ -95,6 +95,6 @@ async function runWindowsAcceptance(input={},deps={}){
 module.exports={runWindowsAcceptance,checkNativeReport};
 if(require.main===module){
  const {values}=parseArgs({options:{output:{type:'string'},help:{type:'boolean'}}});
- if(values.help){console.log('node scripts/run-windows-aya-native.cjs --output ci-artifacts/native\nWindows CI only: downloads the existing pinned/hash-verified engine+model into a temporary folder, runs 9 real conversation/memory/CAD fixture calls, and removes weights. Reports never claim completed semantic or clinical acceptance.');}
+ if(values.help){console.log('node scripts/run-windows-aya-native.cjs --output ci-artifacts/native\nWindows CI only: downloads the existing pinned/hash-verified engine+model into a temporary folder, runs real conversation/memory/CAD, module-context, cancellation and restart checks, and removes weights. Reports never claim completed semantic or clinical acceptance.');}
  else runWindowsAcceptance({output:values.output,onProgress:p=>console.log(JSON.stringify({stage:p.stage,completed:p.completed,total:p.total}))}).then(result=>{console.log(JSON.stringify(result,null,2));if(result.status!=='passed')process.exitCode=1;}).catch(()=>{console.error('NATIVE_ACCEPTANCE_FAILED');process.exitCode=1;});
 }

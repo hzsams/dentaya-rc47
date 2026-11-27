@@ -1,9 +1,9 @@
 {
-  "patients": "Find or create a patient record. From the patient card, open their cases or scans, or start a new scan.",
-  "cases": "Find a case in the clinic or laboratory queue. Case details connect scans, design, messages, finance and delivery. Creating a clinic case requires a patient and a laboratory.",
-  "appointments": "Use the clinic calendar to select a day and add or update an appointment. Check the patient, date and time before saving. Existing appointments can be downloaded to a calendar file.",
+  "patients": "Find a patient or open '+ Yeni Hasta' in the Turkish UI to create a record. From the patient card, open their cases or scans, or choose 'Yeni Tarama' to start a scan.",
+  "cases": "Find a case in the clinic or laboratory queue. Case details connect scans, design, messages, finance and delivery. In a clinic choose 'Yeni Vaka' in the Turkish UI and select a patient and a laboratory.",
+  "appointments": "In the clinic calendar select a day and choose '+ Randevu Ekle' in the Turkish UI. Verify the patient, date and time before 'Randevuyu Kaydet'. Use 'Takvime indir' to export an existing appointment to a calendar file.",
   "scans": "Find saved scans and open a scan in Scan Studio. Review the linked patient and case before using a scan for design.",
-  "scan-studio": "Inspect a scan model and associate the scan with the relevant patient or case. Confirm model orientation, jaw and units before continuing to design.",
+  "scan-studio": "Inspect a scan model and associate it with the relevant patient or case. Confirm orientation, jaw and units before using the Turkish UI's 'Taramayı Kaydet ve CAD'e Aç' option for an eligible scan.",
   "clinic": "Use the clinic hub to open patients, cases, appointments and scan tools. Open the destination module to review its current records.",
   "cad-library": "Manage personal CAD forms. Open DentAYA Design to place a form into an active design.",
   "labs": "Find laboratory connections and review the intended laboratory before assigning a clinic case.",

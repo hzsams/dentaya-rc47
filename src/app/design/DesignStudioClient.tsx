@@ -385,11 +385,17 @@ export default function DesignStudioClient() {
     const saveDialogRef=useRef<HTMLDialogElement>(null);
     useEffect(()=>{const dialog=saveDialogRef.current;if(!dialog)return;if(exiting||exitFailure||submitting||contextLoading){if(!dialog.open)dialog.showModal();}else if(dialog.open)dialog.close();},[exiting,exitFailure,submitting,contextLoading]);
     const [localRecoverySavedAt, setLocalRecoverySavedAt] = useState<number | null>(null);
+    const [localRecoveryCheckpoint,setLocalRecoveryCheckpoint]=useState<{key:string;savedAt:number;revision:object|null}|null>(null);
     const selectedCase = useMemo(() => cases.find((item) => item.id === selectedCaseId) ?? null, [cases, selectedCaseId]);
     const jobSetup = settings.job_setup;
     const activeJobUnit = activeCadUnit(jobSetup);
     const recoveryKey = useMemo(() => project?.id && sourceKey ? makeCadRecoveryKey(project.id, sourceKey) : "", [project?.id, sourceKey]);
     const saveFailureScope=JSON.stringify([user?.id,org?.id,project?.id,sourceKey,activeJobUnit?.id]);
+    // Keep a small identity for the exact editable revision, including a leave-and-return to the same unit.
+    const recoveryRevision=useMemo(()=>({
+        scope:saveFailureScope,settings,marginPoints,measurements,geometryRevision,
+        stage:project?.workflow_stage,status:project?.status,
+    }),[saveFailureScope,settings,marginPoints,measurements,geometryRevision,project?.workflow_stage,project?.status]);
     useLayoutEffect(()=>{
         const owner={scope:saveFailureScope,generation:saveFailureOwner.current.generation+1,active:true};
         saveFailureOwner.current=owner;
@@ -464,8 +470,18 @@ export default function DesignStudioClient() {
         if (previous.tool !== tool || previous.stage !== activeStepId)
             animateExperienceSurface(document.querySelector<HTMLElement>('.cad-viewport-toolbar'));
     }, [tool, viewMode, activeStepId, project?.id]);
-    const saveStateRef=useRef({project,user,selectedCase,settings,marginPoints,measurements,activeSource,sourceKey,panelTab,workspaceMode,recoveryKey,contextLoading,recoveryLookupReady,recoveryDecisionPending});
-    saveStateRef.current={project,user,selectedCase,settings,marginPoints,measurements,activeSource,sourceKey,panelTab,workspaceMode,recoveryKey,contextLoading,recoveryLookupReady,recoveryDecisionPending};
+    const saveStateRef=useRef({project,user,selectedCase,settings,marginPoints,measurements,activeSource,sourceKey,panelTab,workspaceMode,recoveryKey,recoveryRevision,contextLoading,recoveryLookupReady,recoveryDecisionPending});
+    saveStateRef.current={project,user,selectedCase,settings,marginPoints,measurements,activeSource,sourceKey,panelTab,workspaceMode,recoveryKey,recoveryRevision,contextLoading,recoveryLookupReady,recoveryDecisionPending};
+    const persistRecoveryCheckpoint=useCallback(async(draft:CadRecoveryDraft,revision:object)=>{
+        if(saveStateRef.current.recoveryRevision!==revision)return false;
+        await saveCadRecoveryDraft(draft);
+        const current=saveStateRef.current;
+        if(current.recoveryKey===draft.key&&current.recoveryRevision===revision){
+            setLocalRecoverySavedAt(draft.savedAt);
+            setLocalRecoveryCheckpoint({key:draft.key,savedAt:draft.savedAt,revision:draft.workspace.designSnapshot?revision:null});
+        }
+        return current.recoveryKey===draft.key&&current.recoveryRevision===revision;
+    },[]);
     useEffect(()=>{dirtyRevisionRef.current++;setHasUnsavedChanges(true);},[settings,marginPoints,measurements,geometryRevision,sourceKey,project?.workflow_stage,project?.status]);
     useEffect(()=>{const guard=(event:BeforeUnloadEvent)=>{if(saveStateRef.current.project&&dirtyRevisionRef.current!==cleanRevisionRef.current){event.preventDefault();event.returnValue='';}};window.addEventListener('beforeunload',guard);return()=>window.removeEventListener('beforeunload',guard);},[]);
     const gates = useMemo(() => ({
@@ -783,6 +799,7 @@ export default function DesignStudioClient() {
         setRecoveryDecisionPending(false);
         setRecoveryLookupKey(null);
         setLocalRecoverySavedAt(null);
+        setLocalRecoveryCheckpoint(null);
         if (!recoveryKey || !recoveryProject?.id || !sourceKey) {
             setRecoveryLookupKey(recoveryKey);
             return () => {
@@ -830,7 +847,7 @@ export default function DesignStudioClient() {
             if (!geometry?.length)
                 return;
             const savedAt = Date.now();
-            void saveCadRecoveryDraft({
+            void persistRecoveryCheckpoint({
                 key: recoveryKey,
                 projectId: project.id,
                 sourceKey,
@@ -844,9 +861,7 @@ export default function DesignStudioClient() {
                     workflowStage: project.workflow_stage,
                     projectStatus: project.status,
                 },
-            }).then(() => {
-                setLocalRecoverySavedAt(savedAt);
-            }).catch(() => {
+            },recoveryRevision).catch(() => {
                 // Local recovery is best-effort and must never block CAD editing.
             });
         }, 650);
@@ -859,10 +874,12 @@ export default function DesignStudioClient() {
         geometryRevision,
         marginPoints,
         measurements,
+        persistRecoveryCheckpoint,
         project,
         recoveryDecisionPending,
         recoveryKey,
         recoveryLookupReady,
+        recoveryRevision,
         settings,
         sourceKey,
     ]);
@@ -1090,22 +1107,24 @@ export default function DesignStudioClient() {
             if(state.recoveryDecisionPending){setStatus('Kurtarma kaydı bulundu');document.querySelector<HTMLElement>('.cad-recovery-notice button')?.focus();return false;}
             if(!state.project||!state.user||!state.selectedCase||state.contextLoading||state.project.id!==requestedProject||state.project.case_id!==state.selectedCase.id)return false;
             const workspace=viewportRef.current?.captureWorkspace();if(state.activeSource&&!workspace){setStatus('Modelin yüklenmesini bekleyin.');return false;}
+            const geometry=workspace?viewportRef.current?.captureRecoveryGeometry():null;
             const revision=dirtyRevisionRef.current,owner=saveFailureOwner.current;setSaving(true);localExitReadyRef.current=false;
             if(showMessage)setStatus('Kaydediliyor…');
             try {
                 const record=workspace?await encodeCadWorkspace(workspace):state.settings.cad_workspace;
                 const payloadSettings={...state.settings,cad_workspace:record,guided_task:state.workspaceMode==='wizard'?state.panelTab:state.settings.guided_task};
-                const geometry=viewportRef.current?.captureRecoveryGeometry();
-                if(state.recoveryKey&&geometry&&record&&workspace){
-                    try { await saveCadRecoveryDraft({key:state.recoveryKey,projectId:state.project.id,sourceKey:state.sourceKey,savedAt:record.savedAt,geometry,workspace:{settings:payloadSettings,marginPoints:state.marginPoints,measurements:state.measurements,designSnapshot:workspace,workflowStage:state.project.workflow_stage,projectStatus:state.project.status}});
-                    localExitReadyRef.current=true;setLocalRecoverySavedAt(record.savedAt); } catch { localExitReadyRef.current=false; }
+                if(state.recoveryKey&&geometry?.length&&record&&workspace){
+                    try { localExitReadyRef.current=await persistRecoveryCheckpoint({key:state.recoveryKey,projectId:state.project.id,sourceKey:state.sourceKey,savedAt:record.savedAt,geometry,workspace:{settings:payloadSettings,marginPoints:state.marginPoints,measurements:state.measurements,designSnapshot:workspace,workflowStage:state.project.workflow_stage,projectStatus:state.project.status}},state.recoveryRevision); }
+                    catch { localExitReadyRef.current=false; }
                 }
                 const {data,error}=await supabase.from('design_projects').update({source_scan_id:state.activeSource?.scanId??null,settings:payloadSettings,margin_points:state.marginPoints,measurements:state.measurements,workflow_stage:state.project.workflow_stage,status:state.project.status,restoration_type:state.selectedCase.case_type,tooth_codes:state.settings.job_setup.units.map(u=>u.tooth_code),material:state.selectedCase.material,shade:state.selectedCase.shade,updated_by:state.user.id}).eq('id',state.project.id).eq('updated_at',savedVersionRef.current.get(state.project.id)??state.project.updated_at).select('id,case_id,lab_org_id,source_scan_id,title,restoration_type,tooth_codes,material,shade,workflow_stage,status,settings,margin_points,measurements,updated_at').abortSignal(AbortSignal.timeout(20000)).single();
                 if(error||!data)throw error??Error('CAD_SAVE_FAILED');
                 if(owner.active&&saveFailureOwner.current===owner)setSaveFailure(null);
                 savedVersionRef.current.set(state.project.id,data.updated_at);
                 savedSettingsRef.current={projectId:state.project.id,settings:payloadSettings};
-                if(state.recoveryKey&&record)await acknowledgeCadRecoveryDraft(state.recoveryKey,record.savedAt).catch(()=>undefined);
+                if(state.recoveryKey&&record)await acknowledgeCadRecoveryDraft(state.recoveryKey,record.savedAt).then(()=>{
+                    setLocalRecoveryCheckpoint(current=>current?.key===state.recoveryKey&&current.savedAt<=record.savedAt?null:current);
+                }).catch(()=>undefined);
                 setProject(current=>current?.id===state.project!.id?{...current,updated_at:data.updated_at,settings:payloadSettings}:current);
                 if(revision===dirtyRevisionRef.current){cleanRevisionRef.current=revision;setHasUnsavedChanges(false);localExitReadyRef.current=false;setLocalRecoverySavedAt(null);}
                 if(showMessage){setStatus('CAD projesi kaydedildi.');playExperienceCue('complete');}
@@ -1414,6 +1433,7 @@ export default function DesignStudioClient() {
         setRecoveryCandidate(null);
         try {
             await deleteCadRecoveryDraft(key);
+            setLocalRecoveryCheckpoint(current=>current?.key===key?null:current);
             setLocalRecoverySavedAt(null);
             setStatus("Eski yerel kurtarma kaydı silindi. Mevcut çalışma korunuyor.");
         }
@@ -1748,15 +1768,16 @@ export default function DesignStudioClient() {
     const kernelReport=kernelReportToken===cadStateToken([qcBaseToken,geometryRevision])&&cadReady&&!contextLoading&&recoveryLookupReady&&!recoveryDecisionPending?storedKernelReport:null;
     const currentAyaReport=kernelReport?summarizeAyaReport(kernelReport,ayaDataToken,sceneState.antagonistReady,settings.minimum_thickness_mm):null;
     const inspectionContext=normalizeCadInspection(settings);
+    const localRecoveryReady=hasUnsavedChanges&&!contextLoading&&recoveryLookupReady&&!recoveryDecisionPending&&localRecoveryCheckpoint?.key===recoveryKey&&localRecoveryCheckpoint.revision===recoveryRevision;
     const ayaContext:AyaCadContext={
         sectionToken:ayaSectionKey,section:currentSection,
         inspectionFlashlight:inspectionContext.inspection_flashlight,inspectionFlashlightTarget:inspectionContext.inspection_flashlight_target,
-        scope:ayaScope,dataToken:ayaDataToken,snapshot:cadStateToken([ayaDataToken,ayaEpoch,activeStepId,panelTab,tool,viewMode,historyState,saving,exiting,submitting,contextLoading,cadReady,sceneState,currentSection,currentAyaReport,exitFailure,currentSaveFailure]),
+        scope:ayaScope,dataToken:ayaDataToken,snapshot:cadStateToken([ayaDataToken,ayaEpoch,activeStepId,panelTab,tool,viewMode,historyState,saving,exiting,submitting,contextLoading,cadReady,sceneState,currentSection,currentAyaReport,exitFailure,currentSaveFailure,localRecoveryReady]),
         unit:activeJobUnit?.tooth_code??'',restoration:activeJobUnit?cadRestorationLabel(activeJobUnit.design_type):'',
         stage:activeStepId,task:panelTab,upperReady:sceneState.upperReady,lowerReady:sceneState.lowerReady,antagonistReady:sceneState.antagonistReady,openingMm:sceneState.openingMm,
         setupComplete:jobSetup.complete,sourceReady:Boolean(activeSource),modelReady:cadReady&&!contextLoading&&recoveryLookupReady&&!recoveryDecisionPending,
         marginPoints:marginPoints.length,placed:viewportRef.current?.hasMarginPlacement()??false,visible:sceneState.activeVisible,
-        unsaved:dirtyRevisionRef.current!==cleanRevisionRef.current,saveFailed:exitFailure||currentSaveFailure,isSaving:saving||exiting||submitting||contextLoading,
+        unsaved:dirtyRevisionRef.current!==cleanRevisionRef.current,saveFailed:exitFailure||currentSaveFailure,localRecoveryReady,isSaving:saving||exiting||submitting||contextLoading,
         material:activeJobUnit?.material??project?.material??'',tool,view:viewMode,undoCount:historyState.undoCount,redoCount:historyState.redoCount,
         measurementsMm:measurements.map(m=>m.distance).slice(-8),designSettings:{cementGapMm:settings.cement_gap_mm,minimumThicknessMm:settings.minimum_thickness_mm,brushRadiusMm:settings.brush_radius_mm},
         report:currentAyaReport

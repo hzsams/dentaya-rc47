@@ -393,6 +393,12 @@ try {
  await page.waitForFunction(()=>document.querySelector('[data-aya-fact=save]')?.getAttribute('data-state')==='failed');
  assert.equal(await liveFact('report').getAttribute('data-state'),'missing','A real mesh edit invalidates the visible QC status');
  assert.match(await liveFact('save').textContent(),/kaydedilemedi/,'The failed host write stays explicit before local recovery/exit');
+ await page.evaluate(()=>{window.rc47CadModel.ready=true;window.dispatchEvent(new Event('focus'));});
+ await aya.getByRole('combobox',{name:'Kurulu yerel model',exact:true}).waitFor();
+ await ask('Kaydedilemeyen bu değişikliği yerelde kurtarabilir miyim?');
+ const recoveryContext=await page.evaluate(()=>window.rc47CadModel.calls.at(-1).cadContext);
+ assert.equal(recoveryContext.saveFailed,true);
+ assert.equal(normalizeWorkspace(recoveryContext).localRecoveryReady,true,'Only committed recovery for the still-dirty scene is sent to AYA');
  if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC62_CAD_Host_Save_Failure.png'),animations:'disabled',timeout:15000});}
  await aya.getByRole('button',{name:'Kapat',exact:true}).click();
  await page.locator('.cad-main-header').getByRole('button',{name:'Kaydet ve çık',exact:true}).click();await modal.waitFor();await modal.getByRole('button',{name:'Yerel kaydet ve çık',exact:true}).waitFor();assert.ok(page.url().includes('/design'));

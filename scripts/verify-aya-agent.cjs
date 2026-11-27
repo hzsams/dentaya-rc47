@@ -16,6 +16,17 @@ function rejects(change,input={}){assert.throws(()=>parse({...plan,...change},in
  for(const patch of [{scope:'another-unit'},{snapshot:'old-state'},{dataToken:'old-geometry'},{scope:undefined}])assert.deepEqual(normalizeWorkspace({...cad,recentActions:[{...cad.recentActions[1],...patch}]}).recentActions,[],'Stale or unscoped action text cannot enter current model evidence');
  const oldSave={...provenance,tool:'save',ok:false,result:'Previous network failure'};
  assert.deepEqual(normalizeWorkspace({...cad,unsaved:false,saveFailed:false,recentActions:[oldSave]}).recentActions,[],'Live successful save state outranks even a matching old failure');
+ const failedWithCopy={...cad,unsaved:true,saveFailed:true,localRecoveryReady:true};
+ assert.equal(normalizeWorkspace(failedWithCopy).localRecoveryReady,true);
+ for(const missing of [{unsaved:false},{sourceReady:false},{modelReady:false},{dataToken:''}]){
+  assert.equal(normalizeWorkspace({...failedWithCopy,...missing}).localRecoveryReady,false);
+ }
+ assert.match(prepareAgent({cadContext:failedWithCopy}).instructions,/committed local recovery copy/);
+ assert.match(prepareAgent({cadContext:{...failedWithCopy,localRecoveryReady:false}}).instructions,/local recovery is unverified/);
+ const freshQc={...failedWithCopy,report:{dataToken:cad.dataToken,triangles:24},recentActions:[{...provenance,tool:'inspect',ok:true,result:'Fresh report'}]};
+ assert.match(prepareAgent({cadContext:freshQc}).instructions,/Inspect already succeeded on this geometry/);
+ assert.match(prepareAgent({cadContext:freshQc}).instructions,/Repeat inspect only if requested or if it can resolve a specific gap/);
+ assert.doesNotMatch(prepareAgent({cadContext:{...freshQc,snapshot:'different'}}).instructions,/Inspect already succeeded/);
  assert.equal(parse(plan).output,plan.answer);
  const input={cadContext:cad};
  const result=parse({...plan,actions:[{tool:'inspect',reason:'Ölçüm uydurmadan güncel rapor al.'},{tool:'inspect',reason:'Tekrar'}]},input);
