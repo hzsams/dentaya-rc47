@@ -46,8 +46,8 @@
     },
     {
       "path": ".github/workflows/windows-release.yml",
-      "size": 12280,
-      "sha256": "e74411ab3a3cb5fff5f142e191f8a3a70ea5ce4f66fee599883bcec29f619d68"
+      "size": 12333,
+      "sha256": "9abd6c8b5d5366cc8b3d4ca0f322d8a822c8b298e190d7c932fd444db092f4e7"
     },
     {
       "path": ".gitignore",
@@ -7576,8 +7576,8 @@
     },
     {
       "path": "scripts/verify-aya-native.cjs",
-      "size": 17959,
-      "sha256": "f29450601a4fcf14e5be09885fb29ba7625aaba190139ee2494d44ba16c7a06a"
+      "size": 17945,
+      "sha256": "5a92873355652b3d7ec4f0ceddb2ae59dfde44f66a8ca0f4c743f3e76a9d550f"
     },
     {
       "path": "scripts/verify-aya-natural-stream.cjs",

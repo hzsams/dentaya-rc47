@@ -128,7 +128,7 @@ async function hashFile(file){const hash=crypto.createHash('sha256');for await(c
    {name:'navigation-new-appointment-draft',prompt:'Yeni bir randevu başlatmak istiyorum. Hasta ve zamanı ben seçeceğim.',expected:'new-appointment-draft'},
   ];
   for(const {name,prompt,expected} of navigationCases){
-   const reply=await turn(name,prompt,{allowModuleActions:true,moduleId:'ai',history:[]},'navigation');
+   const reply=await turn(name,prompt,{allowModuleActions:true,history:[]},'navigation');
    result.semanticReview.signals.push({id:name,pass:reply.openModuleId===expected&&!reply.output.includes('[[AYA_OPEN_MODULE:')});
   }
 

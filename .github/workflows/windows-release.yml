@@ -13,7 +13,7 @@ permissions:
 
 concurrency:
   group: windows-release-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.ref == 'refs/heads/codex/rc62-guncel-kaynak' }}
 
 env:
   NEXT_TELEMETRY_DISABLED: '1'
