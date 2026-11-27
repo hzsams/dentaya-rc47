@@ -58,20 +58,32 @@ try {
   const cad=await page.evaluate(()=>JSON.parse(localStorage.getItem('dentaya:cad-workspace:v1')));assert.equal(cad.background,'theme');assert.equal(cad.rotateSpeed,1.4);assert.equal(cad.zoomSpeed,1.2);
   await page.getByRole('button',{name:'Tümünü Kaydet',exact:true}).click();await page.waitForFunction(()=>document.body.textContent.includes('kaydedildi'));
   assert.ok(writes.some(w=>w.table==='user_preferences'&&(Array.isArray(w.data)?w.data[0]:w.data).theme==='ocean'),'Save must use the current shared palette theme');
-  const options=await select().locator('option:not([disabled])').evaluateAll(nodes=>nodes.map(node=>node.value));assert.equal(options.length,72);
+  const options=await select().locator('option:not([disabled])').evaluateAll(nodes=>nodes.map(node=>node.value));assert.equal(options.length,77);assert.equal(new Set(options).size,77);
   for(const option of options){await select().selectOption(option);assert.equal(await select().inputValue(),option);const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('dentaya:customization-v1')));assert.equal(stored.appearancePreset,option);assert.deepEqual(await colors(),[stored.background,stored.panel,stored.accent].map(c=>c.toLowerCase()));}
-  for(const [group,id] of [['Studio','studio-graphite'],['Mineral','mineral-jade'],['Heritage','heritage-oxford'],['Contrast','contrast-ivory']]){await palette().locator('.appearance-collection-tabs').getByRole('button',{name:group,exact:true}).click();await palette().locator(`[data-palette-card="palette:${id}"]`).click();assert.equal(await select().inputValue(),'palette:'+id);}
   const referencePalettes=[
     ['reference-midnight',['#121747','#1a2154','#00b9f2']],
     ['reference-graphite',['#0c0d0e','#2d2e33','#10adb1']],
     ['reference-turquoise',['#082a30','#103d45','#16cdb8']],
     ['reference-coral',['#2b1621','#422433','#ff7198']],
   ];
+  const cityPalettes=[
+    ['palm-dusk',['#201b34','#352747','#ffaeaa']],
+    ['neon-shore',['#102832','#18414b','#ff91ca']],
+    ['dusty-boulevard',['#26241c','#373128','#eab972']],
+    ['metro-fog',['#171d25','#26323e','#b6c8dc']],
+    ['pacific-daylight',['#e1eae1','#f5faf2','#34634c'],'light'],
+  ];
+  const cityCards=()=>palette().getByRole('group',{name:'Şehir paletleri',exact:true});
+  assert.equal(await cityCards().getByRole('button').count(),cityPalettes.length);
+  for(const [id,expected] of cityPalettes){
+    const card=cityCards().locator(`[data-palette-card="palette:${id}"]`);
+    await card.click();assert.equal(await card.getAttribute('aria-pressed'),'true');assert.equal(await select().inputValue(),'palette:'+id);await expectColors(expected);
+  }
   const hexRgb=hex=>'rgb('+[1,3,5].map(offset=>parseInt(hex.slice(offset,offset+2),16)).join(', ')+')';
-  for(const [id,expected] of referencePalettes){
+  for(const [id,expected,family='dark'] of [...referencePalettes,...cityPalettes]){
     await select().selectOption('palette:'+id);await expectColors(expected);
     const rendered=await page.evaluate(()=>({background:getComputedStyle(document.body).backgroundColor,panel:getComputedStyle(document.querySelector('.appearance-palette:has(select)')).backgroundColor,text:document.documentElement.style.getPropertyValue('--dy-text'),accentText:document.documentElement.style.getPropertyValue('--dy-accent-contrast'),family:document.documentElement.dataset.dyColorFamily}));
-    assert.equal(rendered.background,hexRgb(expected[0]),'The actual application background follows the reference palette');assert.equal(rendered.panel,hexRgb(expected[1]));assert.equal(rendered.family,'dark');
+    assert.equal(rendered.background,hexRgb(expected[0]),'The actual application background follows the selected palette');assert.equal(rendered.panel,hexRgb(expected[1]));assert.equal(rendered.family,family);
     const luminance=hex=>{const c=[1,3,5].map(offset=>parseInt(hex.slice(offset,offset+2),16)/255).map(value=>value<=.04045?value/12.92:((value+.055)/1.055)**2.4);return c[0]*.2126+c[1]*.7152+c[2]*.0722;};
     const ratio=(a,b)=>{const x=luminance(a),y=luminance(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);};
     assert.ok(expected.slice(0,2).every(surface=>ratio(rendered.text,surface)>=4.5),'Body and panel text retain readable contrast');assert.ok(ratio(expected[2],expected[1])>=4.5,'Small accent labels remain readable');assert.ok(ratio(rendered.accentText,expected[2])>=4.5,'Accent buttons retain readable text');
@@ -83,19 +95,31 @@ try {
   await palette().locator('summary').click();await palette().getByLabel('Vurgu rengi',{exact:true}).evaluate(input=>{Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(input,'#aa55cc');input.dispatchEvent(new Event('input',{bubbles:true}));});
   await page.waitForFunction(()=>document.documentElement.style.getPropertyValue('--dy-accent')==='#aa55cc');assert.equal(await select().inputValue(),'custom');
   await palette().getByRole('button',{name:'Tema rengine dön',exact:true}).click();await expectColors(['#101215','#1c2026','#b9c6d7']);assert.equal(await select().inputValue(),'palette:carbon');
-  await page.locator('.desktop-titlebar-actions').getByRole('button',{name:'Görünüm ve tercihler',exact:true}).click();await page.locator('dialog[open] .appearance-palette select').selectOption('style:retro');await expectColors(['#e7dfcc','#fff5df','#8e3d25']);
+  await page.locator('.desktop-titlebar-actions').getByRole('button',{name:'Görünüm ve tercihler',exact:true}).click();
+  const quickPicker=page.locator('dialog[open] .appearance-palette');
+  await quickPicker.getByRole('button',{name:'Palm Dusk',exact:true}).click();await expectColors(cityPalettes[0][1]);
+  await quickPicker.locator('select').selectOption('style:retro');await expectColors(['#e7dfcc','#fff5df','#8e3d25']);
   await page.getByRole('button',{name:'Ayarları kapat',exact:true}).click();assert.equal(await select().inputValue(),'style:retro');
   await openSettings();assert.equal(await select().inputValue(),'style:retro');await expectColors(['#e7dfcc','#fff5df','#8e3d25']);
   const locales=['en','de','fr','es','it','pt','nl','pl','ro','ru','uk','ar','zh','ja','sv','da','el','cs','ko','bg','hr','et','fi','hu','ga','lv','lt','mt','sk','sl','no','is','sr','bs','sq','mk','az','ka','hy','he','fa','hi','bn','id','vi','tr'];
-  for(const locale of locales){await page.locator('.language-select--compact select').selectOption(locale);await page.waitForFunction(locale=>document.documentElement.lang===locale,locale);assert.equal(await select().inputValue(),'style:retro');await expectColors(['#e7dfcc','#fff5df','#8e3d25']);languages.push(locale);}
+  for(const locale of locales){await page.locator('.language-select--compact select').selectOption(locale);await page.waitForFunction(locale=>document.documentElement.lang===locale,locale);assert.equal(await select().inputValue(),'style:retro');await expectColors(['#e7dfcc','#fff5df','#8e3d25']);if(locale==='en')assert.equal(await palette().getByRole('group',{name:'City palettes',exact:true}).count(),1);languages.push(locale);}
   const download=page.waitForEvent('download');await page.locator('.customize-panel:visible').getByRole('button',{name:'Ek ayarları dışa aktar',exact:true}).click();const saved=JSON.parse(await fs.readFile(await (await download).path(),'utf8'));assert.equal(saved.version,2);assert.equal(saved.customization.appearancePreset,'style:retro');assert.ok(saved.theme);
   await page.getByRole('button',{name:'Görünümü Sıfırla',exact:true}).click();await expectColors(['#ebe9f0','#ffffff','#72568f']);
   await page.locator('.customize-panel:visible input[type=file]').setInputFiles({name:'palette.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(saved))});await expectColors(['#e7dfcc','#fff5df','#8e3d25']);assert.equal(await select().inputValue(),'style:retro');
   const old={version:1,logo:saved.logo,customization:{...saved.customization,appearancePreset:null,style:'old-money',background:'#ede9de',panel:'#faf7ef',accent:'#294e3d',font:'classic'}};
   await page.locator('.customize-panel:visible input[type=file]').setInputFiles({name:'old-palette.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(old))});await expectColors(['#ede9de','#faf7ef','#294e3d']);assert.equal(await select().inputValue(),'style:old-money');
   if(process.env.DENTAYA_SCREENSHOT_DIR){await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});await palette().screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'palette-desktop.png')});}
+  await page.setViewportSize({width:3840,height:2160});
+  await cityCards().getByRole('button',{name:'Palm Dusk',exact:true}).click();await expectColors(cityPalettes[0][1]);
+  assert.ok(await cityCards().evaluate(group=>{const bounds=group.getBoundingClientRect();return bounds.left>=0&&bounds.right<=innerWidth&&bounds.bottom<=innerHeight&&bounds.width<=64*parseFloat(getComputedStyle(document.documentElement).fontSize);}));
+  if(process.env.DENTAYA_SCREENSHOT_DIR){
+    await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'palette-city-4k.png'),animations:'disabled'});
+    await palette().screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'palette-city-detail.png'),animations:'disabled'});
+  }
   await page.setViewportSize({width:390,height:844});assert.ok(await palette().evaluate(n=>n.getBoundingClientRect().right<=innerWidth+1));assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   if(process.env.DENTAYA_SCREENSHOT_DIR)await palette().screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'palette-mobile.png')});
+  await cityCards().getByRole('button',{name:'Palm Dusk',exact:true}).click();await expectColors(cityPalettes[0][1]);
+  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   await select().selectOption('palette:reference-midnight');await expectColors(['#121747','#1a2154','#00b9f2']);
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   if(process.env.DENTAYA_SCREENSHOT_DIR)await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC57_Background_Midnight_Mobile.png'),animations:'disabled'});
@@ -104,5 +128,5 @@ try {
   if(process.env.DENTAYA_SCREENSHOT_DIR)await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC57_Background_Coral_Mobile.png'),animations:'disabled'});
   await openSettings();assert.equal(await select().inputValue(),'palette:reference-coral');await expectColors(['#2b1621','#422433','#ff7198']);
   assert.deepEqual(errors,[]);
-  console.log(JSON.stringify({pass:true,presetChoices:options.length,referencePalettes:4,actualGlobalReferenceBackgrounds:true,readableTextPanelAndAccentContrast:true,referencePaletteSaveAndReload:true,referencePalettesMobileFit:true,oneVisiblePalette:true,duplicateEditorsRemoved:true,settingsAndQuickPanelSynced:true,legacyAccentCannotLeak:true,reloadPreservesSelection:true,saveUsesCurrentPalette:true,customColorAndReset:true,appearanceExportVersion:2,version1Import:true,version2Import:true,cadFollowsPalette:true,cadCameraSpeedsPreserved:true,languages,mobileFits:true,backend:'mocked, no production data'},null,2));
+  console.log(JSON.stringify({pass:true,presetChoices:options.length,referencePalettes:referencePalettes.length,cityPalettes:cityPalettes.length,actualGlobalPaletteBackgrounds:true,readableTextPanelAndAccentContrast:true,paletteSaveAndReload:true,oneVisiblePalette:true,duplicateEditorsRemoved:true,settingsAndQuickPanelSynced:true,legacyAccentCannotLeak:true,reloadPreservesSelection:true,saveUsesCurrentPalette:true,customColorAndReset:true,appearanceExportVersion:2,version1Import:true,version2Import:true,cadFollowsPalette:true,cadCameraSpeedsPreserved:true,languages,paletteFits4K:true,mobileFits:true,backend:'mocked, no production data'},null,2));
 } catch(error){console.error(logs);throw error;} finally {await browser?.close();server?.kill('SIGTERM');}

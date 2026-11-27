@@ -16,7 +16,7 @@
   "ayaQuestionCatalogueActual": 1008,
   "dentalFactsTarget": 30000,
   "miniGamesActual": 5,
-  "appearanceOptionsActual": 72,
+  "appearanceOptionsActual": 77,
   "typedCadToolsActual": 27,
   "modelWeightsIncluded": false,
   "verification": "RC62_KONTROL_RAPORU.md",
@@ -7451,8 +7451,8 @@
     },
     {
       "path": "scripts/verify-appearance-browser.mjs",
-      "size": 15357,
-      "sha256": "a005813813fa4db0a02ed613c56a30855392a0033af4b0e9e50977105286ebf1"
+      "size": 17065,
+      "sha256": "93f94bc784d6eeb2c21f8c800cd65c467a894e871d9e86fc68bfb6c519f9d215"
     },
     {
       "path": "scripts/verify-appointment-planner.ts",
@@ -7726,8 +7726,8 @@
     },
     {
       "path": "scripts/verify-cad-restoration-browser.mjs",
-      "size": 24298,
-      "sha256": "69caa5108741cc13a86d579e505171729c10d89ceef1349f52a9ef39fdd82df9"
+      "size": 24841,
+      "sha256": "5ea540f42937955cb743adf3c14d133e004d3b33a1d8f436f018fbf2d7835b25"
     },
     {
       "path": "scripts/verify-cad-restoration-surface.ts",
@@ -7736,8 +7736,8 @@
     },
     {
       "path": "scripts/verify-cad-restoration-version.ts",
-      "size": 3081,
-      "sha256": "83f83387661d60a0f9d5520c36779750a05f3fc62f4f42daf8c98cce668a8251"
+      "size": 4064,
+      "sha256": "dd7d1e4b41825ae4d0466eae6b8c3485cf08c29547cb6f0e9faf5b8595f46274"
     },
     {
       "path": "scripts/verify-cad-section.ts",
@@ -7761,8 +7761,8 @@
     },
     {
       "path": "scripts/verify-crown-anatomy.ts",
-      "size": 6393,
-      "sha256": "85984037471eee4027eca26aa8dfac0ea213f16dfc111f266dde272ed3da8a9b"
+      "size": 6813,
+      "sha256": "fdfced1a7d52cb02bf4fd19bf837550ca870ed9cf25b29e4280ec62f96859756"
     },
     {
       "path": "scripts/verify-dental-facts.ts",
@@ -8026,8 +8026,8 @@
     },
     {
       "path": "src/app/AppearancePalette.tsx",
-      "size": 4949,
-      "sha256": "1be435cb8baed30774a7cf8b8a564ce4b79edf85b9fc59465a13faa929727d74"
+      "size": 5186,
+      "sha256": "e2e5b067891fa95949d82fcbb5686549464aaa051fa01a9a70409ab5ad066b0b"
     },
     {
       "path": "src/app/BrandLogo.tsx",
@@ -8286,8 +8286,8 @@
     },
     {
       "path": "src/app/appearance-palette.ts",
-      "size": 3832,
-      "sha256": "78ea2cb5812c858f2bc21ffbe95b2d039ffca36f0ed720cc16d2346110112984"
+      "size": 3658,
+      "sha256": "3ce21e946cc46d3fd6b56c8233e6537531ca82de909ccf3f7298ec5e467b951c"
     },
     {
       "path": "src/app/appointments/page.tsx",
@@ -8361,8 +8361,8 @@
     },
     {
       "path": "src/app/customization.ts",
-      "size": 15535,
-      "sha256": "2ada42bc7e0909526090116a7ac8d2b822bb2de281dc93c50577738202b4bea8"
+      "size": 15942,
+      "sha256": "139f9d93418fc131704038ad4ca063edb873fa97f2dd321fd238317ddffaa585"
     },
     {
       "path": "src/app/dentaya-theme.tsx",
@@ -8431,8 +8431,8 @@
     },
     {
       "path": "src/app/design/DesignViewport.tsx",
-      "size": 152103,
-      "sha256": "870555936e332c0f184fce5e5a0a43c725998e75a2bcf37dd38f766d78a172dd"
+      "size": 152141,
+      "sha256": "1d5124c6c9330b63dcc076943a8be4e7c0cf61c11d522e623ccc943bf1259944"
     },
     {
       "path": "src/app/design/cad-workspace.css",
@@ -8461,8 +8461,8 @@
     },
     {
       "path": "src/app/globals.css",
-      "size": 122605,
-      "sha256": "e3433067afe63f4d902928bec0f194d6c55afda8918dc25d0dfb6cf5cff1eff0"
+      "size": 122324,
+      "sha256": "e5ca8240026e45e3bf001e7f97e9c37042d38d21266cf019fbe24482362b08f3"
     },
     {
       "path": "src/app/invite/page.tsx",
@@ -8906,8 +8906,8 @@
     },
     {
       "path": "src/lib/cad-restoration-shape.ts",
-      "size": 10360,
-      "sha256": "994104a61235b97d07432e3ce118b9941dfbdda0c579ea51b7dc1d8b5219624d"
+      "size": 12211,
+      "sha256": "d265ede8e2df9beba361a149c477766f1cd4023ec7b156901030e77043b40297"
     },
     {
       "path": "src/lib/cad-restoration-surface.ts",
@@ -8921,8 +8921,8 @@
     },
     {
       "path": "src/lib/cad-restoration-version.ts",
-      "size": 1208,
-      "sha256": "076b724d7b40ccb74179eac839e77b62175ebaa0009ddf1c370380a328ee8124"
+      "size": 1918,
+      "sha256": "49974ccb68a339fbb11ccb5581059a8b0a2119cb7ce1bef69f5f51b3375cf3cf"
     },
     {
       "path": "src/lib/cad-sculpt-brush.ts",
@@ -13448,6 +13448,21 @@
       "path": "verification/RC61/work-browser.txt",
       "size": 1592,
       "sha256": "198bbf9748c17cebf400b968ce5071614b966fb5b5c63fdb96399d5416e21d8a"
+    },
+    {
+      "path": "verification/RC62/appearance-and-cad/cad-46-oblique-4k.png",
+      "size": 468859,
+      "sha256": "f4ae2cc41ea13cf7bc1df7974bd02a99b10b04370c7fdb1d9757c754f7682701"
+    },
+    {
+      "path": "verification/RC62/appearance-and-cad/cad-46-occlusal-4k.png",
+      "size": 692155,
+      "sha256": "56002901d692b20b66fa5954405ab584e9dbe4c43602d521d04fec9565430f8e"
+    },
+    {
+      "path": "verification/RC62/appearance-and-cad/city-palettes.png",
+      "size": 22129,
+      "sha256": "57a535ac5be94148c8694711f3f1dec3c89cf9ce71561a04121971cdac4da176"
     },
     {
       "path": "verification/RC62/current-source/AYA_RC50_callback_failure_and_stale_proposal.png",

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {cadRestorationCacheAction,CAD_DEFAULT_ANATOMY_VERSION} from '../src/lib/cad-restoration-version';
+import {cadRestorationCacheAction,cadDefaultAnatomyVersion,CAD_DEFAULT_ANATOMY_VERSION} from '../src/lib/cad-restoration-version';
 const key='unit-46:46:anatomic_crown:natural:balanced:',positions=[0,0,0,1,0,0,0,1,0];
 const legacy={key:key+'legacy-rc37',geometry:{positions:[...positions]},base:[...positions]};
 const expected=key+CAD_DEFAULT_ANATOMY_VERSION;
@@ -20,4 +20,15 @@ assert.equal(cadRestorationCacheAction({...legacy,key:library},library),'restore
 assert.equal(cadRestorationCacheAction({...legacy,key:library},expected),'replace','A library asset is never auto-upgraded as a default form.');
 assert.equal(cadRestorationCacheAction(legacy,library),'replace');
 assert.equal(cadRestorationCacheAction({...legacy,key:'unit-46:46:anatomic_crown:reticula:legacy-rc38'},expected),'replace','Cancelled families do not acquire a migration exception.');
+const refined=key+cadDefaultAnatomyVersion('46','anatomic_crown');
+const rc55={...legacy,key:expected,anchor:{placed:true}};
+assert.notEqual(refined,expected);
+assert.equal(cadDefaultAnatomyVersion('36','anatomic_crown'),refined.slice(key.length));
+assert.equal(cadDefaultAnatomyVersion('47','anatomic_crown'),CAD_DEFAULT_ANATOMY_VERSION);
+assert.equal(cadDefaultAnatomyVersion('46','coping'),CAD_DEFAULT_ANATOMY_VERSION);
+assert.equal(cadRestorationCacheAction(rc55,refined),'restore','The seated crown stays in place until the raw margin is available.');
+assert.equal(cadRestorationCacheAction(rc55,refined,{marginReady:true}),'upgrade');
+assert.equal(cadRestorationCacheAction({...rc55,geometry:sculpted.geometry},refined,{marginReady:true}),'restore');
+assert.equal(cadRestorationCacheAction({...rc55,shell:{}},refined,{marginReady:true}),'restore');
+assert.equal(cadRestorationCacheAction({...legacy,key:library},refined,{marginReady:true}),'replace');
 console.log('PASS: untouched legacy default upgrade, exact existing sculpt/shell/current mesh retention, incomplete-provenance retention, scoped unit/type/form/style and independent technician-library keys; no cancelled-family revival.');

@@ -2,6 +2,14 @@
 import {updateCadWorkspace} from '@/lib/cad-workspace-preferences';
 import { useEffect, useSyncExternalStore } from "react";
 
+export const CITY_PALETTES = [
+  ["palm-dusk", "Palm Dusk", "#201b34", "#352747", "#ffaeaa"],
+  ["neon-shore", "Neon Shore", "#102832", "#18414b", "#ff91ca"],
+  ["dusty-boulevard", "Dusty Boulevard", "#26241c", "#373128", "#eab972"],
+  ["metro-fog", "Metro Fog", "#171d25", "#26323e", "#b6c8dc"],
+  ["pacific-daylight", "Pacific Daylight", "#e1eae1", "#f5faf2", "#34634c"],
+] as const;
+
 export const COLOR_PALETTES = [
   ["reference-midnight", "Neon Midnight", "#121747", "#1a2154", "#00b9f2"],
   ["reference-graphite", "Graphite Turquoise", "#0c0d0e", "#2d2e33", "#10adb1"],
@@ -35,6 +43,7 @@ export const COLOR_PALETTES = [
   ["linen", "Keten", "#f4f0e6", "#fffdf5", "#706335"],
   ["petal", "Gül yaprağı", "#fcf0f4", "#fffaff", "#9c4568"],
   ["olive", "Zeytin", "#f0f3e8", "#fcfef8", "#566b34"],
+  ...CITY_PALETTES,
 ] as const;
 export const ACCENT_COLORS = [
   "#7bdccb","#30bfa5","#188879","#17615b","#9be7c6","#4fbd88","#28754c","#b5d88a",

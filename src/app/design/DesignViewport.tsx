@@ -37,7 +37,7 @@ import { repairCadMesh, type MeshRepairResult, } from "@/lib/cad-mesh-repair-eng
 import {captureCadGeometry,restoreCadGeometry,decodeCadWorkspace,validateCadWorkspace,type CadWorkspaceRecord,type CadWorkspaceSnapshot,type CadUnitGeometryState} from '@/lib/cad-project-state';
 import {cadMarginCenter,placeCadCrownOnMargin} from '@/lib/cad-margin-placement';
 import {cadCervicalBaseZ,cadCervicalRegistration,cadRestorationTransform} from '@/lib/cad-restoration-transform';
-import {CAD_DEFAULT_ANATOMY_VERSION,cadRestorationCacheAction} from '@/lib/cad-restoration-version';
+import {cadDefaultAnatomyVersion,cadRestorationCacheAction} from '@/lib/cad-restoration-version';
 import {sizeCadRestorationAboveSource} from '@/lib/cad-preparation-envelope';
 import {createRestorationGeometry} from "@/lib/cad-restoration-shape";
 import { activeCadUnit, type CadJobSetup, } from "@/lib/cad-job-setup";
@@ -1892,7 +1892,7 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
         if(asset){const geometry=libraryGeometryRef.current.get(asset.id+':'+asset.sha256);if(!geometry)throw Error('Form dosyası geçersiz.');return cadLibraryGeometryForRestoration(geometry,unit.design_type);}
         return createRestorationGeometry(radius,unit.anatomy_code||unit.tooth_code,unit.design_type,unit.tooth_form,unit.morphology_style);
     }
-    function expectedUnitKey(u:NonNullable<ReturnType<typeof activeCadUnit>>){const asset=u.form_library_id&&!['primary_telescope','secondary_telescope'].includes(u.design_type)?readProjectCadForms(settingsRef.current.cad_library_assets)[u.form_library_id]:undefined;return [u.id,u.anatomy_code,u.design_type,asset?'library-rc41:'+asset.id+':'+asset.sha256:u.tooth_form+':'+u.morphology_style+':'+CAD_DEFAULT_ANATOMY_VERSION].join(':');}
+    function expectedUnitKey(u:NonNullable<ReturnType<typeof activeCadUnit>>){const asset=u.form_library_id&&!['primary_telescope','secondary_telescope'].includes(u.design_type)?readProjectCadForms(settingsRef.current.cad_library_assets)[u.form_library_id]:undefined;return [u.id,u.anatomy_code,u.design_type,asset?'library-rc41:'+asset.id+':'+asset.sha256:u.tooth_form+':'+u.morphology_style+':'+cadDefaultAnatomyVersion(u.anatomy_code||u.tooth_code,u.design_type)].join(':');}
     function unitKey() {const u=activeCadUnit(settingsRef.current.job_setup);return u?{id:u.id,key:expectedUnitKey(u)}:null;}
     function cacheLiveUnit() {
         const live=liveUnitRef.current,mesh=designMeshRef.current;if(!live||!mesh)return;

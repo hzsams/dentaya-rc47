@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import {STLExporter} from 'three/examples/jsm/exporters/STLExporter.js';
 import {STLLoader} from 'three/examples/jsm/loaders/STLLoader.js';
 import {analyzeCadMesh} from '../src/lib/cad-mesh-qc.ts';
+import {cadDefaultAnatomyVersion} from '../src/lib/cad-restoration-version.ts';
 import {decodeCadWorkspace,encodeCadWorkspace} from '../src/lib/cad-project-state.ts';
 
 // Real CAD/WebGL, prepared-stump geometry and user controls; synthetic HTTP backend.
@@ -35,7 +36,8 @@ try{
  const url='http://127.0.0.1:3069/design?case='+caseId,deadline=Date.now()+65000;let ready=false;
  while(Date.now()<deadline){if(exitCode!==null)throw Error(logs);try{if((await fetch(url)).ok){ready=true;break;}}catch{}await new Promise(resolve=>setTimeout(resolve,250));}assert.ok(ready,logs);
  browser=await chromium.launch({headless:true,...(process.env.DENTAYA_CHROMIUM_PATH?{executablePath:process.env.DENTAYA_CHROMIUM_PATH}:{}),args:['--no-sandbox','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
- const page=await browser.newPage({viewport:{width:1600,height:1000}});page.setDefaultTimeout(30000);page.on('pageerror',error=>errors.push(error.message));let downloadCount=0;page.on('download',()=>downloadCount++);
+ const normalViewport={width:1600,height:1000};
+ const page=await browser.newPage({viewport:normalViewport});page.setDefaultTimeout(30000);page.on('pageerror',error=>errors.push(error.message));let downloadCount=0;page.on('download',()=>downloadCount++);
  await page.route('**/training-scans/rc55-preparations.stl',route=>route.fulfill({status:200,contentType:'model/stl',body:stl}));
  await page.route('http://127.0.0.1:54321/**',async route=>{
   const request=route.request(),u=new URL(request.url()),table=u.pathname.split('/').at(-1);let body=[];
@@ -76,10 +78,14 @@ try{
   assert.ok(registration.maxMarginGapMm<.04,'The default rendered neck follows the selected margin polyline');
   assert.ok(registration.neckSampleCount>=24,'Registration uses a full neck ring rather than a single sphere pole');
   assert.equal(current.restorationMaterial.type,'MeshPhysicalMaterial');assert.ok(current.restorationMaterial.clearcoat>0,'The actual natural restoration uses its chosen enamel finish');
-  const snapshot=await save(),record=snapshot.units['unit-'+spec.code];assert.ok(record.key.endsWith(':anatomy-rc55'));assert.equal(record.anchor.placed,true);
+  const snapshot=await save(),record=snapshot.units['unit-'+spec.code];assert.ok(record.key.endsWith(':'+cadDefaultAnatomyVersion(spec.code,spec.type)));assert.equal(record.anchor.placed,true);
   const crownHeight=Math.max(...record.placementBase.filter((_,n)=>n%3===2));assert.ok(crownHeight>2&&crownHeight<12,'There is a bounded anatomical crown body, not an entire tooth/root');
   // This scan fixture's insertion direction is Z; global front/back are its occlusal views.
-  await camera(spec.code==='16'?'Arkadan':'Önden');await picture('RC58_'+spec.code+'_'+spec.type+'_occlusal.png');await camera('İzometrik');await picture('RC58_'+spec.code+'_'+spec.type+'_placed.png');
+  const review4k=i===0&&process.env.DENTAYA_CAD_4K==='1'&&process.env.DENTAYA_SCREENSHOT_DIR;
+  if(review4k)await page.setViewportSize({width:3840,height:2160});
+  await camera(spec.code==='16'?'Arkadan':'Önden');await picture('DentAYA_'+spec.code+'_'+spec.type+'_occlusal.png');
+  await camera('İzometrik');await picture('DentAYA_'+spec.code+'_'+spec.type+'_placed.png');
+  if(review4k)await page.setViewportSize(normalViewport);
   await anatomyTab();
   for(const height of [.84,1.2]){
    const input=page.getByRole('spinbutton',{name:'Tüberkül yüksekliği sayısal değer',exact:true});await input.fill(String(height));await input.press('Enter');await frames();
@@ -113,6 +119,8 @@ try{
  }
  const beforeAya=await state();await idle();await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();
  const aya=page.getByRole('dialog',{name:'AYA çalışma asistanı',exact:true});
+ const selectAyaGuide=()=>aya.getByRole('combobox',{name:'Yanıt kaynağı',exact:true}).selectOption('guide');
+ await selectAyaGuide();
  async function askAya(prompt){const count=await aya.locator('.cad-aya-messages article').count();await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).fill(prompt);await aya.getByRole('button',{name:'Gönder',exact:true}).click();const reply=aya.locator('.cad-aya-messages article').nth(count+1);await reply.waitFor();return reply;}
  const anatomy=await askAya('Bu kron çok yapay görünüyor, anatomik formu nasıl değiştirebilirim?');assert.equal(await anatomy.locator('[data-proposal-tool=library]').count(),1);
  const seating=await askAya('Bu kuron preparasyonun üstüne oturmuyor; nereden kontrol etmeliyim?');assert.match(await seating.textContent(),/iç yüzey uyumu onayı değildir/);assert.equal(await seating.locator('[data-proposal-tool=inspect]').count(),1);await picture('RC58_AYA_placement_guidance.png');
@@ -144,6 +152,7 @@ try{
  const render=await page.locator('[data-cad-render-state]').evaluate(node=>JSON.parse(node.dataset.cadRenderState));assert.equal(render.design.visible,false,'An unregistered starter is hidden instead of floating at the model center');assert.equal(render.state.renderedUnits,0);assert.ok(render.lower.visible,'The actual scan remains visible for choosing the restoration target');
  await page.getByRole('button',{name:'Tümünü göster',exact:true}).click();await frames();assert.equal((await page.locator('[data-cad-render-state]').evaluate(node=>JSON.parse(node.dataset.cadRenderState))).design.visible,false,'Show all cannot invent a restoration target');await picture('RC58_raw_model_before_margin.png');
  await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();
+ await selectAyaGuide();
  const hidden=await askAya('Kuron görünmüyor, nasıl gösterebilirim?');assert.match(await hidden.textContent(),/ham modelde doğru dişi ve koleyi doğrula/);assert.equal(await hidden.locator('[data-proposal-tool=show-all]').count(),0);assert.ok(await page.getByRole('button',{name:'Marjin çiz',exact:true}).getAttribute('aria-pressed')==='true'||await hidden.locator('[data-proposal-tool=tool-margin]').count()===1,'AYA either keeps the already selected margin tool or offers that actual tool');await aya.getByRole('button',{name:'Kapat',exact:true}).click();
  await page.locator('[data-cad-menu=app]>summary').click();await page.getByRole('button',{name:'Uzman',exact:true}).click();await page.getByRole('tab',{name:'İç yüzey',exact:true}).click();
  await page.getByText('Crown Shell / Intaglio',{exact:true}).click();await page.getByRole('button',{name:'Crown shell oluştur',exact:true}).click();await frames();assert.match(await page.locator('.cad-status-bar').textContent(),/Önce restorasyonu ham modelde/);

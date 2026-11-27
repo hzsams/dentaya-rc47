@@ -55,6 +55,10 @@ function topAt(x:number,y:number){ray.set(new THREE.Vector3(x*crownSize.x/2,y*cr
 assert.ok(topAt(.30,.20)>topAt(.30,0)+.3,'The central developmental groove lies below its adjacent cusp inclines');
 assert.ok(topAt(0,.20)>topAt(0,0)+.3,'The central fossa is an actual basin, not a shaded mark');
 assert.ok(topAt(.5,.5)-topAt(.65,.5)<1,'Cusps have rounded neighboring inclines instead of isolated tall spikes');
+assert.ok(topAt(-.45,-.45)>topAt(.47,-.30)+.22,'The distal cusp is smaller than the mesiobuccal cusp');
+assert.ok(topAt(-.45,-.45)>topAt(-.26,-.40)+.22,'The mesiobuccal developmental groove separates its outer inclines');
+assert.ok(topAt(.47,-.30)>topAt(.25,-.32)+.20,'The distal buccal developmental groove remains present');
+assert.ok(topAt(-.43,.40)>topAt(.29,.40)+.06,'The two lingual cusps have distinct heights');
 surfaceMesh.material.dispose();
 assert.ok(crownSize.z/crownSize.x>.5&&crownSize.z/crownSize.x<.9,'A posterior crown is not a tall narrow spike');
 assert.ok(copingSize.z<crownSize.z*.85&&copingSize.z>crownSize.z*.45,'The coping has a reduced, bounded coronal body');
