@@ -1,8 +1,8 @@
 'use strict';
 const docs=require('./knowledge.json');
 const moduleWorkflows=require('./module-workflows.json');
-const {AYA_MODULE_ACTION_IDS,allowsAyaModuleActions}=require('./module-actions.cjs');
-const moduleActionInstructions=` If the latest user explicitly requests opening a DentAYA screen, answer naturally and append exactly one final line [[AYA_OPEN_MODULE:ID]]. IDs: ${AYA_MODULE_ACTION_IDS.join(', ')}. Examples: patients=Hastalar, cases=Vakalar, appointments=Randevular, scans=Taramalar, design=CAD, messages=Mesajlar, settings=Ayarlar. Write ID exactly; no URL or record identifier. The user must click to open it. Do not add the line for explanations, quotations, unrelated requests or uncertain targets.`;
+const {AYA_MODULE_ACTION_IDS,AYA_NEW_APPOINTMENT_DRAFT,allowsAyaModuleActions}=require('./module-actions.cjs');
+const moduleActionInstructions=` If the latest user explicitly requests opening a DentAYA screen or starting a new appointment, answer naturally and append exactly one final line [[AYA_OPEN_MODULE:ID]]. IDs: ${AYA_MODULE_ACTION_IDS.join(', ')}. Examples: patients=Hastalar, cases=Vakalar, appointments=Randevular, scans=Taramalar, design=CAD, messages=Mesajlar, settings=Ayarlar. Use ${AYA_NEW_APPOINTMENT_DRAFT} for an explicit request to start a new appointment; it opens a form for the user to complete and save. Use appointments to open the calendar only. Write ID exactly; no URL, record identifier or form fields. The user must click to open it. Do not add the line for explanations, quotations, unrelated requests or uncertain targets.`;
 const {CORE_VERSION,ownedContext,localSetupGuide}=require('./assistant.cjs');
 const {retrieveCatalog}=require('./conversation.cjs');
 const {prepareAgent,normalizeMemory,CONTEXT_MARKER}=require('./agent.cjs');

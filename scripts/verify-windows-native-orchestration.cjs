@@ -5,7 +5,7 @@ const {runAcceptanceCases}=require('./verify-aya-native.cjs');
 const {MODEL}=require('../electron/aya/managed-runtime.cjs');
 const {CANDIDATE}=require('./aya-native-candidate.cjs');
 const ready={installed:true,error:'',models:[{name:MODEL.id}],progress:{running:false,status:'ready',completed:MODEL.bytes,total:MODEL.bytes}};
-const valid=(pin=MODEL)=>({contractPass:true,nativeInference:true,mock:false,model:{verified:true,bytes:pin.bytes,sha256:pin.sha256},semanticReviewRequired:true,moduleCases:{attempted:2,succeeded:2},navigationCases:{attempted:2,succeeded:2},runtimeChecks:{passed:true,cancelledAfterFirstToken:true,restarted:true},caseCounts:{attempted:9,succeeded:9,conversation:{succeeded:5,streamedUpdates:12},memory:{succeeded:2},cad:{succeeded:2}}});
+const valid=(pin=MODEL)=>({contractPass:true,nativeInference:true,mock:false,model:{verified:true,bytes:pin.bytes,sha256:pin.sha256},semanticReviewRequired:true,moduleCases:{attempted:2,succeeded:2},navigationCases:{attempted:3,succeeded:3},runtimeChecks:{passed:true,cancelledAfterFirstToken:true,restarted:true},caseCounts:{attempted:9,succeeded:9,conversation:{succeeded:5,streamedUpdates:12},memory:{succeeded:2},cad:{succeeded:2}}});
 (async()=>{
  const historical=require('../verification/RC62/native-experiments/baseline-1.7b/native-inference-report.json');
  const seen=[],signals=[];

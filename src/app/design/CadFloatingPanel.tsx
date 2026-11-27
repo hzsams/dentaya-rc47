@@ -17,8 +17,11 @@ export default function CadFloatingPanel({ visible, onClose, children, title = '
   const drag = useRef<{ pointer: number; x: number; y: number; left: number; top: number } | null>(null);
   function topBoundary() { return Math.max(64, (document.querySelector('.cad-viewport-frame')?.getBoundingClientRect().top ?? 86) + 8); }
   function rightBoundary() {
-    const rail = document.querySelector('.cad-main-header')?.getBoundingClientRect();
-    return rail && rail.width > 0 ? Math.min(window.innerWidth, rail.left) : window.innerWidth;
+    const rail = document.querySelector('.cad-main-header');
+    if (!rail) return window.innerWidth;
+    const bounds = rail.getBoundingClientRect();
+    const expandedWidth = parseFloat(getComputedStyle(rail).getPropertyValue('--cad-command-width'));
+    return Math.min(window.innerWidth, Number.isFinite(expandedWidth) ? bounds.right - expandedWidth : bounds.left);
   }
   function clamp(x: number, y: number) {
     const right = rightBoundary();

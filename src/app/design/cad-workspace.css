@@ -1,6 +1,6 @@
 /* DentAYA Design — immersive dental workbench.
    One real scene, left instrument windows and a right command rail; user palettes remain intact. */
-.cad-professional{--cad-bg:var(--dy-bg,#ebe9f0);--cad-surface:var(--studio-panel,var(--dy-surface,#fff));--cad-surface2:var(--dy-surface2,#f2f0f5);--cad-line:var(--studio-border,var(--dy-border,#c9c3d2));--cad-ink:var(--studio-text,var(--dy-text,#302b38));--cad-muted:var(--studio-muted,var(--dy-muted,#77717e));--cad-accent:var(--studio-accent,var(--dy-accent,#72568f));--cad-accent-soft:var(--studio-accent-soft,var(--dy-accent-soft,#ece5f4));--cad-warning:var(--dy-warning,#d69339);--cad-chrome:var(--studio-chrome,#645075);--cad-on-chrome:var(--studio-on-chrome,#fff);--cad-button-face:linear-gradient(180deg,var(--studio-button-top,var(--cad-surface)),var(--studio-button-bottom,var(--cad-surface2)));--cad-bevel:inset 0 1px 0 #ffffff80,inset 0 -1px 0 #30283e0b,0 1px 2px #30283e12;--cad-left-width:0px;--cad-inspector-width:284px;--cad-object-height:clamp(190px,28dvh,260px);--cad-command-width:76px;--cad-status-height:23px;--cad-toolbar-height:38px;position:relative;display:flex;flex-direction:column;width:100%;height:calc(100dvh - var(--desktop-chrome-height,0px));min-height:420px;overflow:hidden;isolation:isolate;background:var(--cad-bg);color:var(--cad-ink);font-size:13px;line-height:1.45;letter-spacing:normal}
+.cad-professional{--cad-bg:var(--dy-bg,#ebe9f0);--cad-surface:var(--studio-panel,var(--dy-surface,#fff));--cad-surface2:var(--dy-surface2,#f2f0f5);--cad-line:var(--studio-border,var(--dy-border,#c9c3d2));--cad-ink:var(--studio-text,var(--dy-text,#302b38));--cad-muted:var(--studio-muted,var(--dy-muted,#77717e));--cad-accent:var(--studio-accent,var(--dy-accent,#72568f));--cad-accent-soft:var(--studio-accent-soft,var(--dy-accent-soft,#ece5f4));--cad-warning:var(--dy-warning,#d69339);--cad-chrome:var(--studio-chrome,#645075);--cad-on-chrome:var(--studio-on-chrome,#fff);--cad-button-face:var(--studio-button-top,var(--cad-surface));--cad-bevel:none;--cad-left-width:0px;--cad-inspector-width:284px;--cad-object-height:clamp(190px,28dvh,260px);--cad-command-width:76px;--cad-rail-rest-width:44px;--cad-status-height:23px;--cad-toolbar-height:38px;position:relative;display:flex;flex-direction:column;width:100%;height:calc(100dvh - var(--desktop-chrome-height,0px));min-height:420px;overflow:hidden;isolation:isolate;background:var(--cad-bg);color:var(--cad-ink);font-size:13px;line-height:1.45;letter-spacing:normal}
 .cad-professional *,.cad-professional *::before,.cad-professional *::after{box-sizing:border-box}
 .cad-professional :is(button,a,input,select,textarea){font:inherit}
 .cad-professional button{color:inherit;cursor:pointer}
@@ -13,7 +13,12 @@
 .cad-professional :is(.cad-object-panel,.cad-tool-content,.cad-menu-content,.cad-context-menu,.cad-aya-messages){scrollbar-width:thin;scrollbar-color:var(--cad-line) transparent;overscroll-behavior:contain}
 
 /* Continuous document toolbar and task sequence. */
-.cad-professional .cad-main-header{position:absolute;z-index:60;top:0;right:0;bottom:var(--cad-status-height);display:flex;flex-direction:column;align-items:stretch;gap:3px;width:var(--cad-command-width);padding:8px 5px;border:0;border-left:1px solid #1d1b23;background:linear-gradient(90deg,#29272f,#333039);color:#f4f2f8;box-shadow:inset 1px 0 #ffffff0a;overflow-y:auto;scrollbar-width:none}
+.cad-professional .cad-main-header{--cad-rail-width:var(--cad-rail-rest-width);--cad-rail-labels:0;position:absolute;z-index:60;top:0;right:0;bottom:var(--cad-status-height);display:flex;flex-direction:column;align-items:stretch;gap:3px;width:var(--cad-rail-width);padding:8px 5px;border:0;border-left:1px solid #1d1b23;background:#2b2931;color:#f4f2f8;overflow-y:auto;scrollbar-width:none;transition:width 180ms ease}
+.cad-professional .cad-main-header:is([data-rail-pinned=true],[data-rail-overlay=true],:has(.cad-chrome-menu[open],:focus-visible)){--cad-rail-width:var(--cad-command-width);--cad-rail-labels:1}
+@media(hover:hover){.cad-professional .cad-main-header:hover{--cad-rail-width:var(--cad-command-width);--cad-rail-labels:1}}
+.cad-professional .cad-rail-toggle{order:-1;display:grid;place-items:center;flex:none;min-height:32px;margin-bottom:5px;padding:0;border:0;border-bottom:1px solid #ffffff22;background:transparent;color:#ddd7e6}
+.cad-professional .cad-rail-toggle:is(:hover,[aria-pressed=true]){background:#ffffff10;color:#fff}
+@media(prefers-reduced-motion:reduce){.cad-professional .cad-main-header,.cad-professional .cad-main-header :is(.cad-button,.cad-chrome-menu>summary)>span{transition:none}}
 .cad-professional .cad-main-header:has(.cad-chrome-menu[open]){z-index:90}
 .cad-professional .cad-hub-link{display:grid;place-items:center;order:8;width:100%;height:35px;min-height:35px;padding:0;border:0;background:transparent;color:#ddd7e6}
 .cad-professional .cad-hub-link:hover{background:var(--cad-accent-soft);color:var(--cad-accent)}
@@ -50,12 +55,12 @@
 .cad-professional .cad-icon-command[aria-pressed=true]{border-color:var(--cad-accent);background:var(--cad-accent-soft);color:var(--cad-accent)}
 
 /* The real WebGL scene has its own column instead of sitting behind the docks. */
-.cad-professional .cad-viewport-frame{position:relative;display:grid;grid-template-columns:var(--cad-left-width) minmax(0,1fr);grid-template-rows:var(--cad-object-height) minmax(0,1fr);flex:1;min-height:0;padding-right:var(--cad-command-width);overflow:hidden;isolation:isolate}
+.cad-professional .cad-viewport-frame{position:relative;display:grid;grid-template-columns:var(--cad-left-width) minmax(0,1fr);grid-template-rows:var(--cad-object-height) minmax(0,1fr);flex:1;min-height:0;padding-right:var(--cad-rail-rest-width);overflow:hidden;isolation:isolate}
 .cad-professional .cad-scene-viewport{grid-column:2;grid-row:1 / 3;min-width:0;min-height:0!important;height:100%!important}
 .cad-professional canvas{display:block;outline:none;touch-action:none}
 .cad-professional .cad-object-panel{position:relative;grid-column:1;grid-row:1;z-index:5;min-width:0;height:100%;overflow:auto;border:0;border-right:1px solid var(--cad-line);border-bottom:3px solid color-mix(in srgb,var(--cad-accent) 25%,var(--cad-line));border-radius:0;background:var(--cad-surface);color:var(--cad-ink);box-shadow:1px 0 3px #21192c20}
-.cad-professional .cad-object-panel-title{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:8px;height:33px;padding:0 9px;border-bottom:1px solid #30283e55;background:linear-gradient(180deg,color-mix(in srgb,var(--cad-chrome) 90%,white),var(--cad-chrome));color:var(--cad-on-chrome);box-shadow:inset 0 1px #ffffff22}
-.cad-professional .cad-object-panel-title>svg{width:16px;height:16px;color:#efc78f}
+.cad-professional .cad-object-panel-title{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:8px;height:33px;padding:0 9px;border-bottom:1px solid #30283e55;background:var(--cad-chrome);color:var(--cad-on-chrome)}
+.cad-professional .cad-object-panel-title>svg{width:16px;height:16px;color:inherit}
 .cad-professional .cad-object-panel-title strong{flex:1;color:var(--cad-on-chrome);font-size:12px;font-weight:600}
 .cad-professional .cad-object-panel-title button{width:26px;height:27px;margin-left:auto}
 .cad-professional .cad-object-panel--collapsed{overflow:hidden}
@@ -69,22 +74,26 @@
 .cad-professional .cad-layer-actions{display:flex;gap:5px;margin-bottom:5px}
 .cad-professional .cad-layer-actions button{flex:1;min-height:27px;padding:4px;border:1px solid var(--cad-line);border-radius:4px;background:var(--cad-button-face);color:var(--cad-muted);font-size:11px;box-shadow:var(--cad-bevel)}
 .cad-professional .cad-layer-actions button:hover{background:var(--cad-surface2);color:var(--cad-ink)}
-.cad-professional .cad-layer-row{padding:2px 0;border-top:1px solid color-mix(in srgb,var(--cad-line) 65%,transparent)}
-.cad-professional .cad-layer-name{display:flex;align-items:center;gap:7px}
-.cad-professional .cad-layer-name>input{flex:none}
+.cad-professional .cad-layer-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(65px,34%);align-items:center;gap:4px;min-height:30px;padding:2px 3px;border-top:1px solid color-mix(in srgb,var(--cad-line) 65%,transparent)}
+.cad-professional .cad-layer-row[data-layer=design][data-visible=true]{background:var(--cad-accent-soft)}
+.cad-professional .cad-layer-name{display:flex;align-items:center;min-width:0;gap:5px}
+.cad-professional .cad-layer-eye{position:relative;display:grid;place-items:center;width:24px;height:24px;flex:none;color:var(--cad-muted)}
+.cad-professional .cad-layer-eye:focus-within{outline:2px solid var(--cad-accent);outline-offset:-2px;border-radius:3px}
+.cad-professional .cad-layer-eye>input{position:absolute;inset:0;width:24px;height:24px;opacity:0;cursor:pointer}
+.cad-professional .cad-layer-eye>svg{pointer-events:none}
 .cad-professional .cad-layer-name>label{flex:1;min-width:0;margin:0;color:var(--cad-ink);font-size:12px;cursor:pointer}
 .cad-professional .cad-layer-name>button{display:grid;place-items:center;width:24px;height:24px;flex:0 0 24px;min-width:22px;padding:0;border:0;background:transparent;color:var(--cad-muted)}
 .cad-professional .cad-layer-name>button:hover{color:var(--cad-accent)}
 .cad-professional .cad-layer-color{width:10px;height:10px;flex:none;border-radius:2px;background:var(--cad-group-color);box-shadow:inset 0 0 0 1px #ffffff24}
-.cad-professional .cad-layer-row:is([data-visible=false],[data-auto-hidden=true]) .cad-layer-name{opacity:.45}
-.cad-professional .cad-layer-opacity{display:flex;align-items:center;gap:6px;margin:7px 0 0;color:var(--cad-muted);font-size:11px;margin-top:1px}
-.cad-professional .cad-layer-opacity kbd{width:27px;flex:none;font:inherit;font-size:9px}
+.cad-professional .cad-layer-row:is([data-visible=false],[data-auto-hidden=true]) :is(.cad-layer-color,.cad-layer-name>label){opacity:.65}
+.cad-professional .cad-layer-opacity{display:flex;align-items:center;gap:4px;margin:0;color:var(--cad-muted);font-size:11px}
 .cad-professional .cad-layer-opacity input{flex:1;width:0;min-width:0;height:12px;accent-color:var(--cad-group-color)}
 .cad-professional .cad-layer-opacity output{width:29px;font-size:10px;text-align:right;font-variant-numeric:tabular-nums}
-.cad-professional .cad-annotation-layers{display:grid;gap:9px;padding:12px 0;border-top:1px solid var(--cad-line);color:var(--cad-muted);font-size:12px}
+@media(hover:hover){.cad-professional .cad-layer-row:not(:hover,:focus-within) .cad-layer-opacity input{opacity:0}}
+.cad-professional .cad-annotation-layers{display:grid;gap:9px;padding-top:8px;color:var(--cad-muted);font-size:12px}
 .cad-professional .cad-annotation-layers label,.cad-professional .cad-unit-visibility>label{display:flex;align-items:center;gap:7px;margin:0;font-size:12px}
-.cad-professional .cad-unit-visibility{padding:9px 0;border-top:1px solid var(--cad-line)}
-.cad-professional .cad-unit-visibility>summary{font-size:12px;color:var(--cad-muted);cursor:pointer}
+.cad-professional :is(.cad-unit-visibility,.cad-annotation-settings){padding:9px 0;border-top:1px solid var(--cad-line)}
+.cad-professional :is(.cad-unit-visibility,.cad-annotation-settings)>summary{font-size:12px;color:var(--cad-muted);cursor:pointer}
 .cad-professional .cad-unit-visibility>label{margin-top:8px}
 .cad-professional .cad-bite-controls{display:grid;gap:8px;padding:12px 0;border-top:1px solid var(--cad-line)}
 .cad-professional .cad-bite-controls>strong{color:var(--cad-ink);font-size:12px;font-weight:600}
@@ -117,7 +126,7 @@
 .cad-professional .cad-scene-files>div{display:flex;align-items:center;gap:6px;padding-top:10px}
 .cad-professional .cad-scene-files small{margin-left:auto;color:var(--cad-muted)}
 .cad-professional .cad-active-display{position:absolute;z-index:3;top:57px;left:calc(var(--cad-left-width) + 18px);display:flex;align-items:center;gap:10px;color:#ded5eb;font-size:12px;pointer-events:none}
-.cad-professional .cad-active-display>svg{width:19px;height:19px;color:#e3c097}
+.cad-professional .cad-active-display>svg{width:19px;height:19px;color:inherit}
 .cad-professional .cad-active-display strong{color:#f4edff;font-size:12px;font-weight:600}
 .cad-professional .cad-active-display>span{padding-left:9px;border-left:1px solid var(--cad-line)}
 .cad-professional .cad-view-toolbar{position:absolute;z-index:6;right:calc(var(--cad-command-width) + 12px);bottom:14px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px;border:1px solid #b4a6ca44;border-radius:4px;background:#30283ecc;color:#eee7f7;box-shadow:0 2px 8px #21192c30}
@@ -133,13 +142,13 @@
 .cad-professional .cad-status-bar>span:first-child::before{content:'';display:inline-block;width:5px;height:5px;margin-right:8px;background:#d6c099;vertical-align:1px}
 .cad-professional .cad-status-bar>span:last-child{font-variant-numeric:tabular-nums}
 
-/* Default right dock; pointer or keyboard movement detaches the same inspector. */
+/* The tool panel docks below visibility; pointer or keyboard movement detaches it. */
 .cad-professional .cad-floating-panel{position:fixed;z-index:40;display:flex;flex-direction:column;width:var(--cad-inspector-width);max-width:calc(100vw - 24px);max-height:calc(100dvh - 44px);padding:0;overflow:hidden;border:1px solid var(--cad-line);border-radius:5px !important;background:var(--cad-surface);color:var(--cad-ink);box-shadow:0 8px 26px #21192c40}
 .cad-professional .cad-floating-panel[data-docked=true]{position:relative;grid-column:1;grid-row:2;top:auto;right:auto;bottom:auto;left:auto;width:100%;height:100%;min-height:0;max-height:none;border:0;border-right:1px solid var(--cad-line);border-radius:0 !important;background:var(--cad-surface);box-shadow:1px 0 3px #21192c20}
-.cad-professional .cad-panel-header{display:flex;align-items:center;gap:2px;height:35px;flex:none;padding:0 7px;border-bottom:1px solid #30283e55;background:linear-gradient(180deg,color-mix(in srgb,var(--cad-chrome) 90%,white),var(--cad-chrome));box-shadow:inset 0 1px #ffffff22}
+.cad-professional .cad-panel-header{display:flex;align-items:center;gap:2px;height:35px;flex:none;padding:0 7px;border-bottom:1px solid #30283e55;background:var(--cad-chrome)}
 .cad-professional .cad-panel-header>button{display:grid;place-items:center;width:25px;height:27px;padding:0;border:0;border-radius:4px;background:transparent;color:var(--cad-on-chrome)}
 .cad-professional .cad-panel-header>button:hover{background:var(--cad-bg);color:var(--cad-ink)}
-.cad-professional .cad-panel-header>button[aria-pressed=true]{color:#f1cf92}
+.cad-professional .cad-panel-header>button[aria-pressed=true]{background:#ffffff16;color:var(--cad-on-chrome)}
 .cad-professional .cad-panel-header .cad-panel-handle{display:flex;align-items:center;justify-content:flex-start;gap:7px;flex:1;min-width:0;border:0;cursor:move;touch-action:none;text-align:left}
 .cad-professional .cad-panel-handle>svg{width:13px;color:#d4c3e4}
 .cad-professional .cad-panel-handle strong{overflow:hidden;color:var(--cad-on-chrome);font-size:13px;font-weight:600;white-space:nowrap;text-overflow:ellipsis}
@@ -153,7 +162,7 @@
 .cad-professional .cad-tool-palette{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
 .cad-professional .cad-tool-palette .cad-command{position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;min-height:76px;padding:9px 4px;border:1px solid var(--cad-line);border-radius:4px;background:var(--cad-button-face);color:var(--cad-accent);box-shadow:var(--cad-bevel)}
 .cad-professional .cad-tool-palette .cad-command:hover:not(:disabled){background:var(--cad-surface2);color:var(--cad-ink)}
-.cad-professional .cad-tool-palette .cad-command[aria-pressed=true]{border-color:var(--cad-accent);background:linear-gradient(180deg,color-mix(in srgb,var(--cad-accent) 18%,var(--cad-surface)),var(--cad-accent-soft));color:var(--cad-accent);box-shadow:inset 0 1px #ffffff70,inset 0 -3px var(--cad-accent),0 1px 3px #21192c18}
+.cad-professional .cad-tool-palette .cad-command[aria-pressed=true]{border-color:var(--cad-accent);background:var(--cad-accent-soft);color:var(--cad-accent)}
 .cad-professional .cad-tool-palette .cad-command>span{font-size:12px;line-height:1.3;color:var(--cad-ink)}
 .cad-professional .cad-tool-palette kbd{position:absolute;top:3px;right:4px;font:inherit;font-size:10px;opacity:.6}
 .cad-professional .cad-task-tools{flex:none;padding:10px;border-bottom:1px solid var(--cad-line)}
@@ -340,15 +349,15 @@
 
 .cad-professional:has(.cad-object-panel--collapsed){--cad-object-height:34px}
 
-.cad-professional .cad-main-header .cad-button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;width:100%;min-height:64px;height:auto;padding:8px 3px;border:1px solid transparent;border-radius:4px;background:transparent;color:#f0edf5;font-size:11px;line-height:1.25;text-align:center;white-space:normal;box-shadow:none}
+.cad-professional .cad-main-header .cad-button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:7px;width:100%;min-height:64px;height:auto;padding:8px 3px;border:1px solid transparent;border-radius:4px;background:transparent;color:#f0edf5;font-size:11px;line-height:1.25;text-align:center;white-space:normal;box-shadow:none}
 
-.cad-professional .cad-main-header .cad-button>svg{width:28px;height:28px;stroke-width:1.7;filter:drop-shadow(0 1px 1px #0005)}
+.cad-professional .cad-main-header .cad-button>svg{width:28px;height:28px;stroke-width:1.7}
 
-.cad-professional .cad-main-header .cad-button>span{width:calc(100% + 4px);max-width:calc(100% + 4px);overflow-wrap:normal;word-break:normal;hyphens:none}
+.cad-professional .cad-main-header :is(.cad-button,.cad-chrome-menu>summary)>span{position:absolute;right:0;bottom:4px;left:0;padding:0 2px;overflow:hidden;overflow-wrap:normal;word-break:normal;hyphens:none;opacity:var(--cad-rail-labels);pointer-events:none;transition:opacity 160ms ease}
 
 .cad-professional .cad-main-header .cad-button:hover:not(:disabled){background:#ffffff13;border-color:#ffffff25;color:#fff}
 
-.cad-professional .cad-main-header .cad-button--primary{background:linear-gradient(180deg,#78628b,#594867);border-color:#9f8aaf70;color:#fff;box-shadow:inset 0 1px #ffffff22,0 2px 4px #0003}
+.cad-professional .cad-main-header .cad-button--primary{background:#ffffff12;border-color:#ffffff20;color:#fff}
 
 .cad-professional .cad-main-header .cad-button[aria-pressed=true]{background:#78628b55;border-color:#a596b980;color:#fff}
 
@@ -370,7 +379,7 @@
 
 .cad-professional .cad-workflow{order:2;position:relative;flex:none}
 
-.cad-professional .cad-main-header .cad-chrome-menu>summary{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;min-height:64px;padding:8px 2px;border:1px solid transparent;border-radius:4px;color:#f0edf5;font-size:11px;line-height:1.2;text-align:center;white-space:normal}
+.cad-professional .cad-main-header .cad-chrome-menu>summary{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:7px;min-height:64px;padding:8px 2px;border:1px solid transparent;border-radius:4px;color:#f0edf5;font-size:11px;line-height:1.2;text-align:center;white-space:normal}
 
 .cad-professional .cad-main-header .cad-chrome-menu>summary>svg{width:28px;height:28px}
 
@@ -388,25 +397,9 @@
 
 .cad-professional .cad-layer-name>svg{color:var(--cad-accent)}
 
-.cad-professional .cad-command .cad-icon-volume{fill:var(--cad-glyph-accent,#d3914c);fill-opacity:.38}
+.cad-professional .cad-command .cad-icon-volume{fill:currentColor;fill-opacity:.12}
 
-.cad-professional .cad-command .cad-icon-edges{stroke:var(--cad-glyph-edge,var(--cad-accent))}
-
-.cad-professional .cad-command[data-cad-tool=orbit]{--cad-glyph-edge:#7a6294;--cad-glyph-accent:#ad93c7}
-
-.cad-professional .cad-command[data-cad-tool=add]{--cad-glyph-edge:#9f6a2f;--cad-glyph-accent:#e9b15d}
-
-.cad-professional .cad-command[data-cad-tool=reduce]{--cad-glyph-edge:#86629c;--cad-glyph-accent:#caa3d8}
-
-.cad-professional .cad-command[data-cad-tool=smooth]{--cad-glyph-edge:#a7773d;--cad-glyph-accent:#e9bb76}
-
-.cad-professional .cad-command[data-cad-tool=flatten]{--cad-glyph-edge:#8a6b54;--cad-glyph-accent:#d8b799}
-
-.cad-professional .cad-command[data-cad-tool=margin]{--cad-glyph-edge:#95642b;--cad-glyph-accent:#edbc73}
-
-.cad-professional .cad-command[data-cad-tool=measure]{--cad-glyph-edge:#7a6395;--cad-glyph-accent:#b6a3cd}
-
-.cad-professional .cad-command[data-cad-tool=connector]{--cad-glyph-edge:#a27135;--cad-glyph-accent:#ddb477}
+.cad-professional .cad-command:not([aria-pressed=true]) .cad-icon-edges{stroke:var(--cad-muted)}
 
 .cad-professional .cad-main-header>.cad-button:has(>.cad-icon--export){order:7}
 

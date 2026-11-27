@@ -52,6 +52,7 @@
     "verify:cad-display": "node --import tsx scripts/verify-cad-display.ts",
     "verify:ui-browser": "node scripts/verify-ui-browser.mjs",
     "verify:cad-browser": "node scripts/verify-cad-browser.mjs",
+    "verify:scan-studio-browser": "node scripts/verify-scan-studio-browser.mjs",
     "verify:bundled-languages": "node scripts/verify-bundled-languages.mjs",
     "verify:system-translations": "node scripts/verify-visible-translations.mjs && node --import tsx scripts/verify-system-translations.ts",
     "verify:validation": "node --import tsx scripts/verify-validation.ts",

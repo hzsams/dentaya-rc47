@@ -165,6 +165,10 @@ jobs:
           $status = Get-Content $path -Raw | ConvertFrom-Json
           $native = Get-Content ci-artifacts/native/native-inference-report.json -Raw | ConvertFrom-Json
           $failed = @($native.semanticReview.signals | Where-Object { $_.pass -eq $false } | ForEach-Object { $_.id })
+          $lastCase = ($native.checks | Select-Object -Last 1).name
+          $outcome = "Model $($status.model.id), result $($status.status) $($status.error), inference $($status.nativeInferenceObserved), base $($status.casesSucceeded)/$($status.casesAttempted), last case $lastCase, CAD browser $($native.cadBrowser.stage), failed signals $($failed -join ', ')"
+          if ($status.status -eq 'passed') { Write-Host "::notice title=AYA native evidence::$outcome" }
+          else { Write-Host "::warning title=AYA native evidence::$outcome" }
           @(
             "## Native AYA ($env:AYA_NATIVE_PROFILE)"
             "Source: $env:GITHUB_SHA"

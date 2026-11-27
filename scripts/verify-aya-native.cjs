@@ -125,6 +125,7 @@ async function hashFile(file){const hash=crypto.createHash('sha256');for await(c
   const navigationCases=[
    {name:'navigation-open-cad',prompt:'CAD Tasarım modülünü açar mısın? Oraya geçmek istiyorum.',expected:'design'},
    {name:'navigation-explanation-only',prompt:'Randevular modülünün ne işe yaradığını bir cümleyle anlat. Modülü açma.'},
+   {name:'navigation-new-appointment-draft',prompt:'Yeni bir randevu başlatmak istiyorum. Hasta ve zamanı ben seçeceğim.',expected:'new-appointment-draft'},
   ];
   for(const {name,prompt,expected} of navigationCases){
    const reply=await turn(name,prompt,{allowModuleActions:true,moduleId:'ai',history:[]},'navigation');

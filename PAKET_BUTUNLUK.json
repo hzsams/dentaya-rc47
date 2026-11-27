@@ -46,8 +46,8 @@
     },
     {
       "path": ".github/workflows/windows-release.yml",
-      "size": 11733,
-      "sha256": "faf7c175eea6387b8a0b1a36fe07ec93bf3356221405452b1a29dd8a4c121643"
+      "size": 12280,
+      "sha256": "e74411ab3a3cb5fff5f142e191f8a3a70ea5ce4f66fee599883bcec29f619d68"
     },
     {
       "path": ".gitignore",
@@ -1201,8 +1201,8 @@
     },
     {
       "path": "electron/aya/core.cjs",
-      "size": 9707,
-      "sha256": "16cedebb00231373ae284b1e2a7cb805805e9ef8b135a05a8b15c77296390188"
+      "size": 9956,
+      "sha256": "9f0d4c766c3255afac7a67b28c18c2dc24a4f0ea61f6102c470ef466b6c654a8"
     },
     {
       "path": "electron/aya/dialogue.cjs",
@@ -1266,13 +1266,13 @@
     },
     {
       "path": "electron/aya/module-actions.cjs",
-      "size": 1726,
-      "sha256": "7c00bed80752a245bfefa9c0596d8a3ba51947ab7477daf6ad1b1be50da7de1f"
+      "size": 1839,
+      "sha256": "ff101198e0314090498c3f093966778aaf443c8722fa4c70fc0f85fa760c55b5"
     },
     {
       "path": "electron/aya/module-actions.d.cts",
-      "size": 512,
-      "sha256": "0f9b8b3c1f8b226d5c732deaeb9b5f884f61b756ce4aa119ed73ff8eb62cb264"
+      "size": 612,
+      "sha256": "5f14fcfc5482a5a84a909cd80fc77fa0b901a611d2c83de60e6f2d76ba7523ac"
     },
     {
       "path": "electron/aya/module-workflows.json",
@@ -2201,8 +2201,8 @@
     },
     {
       "path": "package.json",
-      "size": 11065,
-      "sha256": "3d870d86ab22ed999394ba42a02fd21498ab1b7a480f991d1e9c724bc9ff9056"
+      "size": 11146,
+      "sha256": "88f5755507ad3843be7e0a2b2654e550ec535930f2009b7a3cdc96a4eeb58cfd"
     },
     {
       "path": "public/brand/DentAYA_Premium_Atelier.svg",
@@ -7452,7 +7452,7 @@
     {
       "path": "scripts/run-windows-aya-native.cjs",
       "size": 9482,
-      "sha256": "47b35e96f59c71782e087bb3dfce5896ad1f55ad1ceee814131b42fa32c33eba"
+      "sha256": "680ee7c7e7f203ec098362930904068c81813593f85370d7cff3b3379c8f7d2b"
     },
     {
       "path": "scripts/setup-windows.ps1",
@@ -7576,8 +7576,8 @@
     },
     {
       "path": "scripts/verify-aya-native.cjs",
-      "size": 17798,
-      "sha256": "6663d381a9beeae1e9c9ddf78646276afe02a5ae777d5224d66c2b61b7b88617"
+      "size": 17959,
+      "sha256": "f29450601a4fcf14e5be09885fb29ba7625aaba190139ee2494d44ba16c7a06a"
     },
     {
       "path": "scripts/verify-aya-natural-stream.cjs",
@@ -7671,8 +7671,8 @@
     },
     {
       "path": "scripts/verify-cad-daily-browser.mjs",
-      "size": 65760,
-      "sha256": "e3c4227ca43c28f105471d530e0f8e24cc80e1017db13a1f4e75e5fe1a5750fd"
+      "size": 66098,
+      "sha256": "c38eac73c26ad038b0bfd8a61d0d2b022138e9f055fffe687445573e4c28487c"
     },
     {
       "path": "scripts/verify-cad-daily.ts",
@@ -7801,8 +7801,8 @@
     },
     {
       "path": "scripts/verify-desktop-shell-browser.mjs",
-      "size": 53292,
-      "sha256": "8420fe77ffc668582d99046ecd76889306ab1642361a87f792202d2188854d20"
+      "size": 54897,
+      "sha256": "d45fb116683429daace88fc5dbb075d230f78786367add04d5c45ce98d9e7781"
     },
     {
       "path": "scripts/verify-e2e-workflow.ts",
@@ -7886,8 +7886,8 @@
     },
     {
       "path": "scripts/verify-native-cad-browser.mjs",
-      "size": 7841,
-      "sha256": "04fbf186c2215cd395a61cc3b12b0dcceefe0e0b93f73db1b69e9730d53d86cb"
+      "size": 10061,
+      "sha256": "0d47dc06a949b40ad300b9b9d248dc495ba85fada68d141534dea5e375971b81"
     },
     {
       "path": "scripts/verify-operations-center.ts",
@@ -7948,6 +7948,11 @@
       "path": "scripts/verify-runtime.mjs",
       "size": 817,
       "sha256": "2b3f97ce10fc8370e248470d9a5310d968c02b4ffa60e180df7a2c68adbb52d0"
+    },
+    {
+      "path": "scripts/verify-scan-studio-browser.mjs",
+      "size": 14613,
+      "sha256": "e79cd412f4e53a596bdb120b5c9e190c373a7bf38b44b9934753c40f08becddc"
     },
     {
       "path": "scripts/verify-sculpt-integrity.ts",
@@ -8032,7 +8037,7 @@
     {
       "path": "scripts/verify-windows-native-orchestration.cjs",
       "size": 6313,
-      "sha256": "9da83f83fc82f50a386aa0bfaeb8f035e4366f937a02ea1b37c7c1665d2ad5ac"
+      "sha256": "8d06e267e126f2f8f4b1ecbcc12820ef8ad68efb7ae1b3eddcaada8494c98437"
     },
     {
       "path": "scripts/verify-windows-packaging.mjs",
@@ -8186,8 +8191,8 @@
     },
     {
       "path": "src/app/WorkspaceChrome.tsx",
-      "size": 17418,
-      "sha256": "8cc0664764b0cbe34de1ae8aa934b2c02264c23e3dc0ab203b069345956645eb"
+      "size": 17592,
+      "sha256": "fc875747e95a9c6d04385293fbbf4a5b4b439d8c5336698b150a6a16224428e5"
     },
     {
       "path": "src/app/WorkspaceLauncher.tsx",
@@ -8206,8 +8211,8 @@
     },
     {
       "path": "src/app/ai/AyaChat.tsx",
-      "size": 37130,
-      "sha256": "32d2d63297b10d44d20f0f157003e4e6120e00e9882d71472beef2f053895b69"
+      "size": 37354,
+      "sha256": "e91ad5b0fa238fbd08a374fd2c5cf3bfa06027f96e8961b6d73d1271962bb7ea"
     },
     {
       "path": "src/app/ai/AyaConnection.tsx",
@@ -8316,8 +8321,8 @@
     },
     {
       "path": "src/app/appointments/page.tsx",
-      "size": 33848,
-      "sha256": "070fb430ea163034bf3c833002483a7b4e02cf2e37b4d6cfb0b0d9aa0a2276b5"
+      "size": 34531,
+      "sha256": "53fb34a22c95c05c646aac4ac6dd608d7941c7ffed1be100c97acffa94d42bb6"
     },
     {
       "path": "src/app/cad-library/CadFormLibrary.tsx",
@@ -8411,8 +8416,8 @@
     },
     {
       "path": "src/app/design/CadFloatingPanel.tsx",
-      "size": 6578,
-      "sha256": "b4d876632b2b9865842ff427d05a7b2c97140cb3be053b83778bd10b6a02b296"
+      "size": 6766,
+      "sha256": "5408df967f1a5d69f7995bf269e814d8aaa7d4f2237e2d709a1fdb9d5d8ed337"
     },
     {
       "path": "src/app/design/CadIcon.tsx",
@@ -8431,8 +8436,8 @@
     },
     {
       "path": "src/app/design/CadSceneControls.tsx",
-      "size": 7429,
-      "sha256": "7f9621324b3732872b646e73bd782bb31a8ced05facdad1c7d8dbb1224e760da"
+      "size": 7584,
+      "sha256": "c52f162005c04ab2b63a237c545f65f108320913df8b6db25b2ecc7cadc19afd"
     },
     {
       "path": "src/app/design/CadToolPalette.tsx",
@@ -8451,8 +8456,8 @@
     },
     {
       "path": "src/app/design/DesignStudioClient.tsx",
-      "size": 183497,
-      "sha256": "e566824c3c3bd29e09ab3c08342c6d3328dd8bc4a8e1147f015028872fd38712"
+      "size": 184094,
+      "sha256": "dfcb61c85ec61b7565efec6e0bc5b025974bd765833221eb7b5030495461b907"
     },
     {
       "path": "src/app/design/DesignViewport.tsx",
@@ -8461,8 +8466,8 @@
     },
     {
       "path": "src/app/design/cad-workspace.css",
-      "size": 58411,
-      "sha256": "6325df08f9b73d816efba9843a5cd93d78b0e1e3ffbd941566f3bd5bdb206590"
+      "size": 58651,
+      "sha256": "60e84e5cb5a285d43d0a9415b8846d1e1f3e7011aba7e379509babf61276ef5a"
     },
     {
       "path": "src/app/design/page.tsx",
@@ -8471,8 +8476,8 @@
     },
     {
       "path": "src/app/desktop-shell.css",
-      "size": 20168,
-      "sha256": "7811b43560df99a7307444adfb55e26093b75be2c3b61e28c8158d04ff3cedf7"
+      "size": 20439,
+      "sha256": "44cbee1bf9ff56977018a41f39d4a67df63c46eb318694b31617e475739226da"
     },
     {
       "path": "src/app/error.tsx",
@@ -8656,18 +8661,23 @@
     },
     {
       "path": "src/app/scan-studio/LocalScanPreview.tsx",
-      "size": 7736,
-      "sha256": "b735c3c572b0702bd9c2e9a51b330d8dac21b60d50af6446a2c2efcdd906436e"
+      "size": 7968,
+      "sha256": "e56732dc79db905e47000c3f7e09a76e84c1e54a892cf02743b8e2a7281a4094"
     },
     {
       "path": "src/app/scan-studio/ScanStudioClient.tsx",
-      "size": 43300,
-      "sha256": "3fa2dce32c101a6e10a27048dc2522f5f8674bcdaa5e873a2a24ece4a7c52adc"
+      "size": 34352,
+      "sha256": "60c8434127e854ce081e53e41a38f6f58c1300178c96d353ca9ca0da519d54a1"
     },
     {
       "path": "src/app/scan-studio/page.tsx",
       "size": 1364,
       "sha256": "b80b58f5df1adc10462ab0ee4c960a76cafef3ed4e462351bb867dc7ad182b7a"
+    },
+    {
+      "path": "src/app/scan-studio/scan-workspace.css",
+      "size": 9063,
+      "sha256": "fe02d162e391ea7f92ae12248e22cf14fb29d62af3dc088da6f37fdd06cfa383"
     },
     {
       "path": "src/app/scans/ScanCompareViewer.tsx",
@@ -8740,6 +8750,11 @@
       "sha256": "4b625ca35cb6e71a83090c2103b70d090d89db12e8adcd59444537043c3a52af"
     },
     {
+      "path": "src/lib/aya-appointment-draft.ts",
+      "size": 782,
+      "sha256": "223ff3d1570c0ad7149855f77c28de1a76d9de2b88e9109a0d55da429270f708"
+    },
+    {
       "path": "src/lib/aya-cad-agent.ts",
       "size": 6519,
       "sha256": "8e81fa00400fdc82ecbc288fa89c6614f847f2135d8577129cade6ea2bb66344"
@@ -8796,8 +8811,8 @@
     },
     {
       "path": "src/lib/aya-module-navigation.ts",
-      "size": 1061,
-      "sha256": "2efcfaa14f7b5c42850adbba41de2f5745431a615b56bc633ffd98cc771e461e"
+      "size": 1279,
+      "sha256": "8727f61caab64dfec9b2396683b21dda275c85a308ea4c4ac684f008934d2170"
     },
     {
       "path": "src/lib/aya-platform-copilot.ts",
@@ -9101,8 +9116,8 @@
     },
     {
       "path": "src/lib/i18n/aya-chat-workspace.ts",
-      "size": 696,
-      "sha256": "86d8572d7225ba97094701decc2eee5459a8b189521d2206f9c8f31319b92247"
+      "size": 793,
+      "sha256": "094a8fae4f1dbee99af0d7d480a3824f4fc8c13238742daef879e20cd153c9c9"
     },
     {
       "path": "src/lib/i18n/aya-experience.ts",
@@ -9598,6 +9613,11 @@
       "path": "src/lib/i18n/reviewed/zh.json",
       "size": 3331,
       "sha256": "c69ecc91e71a4809703cc4a52377ad0b8ca3faba71abd1f441bde7d9b6c611c9"
+    },
+    {
+      "path": "src/lib/i18n/scan-studio.ts",
+      "size": 2169,
+      "sha256": "b81e8e161c60d51655d40343f2d71e0407449771bc4a4a6da6853f14c9541f91"
     },
     {
       "path": "src/lib/i18n/ui-manifest.json",

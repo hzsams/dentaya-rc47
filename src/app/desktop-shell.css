@@ -65,12 +65,12 @@
 .desktop-shell .module-content.desktop-content { height: 100%; min-height: 0; min-width: 0; padding: 0; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--studio-border) transparent; }
 .desktop-shell .desktop-workspace-home .desktop-home-heading h1 { font-size: 18px !important; line-height: 1.25; font-weight: 650; letter-spacing: -.3px !important; margin: 0 !important; }
 .desktop-shell .desktop-content > main.desktop-workspace-home { margin: 0 !important; padding: 0 !important; min-height: 100% !important; max-width: none !important; }
-.desktop-shell .desktop-content > main.cad-professional { margin: 0 !important; padding: 0 !important; min-height: 0 !important; max-width: none !important; }
-.desktop-content > main:not(.desktop-workspace-home):not(.cad-professional) { margin: 0 !important; padding: 18px !important; min-height: 100% !important; max-width: none !important; background: var(--studio-shell) !important; }
-.desktop-shell .desktop-content > main:not(.desktop-workspace-home) h1 { font-size: 22px !important; font-weight: 650; line-height: 1.25; letter-spacing: -.025em !important; margin-block: 0 6px; }
-.desktop-content:not(.desktop-content--manager):not(.desktop-content--cad) :is(input,select,textarea):not([type=checkbox]):not([type=range]) { border: 1px solid var(--studio-border); border-radius: 4px; background: var(--studio-inset); color: var(--studio-text); font-size: 13px; box-shadow: inset 0 1px 2px #21192c08; }
-.desktop-content:not(.desktop-content--manager):not(.desktop-content--cad) :is(input,select):not([type=checkbox]):not([type=range]) { min-height: 34px; }
-.desktop-content button:not(.cad-professional button):not([role=tab]) { min-height: 34px; border-radius: 4px; }
+.desktop-shell .desktop-content > :is(main.cad-professional,main.scan-studio) { margin: 0 !important; padding: 0 !important; min-height: 0 !important; max-width: none !important; }
+.desktop-content > main:not(.desktop-workspace-home):not(.cad-professional):not(.scan-studio) { margin: 0 !important; padding: 18px !important; min-height: 100% !important; max-width: none !important; background: var(--studio-shell) !important; }
+.desktop-shell .desktop-content > main:not(.desktop-workspace-home):not(.scan-studio) h1 { font-size: 22px !important; font-weight: 650; line-height: 1.25; letter-spacing: -.025em !important; margin-block: 0 6px; }
+.desktop-content:not(.desktop-content--manager):not(.desktop-content--cad):not(.desktop-content--scan) :is(input,select,textarea):not([type=checkbox]):not([type=range]) { border: 1px solid var(--studio-border); border-radius: 4px; background: var(--studio-inset); color: var(--studio-text); font-size: 13px; box-shadow: inset 0 1px 2px #21192c08; }
+.desktop-content:not(.desktop-content--manager):not(.desktop-content--cad):not(.desktop-content--scan) :is(input,select):not([type=checkbox]):not([type=range]) { min-height: 34px; }
+.desktop-content button:not(.cad-professional button):not(.scan-studio button):not([role=tab]) { min-height: 34px; border-radius: 4px; }
 .desktop-content :is(button,input,select,textarea,a):focus-visible, .desktop-titlebar :is(button,a):focus-visible { outline: 2px solid var(--studio-accent); outline-offset: 2px; }
 .desktop-shell .module-content .module-workcard { margin: 14px 18px; border: 1px solid var(--studio-border); border-radius: 5px; background: var(--studio-panel); box-shadow: 0 1px 3px #21192c09; }
 .desktop-content :is(.patient-head,.apt-head,.finance-header,.message-page-header,.cases-header) { align-items: center !important; gap: 12px !important; margin-block: 0 15px !important; padding-bottom: 14px; border-bottom: 1px solid var(--studio-border); }
@@ -150,11 +150,11 @@ body:has(.desktop-shell) .workspace-settings-content { padding: 22px; background
 .cad-watermark .brand-lockup { width: 172px; height: 39px; }
 .cad-watermark img { width: auto; height: auto; max-width: 100%; max-height: 39px; }
 /* CAD owns the complete window. Shared module chrome remains available in its menu. */
-.desktop-shell--cad { --desktop-chrome-height: var(--desktop-notice-height,0px); grid-template-rows: minmax(0,1fr); }
+:is(.desktop-shell--cad,.desktop-shell--scan) { --desktop-chrome-height: var(--desktop-notice-height,0px); grid-template-rows: minmax(0,1fr); }
 .desktop-shell--cad>.desktop-titlebar { display: none; }
-.desktop-shell .desktop-content--cad { overflow: hidden; }
-body:has(.desktop-shell--cad)>.language-select--compact, body:has(.desktop-shell--cad) [data-dentaya-launcher=true] { display: none !important; }
-html[data-workspace-compact=false] .desktop-content>main:not(.desktop-workspace-home):not(.cad-professional) { padding: 24px !important; }
+.desktop-shell :is(.desktop-content--cad,.desktop-content--scan) { overflow: hidden; }
+body:has(.desktop-shell--cad,.desktop-shell--scan)>.language-select--compact, body:has(.desktop-shell--cad,.desktop-shell--scan) [data-dentaya-launcher=true] { display: none !important; }
+html[data-workspace-compact=false] .desktop-content>main:not(.desktop-workspace-home):not(.cad-professional):not(.scan-studio) { padding: 24px !important; }
 @media(max-width:800px) {
   .desktop-shell .desktop-workspace.module-workspace { grid-template-columns: minmax(0,1fr); }
   .desktop-shell .desktop-module-navigation { display: none; }
@@ -171,7 +171,7 @@ html[data-workspace-compact=false] .desktop-content>main:not(.desktop-workspace-
   .desktop-statusbar { padding-inline: 10px 140px; gap: 9px; }
   .desktop-statusbar code,.desktop-network-status { display: none; }
   body:has(.desktop-shell) [data-dentaya-launcher=true] { display: none !important; }
-  .desktop-content>main:not(.desktop-workspace-home):not(.cad-professional) { padding: 13px !important; }
+  .desktop-content>main:not(.desktop-workspace-home):not(.cad-professional):not(.scan-studio) { padding: 13px !important; }
   .desktop-content :is(.finance-shell,.message-shell) { grid-template-columns: minmax(0,1fr) !important; }
   .desktop-content :is(.patient-stats,.apt-stats,.finance-stats) { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
   .desktop-module-menu>div { padding: 12px; }

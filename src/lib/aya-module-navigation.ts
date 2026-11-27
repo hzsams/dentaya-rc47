@@ -1,5 +1,5 @@
 import workflows from '../../electron/aya/module-workflows.json';
-import type { AyaModuleActionId } from '../../electron/aya/module-actions.cjs';
+import { AYA_NEW_APPOINTMENT_DRAFT, type AyaModuleActionId } from '../../electron/aya/module-actions.cjs';
 import { MODULE_TREE, moduleDestinations } from './module-navigation';
 
 export type AyaModuleId = keyof typeof workflows;
@@ -18,7 +18,9 @@ export function ayaModuleFromParam(value: string | null) {
 }
 
 export function ayaModuleActionDestination(id: AyaModuleActionId) {
-    return { href: `/${id}`, label: labels.get(id) ?? id };
+    const appointmentDraft = id === AYA_NEW_APPOINTMENT_DRAFT;
+    const moduleId = appointmentDraft ? 'appointments' : id;
+    return { href: `/${moduleId}`, label: labels.get(moduleId) ?? moduleId, ...(appointmentDraft ? {appointmentDraft} : {}) };
 }
 
 export function ayaHrefFromPathname(pathname: string) {

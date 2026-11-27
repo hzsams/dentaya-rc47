@@ -25,7 +25,7 @@ const errors = [], interceptedWrites = [], checks = [], layoutSamples = [];
 const moduleDestinations = ['/workspace', '/cases', '/patients', '/appointments', '/ai', '/scans', '/scan-studio', '/design', '/cad-library', '/training', '/operations', '/logistics', '/community', '/messages', '/notifications', '/clinic', '/labs', '/finance', '/team', '/settings', '/pilot-flow', '/pilot-check', '/ops-health', '/release-check'];
 let browser, server, serverExit = null, logs = '', debugPage;
 
-async function installFixture(context, authenticated = true, { locale = 'tr', theme = 'midnight', organizationType = 'clinic', emptyCases = false } = {}) {
+async function installFixture(context, authenticated = true, { locale = 'tr', theme = 'midnight', organizationType = 'clinic', emptyCases = false, role = () => 'owner' } = {}) {
   context.on('page', page => {
     page.setDefaultTimeout(30_000);
     page.on('pageerror', error => errors.push({ url: page.url(), error: error.message }));
@@ -41,7 +41,7 @@ async function installFixture(context, authenticated = true, { locale = 'tr', th
     if (url.pathname.includes('/auth/')) rows = authenticated ? { user } : { user: null };
     else {
       if (!['GET', 'HEAD'].includes(method)) interceptedWrites.push({ table, method, payload: request.postDataJSON() });
-      if (table === 'memberships') rows = authenticated ? [{ id: id(8), organization_id: organizationType === 'laboratory' ? ids.lab : ids.clinic, user_id: ids.user, role: 'owner', status: 'active' }] : [];
+      if (table === 'memberships') rows = authenticated ? [{ id: id(8), organization_id: organizationType === 'laboratory' ? ids.lab : ids.clinic, user_id: ids.user, role: role(), status: 'active' }] : [];
       else if (table === 'profiles') rows = [{ id: ids.user, full_name: 'Sentetik Kullanıcı', email: user.email, phone: '' }];
       else if (table === 'organizations') rows = organizations.filter(row => !url.searchParams.get('id')?.startsWith('eq.') || url.searchParams.get('id') === `eq.${row.id}`);
       else if (table === 'user_preferences') rows = [{ theme, motion_level: 'reduced', compact_mode: false, surface_style: 'soft', font_scale: 'normal', custom_accent: null, use_custom_accent: false }];
@@ -298,7 +298,8 @@ async function cadFolderNavigation(context) {
 async function contextualAyaNavigation() {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
   try {
-    await installFixture(context);
+    let role = 'owner';
+    await installFixture(context, true, { role: () => role });
     await context.addInitScript(() => {
       const calls = [];
       window.ayaModuleFixtureCalls = calls;
@@ -308,6 +309,7 @@ async function contextualAyaNavigation() {
         localAyaChat: async input => {
           calls.push(input);
           if (input.prompt === 'Randevuları aç') return {ok:true,output:'Randevular ekranına geçebilirsin.',openModuleId:'appointments'};
+          if (input.prompt === 'Yeni randevu başlat') return {ok:true,output:'Yeni randevu formunu açabilirsin.',openModuleId:'new-appointment-draft'};
           if (input.prompt === 'Özel kaydı aç') return {ok:true,output:'Geçersiz hedef önerisi.',openModuleId:'cases/PRIVATE_RECORD'};
           return {ok:true,output:'Fixture local reply',workingMemory:input.task==='memory'?input.workingMemory:undefined};
         },
@@ -382,10 +384,36 @@ async function contextualAyaNavigation() {
     await chat.locator('.aya-message--assistant').filter({hasText:'Geçersiz hedef önerisi.'}).waitFor();
     assert.equal(await chat.locator('.aya-module-action').count(),0,'An IPC result cannot create an action for a record or external URL');
 
+    await chat.locator('#aya-local-message').fill('Yeni randevu başlat');
+    await send.click();
+    const openDraft=chat.getByRole('button',{name:'Yeni randevu formunu aç',exact:true});
+    await openDraft.waitFor();
+    assert.equal(new URL(page.url()).pathname,'/ai');
+    await openDraft.click();
+    const draft=page.getByRole('dialog',{name:'Randevu formu',exact:true});
+    await draft.waitFor();
+    await page.waitForURL('**/appointments');
+    assert.equal(await draft.getByLabel('Hasta',{exact:true}).inputValue(),'','AYA cannot choose a patient');
+    assert.equal(interceptedWrites.filter(write=>write.table==='appointments').length,0,'Opening a form submits no appointment');
+    await page.keyboard.press('Escape');
+    await draft.waitFor({state:'hidden'});
+    await page.goto(`${base}/appointments?aya-draft=unapproved`);
+    await page.waitForURL('**/appointments');
+    assert.equal(await draft.count(),0,'A URL without the in-process approval cannot open the form');
+
+    role = 'viewer';
+    await page.goto(`${base}/ai?module=appointments`);
+    await chat.locator('.aya-status--model').waitFor();
+    await chat.locator('#aya-local-message').fill('Yeni randevu başlat');
+    await send.click();
+    await openDraft.click();
+    await page.waitForURL('**/appointments');
+    assert.equal(await draft.count(),0,'Read-only members cannot open a draft through AYA');
+
     await page.goto(`${base}/ai?module=patients&module=appointments`);
     await chat.locator('.aya-chat-header a[href="/workspace"]').waitFor();
     assert.equal(await chat.getByRole('link',{name:'Genel AYA',exact:true}).count(),0,'An ambiguous module URL opens the general chat');
-    checks.push('contextual AYA tab, dock, folder and Ctrl+K, canonical module only at synthetic desktop IPC, no patient/case identifiers, diagnostic and memory isolation, guarded user-approved navigation without stale or invalid actions');
+    checks.push('contextual AYA navigation, canonical module only at synthetic IPC, diagnostic and memory isolation, guarded navigation, explicit appointment draft with empty patient and no submission, URL replay protection');
   } finally {
     await context.close();
   }

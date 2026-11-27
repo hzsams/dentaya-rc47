@@ -1,7 +1,8 @@
 'use strict';
 
 const workflows = require('./module-workflows.json');
-const AYA_MODULE_ACTION_IDS = Object.freeze(['workspace', 'design', ...Object.keys(workflows)]);
+const AYA_NEW_APPOINTMENT_DRAFT = 'new-appointment-draft';
+const AYA_MODULE_ACTION_IDS = Object.freeze(['workspace', 'design', ...Object.keys(workflows), AYA_NEW_APPOINTMENT_DRAFT]);
 const allowed = new Set(AYA_MODULE_ACTION_IDS);
 const prefix = '[[AYA_OPEN_MODULE:';
 const actionLine = /^\[\[AYA_OPEN_MODULE:([a-z][a-z0-9-]*)\]\]$/;
@@ -37,4 +38,4 @@ function moduleActionStreamText(output) {
     return parseModuleActionReply(output).output;
 }
 
-module.exports = { AYA_MODULE_ACTION_IDS, isAyaModuleActionId, allowsAyaModuleActions, parseModuleActionReply, moduleActionStreamText };
+module.exports = { AYA_MODULE_ACTION_IDS, AYA_NEW_APPOINTMENT_DRAFT, isAyaModuleActionId, allowsAyaModuleActions, parseModuleActionReply, moduleActionStreamText };

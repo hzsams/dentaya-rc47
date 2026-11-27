@@ -28,7 +28,10 @@ const userId='11111111-1111-4111-8111-111111111111',orgId='22222222-2222-4222-82
 const unit=(code,i)=>({id:`unit-${code}-${i}`,tooth_code:code,anatomy_code:code,role:'abutment',design_type:'anatomic_crown',tooth_form:'natural',morphology_style:'balanced',material:'Zirkonya',attachment_type:'none',temporary:false,notes:''});
 const circle=(x,y,z)=>Array.from({length:32},(_,i)=>({x:x+2*Math.cos(i*Math.PI/16),y:y+2*Math.sin(i*Math.PI/16),z}));
 const caseRow={id:caseId,case_number:'CAD-RC40-IMPLANT',patient_id:'44444444-4444-4444-8444-444444444444',patient_reference:'SYNTHETIC',title:'İmplant dayanaklı günlük CAD kontrolü',case_type:'İmplant üstü kron',status:'design',priority:'normal',due_date:null,tooth_codes:['46','47'],material:'Zirkonya',shade:'A2',clinical_notes:''};
-let savedProject={id:'55555555-5555-4555-8555-555555555555',case_id:caseId,lab_org_id:orgId,source_scan_id:'scan-lower',title:'RC40 test',restoration_type:caseRow.case_type,tooth_codes:['46','47'],material:'Zirkonya',shade:'A2',workflow_stage:'margin',status:'working',settings:{show_design:false,opacity:0,job_setup:{version:1,complete:true,active_unit_id:'unit-46-0',units:[unit('46',0),unit('47',1)],updated_at:null},unit_margins:{'unit-46-0':circle(12,-5,-1.75),'unit-47-1':circle(-16,4,-1.55)}},margin_points:circle(12,-5,-1.75),measurements:[],updated_at:new Date().toISOString()};
+if(nativeAya)Object.assign(caseRow,{case_number:'CAD-AYA-SHELL',title:'Sentetik preparasyonda tek kuron',case_type:'Kron',tooth_codes:['46']});
+const units=nativeAya?[{...unit('46',0),role:'single'}]:[unit('46',0),unit('47',1)];
+const unitMargins={'unit-46-0':circle(12,-5,-1.75),...(!nativeAya&&{'unit-47-1':circle(-16,4,-1.55)})};
+let savedProject={id:'55555555-5555-4555-8555-555555555555',case_id:caseId,lab_org_id:orgId,source_scan_id:'scan-lower',title:'RC40 test',restoration_type:caseRow.case_type,tooth_codes:caseRow.tooth_codes,material:'Zirkonya',shade:'A2',workflow_stage:'margin',status:'working',settings:{show_design:false,opacity:0,job_setup:{version:1,complete:true,active_unit_id:'unit-46-0',units,updated_at:null},unit_margins:unitMargins},margin_points:circle(12,-5,-1.75),measurements:[],updated_at:new Date().toISOString()};
 const secondCase={...caseRow,id:secondCaseId,patient_id:'88888888-8888-4888-8888-888888888888',case_number:'CAD-SECOND-CASE',title:'Ayrı CAD vaka geçişi'};
 let secondProject={...structuredClone(savedProject),id:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',case_id:secondCaseId,source_scan_id:'scan-second'};
 const group=new THREE.Group();
@@ -145,7 +148,7 @@ try {
  };
 
  await page.goto(url);await ready();
- if(nativeAya)return await verifyPlacedCrownWithAya({page,save,writes,errors,aya:nativeAya,evidence});
+ if(nativeAya)return await verifyPlacedCrownWithAya({page,save,readSavedWorkspace:()=>decodeCadWorkspace(savedProject.settings.cad_workspace),writes,errors,aya:nativeAya,evidence});
  const openCaseUrl=page.url();await navigateModule('/design');assert.equal(page.url(),openCaseUrl,'The active Design module preserves its open case');
  // Both docks share the left column, leaving one continuous canvas beside them.
  const inspectorPanel=page.locator('.cad-floating-panel');

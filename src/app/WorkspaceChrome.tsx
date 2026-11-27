@@ -62,6 +62,8 @@ export default function WorkspaceChrome({ children }: {
     const pathname = usePathname();
     const currentModule = MODULES[pathname.split("/")[1]];
     const isCad=pathname==='/design'||pathname==='/cad';
+    const isScan=pathname==='/scan-studio';
+    const isWorkbench=isCad||isScan;
     const isWorkspace=pathname==='/workspace',isAya=pathname==='/ai';
     const isLibrary=pathname==='/cad-library';
     const isDesktop=Boolean(currentModule)||isCad||isWorkspace||isAya||isLibrary;
@@ -159,8 +161,8 @@ export default function WorkspaceChrome({ children }: {
         }
     }
     return <>
-    {isDesktop ? <UiNode as="div" className={`desktop-shell professional-chrome ${isCad?'desktop-shell--cad':''}`} data-desktop-module={moduleKey}>
-      {!isCad&&<UiNode as="header" className="desktop-titlebar" translateChildren={false}>
+    {isDesktop ? <UiNode as="div" className={`desktop-shell professional-chrome ${isCad?'desktop-shell--cad':isScan?'desktop-shell--scan':''}`} data-desktop-module={moduleKey}>
+      {!isWorkbench&&<UiNode as="header" className="desktop-titlebar" translateChildren={false}>
         <UiNode as="div" className="desktop-brand-area">
           <UiNode as="button" ref={menuButton} type="button" onClick={openModuleMenu} title={desktopCopy.menuHint} aria-haspopup="dialog" aria-controls="desktop-module-menu" className="desktop-modules-button"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"/></svg><UiNode as="span">{desktopCopy.modules}</UiNode><UiNode as="kbd" translateChildren={false}>{desktopCopy.menuHint}</UiNode></UiNode>
           <Link href="/workspace" className="desktop-brand" aria-label="DentAYA"><BrandLogo width={124} height={28} priority/></Link>
@@ -175,21 +177,21 @@ export default function WorkspaceChrome({ children }: {
           <UiNode as="button" ref={preferencesButton} type="button" onClick={openPreferences} aria-label={desktopCopy.preferences} title={copy.appearance}><DentayaIcon name="settings" size={17}/></UiNode>
         </UiNode>
       </UiNode>}
-      <UiNode as="div" className={`desktop-workspace module-workspace ${isCad||!preferences.navigation?'module-workspace--wide':''}`}>
-        {!isCad&&preferences.navigation&&<UiNode as="aside" className="module-navigation desktop-module-navigation" aria-label={desktopCopy.modules} translateChildren={false}>
+      <UiNode as="div" className={`desktop-workspace module-workspace ${isWorkbench||!preferences.navigation?'module-workspace--wide':''}`}>
+        {!isWorkbench&&preferences.navigation&&<UiNode as="aside" className="module-navigation desktop-module-navigation" aria-label={desktopCopy.modules} translateChildren={false}>
           <UiNode as="nav" className="studio-activity-dock" aria-label={desktopCopy.workspaces}>
             {([['/workspace', desktopCopy.workManager, 'case'], ['/design', desktopCopy.design, 'design'], ['/patients', uiText('Hastalar'), 'patient'], ['/scans', uiText('Taramalar'), 'scan'], ['/messages', uiText('Mesajlar'), 'message'], ['/finance', uiText('Finans'), 'finance'], ['/ai', 'AYA', 'ai']] as [string, string, DentayaIconName][]).map(([href,label,icon]) => <Link href={href==='/ai'?ayaHref:href} key={href} aria-current={pathname===href||pathname.startsWith(href+'/')?'page':undefined} title={label}><UiNode as="span" className="studio-dock-icon" data-icon={icon}><DentayaIcon name={icon} size={25}/></UiNode><UiNode as="span">{label}</UiNode></Link>)}
           </UiNode>
           <UiNode as="div" className="studio-dock-bottom"><Link href="/settings" title={uiText('Ayarlar')} aria-label={uiText('Ayarlar')}><DentayaIcon name="settings" size={23}/></Link></UiNode>
         </UiNode>}
         <UiNode as="div" className="module-body desktop-document">
-          <UiNode as="div" className={`module-content desktop-content ${isWorkspace?'desktop-content--manager':''} ${isCad?'desktop-content--cad':''} ${isAya?'desktop-content--aya':''}`}>
+          <UiNode as="div" className={`module-content desktop-content ${isWorkspace?'desktop-content--manager':''} ${isCad?'desktop-content--cad':isScan?'desktop-content--scan':''} ${isAya?'desktop-content--aya':''}`}>
             {children}
-            {currentModule&&<ModuleWorkcard key={moduleKey} module={moduleKey}/>}
+            {currentModule&&!isScan&&<ModuleWorkcard key={moduleKey} module={moduleKey}/>}
           </UiNode>
         </UiNode>
       </UiNode>
-      {!isCad&&<UiNode as="footer" className="desktop-statusbar" translateChildren={false}>
+      {!isWorkbench&&<UiNode as="footer" className="desktop-statusbar" translateChildren={false}>
         <UiNode as="span" className="desktop-status-module"><DentayaIcon name="shield" size={12}/>{moduleLabel}</UiNode>
         <UiNode as="span" className="desktop-network-status"><UiNode as="i" data-online={online} aria-hidden="true"/>{online?desktopCopy.networkAvailable:desktopCopy.offline}</UiNode>
         <UiNode as="code">{DENTAYA_RELEASE.version.replace('1.0.0-rc.','RC')}</UiNode>

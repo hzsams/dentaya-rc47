@@ -1,11 +1,12 @@
 "use client";
+import { consumeAyaAppointmentDraft } from "@/lib/aya-appointment-draft";
 import { workflowText, type WorkflowMessage } from "@/lib/i18n/workflow-safety";
 import LoadingExperience from '@/app/loading-play/LoadingExperience';
 import UiMessage from "@/lib/i18n/UiMessage";
 import UserText from "@/lib/i18n/UserText";
 import UiNode from "@/lib/i18n/UiNode";
 import { useTranslation } from '@/lib/i18n';
-import { useEffect, useMemo, useRef, useState, type CSSProperties, } from "react";
+import { useEffect, useEffectEvent, useMemo, useRef, useState, type CSSProperties, } from "react";
 import Link from "@/lib/i18n/UiLink";
 import { useRouter } from "next/navigation";
 import { appointmentDateTime, calendarFile, conflicts, dateKey, freeTimes, shiftDate, timeKey, weekDays } from '@/lib/appointment-planner';
@@ -54,6 +55,7 @@ export default function AppointmentsPage() {
     const copy = (source: WorkflowMessage, values?: readonly string[]) => workflowText(locale, source, values);
     const router = useRouter();
     const [loading, setLoading] = useState(true);
+    const [canStartAyaDraft, setCanStartAyaDraft] = useState(false);
     const [org, setOrg] = useState<Org | null>(null);
     const [patients, setPatients] = useState<Patient[]>([]);
     const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -84,7 +86,7 @@ export default function AppointmentsPage() {
                 router.replace("/workspace");
                 return;
             }
-            const { data: membership } = await supabase.from("memberships").select("organization_id").eq("user_id", user.id).eq("status", "active").limit(1).maybeSingle();
+            const { data: membership } = await supabase.from("memberships").select("organization_id,role").eq("user_id", user.id).eq("status", "active").limit(1).maybeSingle();
             if(!pageLive.current)return;
             if (!membership) {
                 setNotice("Aktif kurum bulunamadı.");
@@ -105,6 +107,7 @@ export default function AppointmentsPage() {
                 setLoading(false);
                 return;
             }
+            setCanStartAyaDraft(["owner", "admin", "dentist", "assistant"].includes(membership.role));
             await load(current.id);
             setLoading(false);
         }
@@ -124,12 +127,17 @@ export default function AppointmentsPage() {
         if (org?.org_type === 'clinic')
             void load(org.id, selectedDay);
     }, [org, selectedDay]);
-    function openForm(appointment:Appointment|null,time?:string) {
+    function openForm(appointment:Appointment|null,time?:string,emptyPatient=false) {
         if(createLock.current||formOpen.current)return;
-        const next:Form=appointment?{patientId:appointment.patient_id,type:appointment.appointment_type,date:dateKey(new Date(appointment.scheduled_at)),time:timeKey(appointment.scheduled_at),duration:String(appointment.duration_minutes),notes:appointment.notes??''}:{...EMPTY,date:selectedDay,patientId:patients[0]?.id??'',...(time?{time}:{})};
+        const next:Form=appointment?{patientId:appointment.patient_id,type:appointment.appointment_type,date:dateKey(new Date(appointment.scheduled_at)),time:timeKey(appointment.scheduled_at),duration:String(appointment.duration_minutes),notes:appointment.notes??''}:{...EMPTY,date:selectedDay,patientId:emptyPatient?'':patients[0]?.id??'',...(time?{time}:{})};
         formOpen.current=true;formVersion.current++;appointmentRequestId.current=null;
         setEditing(appointment);setForm(next);setFormBaseline(JSON.stringify(next));setNotice('');setShowCreate(true);
     }
+    const openAyaDraft = useEffectEvent(() => {
+        const approved = consumeAyaAppointmentDraft();
+        if (approved && canStartAyaDraft && org?.org_type === 'clinic') openForm(null, undefined, true);
+    });
+    useEffect(() => { if (!loading) openAyaDraft(); }, [loading]);
     function openCreate() {openForm(null);}
     function edit(a: Appointment) {openForm(a);}
     function closeForm() {
@@ -348,7 +356,7 @@ export default function AppointmentsPage() {
     </UiNode>
 
     {showCreate && <UiNode as="div" style={ui.overlay} onMouseDown={closeForm}><UiNode as="section" ref={modalRef} role="dialog" aria-modal="true" aria-label="Randevu formu" tabIndex={-1} style={ui.modal} onMouseDown={e => e.stopPropagation()}><UiNode as="div" style={ui.modalHead}><UiNode as="div"><UiNode as="p" style={ui.eyebrow}>{editing ? "RANDEVU DÜZENLE" : uiText("YENİ RANDEVU")}</UiNode><UiNode as="h2" style={ui.modalTitle}>{editing ? "Tarih ve saati değiştir" : "Takvime ekle"}</UiNode></UiNode><UiNode as="button" type="button" disabled={busy} onClick={closeForm} style={ui.close}>×</UiNode></UiNode><UiNode as="fieldset" disabled={busy} style={{...ui.formGrid,border:0,padding:0,margin:0,minWidth:0}}>
-      <Field label={uiText("Hasta")}><UiNode as="select" disabled={Boolean(editing)} value={form.patientId} onChange={e => setForm(x => ({ ...x, patientId: e.target.value }))} style={ui.input}>{patients.map(p => <UiNode as="option" key={p.id} value={p.id}><UserText>{p.first_name}</UserText> <UserText>{p.last_name}</UserText> · {p.external_ref}</UiNode>)}</UiNode></Field>
+      <Field label={uiText("Hasta")}><UiNode as="select" aria-label={uiText("Hasta")} disabled={Boolean(editing)} value={form.patientId} onChange={e => setForm(x => ({ ...x, patientId: e.target.value }))} style={ui.input}><UiNode as="option" value="" disabled>{uiText("Hasta seç")}</UiNode>{patients.map(p => <UiNode as="option" key={p.id} value={p.id}><UserText>{p.first_name}</UserText> <UserText>{p.last_name}</UserText> · {p.external_ref}</UiNode>)}</UiNode></Field>
       <Field label="Randevu tipi"><UiNode as="input" list="appointment-types" maxLength={120} value={form.type} onChange={e => setForm(x => ({ ...x, type: e.target.value }))} style={ui.input}/></Field>
       <UiNode as="datalist" id="appointment-types">{["Kontrol", "Dijital tarama", "Preparasyon", "Kapşon provası", "Altyapı provası", "İmplant üstü prova", "Total protez prova", "Teslim"].map(t => <UiNode as="option" key={t} value={t}/>)}</UiNode><Field label={uiText("Tarih")}><UiNode as="input" type="date" value={form.date} onChange={e => setForm(x => ({ ...x, date: e.target.value }))} style={ui.input}/></Field>
       <Field label={uiText("Saat")}><UiNode as="input" type="time" value={form.time} onChange={e => setForm(x => ({ ...x, time: e.target.value }))} style={ui.input}/></Field>
