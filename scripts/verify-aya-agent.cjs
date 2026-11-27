@@ -58,6 +58,17 @@ function rejects(change,input={}){assert.throws(()=>parse({...plan,...change},in
  assert.ok(!Object.hasOwn(responseSchema(normalizeWorkspace(cad)).properties,'decisions'));
  assert.match(prepareAgent(cadAtCapacity).instructions,/working memory as read-only/);
  assert.deepEqual(parse({...legacyCadReply,memoryUpdate:'clear'},{...cadAtCapacity,prompt:'Çalışma belleğini temizle'}).workingMemory,fullMemory,'The planning response cannot authorize a reset');
+ const priorNative=require('../verification/RC62/native-experiments/qwen35-grounding/native-inference-report.json');
+ const finalCompletion=priorNative.transport.at(-1);
+ const rawContext=finalCompletion.messages.find(message=>message.content.startsWith(CONTEXT_MARKER));
+ const replayContext=JSON.parse(rawContext.content.slice(CONTEXT_MARKER.length));
+ const replayFields=JSON.parse(finalCompletion.rawCompletion);
+ assert.equal(replayContext.workingMemory.decisions.length,5);
+ assert.equal(replayFields.decisions.length,2);
+ const replay=readAgentReply(finalCompletion.rawCompletion,{prompt:priorNative.checks.at(-1).prompt,cadContext:replayContext.liveCad,workingMemory:replayContext.workingMemory});
+ assert.deepEqual(replay.workingMemory,replayContext.workingMemory,'The archived native CAD response cannot add its observations to decisions');
+ assert.match(replay.output,/save failed/i);
+ assert.ok(replay.proposals.every(proposal=>proposal.scope===replayContext.liveCad.scope&&proposal.snapshot===replayContext.liveCad.snapshot));
  const revisedList=['D1','D2','D3','D4','Revised D5'];
  assert.deepEqual(parse({...blank,memoryUpdate:'patch',memoryPatch:{goal:'keep',decisions:'replace',openQuestions:'keep'},decisions:revisedList},fullInput).workingMemory,{...fullMemory,decisions:revisedList},'A deliberate complete field revision remains available at capacity');
  const resolved=parse({...plan,memoryUpdate:'replace',openQuestions:[]},memoryInput);assert.deepEqual(resolved.workingMemory.openQuestions,[],'A deliberate revision can resolve an open question');

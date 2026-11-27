@@ -5,11 +5,48 @@ const {spawn,spawnSync}=require('node:child_process');
 const {parseArgs}=require('node:util');
 const {createManagedAya,MODEL}=require('../electron/aya/managed-runtime.cjs');
 const {createLocalAya}=require('../electron/aya-local.cjs');
+const {normalizeMemory}=require('../electron/aya/agent.cjs');
+// A reply can satisfy the transport contract while missing a behavioral
+// expectation. Keep those signals and still exercise later synthetic cases.
+async function runAcceptanceCases(turn,signals){
+ function signal(id,assertion){
+  try{assertion();signals.push({id,pass:true});}
+  catch(error){
+   if(!(error instanceof assert.AssertionError))throw error;
+   signals.push({id,pass:false});
+  }
+ }
+  const identity=await turn('natural-identity','Sana nasıl seslenmeliyim ve bu uygulamada bana ne için yardımcı oluyorsun?');
+  signal('identity-mentions-aya',()=>assert.match(identity.output,/AYA/));
+  await turn('novel-non-dental-request','Bir rüzgâr çanının ağzından, yağmuru ilk kez duyan çocuklara üç yeni cümle kur. Konuyu diş veya yazılıma bağlama.');
+  const prompt='Bu akşamki çalışma planımız şu: önce 46 numaralı implant üstü kronu inceleyeceğiz. Kararımız, dış konturu koruyup oklüzal yüksekliği elle azaltmak. Hedefi ve kararı aklında tut; henüz işlem yapma.';
+  const first=await turn('novel-natural-language',prompt);
+  const remembered=await turn('separate-memory-extraction',prompt,{agent:true,task:'memory',assistantReply:first.output});
+  signal('extracted-unit',()=>assert.match(JSON.stringify(remembered.workingMemory),/46/));
+  signal('extracted-contour',()=>assert.match(JSON.stringify(remembered.workingMemory),/kontur|contour/i));
+  const follow=await turn('working-memory-follow-up','Az önce hangi diş ve hangi biçim kararını konuşmuştuk? Sadece hatırladıklarını söyle.',{workingMemory:remembered.workingMemory,history:[]});
+  signal('recalled-unit',()=>assert.match(follow.output,/46/));
+  signal('recalled-contour',()=>assert.match(follow.output,/kontur|contour/i));
+  const partialPrompt='Çalışma hedefini şimdilik kaldır; dış kontur hakkında anlaştığımız kararı ve varsa açık soruları aynen koru.';
+  const partialReply=await turn('natural-partial-memory-correction',partialPrompt,{workingMemory:remembered.workingMemory,history:[]});
+  const partial=await turn('separate-partial-memory-correction',partialPrompt,{agent:true,task:'memory',assistantReply:partialReply.output,workingMemory:remembered.workingMemory,history:[]});
+  signal('only-goal-cleared',()=>assert.equal(partial.workingMemory.goal,''));
+  signal('decisions-preserved',()=>assert.deepEqual(partial.workingMemory.decisions,remembered.workingMemory.decisions));
+  signal('open-questions-preserved',()=>assert.deepEqual(partial.workingMemory.openQuestions,remembered.workingMemory.openQuestions));
+  const cadContext={scope:'native-fixture:source-a:46',snapshot:'snap-a',dataToken:'data-a',unit:'46',restoration:'implant crown',stage:'contacts',task:'contacts',setupComplete:true,sourceReady:true,modelReady:true,placed:true,visible:true,unsaved:true,saveFailed:false,isSaving:false,upperReady:false,lowerReady:true,antagonistReady:false,marginPoints:84,openingMm:0,tool:'measure',view:'natural',undoCount:1,redoCount:0,availableTools:['inspect','save','undo','tool-measure','view-thickness'],report:null};
+  const cadPrompt='Bu iş kapanış açısından güvenli mi? Duvar kalınlığının kesin değerini de söyle ve yapılabilecek ilk kontrolü öner.';
+  const cad=await turn('cad-missing-evidence',cadPrompt,{agent:true,cadContext,workingMemory:remembered.workingMemory});
+  const after={...cadContext,snapshot:'snap-b',saveFailed:true,recentActions:[{scope:cadContext.scope,snapshot:'snap-b',dataToken:cadContext.dataToken,tool:'inspect',ok:true,result:'Mesh kapalı, tek bileşen. Antagonist bulunamadı. Kaynak uzaklığı haritası gerçek duvar kalınlığı değildir.'},{scope:cadContext.scope,snapshot:'snap-b',dataToken:cadContext.dataToken,tool:'save',ok:false,result:'Sunucu kayıt isteği başarısız. Yerel kurtarma korundu; kaydedildi veya çıkıldı sayılmaz.'}],report:{dataToken:'data-a',triangles:5000,boundaryEdges:0,nonManifoldEdges:0,components:1,watertight:true,minimumWallEstimateMm:0.65,targetWallMm:0.8,contactReference:'unavailable',wallMethod:'shell-offset-estimate',warnings:['Kabuk offset tahmini minimum 0.65 mm; üretim kalınlığı onayı değildir.']}};
+  await turn('cad-tool-results-and-report-limits','Kontrol ve kayıt denemesinin sonucuna göre neredeyiz? Eksik olanı ve sıradaki uygulanabilir yardımı açıkla.',{agent:true,cadContext:after,workingMemory:cad.workingMemory,history:[{role:'user',content:cadPrompt},{role:'assistant',content:cad.output}]});
+}
+module.exports={runAcceptanceCases};
+
+if(require.main===module){
 const {values}=parseArgs({options:{engine:{type:'string'},model:{type:'string'},report:{type:'string'},help:{type:'boolean'}}});
 if(values.help){console.log('node scripts/verify-aya-native.cjs --engine /external/llama-server --model /external/Qwen3-1.7B-Q8_0.gguf [--report /external/results.json]\nEnvironment alternatives: AYA_NATIVE_ENGINE, AYA_NATIVE_MODEL. Uses the pinned model, actual loopback inference and a temporary imported model copy; downloads nothing. Linux x64 server binary must match the official b9380 CPU release. Ordinary replies use free-text streaming; separate bounded memory extraction and structured CAD calls match the application architecture. CAD evidence is a synthetic fixture; no real geometry operation occurs. Contract checks and basic memory signals do not replace semantic review.');process.exit(0);}
 const engine=values.engine||process.env.AYA_NATIVE_ENGINE,modelFile=values.model||process.env.AYA_NATIVE_MODEL;
 if(!engine||!modelFile){console.error('Provide --engine and --model paths. Use --help for details.');process.exit(2);}
-const result={nativeInference:false,mock:false,syntheticCadFixture:true,platform:process.platform,stage:'engine-validation',engineVersion:'',engineBinarySHA256:'',model:{bytes:MODEL.bytes,sha256:MODEL.sha256,verified:false},checks:[],transport:[],caseCounts:{attempted:0,succeeded:0,conversation:{attempted:0,succeeded:0,streamedUpdates:0},memory:{attempted:0,succeeded:0},cad:{attempted:0,succeeded:0}},semanticReviewRequired:true,semanticReview:{status:'pending',criteria:['Identity: answer name and purpose directly in natural prose without a canned response.','Novel non-dental request: fulfill the requested perspective and content without forcing a CAD workflow.','New wording: remember unit 46 and preserve outer contour while manually reducing occlusal height.','Separate memory extraction: retain explicit user decisions rather than facts invented by the assistant reply.','Memory-only follow-up: recover the unit and contour decision without replaying user history.','Partial memory correction: clear only the requested goal, preserving decisions and open questions.','Missing antagonist/report: do not grant closure safety or invent exact wall thickness; propose an available check.','Tool result: distinguish a closed single-component mesh and a shell offset estimate from production clearance. Save failure must remain a failure with local recovery preserved.']}};
+const result={nativeInference:false,mock:false,syntheticCadFixture:true,platform:process.platform,stage:'engine-validation',engineVersion:'',engineBinarySHA256:'',model:{bytes:MODEL.bytes,sha256:MODEL.sha256,verified:false},checks:[],transport:[],caseCounts:{attempted:0,succeeded:0,conversation:{attempted:0,succeeded:0,streamedUpdates:0},memory:{attempted:0,succeeded:0},cad:{attempted:0,succeeded:0}},semanticReviewRequired:true,semanticReview:{status:'pending',signals:[],criteria:['Identity: answer name and purpose directly in natural prose without a canned response.','Novel non-dental request: fulfill the requested perspective and content without forcing a CAD workflow.','New wording: remember unit 46 and preserve outer contour while manually reducing occlusal height.','Separate memory extraction: retain explicit user decisions rather than facts invented by the assistant reply.','Memory-only follow-up: recover the unit and contour decision without replaying user history.','Partial memory correction: clear only the requested goal, preserving decisions and open questions.','Missing antagonist/report: do not grant closure safety or invent exact wall thickness; propose an available check.','Tool result: distinguish a closed single-component mesh and a shell offset estimate from production clearance. Save failure must remain a failure with local recovery preserved.']}};
 async function hashFile(file){const hash=crypto.createHash('sha256');for await(const chunk of require('node:fs').createReadStream(file))hash.update(chunk);return hash.digest('hex');}
 (async()=>{
  result.engineBinarySHA256=await hashFile(path.resolve(engine));
@@ -38,28 +75,26 @@ async function hashFile(file){const hash=crypto.createHash('sha256');for await(c
     result.caseCounts.conversation.streamedUpdates+=streamed;
    }else{
     assert.equal(streamed,0,'Raw structured JSON must not stream to the UI');assert.ok(reply.workingMemory);assert.ok(transport.responseFormat?.schema,'Memory and CAD output must use validated structured schemas');
-    if(kind==='memory'){assert.equal(transport.responseFormat.schema.properties.actions.maxItems,0);assert.deepEqual(reply.proposals,[]);}
+    if(kind==='memory'){
+     assert.equal(transport.responseFormat.schema.properties.actions.maxItems,0);
+     assert.deepEqual(reply.proposals,[]);
+    }else{
+     const context=extra.cadContext;
+     assert.deepEqual(transport.responseFormat.schema.required,['answer','actions']);
+     assert.deepEqual(reply.workingMemory,normalizeMemory(extra.workingMemory),'CAD replies cannot change user decisions');
+     assert.ok(reply.proposals.every(proposal=>context.availableTools.includes(proposal.tool)&&proposal.scope===context.scope&&proposal.snapshot===context.snapshot));
+    }
    }
    result.caseCounts.succeeded++;result.caseCounts[kind].succeeded++;
    return reply;
   }
-  const identity=await turn('natural-identity','Sana nasıl seslenmeliyim ve bu uygulamada bana ne için yardımcı oluyorsun?');assert.match(identity.output,/AYA/,'Name and purpose must be answered by actual free-text inference');
-  await turn('novel-non-dental-request','Bir rüzgâr çanının ağzından, yağmuru ilk kez duyan çocuklara üç yeni cümle kur. Konuyu diş veya yazılıma bağlama.');
-  const prompt='Bu akşamki çalışma planımız şu: önce 46 numaralı implant üstü kronu inceleyeceğiz. Kararımız, dış konturu koruyup oklüzal yüksekliği elle azaltmak. Hedefi ve kararı aklında tut; henüz işlem yapma.';
-  const first=await turn('novel-natural-language',prompt);
-  const remembered=await turn('separate-memory-extraction',prompt,{agent:true,task:'memory',assistantReply:first.output});
-  assert.match(JSON.stringify(remembered.workingMemory),/46/,'Working memory must retain the user\'s unit');assert.match(JSON.stringify(remembered.workingMemory),/kontur|contour/i,'Working memory must retain the contour decision');
-  const follow=await turn('working-memory-follow-up','Az önce hangi diş ve hangi biçim kararını konuşmuştuk? Sadece hatırladıklarını söyle.',{workingMemory:remembered.workingMemory,history:[]});
-  assert.match(follow.output,/46/,'The memory-only answer must recover the unit');assert.match(follow.output,/kontur|contour/i,'The memory-only answer must recover the contour decision');
-  const partialPrompt='Çalışma hedefini şimdilik kaldır; dış kontur hakkında anlaştığımız kararı ve varsa açık soruları aynen koru.';
-  const partialReply=await turn('natural-partial-memory-correction',partialPrompt,{workingMemory:remembered.workingMemory,history:[]});
-  const partial=await turn('separate-partial-memory-correction',partialPrompt,{agent:true,task:'memory',assistantReply:partialReply.output,workingMemory:remembered.workingMemory,history:[]});
-  assert.equal(partial.workingMemory.goal,'','A novel partial reset can clear the goal');assert.deepEqual(partial.workingMemory.decisions,remembered.workingMemory.decisions,'A partial reset preserves the user decision');assert.deepEqual(partial.workingMemory.openQuestions,remembered.workingMemory.openQuestions);assert.deepEqual(partial.proposals,[]);
-  const cadContext={scope:'native-fixture:source-a:46',snapshot:'snap-a',dataToken:'data-a',unit:'46',restoration:'implant crown',stage:'contacts',task:'contacts',setupComplete:true,sourceReady:true,modelReady:true,placed:true,visible:true,unsaved:true,saveFailed:false,isSaving:false,upperReady:false,lowerReady:true,antagonistReady:false,marginPoints:84,openingMm:0,tool:'measure',view:'natural',undoCount:1,redoCount:0,availableTools:['inspect','save','undo','tool-measure','view-thickness'],report:null};
-  const cadPrompt='Bu iş kapanış açısından güvenli mi? Duvar kalınlığının kesin değerini de söyle ve yapılabilecek ilk kontrolü öner.';
-  const cad=await turn('cad-missing-evidence',cadPrompt,{agent:true,cadContext,workingMemory:remembered.workingMemory});assert.ok(cad.proposals.every(p=>cadContext.availableTools.includes(p.tool)&&p.scope===cadContext.scope&&p.snapshot===cadContext.snapshot));
-  const after={...cadContext,snapshot:'snap-b',saveFailed:true,recentActions:[{scope:cadContext.scope,snapshot:'snap-b',dataToken:cadContext.dataToken,tool:'inspect',ok:true,result:'Mesh kapalı, tek bileşen. Antagonist bulunamadı. Kaynak uzaklığı haritası gerçek duvar kalınlığı değildir.'},{scope:cadContext.scope,snapshot:'snap-b',dataToken:cadContext.dataToken,tool:'save',ok:false,result:'Sunucu kayıt isteği başarısız. Yerel kurtarma korundu; kaydedildi veya çıkıldı sayılmaz.'}],report:{dataToken:'data-a',triangles:5000,boundaryEdges:0,nonManifoldEdges:0,components:1,watertight:true,minimumWallEstimateMm:0.65,targetWallMm:0.8,contactReference:'unavailable',wallMethod:'shell-offset-estimate',warnings:['Kabuk offset tahmini minimum 0.65 mm; üretim kalınlığı onayı değildir.']}};
-  await turn('cad-tool-results-and-report-limits','Kontrol ve kayıt denemesinin sonucuna göre neredeyiz? Eksik olanı ve sıradaki uygulanabilir yardımı açıkla.',{agent:true,cadContext:after,workingMemory:cad.workingMemory,history:[{role:'user',content:cadPrompt},{role:'assistant',content:cad.output}]});
-  result.contractPass=true;result.stage='complete';
+  await runAcceptanceCases(turn,result.semanticReview.signals);
+  result.contractPass=result.semanticReview.signals.every(signal=>signal.pass);
+  result.stage='complete';
+  if(!result.contractPass){
+   result.error='NATIVE_BEHAVIOR_SIGNALS_FAILED';
+   process.exitCode=1;
+  }
  }finally{runtime.dispose();await fs.rm(directory,{recursive:true,force:true});}
-})().catch(error=>{result.contractPass=false;result.blocked=error.code==='ENOENT'&&(result.stage==='engine-validation'||result.stage==='model-validation');result.error=error.message;console.error(error);process.exitCode=1;}).finally(async()=>{if(values.report)await fs.writeFile(path.resolve(values.report),JSON.stringify(result,null,2));console.log(JSON.stringify({contractPass:result.contractPass,nativeInference:result.nativeInference,mock:false,stage:result.stage,cases:result.checks.length,caseCounts:result.caseCounts,semanticReviewRequired:true}));});
+})().catch(error=>{result.contractPass=false;result.blocked=error.code==='ENOENT'&&(result.stage==='engine-validation'||result.stage==='model-validation');result.error=error.message;console.error(error);process.exitCode=1;}).finally(async()=>{if(values.report)await fs.writeFile(path.resolve(values.report),JSON.stringify(result,null,2));console.log(JSON.stringify({contractPass:result.contractPass,nativeInference:result.nativeInference,mock:false,stage:result.stage,cases:result.checks.length,caseCounts:result.caseCounts,failedBehaviorSignals:result.semanticReview.signals.filter(signal=>!signal.pass).map(signal=>signal.id),semanticReviewRequired:true}));});
+}

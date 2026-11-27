@@ -1,10 +1,25 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs/promises'),os=require('node:os'),path=require('node:path');
 const {runWindowsAcceptance,checkNativeReport}=require('./run-windows-aya-native.cjs');
+const {runAcceptanceCases}=require('./verify-aya-native.cjs');
 const {MODEL}=require('../electron/aya/managed-runtime.cjs');
 const ready={installed:true,error:'',models:[{name:MODEL.id}],progress:{running:false,status:'ready',completed:MODEL.bytes,total:MODEL.bytes}};
 const valid=()=>({contractPass:true,nativeInference:true,mock:false,model:{verified:true,bytes:MODEL.bytes,sha256:MODEL.sha256},semanticReviewRequired:true,caseCounts:{attempted:9,succeeded:9,conversation:{succeeded:5,streamedUpdates:12},memory:{succeeded:2},cad:{succeeded:2}}});
 (async()=>{
+ const historical=require('../verification/RC62/native-experiments/baseline-1.7b/native-inference-report.json');
+ const seen=[],signals=[];
+ await runAcceptanceCases(async(name,_prompt,context)=>{
+  seen.push(name);
+  const recorded=historical.checks.find(item=>item.name===name);
+  if(recorded)return recorded.reply;
+  assert.ok(context?.cadContext,'Only the later independent CAD cases are simulated');
+  return {output:'Synthetic CAD result',workingMemory:context.workingMemory,proposals:[]};
+ },signals);
+ assert.equal(historical.caseCounts.attempted,7);
+ assert.deepEqual(seen.slice(-2),['cad-missing-evidence','cad-tool-results-and-report-limits']);
+ assert.equal(seen.length,9,'A failed behavioral signal cannot cut off the CAD cases');
+ assert.ok(signals.some(signal=>signal.id==='only-goal-cleared'&&!signal.pass),'The known goal correction failure remains visible');
+ assert.equal(checkNativeReport({...valid(),contractPass:signals.every(signal=>signal.pass)},0),false,'Running all cases cannot turn failed behavior into a pass');
  const output=await fs.mkdtemp(path.join(os.tmpdir(),'dentaya-native-orchestration-test-'));
  try{
   let installs=0,stops=0,cancels=0,calls=0,verified=0,clock=0,mode='ready';
@@ -22,6 +37,6 @@ const valid=()=>({contractPass:true,nativeInference:true,mock:false,model:{verif
   const beforeInstall=installs;result=await runWindowsAcceptance({output,timeoutMs:1000},{...deps,platform:'linux'});assert.equal(result.status,'blocked');assert.equal(result.error,'WINDOWS_REQUIRED');assert.equal(installs,beforeInstall);
   for(const file of ['windows-native-result.json','native-inference-report.json','native-acceptance.txt'])assert.ok((await fs.stat(path.join(output,file))).size>0);
   await assert.rejects(()=>runWindowsAcceptance({output,timeoutMs:0},deps),/INVALID_ACCEPTANCE_TIMEOUT/);
-  console.log('PASS: pinned asset gate,9case+exitstatus contract, stale evidence removal,3fresh reports on installation failure, bounded waiting, cleanup, private error exclusion and mock provenance. No native inference.');
+  console.log('PASS: pinned asset gate,9case+exitstatus contract, stale evidence removal,3fresh reports on installation failure, bounded waiting, cleanup, private error exclusion, full case coverage despite recorded behavioral failure, and mock provenance. No native inference.');
  }finally{await fs.rm(output,{recursive:true,force:true});}
 })().catch(error=>{console.error(error);process.exitCode=1;});

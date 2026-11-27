@@ -1141,8 +1141,8 @@
     },
     {
       "path": "electron/aya/agent.cjs",
-      "size": 20803,
-      "sha256": "646101ceb3c07efa5fefdb23818207687c8fdf6e3a7f9af511bd15809737790f"
+      "size": 20832,
+      "sha256": "53af9e0adbed63e03f966d6083247740d7dac6d5b194c840ebe45f986d9df355"
     },
     {
       "path": "electron/aya/agent.d.cts",
@@ -1201,8 +1201,8 @@
     },
     {
       "path": "electron/aya/core.cjs",
-      "size": 8824,
-      "sha256": "1d78937fb67977925119896b818b21a340035bccf4dac11306cef369de7858cf"
+      "size": 8879,
+      "sha256": "6a8e79269bafa1a3312a8e37a4dda5ac2354d8bbc9d4146f4db0f09d9f3c565b"
     },
     {
       "path": "electron/aya/dialogue.cjs",
@@ -7471,8 +7471,8 @@
     },
     {
       "path": "scripts/verify-aya-agent.cjs",
-      "size": 20914,
-      "sha256": "893afe4d0781ed5b312a132fae239629a7b13844224272f090aaa3255a649867"
+      "size": 21954,
+      "sha256": "4486d37d60f12945275da0882d31c0760e8d0f99b21d99bf6f5f2793cb910fe8"
     },
     {
       "path": "scripts/verify-aya-cad-agent.ts",
@@ -7516,8 +7516,8 @@
     },
     {
       "path": "scripts/verify-aya-core.cjs",
-      "size": 11245,
-      "sha256": "f04146ffe43b6ef72625c2ffa7038a4b3af34e8b61436b4d406f109ffd39135c"
+      "size": 11339,
+      "sha256": "ac6f0ae1b39a482dacfe6076fda66d7f1485f27589a910f31cdd8386596a86b3"
     },
     {
       "path": "scripts/verify-aya-dialogue.cjs",
@@ -7556,8 +7556,8 @@
     },
     {
       "path": "scripts/verify-aya-native.cjs",
-      "size": 11937,
-      "sha256": "3d6c9d4ee29396d189ef9586f2bdfe20120380d016902a4c3784c9b8f797e332"
+      "size": 12987,
+      "sha256": "dbbab08a5dc47472e8cb8c957fb0d6775c7d38b7a3fad516d1bbb88aa6fa61ab"
     },
     {
       "path": "scripts/verify-aya-natural-stream.cjs",
@@ -8006,8 +8006,8 @@
     },
     {
       "path": "scripts/verify-windows-native-orchestration.cjs",
-      "size": 4633,
-      "sha256": "337c201a22b53662bfc93886b5e973de80a441dada9833022fcb53235cb23bd9"
+      "size": 5794,
+      "sha256": "0b09f2c93a66044f71aafbb893c589a3e21e2855a95415b2d583e4cb45081c7a"
     },
     {
       "path": "scripts/verify-windows-packaging.mjs",
