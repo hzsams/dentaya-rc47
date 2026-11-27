@@ -71,7 +71,7 @@ async function extractEngine(archive,destination){
  if(!Object.keys(entries).some(name=>path.posix.basename(name)==='llama-server.exe'))throw Error('AYA_ENGINE_ARCHIVE');
  await fsp.mkdir(destination,{recursive:true});for(const [name,data] of Object.entries(entries))await fsp.writeFile(path.join(destination,path.posix.basename(name)),data);
 }
-function createManagedAya({directory,fetchImpl=fetch,spawnImpl=spawn,platform=process.platform,engineBinary}={}){
+function createManagedAya({directory,fetchImpl=fetch,spawnImpl=spawn,platform=process.platform,engineBinary,bundledModel=MODEL}={}){
  if(!directory)throw Error('AYA_DIRECTORY_REQUIRED');const root=path.join(directory,'aya-local'),engineDir=path.join(root,'engine'),modelsDir=path.join(root,'models');
  const binary=()=>engineBinary||path.join(engineDir,platform==='win32'?'llama-server.exe':'llama-server');
  let child=null,startPromise=null,activeModel='',base='',key='',install=null,stopping=false,lifecycle=0,disposed=false;
@@ -84,17 +84,18 @@ function createManagedAya({directory,fetchImpl=fetch,spawnImpl=spawn,platform=pr
   if(disposed)return {ok:false,error:'LOCAL_CANCELLED'};
   if(install||startPromise||child)return {ok:false,error:'LOCAL_BUSY'};
   if(platform!=='win32')return {ok:false,error:'AYA_WINDOWS_REQUIRED'};
-  const controller=new AbortController();install={owner,controller};lastError='';progress={running:true,status:'engine',completed:0,total:ENGINE.bytes+MODEL.bytes};
+  const total=ENGINE.bytes+bundledModel.bytes;
+  const controller=new AbortController();install={owner,controller};lastError='';progress={running:true,status:'engine',completed:0,total};
   void(async()=>{try{
    await fsp.mkdir(root,{recursive:true});const archive=path.join(root,'engine-'+ENGINE.version+'.zip');
-   await verifiedDownload(ENGINE,archive,{signal:controller.signal,fetchImpl,onProgress:(n)=>{progress={running:true,status:'engine',completed:n,total:ENGINE.bytes+MODEL.bytes};}});
+   await verifiedDownload(ENGINE,archive,{signal:controller.signal,fetchImpl,onProgress:(n)=>{progress={running:true,status:'engine',completed:n,total};}});
    if(controller.signal.aborted)throw controller.signal.reason;
    const stage=path.join(root,'engine-stage');await fsp.rm(stage,{force:true,recursive:true});await extractEngine(archive,stage);
    await fsp.rm(engineDir,{force:true,recursive:true});await fsp.rename(stage,engineDir);
-   progress={running:true,status:'model',completed:ENGINE.bytes,total:ENGINE.bytes+MODEL.bytes};
-   await verifiedDownload(MODEL,path.join(modelsDir,MODEL.name),{signal:controller.signal,fetchImpl,onProgress:(n)=>{progress={running:true,status:'model',completed:ENGINE.bytes+n,total:ENGINE.bytes+MODEL.bytes};}});
-   const previous=await records();controller.signal.throwIfAborted();await saveRecords([{id:MODEL.id,file:MODEL.name,name:MODEL.label,size:MODEL.bytes,sha256:MODEL.sha256},...previous.filter(m=>m.id!==MODEL.id)]);controller.signal.throwIfAborted();
-   progress={running:false,status:'ready',completed:ENGINE.bytes+MODEL.bytes,total:ENGINE.bytes+MODEL.bytes};
+   progress={running:true,status:'model',completed:ENGINE.bytes,total};
+   await verifiedDownload(bundledModel,path.join(modelsDir,bundledModel.name),{signal:controller.signal,fetchImpl,onProgress:(n)=>{progress={running:true,status:'model',completed:ENGINE.bytes+n,total};}});
+   const previous=await records();controller.signal.throwIfAborted();await saveRecords([{id:bundledModel.id,file:bundledModel.name,name:bundledModel.label,size:bundledModel.bytes,sha256:bundledModel.sha256},...previous.filter(m=>m.id!==bundledModel.id)]);controller.signal.throwIfAborted();
+   progress={running:false,status:'ready',completed:total,total};
   }catch(e){lastError=controller.signal.aborted?'LOCAL_CANCELLED':e.code==='ENOSPC'?'AYA_DISK_FULL':e.message||'AYA_INSTALL_FAILED';progress={...progress,running:false,status:controller.signal.aborted?'cancelled':'failed'};}finally{install=null;}})();return {ok:true};
  }
  function cancelInstall(owner){if(install&&install.owner!==owner)return {ok:false,error:'LOCAL_BUSY'};install?.controller.abort();return {ok:true};}

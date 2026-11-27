@@ -8,7 +8,21 @@ import * as THREE from 'three';
 import { STLExporter } from 'three/examples/jsm/exporters/STLExporter.js';
 import { decodeCadWorkspace } from '../src/lib/cad-project-state.ts';
 import { normalizeWorkspace } from '../electron/aya/agent.cjs';
+import { registerNativeCadBridge, verifyPlacedCrownWithAya } from './verify-native-cad-browser.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+
+export async function verifyNativeCadBrowser(aya) {
+  const evidence = {pass: false, stage: 'startup', syntheticCase: true, model: aya.model, calls: []};
+  try {
+    await verifyCadDailyBrowser({aya, evidence});
+    evidence.pass = true;
+  } catch (error) {
+    evidence.error = error.message.split('\n').filter(Boolean)[0]?.slice(0, 500);
+  }
+  return evidence;
+}
+
+async function verifyCadDailyBrowser({aya: nativeAya, evidence} = {}) {
 const { chromium } = await import(process.env.DENTAYA_PLAYWRIGHT_MODULE ? pathToFileURL(process.env.DENTAYA_PLAYWRIGHT_MODULE).href : 'playwright');
 const userId='11111111-1111-4111-8111-111111111111',orgId='22222222-2222-4222-8222-222222222222',caseId='33333333-3333-4333-8333-333333333333',secondCaseId='99999999-9999-4999-8999-999999999999';
 const unit=(code,i)=>({id:`unit-${code}-${i}`,tooth_code:code,anatomy_code:code,role:'abutment',design_type:'anatomic_crown',tooth_form:'natural',morphology_style:'balanced',material:'Zirkonya',attachment_type:'none',temporary:false,notes:''});
@@ -31,7 +45,9 @@ try {
  const url='http://127.0.0.1:3049/design?case='+caseId,deadline=Date.now()+65000;
  while(Date.now()<deadline){if(serverExit!==null)throw Error(logs);try{if((await fetch(url)).ok)break;}catch{}await new Promise(r=>setTimeout(r,250));}
  browser=await chromium.launch({headless:true,...(process.env.DENTAYA_CHROMIUM_PATH?{executablePath:process.env.DENTAYA_CHROMIUM_PATH}:{}),args:['--no-sandbox','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
- const page=await browser.newPage({viewport:{width:1600,height:1000}});page.setDefaultTimeout(30000);
+ const viewport=nativeAya?{width:3840,height:2160}:{width:1600,height:1000};
+ const page=await browser.newPage({viewport});page.setDefaultTimeout(30000);
+ if(nativeAya)await registerNativeCadBridge(page,url,nativeAya,evidence);
  page.on('pageerror',e=>errors.push(e.message));
  page.on('request',request=>{if(request.url().includes('/design'))navigationLog.push({at:Date.now()-suiteStarted,url:request.url(),kind:request.resourceType(),navigation:request.isNavigationRequest()});});
  await page.route('http://127.0.0.1:54321/**',async route=>{
@@ -63,7 +79,7 @@ try {
   await route.fulfill({status,headers:{'access-control-allow-origin':'*','access-control-allow-headers':'*','content-type':'application/json'},body:JSON.stringify(body)});
  });
  await page.route('**/training-scans/602.stl',route=>route.fulfill({status:200,contentType:'model/stl',body:fixture}));
- await page.addInitScript(({userId})=>{
+ await page.addInitScript(({userId,withNativeAya})=>{
   const openRecovery=indexedDB.open.bind(indexedDB);
   window.rc51RecoveryReads=[];
   indexedDB.open=(...args)=>{
@@ -89,11 +105,17 @@ try {
    if(model.mode==='engine-memory')return {ok:false,error:'AYA_ENGINE_MEMORY'};
    return result;
   },localAyaCancel:async()=>{model.cancels++;return {ok:true};}};
+  if(withNativeAya)window.dentayaDesktop={
+   onOpenPreferences:()=>()=>{},
+   localAyaStatus:()=>window.dentayaFixtureAyaStatus(),
+   localAyaChat:input=>window.dentayaFixtureAyaChat(input),
+   localAyaCancel:id=>window.dentayaFixtureAyaCancel(id)
+  };
   const exp=Math.floor(Date.now()/1000)+86400,payload=btoa(JSON.stringify({sub:userId,exp,aud:'authenticated',role:'authenticated'}));
   localStorage.setItem('sb-127-auth-token',JSON.stringify({access_token:`eyJhbGciOiJIUzI1NiJ9.${payload}.test`,refresh_token:'test',token_type:'bearer',expires_in:86400,expires_at:exp,user:{id:userId,email:'cad-test@example.invalid',aud:'authenticated',role:'authenticated',app_metadata:{},user_metadata:{},created_at:'2026-01-01T00:00:00Z'}}));
   localStorage.setItem('dentaya:cad-workspace:v1',JSON.stringify({background:'graphite',grid:false,axes:false,damping:false}));
   localStorage.setItem('dentaya:experience:v1',JSON.stringify({motion:'reduced'}));
- },{userId});
+ },{userId,withNativeAya:Boolean(nativeAya)});
  const ready=async()=>{await page.locator('.cad-professional').waitFor();await page.waitForFunction(()=>{const canvas=document.querySelector('.cad-professional canvas'),exit=Array.from(document.querySelectorAll('.cad-main-header button')).find(button=>button.textContent?.trim()==='Kaydet ve çık');return canvas instanceof HTMLCanvasElement&&canvas.width>0&&canvas.height>0&&exit&&!exit.disabled&&!document.querySelector('.cad-save-dialog')?.open;},{},{timeout:55000});};
  const save=async()=>{
   const observed=patchResults.length,writeCount=writes.length;
@@ -123,6 +145,7 @@ try {
  };
 
  await page.goto(url);await ready();
+ if(nativeAya)return await verifyPlacedCrownWithAya({page,save,writes,errors,aya:nativeAya,evidence});
  const openCaseUrl=page.url();await navigateModule('/design');assert.equal(page.url(),openCaseUrl,'The active Design module preserves its open case');
  // Both docks share the left column, leaving one continuous canvas beside them.
  const inspectorPanel=page.locator('.cad-floating-panel');
@@ -475,3 +498,6 @@ try {
  if(debugPage){try{const state=await debugPage.evaluate(()=>({url:location.href,status:document.querySelector('.cad-status-bar')?.textContent,case:document.querySelector('.cad-case-select')?.value,saveState:document.querySelector('.cad-save-state')?.getAttribute('data-save-state'),modalOpen:document.querySelector('.cad-save-dialog')?.open,headerButtons:Array.from(document.querySelectorAll('.cad-main-header button')).map(button=>({label:button.textContent?.trim(),disabled:button.disabled})),history:document.querySelector('.cad-history-count')?.textContent}));console.error('CAD failure diagnostic',JSON.stringify({state,serverVersion:savedProject.updated_at,serverUnit:savedProject.settings?.job_setup?.active_unit_id,serverSavedAt:savedProject.settings?.cad_workspace?.savedAt,writeCount:writes.length,requestLog:requestLog.slice(-30),navigationLog},null,2));const directory=process.env.DENTAYA_SCREENSHOT_DIR||path.join(os.tmpdir(),'dentaya-cad-browser-debug');await fs.mkdir(directory,{recursive:true});await debugPage.screenshot({path:path.join(directory,'CAD_failure.png'),animations:'disabled',timeout:15000});}catch(debugError){console.error('Diagnostic capture failed',debugError.message);}}
  throw error;
 }finally{await browser?.close();if(server){server.kill('SIGTERM');await new Promise(resolve=>{if(server.exitCode!==null)return resolve();server.once('exit',resolve);setTimeout(resolve,3000);});}}
+
+}
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))await verifyCadDailyBrowser();

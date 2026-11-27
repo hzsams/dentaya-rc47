@@ -78,9 +78,10 @@ int main(int argc,char**argv){try{
     {name:'keep-with-list-rejected',value:{...memory,decisions:{operation:'keep',values:[]}},accept:false},
     {name:'action-rejected',value:{...memory,actions:['inspect']},accept:false}
    ]},
-   {name:'agent-cad',schema:responseSchema({availableTools:['inspect','undo','flashlight-on']}),checks:[
+   {name:'agent-cad',schema:responseSchema({availableTools:['inspect','undo','flashlight-on','crown-shell']}),checks:[
     {name:'empty-actions',value:withCadActions([]),accept:true},
     {name:'allowed-inspect',value:withCadActions([{tool:'inspect',reason:'Measure first'}]),accept:true},
+    {name:'allowed-crown-shell',value:withCadActions([{tool:'crown-shell',reason:'Create the first crown shell draft'}]),accept:true},
     {name:'allowed-flashlight-on',value:withCadActions([{tool:'flashlight-on',reason:'Illuminate the surface'}]),accept:true},
     {name:'unavailable-flashlight-off',value:withCadActions([{tool:'flashlight-off',reason:'Disable flashlight'}]),accept:false},
     {name:'disallowed-save',value:withCadActions([{tool:'save',reason:'Save'}]),accept:false},

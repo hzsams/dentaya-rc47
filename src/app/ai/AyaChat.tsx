@@ -17,13 +17,15 @@ import AyaSources from './AyaSources';
 import UserText from "@/lib/i18n/UserText";
 import UiNode from "@/lib/i18n/UiNode";
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from "@/lib/i18n/UiLink";
 import { useTranslation } from '@/lib/i18n';
 import AyaPreferencesPanel from './AyaPreferencesPanel';
 import { useAyaState, readAyaState, ayaSessionRevision, saveAyaSessionIfCurrent, deleteAyaSession, type AyaMessage } from '@/lib/aya-local-state';
 import { playExperienceCue } from '@/lib/experience-audio';
-import type { ayaModuleFromParam } from '@/lib/aya-module-navigation';
+import { ayaModuleActionDestination, type ayaModuleFromParam } from '@/lib/aya-module-navigation';
 type Message = AyaMessage;
+type ModuleAction={reply:Message;destination:ReturnType<typeof ayaModuleActionDestination>};
 type MemoryWork={turn:string;sessionId:string;baseline:string;version:number;prompt:string;answer:string;memory:ReturnType<typeof normalizeMemory>};
 type PendingMemory={requestId:string;cancelled:boolean;promise:Promise<void>};
 type LocalStatus = Awaited<ReturnType<NonNullable<NonNullable<Window['dentayaDesktop']>['localAyaStatus']>>>;
@@ -33,6 +35,7 @@ const ERROR: Record<string, string> = { LOCAL_RUNTIME_MISSING: 'Yerel motor kont
 function OpenArrow() { return <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 12 12 4M4 4h8v8"/></svg>; }
 export default function AyaChat({sourceModule=null}:{sourceModule?:ReturnType<typeof ayaModuleFromParam>}) {
     const { t, locale, intlLocale } = useTranslation();
+    const router=useRouter();
     const { options, sessions } = useAyaState();
     const agentCopy=ayaAgentText(locale);
     const [workingMemory,setWorkingMemory]=useState(()=>normalizeMemory(null));
@@ -46,6 +49,7 @@ export default function AyaChat({sourceModule=null}:{sourceModule?:ReturnType<ty
     const [streamingReply,setStreamingReply]=useState<{text:string;diagnostic:boolean}|null>(null);
     const [retryRequest,setRetryRequest]=useState<{prompt:string;forceModel:boolean;preserveDraft:boolean}|null>(null);
     const [diagnosticResult,setDiagnosticResult]=useState<Message|null>(null);
+    const [moduleAction,setModuleAction]=useState<ModuleAction|null>(null);
     const [saveConflict,setSaveConflict]=useState<'changed'|'missing'|null>(null);
     const [pendingQuestion,setPendingQuestion]=useState('');
     const [recoveredQuestion,setRecoveredQuestion]=useState(false);
@@ -253,7 +257,7 @@ export default function AyaChat({sourceModule=null}:{sourceModule?:ReturnType<ty
         setRetryRequest(null);
         setDiagnosticResult(null);
         setStreamingReply(null);
-        if(!preserveDraft){setDraft('');setPendingQuestion(prompt);setRecoveredQuestion(false);}
+        if(!preserveDraft){setModuleAction(null);setDraft('');setPendingQuestion(prompt);setRecoveredQuestion(false);}
         // Setup checks stay visible without becoming part of the user's work.
         const previous = preserveDraft?[]:messages.at(-1)?.role==='user'&&messages.at(-1)?.content===prompt?messages.slice(0,-1):messages;
         // Old guide replies remain visible in saved conversations, but cannot
@@ -286,7 +290,8 @@ export default function AyaChat({sourceModule=null}:{sourceModule?:ReturnType<ty
             // after it has settled. The native bridge rechecks ownership/readiness.
             const canRequestModel=modelReady||status.error==='LOCAL_BUSY'&&desktop&&status.models.some(item=>item.name===model)&&!status.progress.running&&!status.ollama?.progress.running;
             const moduleContext = !preserveDraft && sourceModule ? {moduleId:sourceModule.id} : {};
-            const result = await resolveAyaReply({prompt,knowledge,history:modelHistory,workingMemory:requestMemory,options:{...requestOptions,style:detailed?'explained':requestOptions.style},locale,forceModel},{t,callModel:canRequestModel&&api?.localAyaChat?()=>Promise.race([api.localAyaChat!({ agent:false,...moduleContext,workingMemory:requestMemory,requestId:id,knowledge,useMemory:!preserveDraft&&notebook.enabled,prompt, model, locale, detail: requestOptions.style === 'concise' && !detailed ? 'concise' : 'detailed', options:requestOptions, history:modelHistory }),aborted]):undefined});
+            const allowModuleActions=!preserveDraft&&!forceModel;
+            const result = await resolveAyaReply({prompt,knowledge,history:modelHistory,workingMemory:requestMemory,options:{...requestOptions,style:detailed?'explained':requestOptions.style},locale,forceModel,allowModuleActions},{t,callModel:canRequestModel&&api?.localAyaChat?()=>Promise.race([api.localAyaChat!({ agent:false,...moduleContext,...(allowModuleActions?{allowModuleActions}:{}),workingMemory:requestMemory,requestId:id,knowledge,useMemory:!preserveDraft&&notebook.enabled,prompt, model, locale, detail: requestOptions.style === 'concise' && !detailed ? 'concise' : 'detailed', options:requestOptions, history:modelHistory }),aborted]):undefined});
             if (!live.current || requestId.current!==id)
                 return;
             if(!result.ok){
@@ -302,6 +307,7 @@ export default function AyaChat({sourceModule=null}:{sourceModule?:ReturnType<ty
             else {
                 const next:Message[]=[...previous, { role: 'user', content: prompt }, reply];
                 setMessages(next);setPendingQuestion('');setRecoveredQuestion(false);
+                if(result.openModuleId)setModuleAction({reply,destination:ayaModuleActionDestination(result.openModuleId)});
                 if(result.kind==='control'&&result.workingMemory)updateMemory(result.workingMemory);
                 rememberWorkspace({messages:next,draft:'',pendingQuestion:''});
                 if(result.engine==='model')memoryWork={turn:id,sessionId,baseline:JSON.stringify(currentMemory.current),version:memoryVersion.current,prompt,answer:result.output,memory:normalizeMemory(currentMemory.current)};
@@ -338,10 +344,17 @@ export default function AyaChat({sourceModule=null}:{sourceModule?:ReturnType<ty
     const runtimeBusy = desktop && status.error==='LOCAL_BUSY' && status.models.some(item=>item.name===model);
     const usingModel = modelReady || runtimeBusy;
     const interactionBusy=busy||acceptanceBusy;
+    function openModule(action:ModuleAction) {
+        if(lock.current||acceptanceLock.current||moduleAction!==action||messages.at(-1)!==action.reply)return;
+        const {href}=action.destination;
+        if(!window.dispatchEvent(new CustomEvent('dentaya:before-navigation',{cancelable:true,detail:{href}})))return;
+        setModuleAction(null);
+        router.push(href);
+    }
     const statusText = acceptanceBusy?workspaceCopy.acceptanceBusy:busy ? copy.answering : checking ? copy.checking : runtimeBusy ? copy.modelBusy : modelReady ? lastModelFailure ? copy.modelFailed : verified ? copy.modelVerified : copy.modelReady : copy.unavailableStatus;
     function prepare(text:string) { if(lock.current||acceptanceLock.current)return;setDraft(text); document.getElementById('aya-local-message')?.focus(); }
     function changeMemory(memory:ReturnType<typeof normalizeMemory>) { if(lock.current||acceptanceLock.current)return;invalidateMemoryWork();memoryEdit.current={sessionId,baseline:JSON.stringify(normalizeMemory(workingMemory))};updateMemory(memory); }
-    function newConversation() { if(lock.current||acceptanceLock.current)return;rememberWorkspace();invalidateMemoryWork();const id=crypto.randomUUID();activeSession.current=id;persistedSession.current={id,revision:null};setSaveConflict(null);memoryEdit.current=null;setMessages([]); updateMemory(normalizeMemory(null)); setSessionId(id); setDraft('');setPendingQuestion('');setRecoveredQuestion(false); setError(''); setRetryRequest(null);setDiagnosticResult(null);setVerified(false); setLastModelFailure(false); document.getElementById('aya-local-message')?.focus(); }
+    function newConversation() { if(lock.current||acceptanceLock.current)return;rememberWorkspace();invalidateMemoryWork();const id=crypto.randomUUID();activeSession.current=id;persistedSession.current={id,revision:null};setSaveConflict(null);memoryEdit.current=null;setMessages([]);setModuleAction(null);updateMemory(normalizeMemory(null)); setSessionId(id); setDraft('');setPendingQuestion('');setRecoveredQuestion(false); setError(''); setRetryRequest(null);setDiagnosticResult(null);setVerified(false); setLastModelFailure(false); document.getElementById('aya-local-message')?.focus(); }
     function openConversation(id:string,preserveDraft=false) {
         if(lock.current||acceptanceLock.current)return;
         const stored=readAyaState().sessions.find(session=>session.id===id);
@@ -349,6 +362,7 @@ export default function AyaChat({sourceModule=null}:{sourceModule?:ReturnType<ty
         rememberWorkspace();
         const recovered=ayaChatWorkspace.draft(id,readAyaState().options.saveHistory);
         invalidateMemoryWork();activeSession.current=id;
+        setModuleAction(null);
         persistedSession.current={id,revision:ayaSessionRevision(stored)};memoryEdit.current=null;setSaveConflict(null);setRetryRequest(null);setDiagnosticResult(null);setSessionId(id);setMessages(stored.messages);updateMemory(normalizeMemory(stored.workingMemory));if(!preserveDraft){setDraft(recovered.pendingQuestion||recovered.draft);setPendingQuestion(recovered.pendingQuestion);setRecoveredQuestion(Boolean(recovered.pendingQuestion));}setError('');setVerified(false);setLastModelFailure(false);
     }
     function saveSeparateConversation() {
@@ -375,7 +389,7 @@ export default function AyaChat({sourceModule=null}:{sourceModule?:ReturnType<ty
                 {workingMemory.goal&&<UiNode as="button" className="aya-goal-preview" type="button" title={copy.memoryHint} onClick={()=>{setPanel('memory');setSettingsOpen(true);}}><UiNode as="span">{copy.goal}</UiNode><UserText>{workingMemory.goal}</UserText><OpenArrow/></UiNode>}
                 <UiNode as="div" className="aya-chat-messages" role="log" aria-label={copy.conversation} aria-live="polite" aria-busy={busy} translateChildren={false}>
                     {!messages.length&&<UiNode as="div" className="aya-chat-welcome" translateChildren={false}><UiNode as="span" className="aya-welcome-kicker">AYA</UiNode><UiNode as="h2">{copy.welcome}</UiNode><UiNode as="p">{usingModel?copy.freeConversation:copy.unavailableNote}</UiNode>{!usingModel&&<UiNode as="button" type="button" onClick={()=>{setPanel('setup');setSettingsOpen(true);}}>{copy.configureModel}</UiNode>}</UiNode>}
-                    {messages.map((m,i)=><UiNode as="article" key={i} className={`aya-message aya-message--${m.role}`} translateChildren={false}><UiNode as="strong">{m.role==='user'?copy.you:m.engine==='core'?copy.core:m.engine==='guide'?copy.document:copy.local}</UiNode><UiNode as="div" data-user-content><UserText>{m.content}</UserText></UiNode><AyaSources references={m.references} onInternalReference={href=>{if(href.startsWith('/ai#')){setPanel(href.includes('knowledge')?'memory':'setup');setSettingsOpen(true);}}}/>{m.role==='assistant'&&<CopyAyaResponse text={m.content}/>}</UiNode>)}
+                    {messages.map((m,i)=><UiNode as="article" key={i} className={`aya-message aya-message--${m.role}`} translateChildren={false}><UiNode as="strong">{m.role==='user'?copy.you:m.engine==='core'?copy.core:m.engine==='guide'?copy.document:copy.local}</UiNode><UiNode as="div" data-user-content><UserText>{m.content}</UserText></UiNode><AyaSources references={m.references} onInternalReference={href=>{if(href.startsWith('/ai#')){setPanel(href.includes('knowledge')?'memory':'setup');setSettingsOpen(true);}}}/>{moduleAction?.reply===m&&<UiNode as="button" type="button" className="aya-module-action" disabled={interactionBusy} onClick={()=>openModule(moduleAction)}>{workspaceCopy.openModule(t(moduleAction.destination.label))}<OpenArrow/></UiNode>}{m.role==='assistant'&&<CopyAyaResponse text={m.content}/>}</UiNode>)}
                     {diagnosticResult&&<UiNode as="article" className="aya-message aya-diagnostic-result" aria-label={copy.diagnosticResult} translateChildren={false}><UiNode as="strong">{copy.diagnosticResult}</UiNode><UiNode as="small">{diagnosticResult.engine==='model'?copy.local:copy.core}</UiNode><UiNode as="div" data-user-content><UserText>{diagnosticResult.content}</UserText></UiNode><UiNode as="small">{copy.diagnosticNote}</UiNode><CopyAyaResponse text={diagnosticResult.content}/></UiNode>}
                     {busy&&streamingReply?.text&&<UiNode as="article" className="aya-message aya-message--assistant" data-aya-streaming={streamingReply.diagnostic?'diagnostic':'conversation'} translateChildren={false}><UiNode as="strong">{streamingReply.diagnostic?copy.diagnosticResult:copy.local}</UiNode><UiNode as="div" data-user-content><UserText>{streamingReply.text}</UserText></UiNode></UiNode>}
                     {busy&&!streamingReply?.text&&<UiNode as="p" className="aya-thinking" role="status">{copy.answering}…</UiNode>}

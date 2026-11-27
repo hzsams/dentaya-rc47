@@ -2,6 +2,7 @@
 const {prepareContext,retainedReferences,guide}=require('./aya/core.cjs');
 const {readMemoryTaskReply}=require('./aya/memory-task.cjs');
 const {readAgentReply,normalizeHistory,fitMessagesToBudget,CONTEXT_MARKER}=require('./aya/agent.cjs');
+const {allowsAyaModuleActions,parseModuleActionReply,moduleActionStreamText}=require('./aya/module-actions.cjs');
 const ORIGIN='http://127.0.0.1:11434';
 const {LANGUAGES}=require('./aya/language-packs.cjs');
 const DOWNLOAD_MODEL='qwen3:4b';
@@ -91,14 +92,24 @@ function createLocalAya({fetchImpl=fetch,managed}={}){
    const instructions='Reply in '+language+'. Base model: Qwen/user-selected. '+prepared.instructions;
    const messages=[{role:'system',content:instructions},{role:'user',content:CONTEXT_MARKER+JSON.stringify(prepared.context)},...history,{role:'user',content:input.prompt.trim()}];
    let references=prepared.references;
+   const moduleActions=allowsAyaModuleActions(input);
+   let lastVisibleToken='';
+   const streamToken=value=>{
+    if(signal.aborted)return;
+    if(!moduleActions){onToken(value);return;}
+    const visible=moduleActionStreamText(value);
+    if(visible&&visible!==lastVisibleToken){lastVisibleToken=visible;onToken(visible);}
+   };
    const finish=result=>{
     signal.throwIfAborted();
     const structured=prepared.agent?(memoryTask?readMemoryTaskReply(result.output,input):readAgentReply(result.output,input)):{};
-    return {ok:true,...result,...structured,model:input.model,references};
+    const action=moduleActions?parseModuleActionReply(result.output):null;
+    if(action&&!action.output.trim())throw Error('LOCAL_EMPTY_RESPONSE');
+    return {ok:true,output:result.output,...(result.metrics?{metrics:result.metrics}:{}),...structured,...action,model:input.model,references};
    };
    // Structured replies are displayed after validation, never streamed as executable JSON.
    if(managed&&input.model.startsWith('aya-local:')){
-    const result=await managed.chat({model:input.model,options:prepared.options,responseSchema:prepared.agent?.schema,signal,onToken:prepared.agent?()=>{}:value=>{if(!signal.aborted)onToken(value);},onContext:budgeted=>{references=retainedReferences(prepared.references,budgeted);},messages});
+    const result=await managed.chat({model:input.model,options:prepared.options,responseSchema:prepared.agent?.schema,signal,onToken:prepared.agent?()=>{}:streamToken,onContext:budgeted=>{references=retainedReferences(prepared.references,budgeted);},messages});
     return finish(result);
    }
    if(!(await models()).some(m=>m.name===input.model))throw Error('MODEL_MISSING');
@@ -112,7 +123,7 @@ function createLocalAya({fetchImpl=fetch,managed}={}){
    references=retainedReferences(prepared.references,budgeted);
    signal.throwIfAborted();
    const body={model:input.model,stream:!prepared.agent,think:false,...(prepared.agent?{format:prepared.agent.schema}:{}),messages:budgeted,options:{num_ctx:8192,num_predict:prepared.options.maxTokens,temperature:prepared.agent?.cad?Math.min(.2,prepared.options.creativity):prepared.options.creativity},keep_alive:'5m'};
-   if(!prepared.agent)return finish(await streamChat(body,signal,onToken));
+   if(!prepared.agent)return finish(await streamChat(body,signal,streamToken));
    const data=await json('/api/chat',{body,signal,timeout:memoryTask?60000:180000});
    if(prepared.agent&&data.done_reason==='length')throw Error('LOCAL_INVALID_PLAN');
    if(data.done!==true||typeof data.message?.content!=='string'||!data.message.content.trim())throw Error('LOCAL_EMPTY_RESPONSE');

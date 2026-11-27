@@ -93,9 +93,15 @@ jobs:
           retention-days: 14
 
   windows-native:
-    name: Separate real native AYA contract evidence
+    name: Real native AYA (${{ matrix.model }})
     runs-on: windows-2025
-    timeout-minutes: 25
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        model: ${{ fromJSON(github.ref == 'refs/heads/codex/rc62-guncel-kaynak' && '["baseline","candidate"]' || '["baseline"]') }}
+    env:
+      AYA_NATIVE_PROFILE: ${{ matrix.model }}
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
@@ -121,14 +127,34 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           npm ci --no-audit --no-fund
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Prepare the candidate CAD browser fixture
+        if: matrix.model == 'candidate'
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $fixture = Join-Path $env:RUNNER_TEMP 'dentaya-cad-playwright'
+          npm install --prefix $fixture --ignore-scripts --no-save --package-lock=false --no-audit --no-fund playwright-core@1.57.0
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $browser = @(
+            (Join-Path ${env:ProgramFiles(x86)} 'Microsoft\Edge\Application\msedge.exe')
+            (Join-Path $env:ProgramFiles 'Google\Chrome\Application\chrome.exe')
+          ) | Where-Object { Test-Path $_ } | Select-Object -First 1
+          if (-not $browser) { throw 'A Chromium browser is required for real CAD evidence' }
+          "DENTAYA_PLAYWRIGHT_MODULE=$(Join-Path $fixture 'node_modules/playwright-core/index.mjs')" | Add-Content $env:GITHUB_ENV
+          "DENTAYA_CHROMIUM_PATH=$browser" | Add-Content $env:GITHUB_ENV
       - name: Exercise real conversation, memory, and synthetic CAD model calls
-        run: node scripts/run-windows-aya-native.cjs --output ci-artifacts/native
+        shell: pwsh
+        run: |
+          $nativeArgs = @('--output', 'ci-artifacts/native')
+          if ($env:AYA_NATIVE_PROFILE -eq 'candidate') { $nativeArgs += @('--candidate', '--cad-browser') }
+          node scripts/run-windows-aya-native.cjs @nativeArgs
+          exit $LASTEXITCODE
       - name: Record native report source provenance
         if: always()
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force ci-artifacts/native | Out-Null
-          node -e "const fs=require('node:fs');fs.writeFileSync('ci-artifacts/native/source-provenance.json',JSON.stringify({commit:process.env.GITHUB_SHA,version:require('./package.json').version,runId:process.env.GITHUB_RUN_ID,runAttempt:process.env.GITHUB_RUN_ATTEMPT,job:'windows-native'},null,2)+'\n')"
+          node -e "const fs=require('node:fs');fs.writeFileSync('ci-artifacts/native/source-provenance.json',JSON.stringify({commit:process.env.GITHUB_SHA,version:require('./package.json').version,runId:process.env.GITHUB_RUN_ID,runAttempt:process.env.GITHUB_RUN_ATTEMPT,job:'windows-native',profile:process.env.AYA_NATIVE_PROFILE},null,2)+'\n')"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Summarize exact-source native AYA evidence
         if: always()
@@ -140,14 +166,18 @@ jobs:
           $native = Get-Content ci-artifacts/native/native-inference-report.json -Raw | ConvertFrom-Json
           $failed = @($native.semanticReview.signals | Where-Object { $_.pass -eq $false } | ForEach-Object { $_.id })
           @(
-            '## Native AYA'
+            "## Native AYA ($env:AYA_NATIVE_PROFILE)"
             "Source: $env:GITHUB_SHA"
+            "Verified model: $($status.model.id), $($status.model.bytes) bytes, SHA-256 $($status.model.sha256), integrity $($status.model.verified)"
             "Result: $($status.status) $($status.error)"
             "Actual inference observed: $($status.nativeInferenceObserved)"
             "Base cases: $($status.casesSucceeded)/$($status.casesAttempted)"
             "Module cases: $($native.moduleCases.succeeded)/$($native.moduleCases.attempted)"
+            "Navigation cases: $($native.navigationCases.succeeded)/$($native.navigationCases.attempted)"
             "Cancellation and restart: $($native.runtimeChecks.passed)"
             "Runner RAM: $($native.hardware.memoryBytes) bytes"
+            "Lowest observed free RAM: $($native.hardware.lowestObservedFreeBytes) bytes"
+            "4K CAD and native model: $($native.cadBrowser.pass) $($native.cadBrowser.stage) $($native.cadBrowser.error)"
             "Failed behavior signals: $($failed -join ', ')"
             'Review the synthetic responses for semantic quality.'
             '<details><summary>Synthetic responses</summary>'
@@ -162,13 +192,14 @@ jobs:
       - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         if: always()
         with:
-          name: windows-native-evidence
+          name: ${{ matrix.model == 'candidate' && 'windows-native-candidate-evidence' || 'windows-native-evidence' }}
           overwrite: true
           path: |
             ci-artifacts/native/native-inference-report.json
             ci-artifacts/native/windows-native-result.json
             ci-artifacts/native/native-acceptance.txt
             ci-artifacts/native/source-provenance.json
+            ci-artifacts/native/native-aya-cad-4k.png
           if-no-files-found: error
           retention-days: 14
 

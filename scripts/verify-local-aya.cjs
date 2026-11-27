@@ -1,6 +1,7 @@
 const assert=require('node:assert/strict');
 const {createLocalAya}=require('../electron/aya-local.cjs');
 const {TOOL_IDS,CONTEXT_MARKER}=require('../electron/aya/agent.cjs');
+const {parseModuleActionReply}=require('../electron/aya/module-actions.cjs');
 const local={name:'qwen3:4b',size:2500000000,details:{format:'gguf'}};
 (async()=>{
  let payload,chatCalls=0,mode='normal',pending,started;
@@ -16,6 +17,11 @@ const local={name:'qwen3:4b',size:2500000000,details:{format:'gguf'}};
   if(mode==='structured')return Response.json({done:true,message:{content:JSON.stringify(structured)}});
   if(mode==='truncated-plan')return Response.json({done:true,done_reason:'length',message:{content:JSON.stringify(structured)}});
   if(mode==='invalid-plan')return Response.json({done:true,message:{content:JSON.stringify({...structured,actions:[{tool:'shell',reason:'Run code'}]})}});
+  if(mode==='module-action')return new Response([
+   ...['Randevular ekranına geçebilirsin.','\n[','[AYA_OPEN_','MODULE:appointments',']]'].map(content=>JSON.stringify({done:false,message:{content}})),
+   JSON.stringify({done:true,message:{content:''}}),
+  ].join('\n')+'\n');
+  if(mode==='invalid-module-action')return Response.json({done:true,message:{content:'Geçerli bir hedef seç.\n[[AYA_OPEN_MODULE://external.invalid]]'}});
   return Response.json(mode==='empty'?{done:true,message:{content:''}}:{done:true,message:{content:'Yerel test yanıtı'}});
  }});
  assert.deepEqual((await api.status()).models,[{name:local.name,size:local.size}]);
@@ -46,6 +52,28 @@ const local={name:'qwen3:4b',size:2500000000,details:{format:'gguf'}};
  r=await api.chat({...moduleRequest,moduleId:'appointments/PRIVATE_RECORD',history:[]},1);
  assert.equal(r.ok,true,r.error);
  assert.doesNotMatch(JSON.stringify(payload),/workspaceModule|PRIVATE_RECORD/);
+ mode='module-action';const streamedAction=[];
+ const actionRequest={prompt:'Randevuları aç',model:local.name,locale:'tr',agent:false,allowModuleActions:true,options:{useKnowledge:false}};
+ r=await api.chat(actionRequest,1,s=>s,value=>streamedAction.push(value));
+ assert.equal(r.ok,true,r.error);
+ assert.equal(r.openModuleId,'appointments');
+ assert.equal(r.output,'Randevular ekranına geçebilirsin.');
+ assert.deepEqual(streamedAction,[r.output],'Raw and partial module markers are never streamed to the chat UI');
+ assert.match(payload.messages[0].content,/\[\[AYA_OPEN_MODULE:ID\]\]/);
+ assert.equal(payload.format,undefined,'Normal chat can suggest navigation and remains free-text');
+ r=await api.chat({...actionRequest,allowModuleActions:false},1);
+ assert.equal(r.openModuleId,undefined,'A diagnostics request cannot produce an actionable proposal');
+ assert.doesNotMatch(payload.messages[0].content,/\[\[AYA_OPEN_MODULE:/);
+ mode='invalid-module-action';r=await api.chat(actionRequest,1);
+ assert.equal(r.ok,true,r.error);
+ assert.equal(r.openModuleId,undefined);
+ assert.equal(r.output,'Geçerli bir hedef seç.');
+ const ordinaryText='Plain reply.\n\n[ordinary bracketed text]';
+ assert.deepEqual(parseModuleActionReply(ordinaryText),{output:ordinaryText});
+ assert.deepEqual(parseModuleActionReply('Belirsiz istek.\n[[AYA_OPEN_MODULE:cases]]\n[[AYA_OPEN_MODULE:patients]]'),{output:'Belirsiz istek.'});
+ assert.equal(parseModuleActionReply('Buradan açabilirsin.\n[[AYA_OPEN_MODULE:cases/1]]').openModuleId,undefined);
+ assert.equal(parseModuleActionReply('Bir örnek.\n[[AYA_OPEN_MODULE:cases]]\nMetin devam ediyor.').openModuleId,undefined);
+ mode='normal';
  r=await api.chat({prompt:'CAD durumu',model:local.name,cadContext:{unit:'46',restoration:'Anatomik kron',stage:'margin',marginPoints:32,placed:true,patientName:'SENSITIVE_TEST',positions:[999],saveFailed:false}},1);assert.equal(r.ok,true);assert.match(payload.messages[1].content,/\"unit\":\"46\"/);assert.match(payload.messages[1].content,/\"marginPoints\":32/);assert.ok(!payload.messages.some(m=>m.content.includes('SENSITIVE_TEST')));assert.ok(!payload.messages.some(m=>m.content.includes('positions')));
  const longNote={id:'long-calibration',title:'Teknisyen çalışma kaydı',content:'Genel çalışma açıklaması '.repeat(350)+'Kalibrasyon kodu Z8T4; yalnız prova cihazına aittir.'};
  r=await api.chat({prompt:'Kalibrasyon kodunu hatırlat.',model:local.name,options:{maxTokens:2048,useKnowledge:false},knowledge:[longNote]},1);assert.equal(r.ok,true,r.error);
@@ -96,5 +124,15 @@ const local={name:'qwen3:4b',size:2500000000,details:{format:'gguf'}};
  installBusy=false;managedStatus={...managedStatus,progress:{...managedStatus.progress,running:false,status:'ready'}};
  assert.equal((await mixed.chat({prompt:'Continue locally',model:local.name},9)).output,'Ollama fixture reply');assert.equal(ollamaChatCalls,1);assert.equal(managedChats,0,'Selected Ollama inference remains on its loopback runtime');
  assert.equal((await mixed.chat({prompt:'Continue managed',model:managedModel.name},9)).output,'Managed fixture reply');assert.equal(managedChats,1);assert.equal(ollamaChatCalls,1,'Selected managed inference never falls through to Ollama');
+ const managedTokens=[];
+ const managedAction=createLocalAya({managed:{isBusy:()=>false,chat:async({onToken})=>{
+  const text='CAD çalışma alanına geçebilirsin.';
+  const output=text+'\n[[AYA_OPEN_MODULE:design]]';
+  onToken(text);onToken(text+'\n[[AYA_OPEN');onToken(output);
+  return {output};
+ }}});
+ r=await managedAction.chat({...actionRequest,prompt:'Design ekranına geç',model:managedModel.name},9,s=>s,value=>managedTokens.push(value));
+ assert.equal(r.openModuleId,'design');
+ assert.deepEqual(managedTokens,[r.output],'The managed runtime strips module markers before token IPC too');
  console.log('PASS local AYA: fixed loopback, no credentials, local-only filtering, remote rejection, language, original-goal/final-constraint and recent-turn budget, matching long-note fact actually in bridge payload, full CAD/all-tools bridge with 2048-token output reserve, validated structured replies and session memory, invalid-plan rejection, empty response, owner cancellation including uncooperative transport, concurrency, download progress, missing runtime. Inference mocked.');
 })().catch(e=>{console.error(e);process.exit(1)});

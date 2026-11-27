@@ -1,4 +1,5 @@
 import workflows from '../../electron/aya/module-workflows.json';
+import type { AyaModuleActionId } from '../../electron/aya/module-actions.cjs';
 import { MODULE_TREE, moduleDestinations } from './module-navigation';
 
 export type AyaModuleId = keyof typeof workflows;
@@ -13,7 +14,11 @@ function isAyaModule(id: string | null | undefined): id is AyaModuleId {
 
 export function ayaModuleFromParam(value: string | null) {
     if (!isAyaModule(value)) return null;
-    return { id: value, href: `/${value}`, label: labels.get(value) ?? value };
+    return { id: value, ...ayaModuleActionDestination(value) };
+}
+
+export function ayaModuleActionDestination(id: AyaModuleActionId) {
+    return { href: `/${id}`, label: labels.get(id) ?? id };
 }
 
 export function ayaHrefFromPathname(pathname: string) {

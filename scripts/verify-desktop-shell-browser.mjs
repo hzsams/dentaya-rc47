@@ -303,9 +303,12 @@ async function contextualAyaNavigation() {
       const calls = [];
       window.ayaModuleFixtureCalls = calls;
       window.dentayaDesktop = {
+        onOpenPreferences: () => () => {},
         localAyaStatus: async () => ({ok:true,models:[{name:'fixture-local',size:1000}],progress:{running:false,status:'ready',completed:0,total:0}}),
         localAyaChat: async input => {
           calls.push(input);
+          if (input.prompt === 'Randevuları aç') return {ok:true,output:'Randevular ekranına geçebilirsin.',openModuleId:'appointments'};
+          if (input.prompt === 'Özel kaydı aç') return {ok:true,output:'Geçersiz hedef önerisi.',openModuleId:'cases/PRIVATE_RECORD'};
           return {ok:true,output:'Fixture local reply',workingMemory:input.task==='memory'?input.workingMemory:undefined};
         },
         localAyaCancel: async () => ({ok:true}),
@@ -334,7 +337,9 @@ async function contextualAyaNavigation() {
     const calls = await page.evaluate(() => window.ayaModuleFixtureCalls);
     assert.equal(calls[0].moduleId,'cases');
     assert.equal(calls[0].agent,false);
+    assert.equal(calls[0].allowModuleActions,true);
     assert.equal(calls.find(call => call.task === 'memory').moduleId,undefined);
+    assert.equal(calls.find(call => call.task === 'memory').allowModuleActions,undefined);
     assert.ok(!JSON.stringify(calls).includes(ids.case),'The case record identifier never enters AYA IPC');
     assert.doesNotMatch(JSON.stringify(calls),/PRIVATE_QUERY|DESKTOP-ONLY-001/);
 
@@ -342,6 +347,7 @@ async function contextualAyaNavigation() {
     await chat.getByRole('button',{name:'Yerel yanıtı test et',exact:true}).click();
     await chat.locator('.aya-diagnostic-result').waitFor();
     assert.equal(await page.evaluate(() => window.ayaModuleFixtureCalls.at(-1).moduleId),undefined,'Model diagnostics omit the source module');
+    assert.equal(await page.evaluate(() => window.ayaModuleFixtureCalls.at(-1).allowModuleActions),undefined,'Model diagnostics cannot propose module actions');
     await chat.getByRole('link',{name:'Genel AYA',exact:true}).click();
     await page.waitForURL('**/ai');
     await chat.locator('.aya-chat-header a[href="/workspace"]').waitFor();
@@ -355,10 +361,31 @@ async function contextualAyaNavigation() {
     await page.waitForURL('**/ai?module=patients');
     await chat.locator('.aya-chat-header a[href="/patients"]').waitFor();
 
+    await chat.locator('.aya-status--model').waitFor();
+    await chat.locator('#aya-local-message').fill('Randevuları aç');
+    await send.click();
+    const openAppointments=chat.getByRole('button',{name:'Randevular ekranını aç',exact:true});
+    await openAppointments.waitFor();
+    assert.equal(new URL(page.url()).search,'?module=patients','A reply cannot navigate before a user action');
+    await page.evaluate(() => window.addEventListener('dentaya:before-navigation',event=>event.preventDefault(),{once:true}));
+    await openAppointments.click();
+    assert.equal(new URL(page.url()).search,'?module=patients','AYA module actions respect the navigation guard');
+    await openAppointments.click();
+    await page.waitForURL('**/appointments');
+    await page.locator('.desktop-document-tabs a[href="/ai?module=appointments"]').click();
+    await page.waitForURL('**/ai?module=appointments');
+    await chat.locator('.aya-message--assistant').filter({hasText:'Randevular ekranına geçebilirsin.'}).waitFor();
+    assert.equal(await chat.locator('.aya-module-action').count(),0,'An approved or restored reply has no stale action');
+    await chat.locator('.aya-status--model').waitFor();
+    await chat.locator('#aya-local-message').fill('Özel kaydı aç');
+    await send.click();
+    await chat.locator('.aya-message--assistant').filter({hasText:'Geçersiz hedef önerisi.'}).waitFor();
+    assert.equal(await chat.locator('.aya-module-action').count(),0,'An IPC result cannot create an action for a record or external URL');
+
     await page.goto(`${base}/ai?module=patients&module=appointments`);
     await chat.locator('.aya-chat-header a[href="/workspace"]').waitFor();
     assert.equal(await chat.getByRole('link',{name:'Genel AYA',exact:true}).count(),0,'An ambiguous module URL opens the general chat');
-    checks.push('contextual AYA tab, dock, folder and Ctrl+K, canonical module only at synthetic desktop IPC, no patient/case identifiers, diagnostic and memory isolation, ambiguous module fallback');
+    checks.push('contextual AYA tab, dock, folder and Ctrl+K, canonical module only at synthetic desktop IPC, no patient/case identifiers, diagnostic and memory isolation, guarded user-approved navigation without stale or invalid actions');
   } finally {
     await context.close();
   }

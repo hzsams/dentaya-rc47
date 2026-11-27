@@ -1,5 +1,5 @@
 'use client';
-import {useEffect,useLayoutEffect,useRef,useState} from 'react';
+import {useEffect,useEffectEvent,useLayoutEffect,useRef,useState} from 'react';
 import UiNode from '@/lib/i18n/UiNode';
 import UserText from '@/lib/i18n/UserText';
 import {useTranslation} from '@/lib/i18n';
@@ -23,6 +23,8 @@ type Message=AyaMessage&{proposals?:AyaProposal[];cadScope?:string;guide?:boolea
 type Event=AyaCadActionEvidence;
 type PendingMemory={id:string;scope:AyaCadContext['scope'];snapshot:AyaCadContext['snapshot'];cancelled:boolean;done:Promise<void>};
 type Session={draft:string;pendingDraft:string;messages:Message[];memory:AyaWorkingMemory;events:Event[]};
+type PendingActionReview={evidence:Event;messages:Message[];events:Event[];interaction:number;waitForAutosave:boolean;autosaveObserved:boolean};
+const GEOMETRY_EDITS:ReadonlySet<AyaCadTool>=new Set(['place','internal-fit','crown-shell','undo','redo']);
 // Panel close/reopen keeps the current task in process memory, scoped to project/source/unit.
 const sessions=new Map<string,Session>();
 const sessionListeners=new Map<string,Set<(session:Session)=>void>>();
@@ -39,11 +41,13 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
  // retry. A reopened panel consumes that draft without adopting the old request.
  const [draft,setDraft]=useState(saved?.draft||saved?.pendingDraft||''),[pendingDraft,setPendingDraft]=useState(''),[messages,setMessages]=useState<Message[]>(()=>saved?.messages??[]),[memory,setMemory]=useState(()=>saved?.memory??normalizeMemory(null)),[events,setEvents]=useState<Event[]>(()=>saved?.events??[]);
  const [activeAction,setActiveAction]=useState<AyaCadTool|null>(null);
+ const [actionReview,setActionReview]=useState<PendingActionReview|null>(null);
  const [busy,setBusy]=useState(false),[model,setModel]=useState(''),[error,setError]=useState(''),[models,setModels]=useState<{name:string;size:number;label?:string}[]>([]);
  const [runtimeBusy,setRuntimeBusy]=useState(false),[guideMode,setGuideMode]=useState(false);
  const live=useRef(true),lock=useRef(false),request=useRef(''),contextRef=useRef(context),inputRef=useRef<HTMLTextAreaElement|null>(null),logRef=useRef<HTMLDivElement|null>(null),followBottom=useRef(true);
  const cancelPending=useRef<((reason:string)=>void)|null>(null),requestSnapshot=useRef('');
  const pendingMemory=useRef<PendingMemory|null>(null);
+ const interaction=useRef(0);
  const initialFocusPending=useRef(true);
  const refreshGate=useRef(createAyaStatusRefreshGate()),modelPreference=useRef('');
  // Publish committed context before a click; render must never mutate a shared ref.
@@ -117,9 +121,10 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
    ]);
   }finally{clearTimeout(timer);}
  }
- // The bounded automatic QC interpretation must never replace an unsent question.
+ // The bounded action follow-up must never replace an unsent question.
  async function send(text=draft,previous=messages,actionEvents=events,preserveDraft=false){
   const prompt=text.trim();if(!prompt||prompt.length>8000||lock.current||contextRef.current.isSaving)return;
+  ++interaction.current;setActionReview(null);
   lock.current=true;followBottom.current=true;setBusy(true);setPendingDraft(preserveDraft?'':prompt);if(!preserveDraft)setDraft('');setError('');
   const requestId=crypto.randomUUID(),captured=contextRef.current;
   const priorMemory=pendingMemory.current;
@@ -156,10 +161,12 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
 
   finally{if(timeout)clearTimeout(timeout);if(request.current===requestId){lock.current=false;request.current='';cancelPending.current=null;if(live.current){setPendingDraft('');setBusy(false);}}}
  }
- async function apply(proposal:AyaProposal){
+ async function apply(proposal:AyaProposal,fromModel=false){
   if(!onRun||lock.current)return;
   const captured=contextRef.current;
   if(ayaProposalBlock(proposal,captured)){setError(copy.stale);return;}
+  const actionInteraction=++interaction.current;
+  setActionReview(null);
   lock.current=true;setBusy(true);setActiveAction(proposal.tool);setError('');followBottom.current=true;
   let result:AyaActionResult;
   try{result=await onRun(proposal);}catch{result={ok:false,message:copy.failed};}
@@ -176,9 +183,33 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
   setBusy(false);setActiveAction(null);
   if(captured.scope!==contextRef.current.scope)return;
   setEvents(nextEvents);setMessages(nextMessages);if(!result.ok)setError(result.message);
-  // One bounded follow-up interprets actual check output, only for the unchanged geometry.
-  if(result.ok&&proposal.tool==='inspect'&&!guideMode&&model&&evidence){await new Promise<void>(resolve=>requestAnimationFrame(()=>resolve()));if(live.current&&evidence.scope===contextRef.current.scope&&evidence.snapshot===contextRef.current.snapshot&&evidence.dataToken===contextRef.current.dataToken)void send(copy.interpret,nextMessages,nextEvents,true);}
+  const geometryEdit=GEOMETRY_EDITS.has(proposal.tool);
+  const reviewable=proposal.tool==='inspect'||fromModel&&(geometryEdit||proposal.tool==='save');
+  if(result.ok&&reviewable&&!guideMode&&model&&evidence?.ok&&evidence.tool===proposal.tool){
+   setActionReview({evidence,messages:nextMessages,events:nextEvents,interaction:actionInteraction,waitForAutosave:geometryEdit,autosaveObserved:false});
+  }
  }
+ const reviewAction=useEffectEvent((review:PendingActionReview)=>{
+  const current=contextRef.current,{evidence}=review;
+  if(!live.current||guideMode||!model||interaction.current!==review.interaction||evidence.scope!==current.scope||evidence.dataToken!==current.dataToken){
+   setActionReview(null);return;
+  }
+  if(current.isSaving||review.waitForAutosave&&(!review.autosaveObserved||current.unsaved&&!current.saveFailed))return;
+  setActionReview(null);
+  if(evidence.snapshot!==current.snapshot||lock.current)return;
+  const prompt=evidence.tool==='inspect'?copy.interpret:`${copy.reviewAction} ${copy.tools[evidence.tool]}.`;
+  void send(prompt,review.messages,review.events,true);
+ });
+ useEffect(()=>{
+  if(!actionReview)return;
+  // A geometry edit queues the editor's existing autosave. Wait for it to settle
+  // before starting the next inference, so its busy state cannot invalidate it.
+  if(actionReview.waitForAutosave&&context.isSaving&&!actionReview.autosaveObserved){
+   setActionReview({...actionReview,autosaveObserved:true});return;
+  }
+  const frame=requestAnimationFrame(()=>reviewAction(actionReview));
+  return()=>cancelAnimationFrame(frame);
+ },[actionReview,context,guideMode,model]);
  const checks=cadChecklist(context,t),legacy=nextCadAction(context),legacyActions={setup:{label:t('İş tanımı'),run:onSetup},show:{label:t('Tümünü göster'),run:onShow},place:{label:t('Koleye yerleştir'),run:onPlace},save:{label:t('Kaydet ve çık'),run:onSave},next:{label:t('Sonraki'),run:onNext}};
  const currentProposal=(tool:AyaCadTool):AyaProposal=>({tool,reason:copy.tools[tool],scope:context.scope??'',snapshot:context.snapshot??''});
  // These facts come only from the committed host, independently of reply text.
@@ -208,7 +239,7 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
   {models.length>0&&<UiNode as="label">Kurulu yerel model<UiNode as="select" value={model} disabled={busy} onChange={e=>{modelPreference.current=e.target.value;setModel(e.target.value);}} aria-label="Kurulu yerel model">{models.map(m=><UiNode as="option" key={m.name} value={m.name} translateChildren={false}>{m.label??m.name}</UiNode>)}</UiNode></UiNode>}
   <UiNode as="div" role="log" ref={logRef} onScroll={e=>{const log=e.currentTarget;followBottom.current=log.scrollHeight-log.scrollTop-log.clientHeight<40;}} className="cad-aya-messages" aria-live="polite">
    {messages.map((m,i)=><UiNode as="article" key={i}><UiNode as="strong">{m.role==='user'?'Siz':m.engine==='model'?'AYA · yerel':m.engine==='core'?'AYA Core':'Uygulama rehberi · belge metni'}</UiNode><UserText>{m.content}</UserText><AyaSources references={m.references}/>
-    {Boolean(m.proposals?.length)&&<UiNode as="div" className="aya-proposals" translateChildren={false}><UiNode as="strong">{copy.actions}</UiNode>{m.proposals!.map(p=>{const stale=ayaProposalBlock(p,context)!==null;return <UiNode as="div" key={p.tool} data-proposal-tool={p.tool}><UiNode as="strong">{copy.tools[p.tool]}</UiNode><UserText>{p.reason}</UserText><UiNode as="button" type="button" disabled={busy||stale||!onRun} onClick={()=>void apply(p)}>{stale?copy.stale:copy.apply}</UiNode></UiNode>;})}</UiNode>}
+    {Boolean(m.proposals?.length)&&<UiNode as="div" className="aya-proposals" translateChildren={false}><UiNode as="strong">{copy.actions}</UiNode>{m.proposals!.map(p=>{const stale=ayaProposalBlock(p,context)!==null;return <UiNode as="div" key={p.tool} data-proposal-tool={p.tool}><UiNode as="strong">{copy.tools[p.tool]}</UiNode><UserText>{p.reason}</UserText><UiNode as="button" type="button" disabled={busy||stale||!onRun} onClick={()=>void apply(p,m.engine==='model')}>{stale?copy.stale:copy.apply}</UiNode></UiNode>;})}</UiNode>}
     {m.role==='assistant'&&<CopyAyaResponse text={m.content}/>}</UiNode>)}
    {busy&&<UiNode as="p" role="status" translateChildren={false}>{copy.planning}</UiNode>}
   </UiNode>

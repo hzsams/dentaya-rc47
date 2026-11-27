@@ -3,8 +3,9 @@ const assert=require('node:assert/strict'),fs=require('node:fs/promises'),os=req
 const {runWindowsAcceptance,checkNativeReport}=require('./run-windows-aya-native.cjs');
 const {runAcceptanceCases}=require('./verify-aya-native.cjs');
 const {MODEL}=require('../electron/aya/managed-runtime.cjs');
+const {CANDIDATE}=require('./aya-native-candidate.cjs');
 const ready={installed:true,error:'',models:[{name:MODEL.id}],progress:{running:false,status:'ready',completed:MODEL.bytes,total:MODEL.bytes}};
-const valid=()=>({contractPass:true,nativeInference:true,mock:false,model:{verified:true,bytes:MODEL.bytes,sha256:MODEL.sha256},semanticReviewRequired:true,moduleCases:{attempted:2,succeeded:2},runtimeChecks:{passed:true,cancelledAfterFirstToken:true,restarted:true},caseCounts:{attempted:9,succeeded:9,conversation:{succeeded:5,streamedUpdates:12},memory:{succeeded:2},cad:{succeeded:2}}});
+const valid=(pin=MODEL)=>({contractPass:true,nativeInference:true,mock:false,model:{verified:true,bytes:pin.bytes,sha256:pin.sha256},semanticReviewRequired:true,moduleCases:{attempted:2,succeeded:2},navigationCases:{attempted:2,succeeded:2},runtimeChecks:{passed:true,cancelledAfterFirstToken:true,restarted:true},caseCounts:{attempted:9,succeeded:9,conversation:{succeeded:5,streamedUpdates:12},memory:{succeeded:2},cad:{succeeded:2}}});
 (async()=>{
  const historical=require('../verification/RC62/native-experiments/baseline-1.7b/native-inference-report.json');
  const seen=[],signals=[];
@@ -25,6 +26,8 @@ const valid=()=>({contractPass:true,nativeInference:true,mock:false,model:{verif
   let installs=0,stops=0,cancels=0,calls=0,verified=0,clock=0,mode='ready';
   const deps={platform:'win32',now:()=>clock,sleep:async ms=>{clock+=ms;},makeRuntime:()=>({installAll:async()=>{installs++;return {ok:true};},status:async()=>mode==='busy'?{...ready,progress:{running:true,status:'model',completed:1,total:MODEL.bytes}}:mode==='failed'?{...ready,error:'PRIVATE C:/patients/model.gguf',progress:{running:false,status:'failed',completed:1,total:MODEL.bytes}}:ready,cancelInstall:()=>{cancels++;},dispose:()=>{stops++;}}),verifyAssets:async()=>{verified++;if(mode==='integrity')throw Error('MODEL_INTEGRITY_FAILED');return {engine:'fixture-engine.exe',model:'fixture-model.gguf',engineBinarySHA256:'f'.repeat(64)};},runNative:async input=>{calls++;assert.equal(input.timeoutMs,20000);await fs.writeFile(input.report,JSON.stringify(mode==='partial'?{...valid(),caseCounts:{...valid().caseCounts,succeeded:8}}:valid()));return {exitCode:mode==='exit-failed'?1:0,output:'Synthetic native transcript only.'};}};
   assert.equal(checkNativeReport(valid(),0),true);
+  assert.equal(checkNativeReport(valid(CANDIDATE),0,CANDIDATE),true);
+  assert.equal(checkNativeReport(valid(CANDIDATE),0),false,'Candidate evidence cannot pass the baseline gate');
   for(const change of [{mock:true},{semanticReviewRequired:false},{model:{...valid().model,verified:false}},{model:{...valid().model,sha256:'0'.repeat(64)}},{caseCounts:{...valid().caseCounts,succeeded:8}},{moduleCases:{attempted:2,succeeded:1}},{runtimeChecks:{...valid().runtimeChecks,restarted:false}}])assert.equal(checkNativeReport({...valid(),...change},0),false);
   assert.equal(checkNativeReport(valid(),1),false);
   let result=await runWindowsAcceptance({output,timeoutMs:20000},deps);

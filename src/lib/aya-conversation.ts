@@ -7,16 +7,17 @@ import {answerCatalog,isCatalogQuestion,safetyReply} from '../../electron/aya/co
 import {ayaDocumentGuide} from './aya-guide';
 import {ayaCadHelp,type AyaCadContext} from './aya-cad-assistance';
 import {normalizeMemory,type AyaWorkingMemory,type AyaProposal} from '../../electron/aya/agent.cjs';
+import {isAyaModuleActionId,type AyaModuleActionId} from '../../electron/aya/module-actions.cjs';
 import type {AyaMessage,AyaOptions} from './aya-local-state';
 import {normalizeAyaReferences} from './aya-references';
 
 export type AyaReplyMode='conversation'|'guide';
-export type AyaModelResult={ok:boolean;output?:string;error?:string;references?:AyaMessage['references'];workingMemory?:AyaWorkingMemory;proposals?:AyaProposal[]};
-export type AyaReplySuccess={ok:true;kind:'model'|'guide'|'control'|'safety';output:string;engine:'model'|'guide'|'core';references:NonNullable<AyaMessage['references']>;workingMemory?:AyaWorkingMemory;proposals?:AyaProposal[]};
+export type AyaModelResult={ok:boolean;output?:string;error?:string;references?:AyaMessage['references'];workingMemory?:AyaWorkingMemory;proposals?:AyaProposal[];openModuleId?:AyaModuleActionId};
+export type AyaReplySuccess={ok:true;kind:'model'|'guide'|'control'|'safety';output:string;engine:'model'|'guide'|'core';references:NonNullable<AyaMessage['references']>;workingMemory?:AyaWorkingMemory;proposals?:AyaProposal[];openModuleId?:AyaModuleActionId};
 /** A failed inference is UI state, never an invented assistant turn or tool proposal. */
 export type AyaReplyUnavailable={ok:false;kind:'unavailable';error:string;cancelled:boolean;references:[]};
 export type AyaReply=AyaReplySuccess|AyaReplyUnavailable;
-type Input={prompt:string;history?:AyaMessage[];workingMemory?:AyaWorkingMemory;knowledge?:unknown;cadContext?:AyaCadContext|null;options?:Partial<AyaOptions>;locale?:string;forceModel?:boolean;mode?:AyaReplyMode};
+type Input={prompt:string;history?:AyaMessage[];workingMemory?:AyaWorkingMemory;knowledge?:unknown;cadContext?:AyaCadContext|null;options?:Partial<AyaOptions>;locale?:string;forceModel?:boolean;mode?:AyaReplyMode;allowModuleActions?:boolean};
 export async function resolveAyaReply(input:Input,{t=s=>s,callModel}:{t?:(s:string)=>string;callModel?:()=>Promise<AyaModelResult>}={}):Promise<AyaReply>{
  const {prompt,knowledge=[],cadContext=null,history=[],options={},locale='tr',forceModel=false,mode='conversation'}=input;
  if(!prompt.trim()||prompt.length>8000)throw Error('INVALID_PROMPT');
@@ -37,7 +38,10 @@ export async function resolveAyaReply(input:Input,{t=s=>s,callModel}:{t?:(s:stri
   if(!callModel)return unavailable('MODEL_MISSING');
   try{
    const result=await callModel();
-   if(result.ok&&typeof result.output==='string'&&result.output.trim())return {ok:true,kind:'model',engine:'model',output:result.output,references:normalizeAyaReferences(result.references),workingMemory:result.workingMemory?normalizeMemory(result.workingMemory):undefined,proposals:cadContext?result.proposals??[]:[]};
+   if(result.ok&&typeof result.output==='string'&&result.output.trim()){
+    const moduleAction=input.allowModuleActions&&!cadContext&&!forceModel&&isAyaModuleActionId(result.openModuleId)?{openModuleId:result.openModuleId}:{};
+    return {ok:true,kind:'model',engine:'model',output:result.output,references:normalizeAyaReferences(result.references),workingMemory:result.workingMemory?normalizeMemory(result.workingMemory):undefined,proposals:cadContext?result.proposals??[]:[],...moduleAction};
+   }
    const error=result.error||'LOCAL_EMPTY_RESPONSE';
    return unavailable(error);
   }catch(error){return unavailable(error instanceof Error&&error.name==='AbortError'?'LOCAL_CANCELLED':error instanceof Error?error.message:'LOCAL_ERROR');}

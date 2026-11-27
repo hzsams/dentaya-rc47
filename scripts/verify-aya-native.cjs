@@ -4,6 +4,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=r
 const {spawn,spawnSync}=require('node:child_process');
 const {parseArgs}=require('node:util');
 const {createManagedAya,MODEL}=require('../electron/aya/managed-runtime.cjs');
+const {CANDIDATE}=require('./aya-native-candidate.cjs');
 const {createLocalAya}=require('../electron/aya-local.cjs');
 const {normalizeMemory,CONTEXT_MARKER}=require('../electron/aya/agent.cjs');
 // A reply can satisfy the transport contract while missing a behavioral
@@ -45,17 +46,18 @@ async function runAcceptanceCases(turn,signals){
 module.exports={runAcceptanceCases};
 
 if(require.main===module){
-const {values}=parseArgs({options:{engine:{type:'string'},model:{type:'string'},report:{type:'string'},help:{type:'boolean'}}});
-if(values.help){console.log('node scripts/verify-aya-native.cjs --engine /external/llama-server --model /external/Qwen3-1.7B-Q8_0.gguf [--report /external/results.json]\nEnvironment alternatives: AYA_NATIVE_ENGINE, AYA_NATIVE_MODEL. Uses the pinned model, actual loopback inference and a temporary imported model copy; downloads nothing. Linux x64 server binary must match the official b9380 CPU release. Ordinary replies use free-text streaming; separate bounded memory extraction and structured CAD calls match the application architecture. CAD evidence is a synthetic fixture; no real geometry operation occurs. Contract checks and basic memory signals do not replace semantic review.');process.exit(0);}
+const {values}=parseArgs({options:{engine:{type:'string'},model:{type:'string'},report:{type:'string'},candidate:{type:'boolean'},'cad-browser':{type:'boolean'},help:{type:'boolean'}}});
+if(values.help){console.log('node scripts/verify-aya-native.cjs --engine /external/llama-server --model /external/pinned.gguf [--candidate] [--report /external/results.json]\nEnvironment alternatives: AYA_NATIVE_ENGINE, AYA_NATIVE_MODEL. Uses the pinned model, actual loopback inference and a temporary imported model copy; downloads nothing. --candidate selects the pinned Qwen3.5 4B model. Linux x64 server binary must match the official b9380 CPU release. Ordinary replies use free-text streaming; separate bounded memory extraction and structured CAD calls match the application architecture. CAD evidence is a synthetic fixture; no real geometry operation occurs. Contract checks and basic memory signals do not replace semantic review.');process.exit(0);}
 const engine=values.engine||process.env.AYA_NATIVE_ENGINE,modelFile=values.model||process.env.AYA_NATIVE_MODEL;
 if(!engine||!modelFile){console.error('Provide --engine and --model paths. Use --help for details.');process.exit(2);}
-const result={nativeInference:false,mock:false,syntheticCadFixture:true,platform:process.platform,stage:'engine-validation',engineVersion:'',engineBinarySHA256:'',model:{bytes:MODEL.bytes,sha256:MODEL.sha256,verified:false},checks:[],transport:[],caseCounts:{attempted:0,succeeded:0,conversation:{attempted:0,succeeded:0,streamedUpdates:0},memory:{attempted:0,succeeded:0},cad:{attempted:0,succeeded:0}},moduleCases:{attempted:0,succeeded:0},runtimeChecks:{passed:false},hardware:{logicalCpus:os.availableParallelism(),memoryBytes:os.totalmem(),initialFreeBytes:os.freemem(),lowestObservedFreeBytes:os.freemem()},semanticReviewRequired:true,semanticReview:{status:'pending',signals:[],criteria:['Identity: answer name and purpose directly in natural prose without a canned response.','Novel non-dental request: fulfill the requested perspective and content without forcing a CAD workflow.','New wording: remember unit 46 and preserve outer contour while manually reducing occlusal height.','Separate memory extraction: retain explicit user decisions rather than facts invented by the assistant reply.','Memory-only follow-up: recover the unit and contour decision without replaying user history.','Partial memory correction: clear only the requested goal, preserving decisions and open questions.','Missing antagonist/report: do not grant closure safety or invent exact wall thickness; propose an available check.','Tool result: distinguish a closed single-component mesh and a shell offset estimate from production clearance. Save failure must remain a failure with local recovery preserved.']}};
+const pin=values.candidate?CANDIDATE:MODEL;
+const result={nativeInference:false,mock:false,syntheticCadFixture:true,platform:process.platform,stage:'engine-validation',engineVersion:'',engineBinarySHA256:'',model:{id:pin.id,bytes:pin.bytes,sha256:pin.sha256,verified:false},checks:[],transport:[],caseCounts:{attempted:0,succeeded:0,conversation:{attempted:0,succeeded:0,streamedUpdates:0},memory:{attempted:0,succeeded:0},cad:{attempted:0,succeeded:0}},moduleCases:{attempted:0,succeeded:0},navigationCases:{attempted:0,succeeded:0},runtimeChecks:{passed:false},hardware:{logicalCpus:os.availableParallelism(),memoryBytes:os.totalmem(),initialFreeBytes:os.freemem(),lowestObservedFreeBytes:os.freemem()},semanticReviewRequired:true,semanticReview:{status:'pending',signals:[],criteria:['Identity: answer name and purpose directly in natural prose without a canned response.','Novel non-dental request: fulfill the requested perspective and content without forcing a CAD workflow.','New wording: remember unit 46 and preserve outer contour while manually reducing occlusal height.','Separate memory extraction: retain explicit user decisions rather than facts invented by the assistant reply.','Memory-only follow-up: recover the unit and contour decision without replaying user history.','Partial memory correction: clear only the requested goal, preserving decisions and open questions.','Missing antagonist/report: do not grant closure safety or invent exact wall thickness; propose an available check.','Tool result: distinguish a closed single-component mesh and a shell offset estimate from production clearance. Save failure must remain a failure with local recovery preserved.','Module navigation: propose the requested destination and keep an explanation request free of routing suggestions.']}};
 async function hashFile(file){const hash=crypto.createHash('sha256');for await(const chunk of require('node:fs').createReadStream(file))hash.update(chunk);return hash.digest('hex');}
 (async()=>{
  result.engineBinarySHA256=await hashFile(path.resolve(engine));
  if(process.platform==='linux'&&process.arch==='x64')assert.equal(result.engineBinarySHA256,'f26a542c95f00b1dbbf21074e7cf0b41c7d822a0c2cc1b47d89bca022f61491a','Use the official Linux x64 b9380 CPU server binary');
  const version=spawnSync(path.resolve(engine),['--version'],{encoding:'utf8',stdio:['ignore','pipe','pipe']});assert.equal(version.status,0,'Engine version check must succeed');result.engineVersion=(version.stdout+version.stderr).trim();assert.match(result.engineVersion,/9380/,'Use the documented b9380 engine');
- result.stage='model-validation';assert.equal((await fs.stat(modelFile)).size,MODEL.bytes,'Use the pinned Qwen model size');assert.equal(await hashFile(modelFile),MODEL.sha256,'Use the pinned Qwen model SHA-256');result.model.verified=true;
+ result.stage='model-validation';assert.equal((await fs.stat(modelFile)).size,pin.bytes,'Use the selected pinned model size');assert.equal(await hashFile(modelFile),pin.sha256,'Use the selected pinned model SHA-256');result.model.verified=true;
  const directory=await fs.mkdtemp(path.join(os.tmpdir(),'dentaya-native-'));
  const runtime=createManagedAya({directory,engineBinary:path.resolve(engine),spawnImpl:(binary,args,options)=>{assert.equal(options.shell,false);assert.equal(args[args.indexOf('--host')+1],'127.0.0.1');return spawn(binary,args,options);},fetchImpl:async(url,options)=>{
   const u=new URL(url);assert.equal(u.hostname,'127.0.0.1');assert.match(options?.headers?.Authorization??'',/^Bearer [a-f0-9]{64}$/);
@@ -71,14 +73,23 @@ async function hashFile(file){const hash=crypto.createHash('sha256');for await(c
   result.stage='inference';
   assert.equal((await runtime.importModel(path.resolve(modelFile))).ok,true);
   const model=(await runtime.status()).models[0].name,api=createLocalAya({managed:runtime,fetchImpl:async()=>{throw Error('Native check must use the managed runtime');}});
+  if(values['cad-browser']){
+   const owner='windows-native-cad';
+   try{
+    const {verifyNativeCadBrowser}=await import('./verify-cad-daily-browser.mjs');
+    result.cadBrowser=await verifyNativeCadBrowser({model,status:()=>api.status(),chat:input=>api.chat(input,owner),cancel:requestId=>api.cancel(owner,requestId),screenshotDirectory:values.report?path.dirname(path.resolve(values.report)):undefined});
+    if(result.cadBrowser.calls.some(call=>call.reply?.ok))result.nativeInference=true;
+   }catch{result.cadBrowser={pass:false,stage:'startup',error:'CAD_BROWSER_UNAVAILABLE'};}
+   console.log(JSON.stringify({cadBrowser:result.cadBrowser}));
+  }
   async function turn(name,prompt,extra={},group='base'){
    const started=Date.now(),kind=extra.task==='memory'?'memory':extra.agent===true?'cad':'conversation';let streamed=0,lastStream='',firstTokenMilliseconds=null;
-   const counts=group==='module'?result.moduleCases:result.caseCounts;
+   const counts=group==='navigation'?result.navigationCases:group==='module'?result.moduleCases:result.caseCounts;
    counts.attempted++;
    if(group==='base')result.caseCounts[kind].attempted++;
    const reply=await api.chat({model,locale:'tr',agent:false,prompt,options:{maxTokens:1536,creativity:0,useKnowledge:false},...extra},'native-check',s=>s,output=>{if(firstTokenMilliseconds===null)firstTokenMilliseconds=Date.now()-started;streamed++;lastStream=output;});
    result.hardware.lowestObservedFreeBytes=Math.min(result.hardware.lowestObservedFreeBytes,os.freemem());
-   const check={name,kind:group==='module'?'module':kind,prompt,reply,streamedUpdates:streamed,streamedCharacters:lastStream.length,firstTokenMilliseconds,wallMilliseconds:Date.now()-started};result.checks.push(check);console.log(JSON.stringify(check));
+   const check={name,kind:group==='base'?kind:group,prompt,reply,streamedUpdates:streamed,streamedCharacters:lastStream.length,firstTokenMilliseconds,wallMilliseconds:Date.now()-started};result.checks.push(check);console.log(JSON.stringify(check));
    assert.equal(reply.ok,true,`${name}: ${reply.error}`);result.nativeInference=true;assert.ok(reply.output.trim());
    const transport=result.transport.at(-1);assert.equal(transport.stream,true,'Actual managed inference must use its streaming transport');
    if(kind==='conversation'){
@@ -111,6 +122,14 @@ async function hashFile(file){const hash=crypto.createHash('sha256');for await(c
    const reply=await turn('module-'+id,modulePrompt,{moduleId:id,history:[]},'module');
    result.semanticReview.signals.push({id:'module-'+id+'-uses-current-control',pass:expected.test(reply.output)&&!unrelated.test(reply.output)});
   }
+  const navigationCases=[
+   {name:'navigation-open-cad',prompt:'CAD Tasarım modülünü açar mısın? Oraya geçmek istiyorum.',expected:'design'},
+   {name:'navigation-explanation-only',prompt:'Randevular modülünün ne işe yaradığını bir cümleyle anlat. Modülü açma.'},
+  ];
+  for(const {name,prompt,expected} of navigationCases){
+   const reply=await turn(name,prompt,{allowModuleActions:true,moduleId:'ai',history:[]},'navigation');
+   result.semanticReview.signals.push({id:name,pass:reply.openModuleId===expected&&!reply.output.includes('[[AYA_OPEN_MODULE:')});
+  }
 
   const cancelId='native-cancel-proof';
   let tokensBeforeCancel=0;
@@ -131,10 +150,11 @@ async function hashFile(file){const hash=crypto.createHash('sha256');for await(c
   assert.equal(restarted.ok,true,restarted.error);
   assert.ok(restarted.output.trim());
   result.runtimeChecks={passed:true,cancelledAfterFirstToken:true,restarted:true};
-  result.contractPass=result.semanticReview.signals.every(signal=>signal.pass);
+  const behaviorPassed=result.semanticReview.signals.every(signal=>signal.pass);
+  result.contractPass=behaviorPassed&&(!values['cad-browser']||result.cadBrowser?.pass===true);
   result.stage='complete';
   if(!result.contractPass){
-   result.error='NATIVE_BEHAVIOR_SIGNALS_FAILED';
+   result.error=behaviorPassed?'NATIVE_CAD_BROWSER_FAILED':'NATIVE_BEHAVIOR_SIGNALS_FAILED';
    process.exitCode=1;
   }
  }finally{runtime.dispose();await fs.rm(directory,{recursive:true,force:true});}

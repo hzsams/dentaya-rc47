@@ -12,7 +12,7 @@ export function summarizeAyaReport(report:CadKernelReport,dataToken:string,antag
  const mesh=report.mesh,contact=antagonistReady?report.contact:null,margin=report.margin,shell=report.crownShell;
  return {dataToken,triangles:mesh?.triangleCount,boundaryEdges:mesh?.boundaryEdges,nonManifoldEdges:mesh?.nonManifoldEdges,components:mesh?.connectedComponents,degenerateTriangles:mesh?.degenerateTriangles,watertight:mesh?.watertight,collisionSamples:contact?.collisionCount,contactSamples:contact?.contactCount,samples:contact?.sampleCount,minimumSignedDistanceMm:contact?.minimumSignedDistanceMm,minimumWallEstimateMm:shell?.minimumWallEstimateMm,targetWallMm,undercutRatio:report.undercut?.undercutRatio,marginPoints:margin?.pointCount,marginClosureGapMm:margin?.closureGapMm,marginProjectedRatio:margin?.projectedRatio,connectors:report.connectorCount,connectorWarnings:report.connectorWarnings.length,warnings:[...(mesh?.warnings??[]),...report.connectorWarnings,...(shell?.warnings??[])].slice(0,8),contactReference:contact?'antagonist':'unavailable',wallMethod:'shell-offset-estimate'};
 }
-export function availableAyaTools(context:AyaCadContext,policy:{tools:readonly string[];views:readonly string[];internalFit:boolean;canNext:boolean;inspection?:boolean}):AyaCadTool[]{
+export function availableAyaTools(context:AyaCadContext,policy:{tools:readonly string[];views:readonly string[];internalFit:boolean;canNext:boolean;inspection?:boolean;crownShell?:boolean}):AyaCadTool[]{
  if(context.isSaving||!context.scope)return [];
  const result:AyaCadTool[]=['setup'];
  if(context.unit)result.push('library');
@@ -29,6 +29,7 @@ export function availableAyaTools(context:AyaCadContext,policy:{tools:readonly s
  }
  for(const tool of ['margin','measure','add','reduce','smooth'])if(policy.tools.includes(tool))result.push(('tool-'+tool) as AyaCadTool);
  if(context.placed&&policy.internalFit)result.push('internal-fit');
+ if(context.setupComplete&&context.sourceReady&&context.placed&&context.marginPoints>=3&&policy.crownShell)result.push('crown-shell');
  if(policy.canNext)result.push('next');
  return result;
 }

@@ -1769,10 +1769,13 @@ export default function DesignStudioClient() {
     const currentAyaReport=kernelReport?summarizeAyaReport(kernelReport,ayaDataToken,sceneState.antagonistReady,settings.minimum_thickness_mm):null;
     const inspectionContext=normalizeCadInspection(settings);
     const localRecoveryReady=hasUnsavedChanges&&!contextLoading&&recoveryLookupReady&&!recoveryDecisionPending&&localRecoveryCheckpoint?.key===recoveryKey&&localRecoveryCheckpoint.revision===recoveryRevision;
+    const crownShellAllowed=activeJobUnit?.role==='single'&&activeJobUnit.design_type==='anatomic_crown'&&
+        cadActivationAllowed('command:crown-shell',activeStepId,workspaceMode,hasBridge,panelTab)&&
+        viewportRef.current?.canBuildInitialCrownShell()===true;
     const ayaContext:AyaCadContext={
         sectionToken:ayaSectionKey,section:currentSection,
         inspectionFlashlight:inspectionContext.inspection_flashlight,inspectionFlashlightTarget:inspectionContext.inspection_flashlight_target,
-        scope:ayaScope,dataToken:ayaDataToken,snapshot:cadStateToken([ayaDataToken,ayaEpoch,activeStepId,panelTab,tool,viewMode,historyState,saving,exiting,submitting,contextLoading,cadReady,sceneState,currentSection,currentAyaReport,exitFailure,currentSaveFailure,localRecoveryReady]),
+        scope:ayaScope,dataToken:ayaDataToken,snapshot:cadStateToken([ayaDataToken,ayaEpoch,activeStepId,panelTab,tool,viewMode,historyState,saving,exiting,submitting,contextLoading,cadReady,sceneState,currentSection,currentAyaReport,exitFailure,currentSaveFailure,localRecoveryReady,crownShellAllowed]),
         unit:activeJobUnit?.tooth_code??'',restoration:activeJobUnit?cadRestorationLabel(activeJobUnit.design_type):'',
         stage:activeStepId,task:panelTab,upperReady:sceneState.upperReady,lowerReady:sceneState.lowerReady,antagonistReady:sceneState.antagonistReady,openingMm:sceneState.openingMm,
         setupComplete:jobSetup.complete,sourceReady:Boolean(activeSource),modelReady:cadReady&&!contextLoading&&recoveryLookupReady&&!recoveryDecisionPending,
@@ -1782,7 +1785,7 @@ export default function DesignStudioClient() {
         measurementsMm:measurements.map(m=>m.distance).slice(-8),designSettings:{cementGapMm:settings.cement_gap_mm,minimumThicknessMm:settings.minimum_thickness_mm,brushRadiusMm:settings.brush_radius_mm},
         report:currentAyaReport
     };
-    ayaContext.availableTools=availableAyaTools(ayaContext,{inspection:workspaceMode==='expert',tools:activeTools,views:activeViews,internalFit:cadActivationAllowed('command:internal-fit',activeStepId,workspaceMode,hasBridge,panelTab),canNext:activeTaskIndex<CAD_GUIDED_TASKS.length-1&&jobSetup.complete&&Boolean(activeSource)&&marginPoints.length>=3});
+    ayaContext.availableTools=availableAyaTools(ayaContext,{inspection:workspaceMode==='expert',tools:activeTools,views:activeViews,internalFit:cadActivationAllowed('command:internal-fit',activeStepId,workspaceMode,hasBridge,panelTab),crownShell:crownShellAllowed,canNext:activeTaskIndex<CAD_GUIDED_TASKS.length-1&&jobSetup.complete&&Boolean(activeSource)&&marginPoints.length>=3});
     useLayoutEffect(()=>{ayaContextRef.current=ayaContext;qcBaseTokenRef.current=qcBaseToken;ayaReceipts.current.publish(ayaContext,contextLoading);});
     async function runAyaAction(proposal:AyaProposal):Promise<AyaActionResult>{
         const current=ayaContextRef.current,copy=ayaAgentText(locale);
@@ -1805,6 +1808,12 @@ export default function DesignStudioClient() {
             isolate:()=>{setSettings(s=>({...s,show_design:true,opacity:1,show_scan:false,show_upper:false,show_lower:false}));return ready();},
             'recorded-bite':()=>{showRecordedBite();return ready();},
             'internal-fit':()=>{const report=viewportRef.current?.applyInternalFit();return {ok:Boolean(report),message:report?copy.fitResult:copy.fitFailed};},
+            'crown-shell':()=>{
+                const viewport=viewportRef.current;
+                if(!crownShellAllowed||!viewport?.canBuildInitialCrownShell())return {ok:false,message:copy.unavailable};
+                const report=viewport.buildCrownShell();
+                return {ok:Boolean(report),message:report?copy.shellCreated:copy.shellFailed};
+            },
             next:async()=>{const next=workspaceMode==='wizard'?CAD_GUIDED_TASKS[activeTaskIndex+1]:STEPS[activeStepIndex+1];const ok=next?await setStage('stage' in next?next.stage:next.id,'tab' in next?next.tab:undefined):false;return {ok,message:ok?copy.next:copy.nextFailed};}
         };
         for(const view of ['natural','contact','thickness','undercut','section'] as const)handlers[('view-'+view) as AyaCadTool]=()=>{if(!cadReady||!activeViews.includes(view))return {ok:false,message:copy.unavailable};selectViewMode(view);return ready();};

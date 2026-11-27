@@ -25,10 +25,10 @@ for(const spec of specs){const geometry=new THREE.CylinderGeometry(1.5,2.25,3.6,
 // transformed cylinder bounding box overestimates the tilted stump's height.
 group.updateMatrixWorld(true);const sourceCenter=new THREE.Box3().setFromObject(group,true).getCenter(new THREE.Vector3()),stl=new STLExporter().parse(group);
 const margin=spec=>{const rotation=new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,0,1),spec.axis);return Array.from({length:48},(_,i)=>new THREE.Vector3(2.5*Math.cos(i*Math.PI/24),2.2*Math.sin(i*Math.PI/24),0).applyQuaternion(rotation).add(spec.center).sub(sourceCenter));};
-const units=specs.map(spec=>({id:'unit-'+spec.code,tooth_code:spec.code,anatomy_code:spec.code,role:'abutment',design_type:spec.type,tooth_form:'natural',morphology_style:'balanced',material:'Zirkonya',attachment_type:'none',temporary:false,notes:''}));
+const units=specs.map(spec=>({id:'unit-'+spec.code,tooth_code:spec.code,anatomy_code:spec.code,role:spec.code==='46'?'single':'abutment',design_type:spec.type,tooth_form:'natural',morphology_style:'balanced',material:'Zirkonya',attachment_type:'none',temporary:false,notes:''}));
 const caseRow={id:caseId,case_number:'CAD-RC58-RESTORATION',patient_id:'44444444-4444-4444-8444-444444444444',patient_reference:'SYNTHETIC',title:'Kuron ve kapşon preparasyon yerleşimi',case_type:'Kron',status:'design',priority:'normal',due_date:null,tooth_codes:specs.map(s=>s.code),material:'Zirkonya',shade:'A2',clinical_notes:''};
 let project={id:'55555555-5555-4555-8555-555555555555',case_id:caseId,lab_org_id:orgId,source_scan_id:'scan-preparations',title:'RC58 full design fixture',restoration_type:'Kron',tooth_codes:caseRow.tooth_codes,material:'Zirkonya',shade:'A2',workflow_stage:'margin',status:'working',settings:{render_palette:'natural',margin_offset_mm:.02,job_setup:{version:1,complete:true,active_unit_id:units[0].id,units,updated_at:null},unit_margins:Object.fromEntries(specs.map(s=>['unit-'+s.code,margin(s)])),unit_parameters:Object.fromEntries(specs.map(s=>['unit-'+s.code,{insertion_axis_x:s.axis.x,insertion_axis_y:s.axis.y,insertion_axis_z:s.axis.z}])),insertion_axis_x:specs[0].axis.x,insertion_axis_y:specs[0].axis.y,insertion_axis_z:specs[0].axis.z},margin_points:margin(specs[0]),measurements:[],updated_at:new Date().toISOString()};
-const errors=[],measurements=[],screenshots=[],exports=[];let server,browser,logs='',exitCode=null,clock=0;
+const errors=[],measurements=[],screenshots=[],exports=[];let server,browser,logs='',exitCode=null,clock=0,rejectSave=false;
 async function stop(){if(!server||server.exitCode!==null||server.signalCode)return;await new Promise(resolve=>{const timer=setTimeout(()=>server.kill('SIGKILL'),5000);server.once('exit',()=>{clearTimeout(timer);resolve();});server.kill('SIGTERM');});}
 try{
  server=spawn(process.execPath,['node_modules/next/dist/bin/next','dev','--hostname','127.0.0.1','--port','3069'],{cwd:root,env:{...process.env,NEXT_TELEMETRY_DISABLED:'1',NEXT_PUBLIC_SUPABASE_URL:'http://127.0.0.1:54321',NEXT_PUBLIC_SUPABASE_ANON_KEY:'dentaya-browser-test-placeholder'},stdio:['ignore','pipe','pipe']});
@@ -40,18 +40,39 @@ try{
  const page=await browser.newPage({viewport:normalViewport});page.setDefaultTimeout(30000);page.on('pageerror',error=>errors.push(error.message));let downloadCount=0;page.on('download',()=>downloadCount++);
  await page.route('**/training-scans/rc55-preparations.stl',route=>route.fulfill({status:200,contentType:'model/stl',body:stl}));
  await page.route('http://127.0.0.1:54321/**',async route=>{
-  const request=route.request(),u=new URL(request.url()),table=u.pathname.split('/').at(-1);let body=[];
+  const request=route.request(),u=new URL(request.url()),table=u.pathname.split('/').at(-1);let body=[],status=200;
   const user={id:userId,email:'cad-test@example.invalid',aud:'authenticated',role:'authenticated',app_metadata:{},user_metadata:{},created_at:'2026-01-01T00:00:00Z'};
   if(request.method()==='OPTIONS')body={};else if(u.pathname.startsWith('/auth/'))body={user};
   else if(table==='memberships')body=[{organization_id:orgId,user_id:userId,role:'owner',status:'active'}];
   else if(table==='organizations')body=[{id:orgId,name:'CAD Fixture',org_type:'laboratory'}];else if(table==='cases')body=[caseRow];
   else if(table==='scan_sessions')body=[{id:'scan-preparations',scan_ref:'SYNTHETIC-PREPARATIONS',patient_id:caseRow.patient_id,case_id:caseId,arch:'lower',captured_at:'2026-10-21T10:00:00Z',file_name:'rc55-preparations.stl',storage_bucket:'public-demo',storage_path:'/training-scans/rc55-preparations.stl',scanner_brand:'Synthetic',scanner_model:'Geometry test',scan_origin:'laboratory',scan_purpose:'master_model'}];
-  else if(table==='design_projects'){if(request.method()==='PATCH'){project={...project,...request.postDataJSON(),updated_at:new Date(Date.now()+ ++clock).toISOString()};}body=[project];}
+  else if(table==='design_projects'){
+   if(request.method()==='PATCH'&&rejectSave){status=503;body={code:'TEST_SAVE_UNAVAILABLE',message:'Save unavailable in fixture'};}
+   else {if(request.method()==='PATCH')project={...project,...request.postDataJSON(),updated_at:new Date(Date.now()+ ++clock).toISOString()};body=[project];}
+  }
   else if(table==='profiles')body=[{id:userId,display_name:'CAD Test'}];
   if(request.headers().accept?.includes('application/vnd.pgrst.object+json'))body=Array.isArray(body)?body[0]??null:body;
-  await route.fulfill({status:200,headers:{'access-control-allow-origin':'*','access-control-allow-headers':'*','content-type':'application/json'},body:JSON.stringify(body)});
+  await route.fulfill({status,headers:{'access-control-allow-origin':'*','access-control-allow-headers':'*','content-type':'application/json'},body:JSON.stringify(body)});
  });
  await page.addInitScript(({userId})=>{
+  const workflow=window.dentayaCadWorkflow={calls:[],memoryCalls:[]};
+  window.dentayaDesktop={
+   onOpenPreferences:()=>()=>{},
+   localAyaStatus:async()=>({ok:true,models:[{name:'fixture-model',size:1024}],progress:{running:false,status:'ready',completed:0,total:0}}),
+   localAyaChat:async input=>{
+    if(input.task==='memory'){workflow.memoryCalls.push(input);return {ok:true,output:'Memory updated',workingMemory:input.workingMemory};}
+    workflow.calls.push(input);
+    const {cadContext:context,prompt}=input;
+    const original=prompt==='Son mesh düzenlemesini geri al ve ardından geometriyi kontrol etmek için uygun işlemi öner.';
+    const review=prompt.startsWith('Tamamlanan CAD işleminin');
+    const createShell=prompt==='Bu tek kuron için kabuğu oluşturmayı öner ve ardından kontrolü planla.';
+    const reviewedShell=review&&context.recentActions.at(-1)?.tool==='crown-shell';
+    const tools=original?['undo','inspect']:createShell?['crown-shell']:review?['inspect']:prompt==='Mevcut çalışma için kayıt işlemini öner.'?['save']:[];
+    const output=reviewedShell?'Kabuk sonucu alındı. Sıradaki işlem geometri kontrolü.':review?'Geri alma sonucu alındı. Sıradaki işlem geometri kontrolü.':'Güncel duruma bağlı işlem önerisi.';
+    return {ok:true,output,proposals:tools.map(tool=>({tool,reason:'Fixture '+tool,scope:context.scope,snapshot:context.snapshot}))};
+   },
+   localAyaCancel:async()=>({ok:true}),
+  };
   const exp=Math.floor(Date.now()/1000)+86400,payload=btoa(JSON.stringify({sub:userId,exp,aud:'authenticated',role:'authenticated'}));
   localStorage.setItem('sb-127-auth-token',JSON.stringify({access_token:`eyJhbGciOiJIUzI1NiJ9.${payload}.test`,refresh_token:'test',token_type:'bearer',expires_in:86400,expires_at:exp,user:{id:userId,email:'cad-test@example.invalid',aud:'authenticated',role:'authenticated',app_metadata:{},user_metadata:{},created_at:'2026-01-01T00:00:00Z'}}));
   localStorage.setItem('dentaya:cad-workspace:v1',JSON.stringify({background:'studio',grid:false,axes:false,damping:false,followToothStyle:true}));
@@ -65,6 +86,13 @@ try{
  async function picture(name){if(!process.env.DENTAYA_SCREENSHOT_DIR)return;await fs.mkdir(process.env.DENTAYA_SCREENSHOT_DIR,{recursive:true});const file=path.join(process.env.DENTAYA_SCREENSHOT_DIR,name);await page.locator('.cad-professional').screenshot({path:file,animations:'disabled'});screenshots.push(file);}
  async function camera(name){await page.locator('[data-cad-menu=camera]>summary').click();await page.locator('[data-cad-menu=camera]').getByRole('button',{name,exact:true}).click();await frames();}
  async function anatomyTab(){await page.getByRole('tab',{name:'Anatomi',exact:true}).click();}
+ const aya=page.getByRole('dialog',{name:'AYA çalışma asistanı',exact:true});
+ async function askAya(prompt){
+  const count=await aya.locator('.cad-aya-messages article').count();
+  await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).fill(prompt);
+  await aya.getByRole('button',{name:'Gönder',exact:true}).click();
+  const reply=aya.locator('.cad-aya-messages article').nth(count+1);await reply.waitFor();return reply;
+ }
  await page.goto(url);await page.locator('.cad-professional').waitFor();await page.waitForFunction(()=>document.querySelector('[data-cad-inspection-state]')&&document.querySelector('.cad-professional canvas')?.width>0,{},{timeout:65000});
  await idle();await page.getByRole('button',{name:'Sonraki',exact:true}).click();
  await page.waitForFunction(()=>JSON.parse(document.querySelector('[data-cad-inspection-state]').dataset.cadInspectionState).placement?.placed);
@@ -103,6 +131,76 @@ try{
    await page.locator('.cad-history-actions button[aria-label="Geri al"]').click();await frames();assert.equal((await state()).geometry.hash,original);
    await page.locator('.cad-history-actions button[aria-label="Yinele"]').click();await frames();assert.equal((await state()).geometry.hash,sculpted);
    await picture('RC58_manual_crown_design.png');
+   await idle();await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();
+   await aya.getByRole('combobox',{name:'Kurulu yerel model',exact:true}).waitFor();
+   const initial=await askAya('Son mesh düzenlemesini geri al ve ardından geometriyi kontrol etmek için uygun işlemi öner.');
+   const oldInspection=initial.locator('[data-proposal-tool=inspect] button');
+   const firstContext=await page.evaluate(()=>window.dentayaCadWorkflow.calls[0].cadContext);
+   assert.equal((await state()).geometry.hash,sculpted,'Model proposals alone cannot change the real mesh');
+   await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).fill('Kullanıcının gönderilmemiş sonraki sorusu.');
+   await initial.locator('[data-proposal-tool=undo]').getByRole('button',{name:'Uygula',exact:true}).evaluate(button=>{button.click();button.click();});
+   await page.waitForFunction(hash=>JSON.parse(document.querySelector('[data-cad-inspection-state]').dataset.cadInspectionState).geometry.hash===hash,original);
+   await page.waitForFunction(()=>window.dentayaCadWorkflow.calls.length===2);
+   const afterUndo=await page.evaluate(()=>window.dentayaCadWorkflow.calls[1]);
+   assert.equal(afterUndo.cadContext.scope,firstContext.scope);
+   assert.notEqual(afterUndo.cadContext.dataToken,firstContext.dataToken,'Undo commits real scene data before AYA reassesses');
+   assert.equal(afterUndo.cadContext.isSaving,false,'The follow-up waits for the editor autosave to settle');
+   assert.equal(afterUndo.cadContext.unsaved,false);
+   assert.equal(afterUndo.cadContext.report,null,'The fresh QC has not been executed without its own click');
+   const undoReceipt=afterUndo.cadContext.recentActions.at(-1);
+   assert.deepEqual([undoReceipt.tool,undoReceipt.ok,undoReceipt.scope,undoReceipt.snapshot,undoReceipt.dataToken],['undo',true,afterUndo.cadContext.scope,afterUndo.cadContext.snapshot,afterUndo.cadContext.dataToken]);
+   assert.ok(afterUndo.history.some(message=>message.role==='user'&&message.content.startsWith('Son mesh düzenlemesini')));
+   assert.ok(await oldInspection.isDisabled(),'A sibling suggestion from the previous snapshot cannot be replayed');
+   assert.equal(await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).inputValue(),'Kullanıcının gönderilmemiş sonraki sorusu.');
+   const freshInspection=aya.locator('article').filter({hasText:'Geri alma sonucu alındı.'}).locator('[data-proposal-tool=inspect]');
+   const historyAfterUndo=(await state()).history;
+   await freshInspection.getByRole('button',{name:'Uygula',exact:true}).click();
+   await page.waitForFunction(()=>window.dentayaCadWorkflow.calls.length===3);
+   const afterInspection=await page.evaluate(()=>window.dentayaCadWorkflow.calls[2].cadContext);
+   assert.equal(afterInspection.report.dataToken,afterUndo.cadContext.dataToken);assert.ok(afterInspection.report.triangles>0);
+   assert.equal(afterInspection.recentActions.at(-1).tool,'inspect');
+   assert.deepEqual((await state()).history,historyAfterUndo,'QC reads the mesh without editing it');
+   assert.equal((await state()).geometry.hash,original);
+   assert.equal(await page.evaluate(()=>window.dentayaCadWorkflow.memoryCalls.length),1,'Automatic follow-ups cannot write user working memory');
+   const failed=await askAya('Mevcut çalışma için kayıt işlemini öner.');
+   rejectSave=true;
+   await failed.locator('[data-proposal-tool=save]').getByRole('button',{name:'Uygula',exact:true}).click();
+   await aya.getByRole('alert').filter({hasText:'CAD projesi kaydedilemedi.'}).waitFor();
+   await frames();assert.equal(await page.evaluate(()=>window.dentayaCadWorkflow.calls.length),4,'A rejected operation cannot advance the workflow');
+   rejectSave=false;await aya.getByRole('button',{name:'Kapat',exact:true}).click();
+   await page.locator('.cad-history-actions button[aria-label="Yinele"]').click();await frames();assert.equal((await state()).geometry.hash,sculpted);
+   console.log('PASS: AYA-approved real mesh undo, autosave-aware follow-up, separately approved current QC, stale sibling rejection and failed-save stop. Inference simulated.');
+   await page.getByRole('tab',{name:'İç yüzey',exact:true}).click();await save();
+   await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();
+   await aya.getByRole('combobox',{name:'Kurulu yerel model',exact:true}).waitFor();
+   const createShell=await askAya('Bu tek kuron için kabuğu oluşturmayı öner ve ardından kontrolü planla.');
+   const shellApply=createShell.locator('[data-proposal-tool=crown-shell]').getByRole('button',{name:'Uygula',exact:true});
+   assert.ok(await shellApply.isEnabled(),'The placed single anatomic crown offers initial shell creation');
+   assert.equal((await state()).geometry.hash,sculpted,'The shell suggestion does not create geometry');
+   const shellInput=await page.evaluate(()=>window.dentayaCadWorkflow.calls.at(-1).cadContext);
+   assert.ok(shellInput.availableTools.includes('crown-shell'));
+   await shellApply.evaluate(button=>{button.click();button.click();});
+   await page.waitForFunction(()=>window.dentayaCadWorkflow.calls.length===6);
+   const shellReview=await page.evaluate(()=>window.dentayaCadWorkflow.calls.at(-1).cadContext);
+   assert.notEqual(shellReview.dataToken,shellInput.dataToken);
+   const shellReceipt=shellReview.recentActions.at(-1);
+   assert.deepEqual([shellReceipt.tool,shellReceipt.ok,shellReceipt.snapshot,shellReceipt.dataToken],['crown-shell',true,shellReview.snapshot,shellReview.dataToken]);
+   assert.ok(!shellReview.availableTools.includes('crown-shell'),'An existing shell removes the creation command from the current allowlist');
+   assert.ok(await createShell.locator('[data-proposal-tool=crown-shell] button').isDisabled(),'The original creation proposal cannot be reapplied');
+   const shell=(await decodeCadWorkspace(project.settings.cad_workspace)).units['unit-46'].shell;
+   assert.ok(shell?.indices.length>0&&shell.positions.length>0,'Autosave contains the actual generated shell geometry');
+   assert.notEqual((await state()).geometry.hash,sculpted,'The generated shell replaces the visible exterior in the real viewport');
+   const reviewShell=aya.locator('article').filter({hasText:'Kabuk sonucu alındı.'}).locator('[data-proposal-tool=inspect]');
+   await reviewShell.getByRole('button',{name:'Uygula',exact:true}).click();
+   await page.waitForFunction(()=>window.dentayaCadWorkflow.calls.length===7);
+   const shellQc=await page.evaluate(()=>window.dentayaCadWorkflow.calls.at(-1).cadContext);
+   assert.equal(shellQc.report.triangles,shell.indices.length/3,'The separately approved QC interprets the actual generated shell');
+   assert.ok(!shellQc.availableTools.includes('crown-shell'));
+   await aya.getByRole('button',{name:'Kapat',exact:true}).click();
+   const clearShell=page.getByRole('button',{name:"Shell'i temizle",exact:true});
+   if(!await clearShell.isVisible())await page.getByText('Crown Shell / Intaglio',{exact:true}).click();
+   await clearShell.click();await frames();assert.equal((await state()).geometry.hash,sculpted);
+   console.log('PASS: AYA-approved real crown shell geometry, guarded single creation, and fresh QC after separate approval. Inference simulated.');
   }
   await page.getByRole('tab',{name:'Son kontrol',exact:true}).click();await idle();
   const [download]=await Promise.all([page.waitForEvent('download'),page.locator('[data-cad-download-stl]').click()]);
@@ -118,10 +216,8 @@ try{
   console.log('PASS: actual rendered '+spec.code+' '+spec.type+' stays on its selected preparation, survives real controls and exports a closed working STL in raw scan coordinates.');
  }
  const beforeAya=await state();await idle();await page.locator('.cad-main-header').getByRole('button',{name:'AYA',exact:true}).click();
- const aya=page.getByRole('dialog',{name:'AYA çalışma asistanı',exact:true});
  const selectAyaGuide=()=>aya.getByRole('combobox',{name:'Yanıt kaynağı',exact:true}).selectOption('guide');
  await selectAyaGuide();
- async function askAya(prompt){const count=await aya.locator('.cad-aya-messages article').count();await aya.getByRole('textbox',{name:'AYA’ya mesajınız',exact:true}).fill(prompt);await aya.getByRole('button',{name:'Gönder',exact:true}).click();const reply=aya.locator('.cad-aya-messages article').nth(count+1);await reply.waitFor();return reply;}
  const anatomy=await askAya('Bu kron çok yapay görünüyor, anatomik formu nasıl değiştirebilirim?');assert.equal(await anatomy.locator('[data-proposal-tool=library]').count(),1);
  const seating=await askAya('Bu kuron preparasyonun üstüne oturmuyor; nereden kontrol etmeliyim?');assert.match(await seating.textContent(),/iç yüzey uyumu onayı değildir/);assert.equal(await seating.locator('[data-proposal-tool=inspect]').count(),1);await picture('RC58_AYA_placement_guidance.png');
  const negative=await askAya('Bu kronu daha doğal yapma.');assert.equal(await negative.locator('[data-proposal-tool]').count(),0);
@@ -159,5 +255,5 @@ try{
  await page.getByRole('button',{name:"Shell'i temizle",exact:true}).click();await frames();assert.equal((await page.locator('[data-cad-render-state]').evaluate(node=>JSON.parse(node.dataset.cadRenderState))).design.visible,false,'Shell commands cannot reveal a starter with no raw-model target');
  await page.getByRole('tab',{name:'Son kontrol',exact:true}).click();const beforeBlockedExport=downloadCount;await page.locator('[data-cad-download-stl]').click();await frames();assert.equal(downloadCount,beforeBlockedExport,'An unregistered starter cannot be exported');assert.match(await page.locator('.cad-status-bar').textContent(),/güncel koleye yerleştir/);
  assert.deepEqual(errors,[]);
- console.log(JSON.stringify({pass:true,realWebGL:true,syntheticPreparedStumps:true,syntheticBackend:true,crownAndCoping:true,offsetTiltedAndOppositeAxes:true,actualRenderedNeckRegistration:true,cuspHeightPreservesMargin:true,naturalFinishAndTechnicalPalette:true,cosmeticChangesPreserveGeometry:true,ayaRestorationGuidanceAndNoAutomaticActions:true,perUnitSaveReopen:true,failedLegacyUpgradeRetainsSavedSurface:true,rawModelBeforeTarget:true,noFloatingSecondCrown:true,hiddenStarterGuidance:true,modelInference:false,manualDesignUndoRedo:true,localActiveUnitStlDownload:true,unregisteredExportBlocked:true,measurements,exports,screenshots},null,2));
+ console.log(JSON.stringify({pass:true,realWebGL:true,syntheticPreparedStumps:true,syntheticBackend:true,crownAndCoping:true,offsetTiltedAndOppositeAxes:true,actualRenderedNeckRegistration:true,cuspHeightPreservesMargin:true,naturalFinishAndTechnicalPalette:true,cosmeticChangesPreserveGeometry:true,ayaRestorationGuidanceAndNoAutomaticActions:true,ayaApprovedUndoThenFreshQc:true,ayaFailedSaveStopsFollowThrough:true,ayaApprovedShellThenFreshQc:true,ayaDuplicateShellBlocked:true,perUnitSaveReopen:true,failedLegacyUpgradeRetainsSavedSurface:true,rawModelBeforeTarget:true,noFloatingSecondCrown:true,hiddenStarterGuidance:true,modelInference:false,manualDesignUndoRedo:true,localActiveUnitStlDownload:true,unregisteredExportBlocked:true,measurements,exports,screenshots},null,2));
 }catch(error){console.error(logs);throw error;}finally{await browser?.close();await stop();}

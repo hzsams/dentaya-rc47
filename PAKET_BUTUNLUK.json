@@ -17,7 +17,7 @@
   "dentalFactsTarget": 30000,
   "miniGamesActual": 5,
   "appearanceOptionsActual": 77,
-  "typedCadToolsActual": 27,
+  "typedCadToolsActual": 28,
   "modelWeightsIncluded": false,
   "verification": "RC62_KONTROL_RAPORU.md",
   "sourceVerification": "verification/RC62/source-verification.json",
@@ -46,8 +46,8 @@
     },
     {
       "path": ".github/workflows/windows-release.yml",
-      "size": 9634,
-      "sha256": "fa2ef1d8439c89e6e92401d253d46ad05b44905d5b4a13a9d93d12ebc5983572"
+      "size": 11733,
+      "sha256": "faf7c175eea6387b8a0b1a36fe07ec93bf3356221405452b1a29dd8a4c121643"
     },
     {
       "path": ".gitignore",
@@ -1126,8 +1126,8 @@
     },
     {
       "path": "electron/aya-local.cjs",
-      "size": 15047,
-      "sha256": "b1538e3e648635d38a6ba42a9b1fe75f6bf792bac04dcaa3cd237ed60cb73281"
+      "size": 15683,
+      "sha256": "891e50e2ca389bae8d0129cd8d7c8b09b20afe10458579253424adda2e5ecf36"
     },
     {
       "path": "electron/aya/acceptance.cjs",
@@ -1141,13 +1141,13 @@
     },
     {
       "path": "electron/aya/agent.cjs",
-      "size": 21661,
-      "sha256": "b301ac3086acd9b5afed84633f9c05ffe1f0f0d5bb4fec485cf5264036bc2fc4"
+      "size": 21931,
+      "sha256": "eeb479b561997f66353343457fd5da96b1721d16d2eda6deb480288ff06c9794"
     },
     {
       "path": "electron/aya/agent.d.cts",
-      "size": 1418,
-      "sha256": "3019eeb2c550714b792a3c08ce19de34863778b3fb518d90b02dac1a362feb58"
+      "size": 1432,
+      "sha256": "62ea8ccfc69fc202fad46895e8c399f1cb4ed326609f48dd8c942dd47abc022b"
     },
     {
       "path": "electron/aya/assistant.cjs",
@@ -1201,8 +1201,8 @@
     },
     {
       "path": "electron/aya/core.cjs",
-      "size": 9039,
-      "sha256": "419798b5f63c2d7ed9d43eb5656f55cca87edc9768c81af58533ad93906c7504"
+      "size": 9707,
+      "sha256": "16cedebb00231373ae284b1e2a7cb805805e9ef8b135a05a8b15c77296390188"
     },
     {
       "path": "electron/aya/dialogue.cjs",
@@ -1246,8 +1246,8 @@
     },
     {
       "path": "electron/aya/managed-runtime.cjs",
-      "size": 19366,
-      "sha256": "35a95db4d27db8f46d69be5adb9d824d097aad2efb080c058018f71925e8c111"
+      "size": 19344,
+      "sha256": "94b4f8e2a50a4710618a721473c705d9e4e7f4d6fbdb5f937bc9c6df42259b8c"
     },
     {
       "path": "electron/aya/memory-dialogue.cjs",
@@ -1263,6 +1263,16 @@
       "path": "electron/aya/memory-task.cjs",
       "size": 2960,
       "sha256": "5b2ca2ab619263c10c833084445ff871408a413c3052085f951ba7a6e2602b72"
+    },
+    {
+      "path": "electron/aya/module-actions.cjs",
+      "size": 1726,
+      "sha256": "7c00bed80752a245bfefa9c0596d8a3ba51947ab7477daf6ad1b1be50da7de1f"
+    },
+    {
+      "path": "electron/aya/module-actions.d.cts",
+      "size": 512,
+      "sha256": "0f9b8b3c1f8b226d5c732deaeb9b5f884f61b756ce4aa119ed73ff8eb62cb264"
     },
     {
       "path": "electron/aya/module-workflows.json",
@@ -7305,6 +7315,11 @@
       "sha256": "848eb12ac374fd37ee83dc4eba9aa451f071f89519bd015fca4fe2887f5b8fbb"
     },
     {
+      "path": "scripts/aya-native-candidate.cjs",
+      "size": 490,
+      "sha256": "1dc17b5afe3df2c478040d50693a05b7f3b5546be8d6dcb9d5cf0ebca014d4cf"
+    },
+    {
       "path": "scripts/brand-source/THIRD_PARTY_LICENSES.txt",
       "size": 4014,
       "sha256": "9c4421ef417460695db61a442ff1aa5d46f61509fbb06111fb885cbd0f449501"
@@ -7436,8 +7451,8 @@
     },
     {
       "path": "scripts/run-windows-aya-native.cjs",
-      "size": 8829,
-      "sha256": "13a58b81d0d93c5b50b3b0fb3608c7dbd8b3a1ff091ceadb487d96eb99162126"
+      "size": 9482,
+      "sha256": "47b35e96f59c71782e087bb3dfce5896ad1f55ad1ceee814131b42fa32c33eba"
     },
     {
       "path": "scripts/setup-windows.ps1",
@@ -7481,8 +7496,8 @@
     },
     {
       "path": "scripts/verify-aya-cad-agent.ts",
-      "size": 9180,
-      "sha256": "eb3468e9425f881f0ef0a06bed886a81436db51f70a98e5a0e002d34ce9b13b1"
+      "size": 9701,
+      "sha256": "5e0a5de6999e103937b221e677cf48ef8867a8e5074b12b8fe2627b67a1705c9"
     },
     {
       "path": "scripts/verify-aya-cad-dialogue.cjs",
@@ -7556,13 +7571,13 @@
     },
     {
       "path": "scripts/verify-aya-native-grammar.cjs",
-      "size": 8963,
-      "sha256": "c9cb24482a1554447bf7574ca8fd6309050118d70a9314b32a69e92c94e95677"
+      "size": 9112,
+      "sha256": "38d001579ef9fd16046895edd1a8ecb5dc0d74e121a574d831096eb1ae3fdde7"
     },
     {
       "path": "scripts/verify-aya-native.cjs",
-      "size": 15999,
-      "sha256": "276ecfb086d26112547e8abfd2a753e15ece2933b8b70f48d556d907a972dcf4"
+      "size": 17798,
+      "sha256": "6663d381a9beeae1e9c9ddf78646276afe02a5ae777d5224d66c2b61b7b88617"
     },
     {
       "path": "scripts/verify-aya-natural-stream.cjs",
@@ -7656,8 +7671,8 @@
     },
     {
       "path": "scripts/verify-cad-daily-browser.mjs",
-      "size": 64573,
-      "sha256": "bd31485ab0d78dce0171137eddf26a9149ac9ec823c3135c3db7cb6cc23fe231"
+      "size": 65760,
+      "sha256": "e3c4227ca43c28f105471d530e0f8e24cc80e1017db13a1f4e75e5fe1a5750fd"
     },
     {
       "path": "scripts/verify-cad-daily.ts",
@@ -7731,8 +7746,8 @@
     },
     {
       "path": "scripts/verify-cad-restoration-browser.mjs",
-      "size": 24841,
-      "sha256": "5ea540f42937955cb743adf3c14d133e004d3b33a1d8f436f018fbf2d7835b25"
+      "size": 33947,
+      "sha256": "da9608d06ef3e18de8cfdc881c4fee8c692cbc47932732a684cec1ae053f6471"
     },
     {
       "path": "scripts/verify-cad-restoration-surface.ts",
@@ -7786,8 +7801,8 @@
     },
     {
       "path": "scripts/verify-desktop-shell-browser.mjs",
-      "size": 51078,
-      "sha256": "77c16ca85c2af171911f51378d8ab535f6bfd6d60ff8fc0bee861d11d9030249"
+      "size": 53292,
+      "sha256": "8420fe77ffc668582d99046ecd76889306ab1642361a87f792202d2188854d20"
     },
     {
       "path": "scripts/verify-e2e-workflow.ts",
@@ -7841,8 +7856,8 @@
     },
     {
       "path": "scripts/verify-local-aya.cjs",
-      "size": 18792,
-      "sha256": "62f0757fc19b77f142c0a631a0a20f937092ab462212396374c2808c9fbe76ae"
+      "size": 21584,
+      "sha256": "ed6db01ae560bf6e0b494e6da02bba58db75f94c3520dc88c08cd5e3de85ee5d"
     },
     {
       "path": "scripts/verify-localization.ts",
@@ -7868,6 +7883,11 @@
       "path": "scripts/verify-morphology-sculpt.ts",
       "size": 3514,
       "sha256": "cc63f576994a61dced36d8ae342fcc9389de0ee3f3a6436e1e6fe8f660ee89b2"
+    },
+    {
+      "path": "scripts/verify-native-cad-browser.mjs",
+      "size": 7841,
+      "sha256": "04fbf186c2215cd395a61cc3b12b0dcceefe0e0b93f73db1b69e9730d53d86cb"
     },
     {
       "path": "scripts/verify-operations-center.ts",
@@ -8011,8 +8031,8 @@
     },
     {
       "path": "scripts/verify-windows-native-orchestration.cjs",
-      "size": 6027,
-      "sha256": "7b087fa2bd32856b2e906406f5287b45b712abff0a0406936846d5ff457746c7"
+      "size": 6313,
+      "sha256": "9da83f83fc82f50a386aa0bfaeb8f035e4366f937a02ea1b37c7c1665d2ad5ac"
     },
     {
       "path": "scripts/verify-windows-packaging.mjs",
@@ -8186,8 +8206,8 @@
     },
     {
       "path": "src/app/ai/AyaChat.tsx",
-      "size": 35905,
-      "sha256": "64c67be1cff11236aa7d65d7ae5831496680576f605a4060cb8c07ee58975852"
+      "size": 37130,
+      "sha256": "32d2d63297b10d44d20f0f157003e4e6120e00e9882d71472beef2f053895b69"
     },
     {
       "path": "src/app/ai/AyaConnection.tsx",
@@ -8246,8 +8266,8 @@
     },
     {
       "path": "src/app/ai/aya-catalog.css",
-      "size": 12480,
-      "sha256": "820fd23399063f97c8051a0eec29b0b1695ff3393f2292d3f8ba3f58719b21b8"
+      "size": 12613,
+      "sha256": "3fcf9e8ab6264f36d676b30a51c35861cccf65af77b7f8f321944a240aa02013"
     },
     {
       "path": "src/app/ai/aya-engine-setup.css",
@@ -8376,8 +8396,8 @@
     },
     {
       "path": "src/app/design/CadAyaPanel.tsx",
-      "size": 22697,
-      "sha256": "9a9e2068227138efe3945490c7478fb4295a57e4486495013c8b6f123a89405d"
+      "size": 24384,
+      "sha256": "c285d696a97b49e733bf2e94866888e5bc9f1d71fe3f95594601103e1bc72c25"
     },
     {
       "path": "src/app/design/CadBrushPresets.tsx",
@@ -8431,13 +8451,13 @@
     },
     {
       "path": "src/app/design/DesignStudioClient.tsx",
-      "size": 182805,
-      "sha256": "a45d9fd0d8b192cff1876254a630f94b7ad29f629a5cf793dab3d9fa5ab27f01"
+      "size": 183497,
+      "sha256": "e566824c3c3bd29e09ab3c08342c6d3328dd8bc4a8e1147f015028872fd38712"
     },
     {
       "path": "src/app/design/DesignViewport.tsx",
-      "size": 152141,
-      "sha256": "1d5124c6c9330b63dcc076943a8be4e7c0cf61c11d522e623ccc943bf1259944"
+      "size": 152478,
+      "sha256": "d0b8434f537c686b30c1b5ac5d975ae9ac37636d8d56acf20927a811fc278093"
     },
     {
       "path": "src/app/design/cad-workspace.css",
@@ -8721,8 +8741,8 @@
     },
     {
       "path": "src/lib/aya-cad-agent.ts",
-      "size": 6364,
-      "sha256": "756e66e78f47880c6f178f509f4dd99902858ba3ef27074a0ff11954b502739c"
+      "size": 6519,
+      "sha256": "8e81fa00400fdc82ecbc288fa89c6614f847f2135d8577129cade6ea2bb66344"
     },
     {
       "path": "src/lib/aya-cad-assistance.ts",
@@ -8741,8 +8761,8 @@
     },
     {
       "path": "src/lib/aya-conversation.ts",
-      "size": 5594,
-      "sha256": "0627788c67a182cbdbb6a8392158c3a90d7c0ffae55d16bb9144b5e29730049d"
+      "size": 5966,
+      "sha256": "68121310d6be4b3823d45fa46f794cfe11f8a4a7a92a9e1e9af48e1707dd1bad"
     },
     {
       "path": "src/lib/aya-download-status.ts",
@@ -8776,8 +8796,8 @@
     },
     {
       "path": "src/lib/aya-module-navigation.ts",
-      "size": 866,
-      "sha256": "7eb2bb51d53b373aa842b402dcb656eaa6d4664ecec90f44ff5b1f36be093a78"
+      "size": 1061,
+      "sha256": "2efcfaa14f7b5c42850adbba41de2f5745431a615b56bc633ffd98cc771e461e"
     },
     {
       "path": "src/lib/aya-platform-copilot.ts",
@@ -9071,8 +9091,8 @@
     },
     {
       "path": "src/lib/i18n/aya-agent.ts",
-      "size": 7682,
-      "sha256": "0c2fa91938f9ce5967d8e3bf8dbcc14300b34ee75156635a949222243ec9d628"
+      "size": 8354,
+      "sha256": "fc4834c4c37394cc3bf744ed3b5f2031b34f327da6dfff4fde669be88bea0eee"
     },
     {
       "path": "src/lib/i18n/aya-catalog.ts",
@@ -9081,8 +9101,8 @@
     },
     {
       "path": "src/lib/i18n/aya-chat-workspace.ts",
-      "size": 600,
-      "sha256": "2d9966c94683af1d17826eade71dc802518d2187375b6efd82edefe0a0207b61"
+      "size": 696,
+      "sha256": "86d8572d7225ba97094701decc2eee5459a8b189521d2206f9c8f31319b92247"
     },
     {
       "path": "src/lib/i18n/aya-experience.ts",
@@ -9771,8 +9791,8 @@
     },
     {
       "path": "src/types/desktop.d.ts",
-      "size": 3206,
-      "sha256": "9ed7e9839047e843434bcf1481fe698a0e1756b8c429a820b1a2787992cd3147"
+      "size": 3314,
+      "sha256": "cd78e899b7d5b970657d3e54c402766f02083a5dae169d0bf1e01fb6a50994c9"
     },
     {
       "path": "supabase/.gitignore",

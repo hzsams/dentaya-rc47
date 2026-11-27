@@ -17,6 +17,11 @@ assert.ok(!availableAyaTools({...context,inspectionFlashlight:false},{...policy,
 assert.ok(availableAyaTools({...context,inspectionFlashlight:true},{...policy,inspection:true}).includes('flashlight-off'));
 assert.ok(!availableAyaTools({...context,inspectionFlashlight:true},{...policy,inspection:true}).includes('flashlight-on'));
 assert.ok(!availableAyaTools({...context,modelReady:false},{...policy,inspection:true}).includes('flashlight-on'));
+assert.ok(availableAyaTools(context,{...policy,crownShell:true}).includes('crown-shell'));
+assert.ok(!availableAyaTools(context,policy).includes('crown-shell'),'Host must explicitly allow first shell creation');
+for(const changed of [{setupComplete:false},{sourceReady:false},{modelReady:false},{marginPoints:2},{placed:false},{isSaving:true}]){
+ assert.ok(!availableAyaTools({...context,...changed},{...policy,crownShell:true}).includes('crown-shell'),'Shell creation requires an active fitted source and valid job');
+}
 
 assert.deepEqual(availableAyaTools({...context,scope:''},policy),[]);
 assert.equal(ayaProposalBlock(proposal,context),null);

@@ -193,6 +193,7 @@ export type DesignViewportHandle = {
     applyInternalFit: () => ReturnType<typeof applyInternalFitRelief> | null;
     toggleBlockoutPreview: () => boolean;
     runKernelQc: () => CadKernelReport;
+    canBuildInitialCrownShell: () => boolean;
     buildCrownShell: () => CrownShellReport | null;
     clearCrownShell: () => void;
     repairCrownShell: () => MeshRepairResult | null;
@@ -673,6 +674,10 @@ const DesignViewport = forwardRef<DesignViewportHandle, Props>(function DesignVi
                 ((contact?.collisionCount ?? 0) > 0 ? 1 : 0);
             onStatus?.(`CAD Kernel QC tamamlandı · ${warnings} uyarı başlığı.`);
             return report;
+        },
+        canBuildInitialCrownShell() {
+            return Boolean(!shellMeshRef.current && designMeshRef.current && sourceKernelIndexRef.current &&
+                liveUnitRef.current?.key===unitKey()?.key && anchorRef.current.placed && anchorRef.current.marginKey===marginKey());
         },
         buildCrownShell() {
             const design = designMeshRef.current;
