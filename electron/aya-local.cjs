@@ -80,8 +80,8 @@ function createLocalAya({fetchImpl=fetch,managed}={}){
   const memoryTask=input.task==='memory';
   if(input.task!==undefined&&!memoryTask||memoryTask&&(input.agent!==true||typeof input.assistantReply!=='string'||!input.assistantReply.trim()||input.assistantReply.length>12000))return {ok:false,error:'INVALID_PROMPT'};
   // Memory extraction cannot execute CAD or draw new facts from retrieval/history.
-  if(memoryTask)input={task:'memory',agent:true,prompt:input.prompt,model:input.model,locale:input.locale,workingMemory:input.workingMemory,assistantReply:input.assistantReply.length>2400?input.assistantReply.slice(0,1500)+'\n[assistant reply shortened]\n'+input.assistantReply.slice(-850):input.assistantReply};
-  const controller=new AbortController();active={owner,controller};
+  if(memoryTask)input={task:'memory',agent:true,requestId:input.requestId,prompt:input.prompt,model:input.model,locale:input.locale,workingMemory:input.workingMemory,assistantReply:input.assistantReply.length>2400?input.assistantReply.slice(0,1500)+'\n[assistant reply shortened]\n'+input.assistantReply.slice(-850):input.assistantReply};
+  const controller=new AbortController();active={owner,controller,requestId:input.requestId};
   const signal=AbortSignal.any([controller.signal,AbortSignal.timeout(memoryTask?60000:180000)]);
   try{
    const task=(async()=>{
@@ -119,7 +119,7 @@ function createLocalAya({fetchImpl=fetch,managed}={}){
    finally{signal.removeEventListener('abort',abort);}
   }catch(error){return {ok:false,error:error?.name==='AbortError'?'LOCAL_CANCELLED':error?.name==='TimeoutError'?'LOCAL_TIMEOUT':SAFE_ERRORS.has(error?.message)?error.message:'LOCAL_UNAVAILABLE'};}finally{if(active?.controller===controller)active=null;}
  }
- function cancel(owner){if(active?.owner===owner)active.controller.abort();return {ok:true};}
+ function cancel(owner,requestId){if(active?.owner===owner&&(requestId===undefined||requestId===active.requestId))active.controller.abort();return {ok:true};}
  function startDownload(owner){
   if(pull||active||managed?.isBusy())return {ok:false,error:'LOCAL_BUSY'};
   const controller=new AbortController();pull={owner,controller};progress={running:true,status:'Model indiriliyor…',completed:0,total:0};

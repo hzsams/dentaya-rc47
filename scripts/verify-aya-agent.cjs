@@ -47,6 +47,17 @@ function rejects(change,input={}){assert.throws(()=>parse({...plan,...change},in
  rejects({...blank,openQuestions:['Q4']},fullInput);
  assert.equal(JSON.stringify(fullMemory),fullBefore,'Overflow must reject atomically without evicting any older agreement');
  assert.deepEqual(parse({...blank,decisions:['D5'],openQuestions:['Q3']},fullInput).workingMemory,fullMemory,'Repeating existing evidence does not consume capacity');
+ const cadAtCapacity={...fullInput,cadContext:cad};
+ const inspect=[{tool:'inspect',reason:'Review the current host report.'}];
+ const legacyCadReply={...blank,goal:'Model suggestion',decisions:['Generated observation 1','Generated observation 2'],actions:inspect};
+ const acceptedCadPlan=parse(legacyCadReply,cadAtCapacity);
+ assert.deepEqual(acceptedCadPlan.workingMemory,fullMemory,'CAD observations cannot overflow or change the user decision memory');
+ assert.equal(acceptedCadPlan.proposals[0].tool,'inspect');
+ assert.deepEqual(parse({answer:plan.answer,actions:inspect},cadAtCapacity),acceptedCadPlan);
+ assert.deepEqual(responseSchema(normalizeWorkspace(cad)).required,['answer','actions']);
+ assert.ok(!Object.hasOwn(responseSchema(normalizeWorkspace(cad)).properties,'decisions'));
+ assert.match(prepareAgent(cadAtCapacity).instructions,/working memory as read-only/);
+ assert.deepEqual(parse({...legacyCadReply,memoryUpdate:'clear'},{...cadAtCapacity,prompt:'Çalışma belleğini temizle'}).workingMemory,fullMemory,'The planning response cannot authorize a reset');
  const revisedList=['D1','D2','D3','D4','Revised D5'];
  assert.deepEqual(parse({...blank,memoryUpdate:'patch',memoryPatch:{goal:'keep',decisions:'replace',openQuestions:'keep'},decisions:revisedList},fullInput).workingMemory,{...fullMemory,decisions:revisedList},'A deliberate complete field revision remains available at capacity');
  const resolved=parse({...plan,memoryUpdate:'replace',openQuestions:[]},memoryInput);assert.deepEqual(resolved.workingMemory.openQuestions,[],'A deliberate revision can resolve an open question');

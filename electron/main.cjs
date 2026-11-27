@@ -417,12 +417,32 @@ const managedAya=require('./aya/managed-runtime.cjs').createManagedAya({director
 const localAya = require('./aya-local.cjs').createLocalAya({managed:managedAya});
 app.on('before-quit',()=>managedAya.dispose());
 function trustedAyaSender(event){const win=BrowserWindow.fromWebContents(event.sender);return win&&[mainWindow,cadWindow].includes(win)&&event.senderFrame===event.sender.mainFrame&&isSameOrigin(event.senderFrame.url);}
+const pendingAyaStarts=new Set();
 for(const [channel,method] of [['status','status'],['guide','guide'],['chat','chat'],['cancel','cancel'],['download','startDownload'],['cancel-download','cancelDownload']]){
  ipcMain.handle('dentaya:aya-local-'+channel,async(event,input)=>{
   if(!trustedAyaSender(event))return {ok:false,error:'UNTRUSTED_WINDOW'};
   if((method==='chat'||method==='startDownload')&&(languagePacks.isBusy()||ayaImportBusy))return {ok:false,error:'LOCAL_BUSY'};
   if(method==='guide')return localAya.guide(input?.prompt,await translationFor(input?.locale||'tr'));
-  if(method==='chat'){const translate=await translationFor(input?.locale||'tr');return languagePacks.isBusy()||ayaImportBusy?{ok:false,error:'LOCAL_BUSY'}:localAya.chat(input,event.sender.id,translate,output=>{if(typeof input?.requestId==='string'&&/^[a-zA-Z0-9-]{1,80}$/.test(input.requestId)&&!event.sender.isDestroyed())event.sender.send('dentaya:aya-local-token',{requestId:input.requestId,output});});}
+  if(method==='chat'){
+   const sender=event.sender,start={owner:sender.id,requestId:input?.requestId,cancelled:false};
+   pendingAyaStarts.add(start);
+   try{
+    const translate=input?.task==='memory'?undefined:await translationFor(input?.locale||'tr');
+    if(start.cancelled||sender.isDestroyed())return {ok:false,error:'LOCAL_CANCELLED'};
+    if(!trustedAyaSender(event))return {ok:false,error:'UNTRUSTED_WINDOW'};
+    if(languagePacks.isBusy()||ayaImportBusy)return {ok:false,error:'LOCAL_BUSY'};
+    return localAya.chat(input,start.owner,translate,output=>{
+     if(typeof start.requestId==='string'&&/^[a-zA-Z0-9-]{1,80}$/.test(start.requestId)&&!sender.isDestroyed())sender.send('dentaya:aya-local-token',{requestId:start.requestId,output});
+    });
+   }finally{pendingAyaStarts.delete(start);}
+  }
+  if(method==='cancel'){
+   const owner=event.sender.id;
+   for(const start of pendingAyaStarts){
+    if(start.owner===owner&&(input===undefined||input===start.requestId))start.cancelled=true;
+   }
+   return localAya.cancel(owner,input);
+  }
   return method==='status'?localAya.status():localAya[method](event.sender.id);
  });
 }

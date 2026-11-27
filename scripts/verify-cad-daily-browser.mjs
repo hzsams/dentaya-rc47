@@ -75,10 +75,15 @@ try {
    },{capture:true});
    return request;
   };
-  const model=window.rc47CadModel={ready:false,calls:[],pending:[],mode:'ok',cancels:0};
+  const model=window.rc47CadModel={ready:false,calls:[],memoryCalls:[],pending:[],mode:'ok',memoryMode:'ok',cancels:0};
   window.dentayaDesktop={onOpenPreferences:()=>()=>{},localAyaStatus:async()=>({ok:true,models:model.ready?[{name:'cad-model-fixture',size:1000}]:[],progress:{running:false,status:'ready',completed:0,total:0}}),localAyaChat:async input=>{
+   if(input.task==='memory'){
+    model.memoryCalls.push(input);
+    if(model.memoryMode==='invalid')return {ok:false,error:'LOCAL_INVALID_PLAN'};
+    return {ok:true,output:'Memory updated',workingMemory:{goal:'46 ünitesinin gerçek kontrol sonuçlarını incele',decisions:['Kole korunacak'],openQuestions:[]}};
+   }
    model.calls.push(input);
-   const result={ok:true,output:model.mode==='pending'?'Gecikmiş model yanıtı':'Mevcut üniteye ait kontrol önerisi',workingMemory:{goal:input.workingMemory?.goal||'46 ünitesinin gerçek kontrol sonuçlarını incele',decisions:['Kontrol kullanıcının onayı ile çalışır'],openQuestions:[]},proposals:input.prompt.startsWith('Yeni kontrol sonuçlarını')?[]:[{tool:'inspect',reason:'Mevcut ünite için geometri kontrolünü hesapla',scope:input.cadContext.scope,snapshot:input.cadContext.snapshot}]};
+   const result={ok:true,output:model.mode==='pending'?'Gecikmiş model yanıtı':'Mevcut üniteye ait kontrol önerisi',workingMemory:{goal:'Modelin kendi gözlemi',decisions:['Öneri onaylanmış karar değildir'],openQuestions:[]},proposals:input.prompt.startsWith('Yeni kontrol sonuçlarını')?[]:[{tool:'inspect',reason:'Mevcut ünite için geometri kontrolünü hesapla',scope:input.cadContext.scope,snapshot:input.cadContext.snapshot}]};
    if(model.mode==='pending')return new Promise(resolve=>model.pending.push(()=>resolve(result)));
    if(model.mode==='invalid')return {ok:false,error:'LOCAL_INVALID_PLAN'};
    if(model.mode==='engine-memory')return {ok:false,error:'AYA_ENGINE_MEMORY'};
@@ -231,6 +236,12 @@ try {
  await ask('Şu anki dişe bakıp gerçek kontrolü önerebilir misin?');
  const inspectProposal=aya.locator('[data-proposal-tool=inspect]').last();await inspectProposal.waitFor();
  const preInspect=await page.evaluate(()=>window.rc47CadModel.calls.at(-1).cadContext);
+ await page.waitForFunction(()=>document.querySelector('.aya-working-memory')?.textContent.includes('Kole korunacak'));
+ const memoryCall=await page.evaluate(()=>window.rc47CadModel.memoryCalls.at(-1));
+ assert.equal(memoryCall.prompt,'Şu anki dişe bakıp gerçek kontrolü önerebilir misin?');
+ assert.equal(memoryCall.assistantReply,'Mevcut üniteye ait kontrol önerisi');
+ assert.deepEqual(memoryCall.history,[]);assert.equal(memoryCall.cadContext,undefined);
+ assert.doesNotMatch(await aya.locator('.aya-working-memory').textContent(),/Modelin kendi gözlemi/);
  assert.equal(await page.locator('.cad-history-count').textContent(),historyBefore);assert.equal(writes.length,writesBefore,'A model suggestion must not execute CAD or save automatically');
  // An automatic result interpretation must not consume the user's next unsent question.
  const unsentCadDraft='Bir sonraki sorum: bu ünitenin formunu nasıl korurum?';
@@ -239,6 +250,7 @@ try {
  await inspectProposal.getByRole('button',{name:'Uygula',exact:true}).evaluate(button=>{button.click();button.click();});
  await page.waitForFunction(()=>window.rc47CadModel.calls.length===2);await aya.getByRole('button',{name:'Gönder',exact:true}).waitFor();
  const interpreted=await page.evaluate(()=>window.rc47CadModel.calls.at(-1));
+ assert.equal(await page.evaluate(()=>window.rc47CadModel.memoryCalls.length),1,'Automatic host QC interpretation cannot trigger a memory update');
  assert.equal(interpreted.cadContext.unit,'46');assert.equal(interpreted.cadContext.report.contactReference,'unavailable');assert.equal(interpreted.cadContext.report.collisionSamples,undefined);assert.equal(interpreted.cadContext.recentActions.at(-1).tool,'inspect');assert.equal(interpreted.cadContext.recentActions.at(-1).ok,true);assert.equal(interpreted.workingMemory.goal,'46 ünitesinin gerçek kontrol sonuçlarını incele');
  assert.ok(interpreted.cadContext.report.triangles>0,'The next model turn receives the actual kernel report');
  const currentInspect=normalizeWorkspace(interpreted.cadContext).recentActions.at(-1);
@@ -260,6 +272,16 @@ try {
  await page.evaluate(()=>{for(const resolve of window.rc47CadModel.pending.splice(0))resolve();window.rc47CadModel.mode='ok';});
  if(process.env.DENTAYA_SCREENSHOT_DIR){await page.screenshot({path:path.join(process.env.DENTAYA_SCREENSHOT_DIR,'RC60_CAD_AYA_Draft_Preserved.png'),animations:'disabled',timeout:15000});}
  console.log('PASS: CAD drafts survive close/reopen and success, invalid output, engine failure, or cancellation during bounded QC interpretation.');
+ // An extraction failure leaves both the valid answer and the saved agreements.
+ await page.evaluate(()=>{window.rc47CadModel.memoryMode='invalid';});
+ const priorMemory=await aya.locator('.aya-working-memory').textContent();
+ const modelAnswers=aya.getByRole('log').locator('article').filter({hasText:'Mevcut üniteye ait kontrol önerisi'});
+ const priorAnswers=await modelAnswers.count();
+ await ask('Bu sonucu mevcut kararlarla açıkla');
+ await page.waitForFunction(()=>window.rc47CadModel.memoryCalls.length===2);
+ assert.equal(await modelAnswers.count(),priorAnswers+1);
+ assert.equal(await aya.locator('.aya-working-memory').textContent(),priorMemory);
+ await page.evaluate(()=>{window.rc47CadModel.memoryMode='ok';});
  // Invalid model output and cancellation retain the prompt and leave CAD usable.
  await page.evaluate(()=>{window.rc47CadModel.mode='invalid';});await ask('Hedefi değiştirmeden kontrol et');assert.equal(await aya.getByRole('textbox').inputValue(),'Hedefi değiştirmeden kontrol et');
  await page.evaluate(()=>{window.rc47CadModel.mode='pending';});

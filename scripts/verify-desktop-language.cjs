@@ -4,14 +4,14 @@ const filename=path.resolve(__dirname,'../electron/main.cjs'),realRequire=create
 const handlers=new Map(),windows=[],cancelled=[],starts=[],gets=[];
 let menu,busy=false,getHook,chatCalls=0;
 class Window extends EventEmitter{
- constructor(){super();this.destroyed=false;this.webContents=new EventEmitter();this.webContents.id=windows.length+1;this.webContents.mainFrame={url:''};this.webContents.getURL=()=>this.webContents.mainFrame.url;this.webContents.setWindowOpenHandler=fn=>{this.open=fn;};this.webContents.send=()=>{};windows.push(this);app.emit('web-contents-created',null,this.webContents);}
+ constructor(){super();this.destroyed=false;this.webContents=new EventEmitter();this.webContents.id=windows.length+1;this.webContents.mainFrame={url:''};this.webContents.getURL=()=>this.webContents.mainFrame.url;this.webContents.isDestroyed=()=>this.destroyed;this.webContents.setWindowOpenHandler=fn=>{this.open=fn;};this.webContents.send=()=>{};windows.push(this);app.emit('web-contents-created',null,this.webContents);}
  loadURL(url){this.webContents.mainFrame.url=url;}isDestroyed(){return this.destroyed;}isMinimized(){return false;}show(){}focus(){}maximize(){}restore(){}setIcon(){}close(){this.destroyed=true;this.emit('closed');}
  static fromWebContents(contents){return windows.find(win=>win.webContents===contents);}static getAllWindows(){return windows.filter(win=>!win.destroyed);}static getFocusedWindow(){return windows[0];}
 }
 const switchReads=[];
 const app=new EventEmitter();Object.assign(app,{isPackaged:false,commandLine:{appendSwitch(){},getSwitchValue(name){switchReads.push(name);return '';}},getPath:()=>temporary,setPath:(_key,value)=>{app.getPath=()=>value;},requestSingleInstanceLock:()=>true,whenReady:()=>Promise.resolve(),quit(){},relaunch(){}});
 const pack={isBusy:()=>busy,get:async locale=>{gets.push(locale);if(getHook)return getHook(locale);return {ok:true,entries:locale==='en'?{'Logo ve görünüm ayarları':'Brand settings','Düzenle':'Edit','Geri al':'Undo','Çıkış':'Quit'}:locale==='fr'?{'Düzenle':'Modifier'}:{}};},start:(input,owner)=>{starts.push({input,owner});return {ok:true};},status:()=>({running:busy}),cancel:owner=>{cancelled.push(owner);return {ok:true};},importPack:async()=>({ok:true})};
-const aya={isBusy:()=>false,status:async()=>({ok:true}),guide:(_prompt,t)=>({ok:true,output:t('Geri al')}),chat:async(_input,_owner,t)=>{chatCalls++;return {ok:true,output:t('Geri al')};},cancel:owner=>cancelled.push(owner),cancelDownload:owner=>cancelled.push(owner),startDownload:async()=>({ok:true})};
+const aya={isBusy:()=>false,status:async()=>({ok:true}),guide:(_prompt,t)=>({ok:true,output:t('Geri al')}),chat:async(_input,_owner,t=s=>s)=>{chatCalls++;return {ok:true,output:t('Geri al')};},cancel:owner=>cancelled.push(owner),cancelDownload:owner=>cancelled.push(owner),startDownload:async()=>({ok:true})};
 function requireMock(name){if(name==='electron')return {app,BrowserWindow:Window,Menu:{buildFromTemplate:items=>items,setApplicationMenu:items=>{menu=items;}},shell:{openExternal(){}},dialog:{showErrorBox:(_title,message)=>{throw Error(message);}},ipcMain:{handle:(name,fn)=>handlers.set(name,fn)},safeStorage:{}};if(name==='./aya/language-packs.cjs')return {LANGUAGES:realRequire(name).LANGUAGES,createLanguagePacks:()=>pack};if(name==='./aya-local.cjs')return {createLocalAya:()=>aya};if(name==='./desktop-brand.cjs')return {LOGOS:[],updateDesktopIcon:()=>({ok:true})};return realRequire(name);}
 const event=(win,frame=win.webContents.mainFrame)=>({sender:win.webContents,senderFrame:frame});
 async function run(){
@@ -29,8 +29,20 @@ async function run(){
  const stale=handlers.get('dentaya:language-activate')(event(owned),{locale:'en'});await handlers.get('dentaya:language-activate')(event(owned),{locale:'fr'});release({ok:true,entries:{'Düzenle':'Edit'}});await stale;assert.equal(menu[1].label,'Modifier');getHook=undefined;
  busy=true;assert.equal((await handlers.get('dentaya:aya-local-chat')(event(owned),{locale:'en'})).error,'LOCAL_BUSY');assert.equal(chatCalls,0);busy=false;
  getHook=()=>new Promise(resolve=>{release=resolve;});const race=handlers.get('dentaya:aya-local-chat')(event(owned),{locale:'en'});busy=true;release({ok:true,entries:{'Geri al':'Undo'}});assert.equal((await race).error,'LOCAL_BUSY');assert.equal(chatCalls,0);busy=false;getHook=undefined;
+ const chat=handlers.get('dentaya:aya-local-chat'),cancel=handlers.get('dentaya:aya-local-cancel');
+ getHook=()=>new Promise(resolve=>{release=resolve;});
+ const cancelledBeforeStart=chat(event(owned),{locale:'en',requestId:'old-module'});
+ await cancel(event(owned),'old-module');
+ release({ok:true,entries:{'Geri al':'Undo'}});
+ assert.equal((await cancelledBeforeStart).error,'LOCAL_CANCELLED');
+ assert.equal(chatCalls,0,'A cancelled route request cannot start after translation resolves');
+ const newModule=chat(event(owned),{locale:'en',requestId:'new-module'});
+ await cancel(event(owned),'old-module');
+ release({ok:true,entries:{'Geri al':'Undo'}});
+ assert.equal((await newModule).output,'Undo','A stale cancellation cannot stop a new translation and chat');
+ getHook=undefined;
  assert.equal((await handlers.get('dentaya:aya-local-guide')(event(owned),{prompt:'geri al',locale:'en'})).output,'Undo');
  owned.open({url:'http://localhost:3010/cad'});const cad=windows.at(-1);assert.equal((await handlers.get('dentaya:language-get')(event(cad),{locale:'en'})).ok,true);const old=cancelled.length;cad.webContents.emit('destroyed');assert.ok(cancelled.slice(old).every(owner=>owner===cad.webContents.id));assert.equal(cancelled.length-old,3);
- console.log('PASS desktop language IPC: owner/top-frame/origin checks, cancel ownership, CAD window access, localized menu roles/accelerators and persistence, stale activation guard, chat/translation busy race. Electron windows and model inference mocked.');
+ console.log('PASS desktop language IPC: owner/top-frame/origin checks, cancel ownership, CAD window access, localized menu roles/accelerators and persistence, stale activation guard, chat/translation busy race and request-specific cancellation before inference. Electron windows and model inference mocked.');
 }
 run().finally(()=>fs.rmSync(temporary,{recursive:true,force:true})).catch(error=>{console.error(error);process.exitCode=1;});

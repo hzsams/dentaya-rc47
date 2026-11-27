@@ -14,7 +14,7 @@ contextBridge.exposeInMainWorld('dentayaDesktop', {
   localAyaGuide: (input) => ipcRenderer.invoke('dentaya:aya-local-guide', input),
   localAyaStatus: () => ipcRenderer.invoke('dentaya:aya-local-status'),
   localAyaChat: (input) => ipcRenderer.invoke('dentaya:aya-local-chat', input),
-  localAyaCancel: () => ipcRenderer.invoke('dentaya:aya-local-cancel'),
+  localAyaCancel: (requestId) => ipcRenderer.invoke('dentaya:aya-local-cancel', requestId),
   localAyaDownload: () => ipcRenderer.invoke('dentaya:aya-local-download'),
   localAyaCancelDownload: () => ipcRenderer.invoke('dentaya:aya-local-cancel-download'),
   saveAyaConnection: (input) => ipcRenderer.invoke('dentaya:aya-connection', input),

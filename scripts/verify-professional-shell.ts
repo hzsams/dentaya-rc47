@@ -4,6 +4,7 @@ import { createLauncherRegistry } from '../src/lib/launcher-ownership';
 import { needsOrganizationConnection } from '../src/lib/i18n/professional-shell';
 import { filterModuleTree, isCurrentModule, MODULE_TREE, moduleAncestorIds, moduleDestinations, moduleFolderIds, normalizeModuleQuery, type ModuleNode } from '../src/lib/module-navigation';
 import { moduleNavigationText } from '../src/lib/i18n/module-navigation';
+import { ayaHrefFromPathname, ayaModuleFromParam } from '../src/lib/aya-module-navigation';
 
 for (const input of [{}, {url:'   ',publishableKey:'',anonKey:' '}]) {
   const config = resolvePublicConnection(input);
@@ -25,6 +26,14 @@ assert.equal(needsOrganizationConnection('/cases'),true);assert.equal(needsOrgan
 const expectedDestinations = ['/workspace','/cases','/patients','/appointments','/ai','/scans','/scan-studio','/design','/cad-library','/training','/operations','/logistics','/community','/messages','/notifications','/clinic','/labs','/finance','/team','/settings','/pilot-flow','/pilot-check','/ops-health','/release-check'];
 const destinations = moduleDestinations(MODULE_TREE);
 assert.deepEqual(destinations.map(node => node.href).sort(), expectedDestinations.sort(), 'The folder menu preserves every existing module destination exactly once');
+for (const {href, label} of destinations.filter(({href}) => !['/workspace', '/ai', '/design'].includes(href))) {
+  const id = href.slice(1);
+  assert.equal(ayaHrefFromPathname(href),`/ai?module=${id}`);
+  assert.deepEqual(ayaModuleFromParam(id),{id,href,label});
+}
+assert.equal(ayaHrefFromPathname('/cases/private-record-id'),'/ai?module=cases','Carry only the base module into AYA');
+for (const route of ['/workspace','/design','/cad','/ai','/unknown']) assert.equal(ayaHrefFromPathname(route),'/ai');
+for (const value of [null,'','__proto__','cases/private-record-id','https://example.com']) assert.equal(ayaModuleFromParam(value),null);
 assert.equal(new Set(moduleFolderIds(MODULE_TREE)).size, moduleFolderIds(MODULE_TREE).length, 'Disclosure controls have unique folder identities');
 assert.deepEqual(moduleAncestorIds(MODULE_TREE, '/operations'), ['management','management/work'], 'Work tracking belongs under management');
 assert.deepEqual(moduleAncestorIds(MODULE_TREE, '/patients/synthetic-patient'), ['clinic','clinic/records'], 'Nested pages reveal their active path');

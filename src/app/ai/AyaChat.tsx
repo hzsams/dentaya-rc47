@@ -22,15 +22,16 @@ import { useTranslation } from '@/lib/i18n';
 import AyaPreferencesPanel from './AyaPreferencesPanel';
 import { useAyaState, readAyaState, ayaSessionRevision, saveAyaSessionIfCurrent, deleteAyaSession, type AyaMessage } from '@/lib/aya-local-state';
 import { playExperienceCue } from '@/lib/experience-audio';
+import type { ayaModuleFromParam } from '@/lib/aya-module-navigation';
 type Message = AyaMessage;
 type MemoryWork={turn:string;sessionId:string;baseline:string;version:number;prompt:string;answer:string;memory:ReturnType<typeof normalizeMemory>};
-type PendingMemory={cancelled:boolean;promise:Promise<void>};
+type PendingMemory={requestId:string;cancelled:boolean;promise:Promise<void>};
 type LocalStatus = Awaited<ReturnType<NonNullable<NonNullable<Window['dentayaDesktop']>['localAyaStatus']>>>;
 const empty: LocalStatus = { ok: false, models: [], progress: { running: false, status: '', completed: 0, total: 0 } };
 const RUNTIME_ERROR='LOCAL_RUNTIME_MISSING';
 const ERROR: Record<string, string> = { LOCAL_RUNTIME_MISSING: 'Yerel motor kontrol edilemedi.', LOCAL_BUSY: 'Model şu anda başka bir işlemde. İşlemin bitmesini bekleyin.', MODEL_MISSING: 'Seçilen model bu bilgisayarda bulunamadı. Listeyi yenileyin veya modeli indirin.', LOCAL_MODEL_REQUIRED: 'Bu model yerel metin sohbeti için uygun değil. Yerel bir metin modeli seçin.', LOCAL_CANCELLED: 'Yanıt durduruldu. Sorunuz korundu.', LOCAL_TIMEOUT: 'Model zaman aşımına uğradı. Daha küçük bir model deneyin.', LOCAL_EMPTY_RESPONSE: 'Model boş yanıt verdi. Sorunuz korundu.' };
 function OpenArrow() { return <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 12 12 4M4 4h8v8"/></svg>; }
-export default function AyaChat() {
+export default function AyaChat({sourceModule=null}:{sourceModule?:ReturnType<typeof ayaModuleFromParam>}) {
     const { t, locale, intlLocale } = useTranslation();
     const { options, sessions } = useAyaState();
     const agentCopy=ayaAgentText(locale);
@@ -121,13 +122,15 @@ export default function AyaChat() {
         window.addEventListener('focus',focus);
         return () => {
             const pending=requestId.current;
+            const memoryRequest=pendingMemory.current;
             live.current = false;statusGate.invalidate();requestId.current='';lock.current=false;
             window.removeEventListener('focus',focus);
             unsubscribeTokens?.();
             cancelRequest.current?.();cancelRequest.current=null;
             latestTurn.current='';
-            if(pendingMemory.current)pendingMemory.current.cancelled=true;
-            if(pending||pendingMemory.current)void window.dentayaDesktop?.localAyaCancel?.().catch(()=>{});
+            if(memoryRequest)memoryRequest.cancelled=true;
+            if(pending)void window.dentayaDesktop?.localAyaCancel?.(pending).catch(()=>{});
+            if(memoryRequest)void window.dentayaDesktop?.localAyaCancel?.(memoryRequest.requestId).catch(()=>{});
         };
     }, []);
     useEffect(() => {
@@ -180,8 +183,9 @@ export default function AyaChat() {
     }
     function stop() {
         // Settle the UI even if the native engine does not acknowledge cancellation.
+        const pending=requestId.current;
         cancelRequest.current?.();
-        void window.dentayaDesktop?.localAyaCancel?.().catch(()=>{});
+        if(pending)void window.dentayaDesktop?.localAyaCancel?.(pending).catch(()=>{});
     }
     function replyError(code:string) {
         if(code==='LOCAL_INVALID_PLAN')return agentCopy.invalid;
@@ -197,7 +201,8 @@ export default function AyaChat() {
     }
     function invalidateMemoryWork() {
         latestTurn.current='';
-        if(pendingMemory.current){pendingMemory.current.cancelled=true;void window.dentayaDesktop?.localAyaCancel?.().catch(()=>{});}
+        const pending=pendingMemory.current;
+        if(pending){pending.cancelled=true;void window.dentayaDesktop?.localAyaCancel?.(pending.requestId).catch(()=>{});}
     }
     async function settleMemoryWork():Promise<boolean> {
         const pending=pendingMemory.current;
@@ -206,7 +211,7 @@ export default function AyaChat() {
         let timer:ReturnType<typeof setTimeout>|undefined;
         try {
             return await Promise.race([
-                (async()=>{await window.dentayaDesktop?.localAyaCancel?.().catch(()=>{});await pending.promise;return true;})(),
+                (async()=>{await window.dentayaDesktop?.localAyaCancel?.(pending.requestId).catch(()=>{});await pending.promise;return true;})(),
                 new Promise<false>(resolve=>{timer=setTimeout(()=>resolve(false),2000);}),
             ]);
         } finally {clearTimeout(timer);}
@@ -223,11 +228,11 @@ export default function AyaChat() {
     function extractMemory(work:MemoryWork) {
         const api=window.dentayaDesktop;
         if(!api?.localAyaChat||!live.current||latestTurn.current!==work.turn||activeSession.current!==work.sessionId||work.answer.length>12000)return;
-        const pending:PendingMemory={cancelled:false,promise:Promise.resolve()};
+        const pending:PendingMemory={requestId:crypto.randomUUID(),cancelled:false,promise:Promise.resolve()};
         pendingMemory.current=pending;
         pending.promise=(async()=>{
             try {
-                const result=await api.localAyaChat!({task:'memory',agent:true,assistantReply:work.answer,requestId:crypto.randomUUID(),prompt:work.prompt,model,locale,detail:'concise',history:[],workingMemory:work.memory});
+                const result=await api.localAyaChat!({task:'memory',agent:true,assistantReply:work.answer,requestId:pending.requestId,prompt:work.prompt,model,locale,detail:'concise',history:[],workingMemory:work.memory});
                 if(!result.ok||!result.workingMemory||pending.cancelled||!live.current||pendingMemory.current!==pending||latestTurn.current!==work.turn||activeSession.current!==work.sessionId||memoryVersion.current!==work.version||JSON.stringify(currentMemory.current)!==work.baseline)return;
                 updateMemory(result.workingMemory);
             } catch { /* Optional extraction never replaces a completed answer. */ }
@@ -270,7 +275,7 @@ export default function AyaChat() {
         let abortedError='';
         const aborted=new Promise<{ok:false;error:string}>(resolve=>{
             cancelRequest.current=()=>{abortedError='LOCAL_CANCELLED';resolve({ok:false,error:abortedError});};
-            watchdog=setTimeout(()=>{abortedError='LOCAL_TIMEOUT';resolve({ok:false,error:abortedError});void api?.localAyaCancel?.().catch(()=>{});},185000);
+            watchdog=setTimeout(()=>{abortedError='LOCAL_TIMEOUT';resolve({ok:false,error:abortedError});void api?.localAyaCancel?.(id).catch(()=>{});},185000);
         });
         try {
             if(!await settleMemoryWork())throw Error('LOCAL_BUSY');
@@ -280,7 +285,8 @@ export default function AyaChat() {
             // A status probe during background extraction may still say BUSY
             // after it has settled. The native bridge rechecks ownership/readiness.
             const canRequestModel=modelReady||status.error==='LOCAL_BUSY'&&desktop&&status.models.some(item=>item.name===model)&&!status.progress.running&&!status.ollama?.progress.running;
-            const result = await resolveAyaReply({prompt,knowledge,history:modelHistory,workingMemory:requestMemory,options:{...requestOptions,style:detailed?'explained':requestOptions.style},locale,forceModel},{t,callModel:canRequestModel&&api?.localAyaChat?()=>Promise.race([api.localAyaChat!({ agent:false,workingMemory:requestMemory,requestId:id,knowledge,useMemory:!preserveDraft&&notebook.enabled,prompt, model, locale, detail: requestOptions.style === 'concise' && !detailed ? 'concise' : 'detailed', options:requestOptions, history:modelHistory }),aborted]):undefined});
+            const moduleContext = !preserveDraft && sourceModule ? {moduleId:sourceModule.id} : {};
+            const result = await resolveAyaReply({prompt,knowledge,history:modelHistory,workingMemory:requestMemory,options:{...requestOptions,style:detailed?'explained':requestOptions.style},locale,forceModel},{t,callModel:canRequestModel&&api?.localAyaChat?()=>Promise.race([api.localAyaChat!({ agent:false,...moduleContext,workingMemory:requestMemory,requestId:id,knowledge,useMemory:!preserveDraft&&notebook.enabled,prompt, model, locale, detail: requestOptions.style === 'concise' && !detailed ? 'concise' : 'detailed', options:requestOptions, history:modelHistory }),aborted]):undefined});
             if (!live.current || requestId.current!==id)
                 return;
             if(!result.ok){
@@ -353,8 +359,9 @@ export default function AyaChat() {
     function closeSettings() { setSettingsOpen(false); settingsButton.current?.focus(); }
     return <UiNode as="section" className={`aya-chat aya-conversation-shell${settingsOpen?' aya-conversation-shell--settings':''}`} aria-label={copy.conversation} translateChildren={false}>
         <UiNode as="header" className="aya-chat-header" translateChildren={false}>
-            <UiNode as="div" translateChildren={false}><Link href="/workspace" translateChildren={false}>← {copy.back}</Link><UiNode as="div" className="aya-title-row" translateChildren={false}><UiNode as="span" className="aya-core-emblem" aria-hidden="true"><UserText>A</UserText></UiNode><UiNode as="div" translateChildren={false}><UiNode as="h1">{copy.title}</UiNode><UiNode as="p">{copy.subtitle}</UiNode></UiNode></UiNode></UiNode>
+            <UiNode as="div" translateChildren={false}><Link href={sourceModule?.href ?? '/workspace'} translateChildren={false}>← {sourceModule ? t(sourceModule.label) : copy.back}</Link><UiNode as="div" className="aya-title-row" translateChildren={false}><UiNode as="span" className="aya-core-emblem" aria-hidden="true"><UserText>A</UserText></UiNode><UiNode as="div" translateChildren={false}><UiNode as="h1">{copy.title}</UiNode><UiNode as="p">{sourceModule ? `${workspaceCopy.moduleContext} · ${t(sourceModule.label)}` : copy.subtitle}</UiNode></UiNode></UiNode></UiNode>
             <UiNode as="div" className="aya-header-actions" translateChildren={false}>
+                {sourceModule && <Link href="/ai" translateChildren={false}>{workspaceCopy.general}</Link>}
                 <UiNode as="button" type="button" disabled={interactionBusy||(!draft&&!pendingQuestion&&!diagnosticResult&&!messages.length&&!workingMemory.goal&&!workingMemory.decisions.length&&!workingMemory.openQuestions.length)} onClick={newConversation}>{copy.newChat}</UiNode>
                 <UiNode as="button" ref={settingsButton} type="button" aria-controls="aya-conversation-settings" aria-expanded={settingsOpen} onClick={()=>{setSettingsOpen(!settingsOpen);}}>{copy.settings}</UiNode>
             </UiNode>

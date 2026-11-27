@@ -11,7 +11,17 @@ export default function AyaAcceptancePanel({model,disabled,beforeAcceptance,onAc
  const {locale}=useTranslation(),copy=ayaAcceptanceText(locale);
  const [running,setRunning]=useState(false),[cancelling,setCancelling]=useState(false),[report,setReport]=useState<AyaAcceptanceReport|null>(null),[progress,setProgress]=useState<AyaAcceptanceProgress|null>(null),[error,setError]=useState('');
  const lock=useRef(false),controller=useRef<AbortController|null>(null),mounted=useRef(true);
- const [runner]=useState(()=>createAyaAcceptanceRunner({chat:async input=>await window.dentayaDesktop?.localAyaChat?.(input)??{ok:false,error:'LOCAL_RUNTIME_MISSING'},cancel:async()=>{await window.dentayaDesktop?.localAyaCancel?.();}}));
+ const [runner]=useState(()=>{
+  let activeRequestId:string|undefined;
+  return createAyaAcceptanceRunner({
+   async chat(input){
+    activeRequestId=input.requestId;
+    try{return await window.dentayaDesktop?.localAyaChat?.(input)??{ok:false,error:'LOCAL_RUNTIME_MISSING'};}
+    finally{activeRequestId=undefined;}
+   },
+   async cancel(){if(activeRequestId)await window.dentayaDesktop?.localAyaCancel?.(activeRequestId);},
+  });
+ });
  useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;controller.current?.abort();};},[runner]);
  async function start(){
   if(lock.current||disabled||!model)return;

@@ -16,6 +16,7 @@ import CustomizationPanel from "./CustomizationPanel";
 import { professionalShellText } from '@/lib/i18n/professional-shell';
 import { desktopShellText } from '@/lib/i18n/desktop-shell';
 import { DENTAYA_RELEASE } from '@/lib/release';
+import { ayaHrefFromPathname } from '@/lib/aya-module-navigation';
 import './desktop-shell.css';
 const MODULES: Record<string, [
     string,
@@ -66,6 +67,7 @@ export default function WorkspaceChrome({ children }: {
     const isDesktop=Boolean(currentModule)||isCad||isWorkspace||isAya||isLibrary;
     const available=isDesktop||pathname==='/';
     const moduleKey=pathname.split('/')[1];
+    const ayaHref=ayaHrefFromPathname(pathname);
     const moduleLabel=currentModule?uiText(currentModule[0]):isCad?'DentAYA Design':isAya?'AYA':isLibrary?uiText('Form kütüphanesi'):desktopCopy.workManager;
     const [preferences, setPreferences] = useState(defaults);
     const [tab, setTab] = useState("appearance");
@@ -166,7 +168,7 @@ export default function WorkspaceChrome({ children }: {
         <UiNode as="nav" className="desktop-document-tabs" aria-label={desktopCopy.workspaces} translateChildren={false}>
           <Link href="/workspace" aria-current={isWorkspace?'page':undefined}><DentayaIcon name="case" size={15}/><UiNode as="span">{desktopCopy.workManager}</UiNode></Link>
           <Link href="/design" aria-current={isCad?'page':undefined}><DentayaIcon name="design" size={15}/><UiNode as="span">{desktopCopy.design}</UiNode></Link>
-          <Link href="/ai" aria-current={isAya?'page':undefined}><DentayaIcon name="ai" size={15}/><UiNode as="span">{desktopCopy.assistant}</UiNode></Link>
+          <Link href={ayaHref} aria-current={isAya?'page':undefined}><DentayaIcon name="ai" size={15}/><UiNode as="span">{desktopCopy.assistant}</UiNode></Link>
           {!isWorkspace&&!isCad&&!isAya&&<Link href={pathname} aria-current="page"><UiNode as="span">{moduleLabel}</UiNode></Link>}
         </UiNode>
         <UiNode as="div" className="desktop-titlebar-actions">
@@ -176,7 +178,7 @@ export default function WorkspaceChrome({ children }: {
       <UiNode as="div" className={`desktop-workspace module-workspace ${isCad||!preferences.navigation?'module-workspace--wide':''}`}>
         {!isCad&&preferences.navigation&&<UiNode as="aside" className="module-navigation desktop-module-navigation" aria-label={desktopCopy.modules} translateChildren={false}>
           <UiNode as="nav" className="studio-activity-dock" aria-label={desktopCopy.workspaces}>
-            {([['/workspace', desktopCopy.workManager, 'case'], ['/design', desktopCopy.design, 'design'], ['/patients', uiText('Hastalar'), 'patient'], ['/scans', uiText('Taramalar'), 'scan'], ['/messages', uiText('Mesajlar'), 'message'], ['/finance', uiText('Finans'), 'finance'], ['/ai', 'AYA', 'ai']] as [string, string, DentayaIconName][]).map(([href,label,icon]) => <Link href={href} key={href} aria-current={pathname===href||pathname.startsWith(href+'/')?'page':undefined} title={label}><UiNode as="span" className="studio-dock-icon" data-icon={icon}><DentayaIcon name={icon} size={25}/></UiNode><UiNode as="span">{label}</UiNode></Link>)}
+            {([['/workspace', desktopCopy.workManager, 'case'], ['/design', desktopCopy.design, 'design'], ['/patients', uiText('Hastalar'), 'patient'], ['/scans', uiText('Taramalar'), 'scan'], ['/messages', uiText('Mesajlar'), 'message'], ['/finance', uiText('Finans'), 'finance'], ['/ai', 'AYA', 'ai']] as [string, string, DentayaIconName][]).map(([href,label,icon]) => <Link href={href==='/ai'?ayaHref:href} key={href} aria-current={pathname===href||pathname.startsWith(href+'/')?'page':undefined} title={label}><UiNode as="span" className="studio-dock-icon" data-icon={icon}><DentayaIcon name={icon} size={25}/></UiNode><UiNode as="span">{label}</UiNode></Link>)}
           </UiNode>
           <UiNode as="div" className="studio-dock-bottom"><Link href="/settings" title={uiText('Ayarlar')} aria-label={uiText('Ayarlar')}><DentayaIcon name="settings" size={23}/></Link></UiNode>
         </UiNode>}

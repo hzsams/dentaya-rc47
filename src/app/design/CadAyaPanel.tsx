@@ -21,6 +21,7 @@ import AyaKnowledgePanel from '../ai/AyaKnowledgePanel';
 import AyaSources from '../ai/AyaSources';
 type Message=AyaMessage&{proposals?:AyaProposal[];cadScope?:string;guide?:boolean};
 type Event=AyaCadActionEvidence;
+type PendingMemory={id:string;scope:AyaCadContext['scope'];snapshot:AyaCadContext['snapshot'];cancelled:boolean;done:Promise<void>};
 type Session={draft:string;pendingDraft:string;messages:Message[];memory:AyaWorkingMemory;events:Event[]};
 // Panel close/reopen keeps the current task in process memory, scoped to project/source/unit.
 const sessions=new Map<string,Session>();
@@ -42,10 +43,19 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
  const [runtimeBusy,setRuntimeBusy]=useState(false),[guideMode,setGuideMode]=useState(false);
  const live=useRef(true),lock=useRef(false),request=useRef(''),contextRef=useRef(context),inputRef=useRef<HTMLTextAreaElement|null>(null),logRef=useRef<HTMLDivElement|null>(null),followBottom=useRef(true);
  const cancelPending=useRef<((reason:string)=>void)|null>(null),requestSnapshot=useRef('');
+ const pendingMemory=useRef<PendingMemory|null>(null);
  const initialFocusPending=useRef(true);
  const refreshGate=useRef(createAyaStatusRefreshGate()),modelPreference=useRef('');
  // Publish committed context before a click; render must never mutate a shared ref.
- useLayoutEffect(()=>{contextRef.current=context;if(request.current&&requestSnapshot.current!==context.snapshot)cancelPending.current?.('LOCAL_CONTEXT_CHANGED');},[context]);
+ useLayoutEffect(()=>{
+  contextRef.current=context;
+  if(request.current&&requestSnapshot.current!==context.snapshot)cancelPending.current?.('LOCAL_CONTEXT_CHANGED');
+  const pending=pendingMemory.current;
+  if(pending&&!pending.cancelled&&(pending.scope!==context.scope||pending.snapshot!==context.snapshot)){
+   pending.cancelled=true;
+   void window.dentayaDesktop?.localAyaCancel?.(pending.id).catch(()=>{});
+  }
+ },[context]);
  function cancel(){cancelPending.current?.('LOCAL_CANCELLED');void window.dentayaDesktop?.localAyaCancel?.();}
 
  useLayoutEffect(()=>{cacheSession(scope,{draft,pendingDraft,messages:messages.slice(-64),memory,events:events.slice(-8)});},[scope,draft,pendingDraft,messages,memory,events]);
@@ -68,29 +78,68 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
  },[context.isSaving]);
  async function refreshModels(){
   const id=refreshGate.current.begin();
-  try{const result=await window.dentayaDesktop?.localAyaStatus?.();if(!live.current||!refreshGate.current.isCurrent(id))return;const available=result?.ok&&!result.progress.running?result.models:[];setRuntimeBusy(Boolean(result?.progress.running||result?.error==='LOCAL_BUSY'));setModels(available);setModel(current=>selectAyaModel(current||modelPreference.current,available));}
+  try{const result=await window.dentayaDesktop?.localAyaStatus?.();if(!live.current||!refreshGate.current.isCurrent(id))return;const available=result&&!result.progress.running&&(result.ok||(pendingMemory.current&&result.error==='LOCAL_BUSY'))?result.models:[];setRuntimeBusy(Boolean(result?.progress.running||result?.error==='LOCAL_BUSY'));setModels(available);setModel(current=>selectAyaModel(current||modelPreference.current,available));}
   catch{if(live.current&&refreshGate.current.isCurrent(id)){setRuntimeBusy(false);setModels([]);setModel('');}}
  }
  useEffect(()=>{const gate=refreshGate.current;live.current=true;void refreshModels();const focus=()=>void refreshModels();window.addEventListener('focus',focus);
-  return()=>{live.current=false;gate.invalidate();window.removeEventListener('focus',focus);if(request.current){cancelPending.current?.('LOCAL_CANCELLED');void window.dentayaDesktop?.localAyaCancel?.();}};
+  return()=>{live.current=false;gate.invalidate();window.removeEventListener('focus',focus);
+   const pending=pendingMemory.current;
+   if(pending){pending.cancelled=true;void window.dentayaDesktop?.localAyaCancel?.(pending.id).catch(()=>{});}
+   if(request.current){cancelPending.current?.('LOCAL_CANCELLED');void window.dentayaDesktop?.localAyaCancel?.();}};
  },[]);
  useEffect(()=>{if(!runtimeBusy)return;const timer=setInterval(()=>void refreshModels(),1500);return()=>clearInterval(timer);},[runtimeBusy]);
+ function extractMemory(prompt:string,answer:string,captured:AyaCadContext){
+  const api=window.dentayaDesktop;
+  if(!api?.localAyaChat||answer.length>12000)return;
+  const pending:PendingMemory={id:crypto.randomUUID(),scope:captured.scope,snapshot:captured.snapshot,cancelled:false,done:Promise.resolve()};
+  pendingMemory.current=pending;
+  pending.done=(async()=>{
+   try{
+    // Only the actual user message and its reply reach the isolated memory task.
+    const result=await api.localAyaChat!({task:'memory',agent:true,assistantReply:answer,requestId:pending.id,prompt,model,locale,detail:'concise',history:[],workingMemory:memory});
+    const current=contextRef.current;
+    if(live.current&&!pending.cancelled&&pendingMemory.current===pending&&current.scope===captured.scope&&current.snapshot===captured.snapshot&&result.ok&&result.workingMemory){
+     setMemory(normalizeMemory(result.workingMemory));
+    }
+   }catch{ /* Memory failure leaves the completed answer and prior agreements available. */ }
+   finally{if(pendingMemory.current===pending)pendingMemory.current=null;}
+  })();
+ }
+ async function settleMemoryWork(){
+  const pending=pendingMemory.current;
+  if(!pending)return true;
+  pending.cancelled=true;
+  let timer:ReturnType<typeof setTimeout>|undefined;
+  try{
+   return await Promise.race([
+    (async()=>{await window.dentayaDesktop?.localAyaCancel?.(pending.id).catch(()=>{});await pending.done;return true;})(),
+    new Promise<false>(resolve=>{timer=setTimeout(()=>resolve(false),2000);}),
+   ]);
+  }finally{clearTimeout(timer);}
+ }
  // The bounded automatic QC interpretation must never replace an unsent question.
  async function send(text=draft,previous=messages,actionEvents=events,preserveDraft=false){
   const prompt=text.trim();if(!prompt||prompt.length>8000||lock.current||contextRef.current.isSaving)return;
   lock.current=true;followBottom.current=true;setBusy(true);setPendingDraft(preserveDraft?'':prompt);if(!preserveDraft)setDraft('');setError('');
   const requestId=crypto.randomUUID(),captured=contextRef.current;
+  const priorMemory=pendingMemory.current;
+  if(priorMemory)priorMemory.cancelled=true;
   request.current=requestId;requestSnapshot.current=captured.snapshot??'';
   const prior=previous.at(-1);
   const base=(prior?.role==='user'&&prior.content===prompt&&prior.cadScope===captured.scope?previous.slice(0,-1):previous).slice(-64),guide=guideMode,user:Message={role:'user',content:prompt,cadScope:captured.scope,guide};
   const modelHistory=base.filter(message=>!message.guide&&message.engine!=='guide');
   setMessages([...base,user]);
-  let timeout:ReturnType<typeof setTimeout>|undefined;
+  let timeout:ReturnType<typeof setTimeout>|undefined,aborted=false;
   try{
    const notebook=readAyaKnowledge(),api=window.dentayaDesktop,options=readAyaState().options,cadContext={...captured,recentActions:actionEvents.slice(-8)};
    const result=await resolveAyaReply({prompt,cadContext,workingMemory:memory,knowledge:notebook.enabled?notebook.items:[],history:guide?base:modelHistory,options,locale,mode:guide?'guide':'conversation'},{t,callModel:!guide&&model&&api?.localAyaChat?()=>{
-    const cancelled=new Promise<{ok:false;error:string}>(resolve=>{cancelPending.current=reason=>{resolve({ok:false,error:reason});if(reason!=='LOCAL_CANCELLED')void api.localAyaCancel?.();};timeout=setTimeout(()=>cancelPending.current?.('LOCAL_TIMEOUT'),185000);});
-    return Promise.race([api.localAyaChat!({agent:true,workingMemory:memory,requestId,prompt,model,locale,detail:'detailed',options,history:modelHistory,knowledge:notebook.enabled?notebook.items:[],useMemory:notebook.enabled,cadContext}),cancelled]);
+    const cancelled=new Promise<{ok:false;error:string}>(resolve=>{cancelPending.current=reason=>{aborted=true;resolve({ok:false,error:reason});if(reason!=='LOCAL_CANCELLED')void api.localAyaCancel?.();};timeout=setTimeout(()=>cancelPending.current?.('LOCAL_TIMEOUT'),185000);});
+    const planned=(async()=>{
+     if(!await settleMemoryWork())return {ok:false,error:'LOCAL_BUSY'};
+     if(!live.current||request.current!==requestId||aborted)return {ok:false,error:'LOCAL_CANCELLED'};
+     return api.localAyaChat!({agent:true,workingMemory:memory,requestId,prompt,model,locale,detail:'detailed',options,history:modelHistory,knowledge:notebook.enabled?notebook.items:[],useMemory:notebook.enabled,cadContext});
+    })();
+    return Promise.race([planned,cancelled]);
    }:undefined});
    if(!live.current||request.current!==requestId)return;
    // A response for another geometry/task cannot change this task's memory or offer executable tools.
@@ -101,7 +150,8 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
     return;
    }
    setMessages([...base,user,{role:'assistant',content:result.output,engine:guide?'guide':result.engine,references:result.references,proposals:result.proposals,cadScope:captured.scope,guide}]);
-   if((!guide||result.kind==='control')&&result.workingMemory)setMemory(result.workingMemory);
+   if(result.kind==='control'&&result.workingMemory)setMemory(result.workingMemory);
+   if(result.kind==='model'&&!preserveDraft)extractMemory(prompt,result.output,captured);
   }catch{if(live.current&&request.current===requestId){if(!preserveDraft)setDraft(prompt);setError(copy.modelUnavailable);}}
 
   finally{if(timeout)clearTimeout(timeout);if(request.current===requestId){lock.current=false;request.current='';cancelPending.current=null;if(live.current){setPendingDraft('');setBusy(false);}}}
@@ -150,7 +200,7 @@ export default function CadAyaPanel({context,onClose,onRun,onPlace,onSave,onSetu
   {onRun&&<UiNode as="div" className="cad-aya-actions" translateChildren={false}><UiNode as="button" type="button" disabled={busy||context.isSaving} onClick={()=>void send(copy.review)}>{copy.refresh}</UiNode>{(['inspect','show-all','undo','save'] as const).filter(id=>context.availableTools?.includes(id)).map(id=><UiNode as="button" type="button" key={id} data-aya-tool={id} disabled={busy} onClick={()=>void apply(currentProposal(id))}>{copy.tools[id]}</UiNode>)}</UiNode>}
   <UiNode as="details" className="cad-aya-context" translateChildren={false}><UiNode as="summary">{copy.context}<UiNode as="small">{checks.filter(item=>item.state==='ready').length} / {checks.length}</UiNode></UiNode><UiNode as="div" className="cad-aya-context-body">
   <UiNode as="details" className="cad-aya-checklist"><UiNode as="summary" translateChildren={false}>{toolsCopy.check}<UiNode as="small">{checks.filter(item=>item.state==='ready').length} / {checks.length}</UiNode></UiNode><UiNode as="p" translateChildren={false}>{toolsCopy.snapshot}</UiNode><UiNode as="ul">{checks.map(item=><UiNode as="li" key={item.id} data-check-id={item.id} data-check-state={item.state} title={item.state==='ready'?undefined:item.message} translateChildren={false}><UiNode as="span">{toolsCopy[item.id]}</UiNode><UiNode as="strong">{toolsCopy[item.state]}</UiNode></UiNode>)}</UiNode></UiNode>
-  <UiNode as="details" className="aya-working-memory" translateChildren={false}><UiNode as="summary">{copy.memory}</UiNode><UiNode as="strong">{copy.goal}</UiNode><UserText>{memory.goal||'—'}</UserText>{memory.decisions.map((s,i)=><UiNode as="p" key={'d'+i}><UserText>{s}</UserText></UiNode>)}{memory.openQuestions.map((s,i)=><UiNode as="p" key={'q'+i}><UserText>{s}</UserText></UiNode>)}<UiNode as="button" disabled={busy} onClick={()=>setMemory(normalizeMemory(null))}>{copy.clear}</UiNode></UiNode>
+  <UiNode as="details" className="aya-working-memory" translateChildren={false}><UiNode as="summary">{copy.memory}</UiNode><UiNode as="strong">{copy.goal}</UiNode><UserText>{memory.goal||'—'}</UserText>{memory.decisions.map((s,i)=><UiNode as="p" key={'d'+i}><UserText>{s}</UserText></UiNode>)}{memory.openQuestions.map((s,i)=><UiNode as="p" key={'q'+i}><UserText>{s}</UserText></UiNode>)}<UiNode as="button" disabled={busy} onClick={()=>{if(pendingMemory.current)pendingMemory.current.cancelled=true;setMemory(normalizeMemory(null));}}>{copy.clear}</UiNode></UiNode>
   {onRun&&<UiNode as="details" className="aya-cad-evidence" data-aya-section-evidence={context.section?JSON.stringify(context.section):undefined} translateChildren={false}><UiNode as="summary">{copy.evidence}</UiNode>{context.section&&<UiNode as="p">{cadSectionText(locale).ayaReady}</UiNode>}{currentReport?<UiNode as="div"><UiNode as="p">{currentReport.boundaryEdges??'—'} {copy.openEdges}</UiNode><UiNode as="p">{currentReport.contactReference==='antagonist'?`${currentReport.collisionSamples??0} / ${currentReport.samples??0} ${copy.samples}`:copy.noAntagonist}</UiNode>{currentReport.minimumWallEstimateMm!==undefined&&<UiNode as="p">{copy.estimate}: {currentReport.minimumWallEstimateMm.toFixed(2)} mm</UiNode>}{currentReport.warnings.map((s,i)=><UiNode as="p" key={i}><UserText>{s}</UserText></UiNode>)}</UiNode>:<UiNode as="p">{copy.noReport}</UiNode>}</UiNode>}
   <AyaKnowledgePanel/>
   </UiNode></UiNode>
