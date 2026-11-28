@@ -1126,8 +1126,8 @@
     },
     {
       "path": "electron/aya-local.cjs",
-      "size": 15716,
-      "sha256": "9067deb53a2d0e04d4f9ea272671f495d09257478edd78d924bcbf3d19309290"
+      "size": 15683,
+      "sha256": "891e50e2ca389bae8d0129cd8d7c8b09b20afe10458579253424adda2e5ecf36"
     },
     {
       "path": "electron/aya/acceptance.cjs",
@@ -1201,8 +1201,8 @@
     },
     {
       "path": "electron/aya/core.cjs",
-      "size": 10019,
-      "sha256": "42bb77ca9eb197bee5ea296e08f94ea051f63e31e7c97935ec74a3da0ffaa563"
+      "size": 9956,
+      "sha256": "9f0d4c766c3255afac7a67b28c18c2dc24a4f0ea61f6102c470ef466b6c654a8"
     },
     {
       "path": "electron/aya/dialogue.cjs",
