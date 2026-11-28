@@ -10,4 +10,9 @@ const CANDIDATE = Object.freeze({
  bytes: 2740937888,
 });
 
-module.exports = {CANDIDATE};
+const candidateSampling = {
+ conversation: {temperature: .7, top_p: .8, top_k: 20, min_p: 0, presence_penalty: 1.5, repeat_penalty: 1, seed: 103},
+ structured: {temperature: .2, top_p: .8, top_k: 20, min_p: 0, presence_penalty: 0, repeat_penalty: 1, seed: 103},
+};
+
+module.exports = {CANDIDATE,candidateSampling};

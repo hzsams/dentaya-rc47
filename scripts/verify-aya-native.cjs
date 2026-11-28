@@ -4,7 +4,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=r
 const {spawn,spawnSync}=require('node:child_process');
 const {parseArgs}=require('node:util');
 const {createManagedAya,MODEL}=require('../electron/aya/managed-runtime.cjs');
-const {CANDIDATE}=require('./aya-native-candidate.cjs');
+const {CANDIDATE,candidateSampling}=require('./aya-native-candidate.cjs');
 const {createLocalAya}=require('../electron/aya-local.cjs');
 const {normalizeMemory,CONTEXT_MARKER}=require('../electron/aya/agent.cjs');
 // A reply can satisfy the transport contract while missing a behavioral
@@ -59,13 +59,16 @@ async function hashFile(file){const hash=crypto.createHash('sha256');for await(c
  const version=spawnSync(path.resolve(engine),['--version'],{encoding:'utf8',stdio:['ignore','pipe','pipe']});assert.equal(version.status,0,'Engine version check must succeed');result.engineVersion=(version.stdout+version.stderr).trim();assert.match(result.engineVersion,/9380/,'Use the documented b9380 engine');
  result.stage='model-validation';assert.equal((await fs.stat(modelFile)).size,pin.bytes,'Use the selected pinned model size');assert.equal(await hashFile(modelFile),pin.sha256,'Use the selected pinned model SHA-256');result.model.verified=true;
  const directory=await fs.mkdtemp(path.join(os.tmpdir(),'dentaya-native-'));
- const runtime=createManagedAya({directory,engineBinary:path.resolve(engine),spawnImpl:(binary,args,options)=>{assert.equal(options.shell,false);assert.equal(args[args.indexOf('--host')+1],'127.0.0.1');return spawn(binary,args,options);},fetchImpl:async(url,options)=>{
+ const samplingOverrides=values.candidate?candidateSampling:undefined;
+ const runtime=createManagedAya({directory,engineBinary:path.resolve(engine),samplingOverrides,spawnImpl:(binary,args,options)=>{assert.equal(options.shell,false);assert.equal(args[args.indexOf('--host')+1],'127.0.0.1');return spawn(binary,args,options);},fetchImpl:async(url,options)=>{
   const u=new URL(url);assert.equal(u.hostname,'127.0.0.1');assert.match(options?.headers?.Authorization??'',/^Bearer [a-f0-9]{64}$/);
   if(u.pathname==='/v1/chat/completions'){
    const payload=JSON.parse(options.body);
    const message=payload.messages.find(message=>message.role==='user'&&message.content.startsWith(CONTEXT_MARKER));
    const workspaceModule=message?JSON.parse(message.content.slice(CONTEXT_MARKER.length)).workspaceModule?.id:undefined;
-   result.transport.push({stream:payload.stream,responseFormat:payload.response_format,thinking:payload.chat_template_kwargs,roles:payload.messages.map(m=>m.role),workspaceModule});
+   const sampling={temperature:payload.temperature,top_p:payload.top_p,top_k:payload.top_k,min_p:payload.min_p,presence_penalty:payload.presence_penalty,repeat_penalty:payload.repeat_penalty,seed:payload.seed};
+   if(samplingOverrides)assert.deepEqual(sampling,samplingOverrides[payload.response_format?'structured':'conversation']);
+   result.transport.push({stream:payload.stream,responseFormat:payload.response_format,thinking:payload.chat_template_kwargs,roles:payload.messages.map(m=>m.role),workspaceModule,sampling});
   }
   return fetch(url,options);
  }});

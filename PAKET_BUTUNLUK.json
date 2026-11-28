@@ -1126,8 +1126,8 @@
     },
     {
       "path": "electron/aya-local.cjs",
-      "size": 15683,
-      "sha256": "891e50e2ca389bae8d0129cd8d7c8b09b20afe10458579253424adda2e5ecf36"
+      "size": 15716,
+      "sha256": "9067deb53a2d0e04d4f9ea272671f495d09257478edd78d924bcbf3d19309290"
     },
     {
       "path": "electron/aya/acceptance.cjs",
@@ -1141,8 +1141,8 @@
     },
     {
       "path": "electron/aya/agent.cjs",
-      "size": 21931,
-      "sha256": "eeb479b561997f66353343457fd5da96b1721d16d2eda6deb480288ff06c9794"
+      "size": 21909,
+      "sha256": "e7fd8870a52d0742956ed213dd6d89e7222c0eabd972b65ee7e2002164b0128f"
     },
     {
       "path": "electron/aya/agent.d.cts",
@@ -1201,8 +1201,8 @@
     },
     {
       "path": "electron/aya/core.cjs",
-      "size": 9956,
-      "sha256": "9f0d4c766c3255afac7a67b28c18c2dc24a4f0ea61f6102c470ef466b6c654a8"
+      "size": 10019,
+      "sha256": "42bb77ca9eb197bee5ea296e08f94ea051f63e31e7c97935ec74a3da0ffaa563"
     },
     {
       "path": "electron/aya/dialogue.cjs",
@@ -1246,8 +1246,8 @@
     },
     {
       "path": "electron/aya/managed-runtime.cjs",
-      "size": 19344,
-      "sha256": "94b4f8e2a50a4710618a721473c705d9e4e7f4d6fbdb5f937bc9c6df42259b8c"
+      "size": 19461,
+      "sha256": "efbe1628cdfc28c94b1cbad3c3c40308549c4ba8b191dfbae9f289b51e239acf"
     },
     {
       "path": "electron/aya/memory-dialogue.cjs",
@@ -7316,8 +7316,8 @@
     },
     {
       "path": "scripts/aya-native-candidate.cjs",
-      "size": 490,
-      "sha256": "1dc17b5afe3df2c478040d50693a05b7f3b5546be8d6dcb9d5cf0ebca014d4cf"
+      "size": 774,
+      "sha256": "32860e2bb67ef9dc534763059ebf411a1b1285492d50da05bfb752f3ec81cffb"
     },
     {
       "path": "scripts/brand-source/THIRD_PARTY_LICENSES.txt",
@@ -7576,8 +7576,8 @@
     },
     {
       "path": "scripts/verify-aya-native.cjs",
-      "size": 17945,
-      "sha256": "5a92873355652b3d7ec4f0ceddb2ae59dfde44f66a8ca0f4c743f3e76a9d550f"
+      "size": 18395,
+      "sha256": "7d6607e1291a97f71c495d57676237960f7403ee641b113302c3de5b6f20eac7"
     },
     {
       "path": "scripts/verify-aya-natural-stream.cjs",

@@ -89,7 +89,7 @@ function createLocalAya({fetchImpl=fetch,managed}={}){
    const task=(async()=>{
    const prepared=prepareContext(input,translate),language=Object.hasOwn(LANGUAGES,input.locale)?LANGUAGES[input.locale]:LANGUAGES.tr;
    const history=normalizeHistory(input.history,input);
-   const instructions='Reply in '+language+'. Base model: Qwen/user-selected. '+prepared.instructions;
+   const instructions=memoryTask?prepared.instructions:'Reply in '+language+'. Base model: Qwen/user-selected. '+prepared.instructions;
    const messages=[{role:'system',content:instructions},{role:'user',content:CONTEXT_MARKER+JSON.stringify(prepared.context)},...history,{role:'user',content:input.prompt.trim()}];
    let references=prepared.references;
    const moduleActions=allowsAyaModuleActions(input);

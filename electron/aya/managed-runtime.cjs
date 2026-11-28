@@ -71,7 +71,7 @@ async function extractEngine(archive,destination){
  if(!Object.keys(entries).some(name=>path.posix.basename(name)==='llama-server.exe'))throw Error('AYA_ENGINE_ARCHIVE');
  await fsp.mkdir(destination,{recursive:true});for(const [name,data] of Object.entries(entries))await fsp.writeFile(path.join(destination,path.posix.basename(name)),data);
 }
-function createManagedAya({directory,fetchImpl=fetch,spawnImpl=spawn,platform=process.platform,engineBinary,bundledModel=MODEL}={}){
+function createManagedAya({directory,fetchImpl=fetch,spawnImpl=spawn,platform=process.platform,engineBinary,bundledModel=MODEL,samplingOverrides}={}){
  if(!directory)throw Error('AYA_DIRECTORY_REQUIRED');const root=path.join(directory,'aya-local'),engineDir=path.join(root,'engine'),modelsDir=path.join(root,'models');
  const binary=()=>engineBinary||path.join(engineDir,platform==='win32'?'llama-server.exe':'llama-server');
  let child=null,startPromise=null,activeModel='',base='',key='',install=null,stopping=false,lifecycle=0,disposed=false;
@@ -153,7 +153,8 @@ function createManagedAya({directory,fetchImpl=fetch,spawnImpl=spawn,platform=pr
   }});
   signal?.throwIfAborted();
   onContext(messages);
-  const started=Date.now();const response=await fetchImpl(base+'/v1/chat/completions',{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},redirect:'error',signal,body:JSON.stringify({model:'aya-local',messages,stream:true,stream_options:{include_usage:true},...templateOptions,temperature:responseSchema?Math.min(.2,options.creativity):options.creativity,max_tokens:options.maxTokens})});
+  const sampling={temperature:responseSchema?Math.min(.2,options.creativity):options.creativity,...samplingOverrides?.[responseSchema?'structured':'conversation']};
+  const started=Date.now();const response=await fetchImpl(base+'/v1/chat/completions',{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},redirect:'error',signal,body:JSON.stringify({model:'aya-local',messages,stream:true,stream_options:{include_usage:true},...templateOptions,...sampling,max_tokens:options.maxTokens})});
   if(!response.ok||!response.body)throw Error('LOCAL_REQUEST_FAILED');
   const reader=response.body.getReader(),decoder=new TextDecoder();let pending='',output='',done=false,tokens=0,finishReason='';
   function line(value){if(!value.startsWith('data:'))return;const data=value.slice(5).trim();if(!data)return;if(data==='[DONE]'){done=true;return;}const event=JSON.parse(data);if(event.error)throw Error('LOCAL_REQUEST_FAILED');if(Number.isSafeInteger(event.usage?.completion_tokens)&&event.usage.completion_tokens>=0)tokens=event.usage.completion_tokens;const chunk=event.choices?.[0]?.delta?.content;if(typeof chunk==='string'&&chunk){output+=chunk;if(output.length>64000)throw Error('LOCAL_RESPONSE_TOO_LARGE');onToken(output);}if(event.choices?.[0]?.finish_reason){finishReason=event.choices[0].finish_reason;done=true;}}
